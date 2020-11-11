@@ -9,7 +9,7 @@
     <span>{{barValue}}</span>
 </div>
 
-<button>add</button>
+<button class="add-button">add</button>
 
 <div>
     <span>Docs:</span>
@@ -22,6 +22,7 @@
             <div>{{doc._id}}</div>
             <div>{{doc.name}}</div>
             <div>{{doc.value}}</div>
+            <button class="remove-button" data-id="{{doc._id}}">-</button>
         </li>
     {{/each}}
 </ul>

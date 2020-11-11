@@ -22,6 +22,9 @@ Meteor.methods({
       name: Random.id(),
       value: Math.floor(Math.random() * 100000)
     })
+  },
+  'remove' ({ _id }) {
+    return TestCollection.remove(_id)
   }
 })
 

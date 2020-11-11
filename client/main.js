@@ -1,22 +1,18 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-
-import './main.html';
 import { TestCollection } from '../imports/TestCollection'
+import './main.html';
 
 Template.body.onCreated(function helloOnCreated() {
   const instance = this
   instance.count = new ReactiveVar(0)
 
   Meteor.subscribe('allDocs')
-  Meteor.call('count', (err, res) => {
-    instance.count.set(res)
-  })
 });
 
 Template.body.helpers({
   docsCount() {
-    return Template.instance().count.get();
+    return TestCollection.find().count()
   },
   allDocs () {
     return TestCollection.find()
@@ -27,7 +23,11 @@ Template.body.helpers({
 });
 
 Template.body.events({
-  'click button'(event, instance) {
+  'click .add-button'(event, instance) {
     Meteor.call('add')
   },
+  'click .remove-button' (event, instance) {
+    const _id = instance.$(event.currentTarget).data('id')
+    Meteor.call('remove', { _id })
+  }
 });
