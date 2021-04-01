@@ -4,12 +4,12 @@ import { Alert, Button, StyleSheet, Text, View } from 'react-native'
 import Meteor, { Mongo, withTracker } from '@meteorrn/core';
 
 
-Meteor.connect("ws://127.0.0.1:3000/websocket");
+//Meteor.connect("ws://127.0.0.1:3000/websocket");
 
 export default function App () {
   return (
     <View style={styles.container}>
-      <Text>Test Meteor Application</Text>
+      <Text testID='textField'>Test Meteor Application</Text>
       <StatusBar style='auto' />
 
       <Button
@@ -29,4 +29,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   }
-})
+});
+
