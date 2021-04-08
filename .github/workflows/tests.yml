@@ -22,14 +22,8 @@ jobs:
           with:
             node-version: '12.x'
         
-        - name: print folder
-          run: ls 
-            
-        - name: open src folder
-          run: cd src
-        
         - name: install node modules
-          run: npm install && npm install jest
+          run: cd src && npm install && npm install jest
              
         - name: run jest tests
           run: cd src && npm test
