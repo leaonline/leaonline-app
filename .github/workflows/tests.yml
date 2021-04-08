@@ -13,7 +13,7 @@ jobs:
         steps:
         
         - name: open src folder
-          uses: cd src
+          run: cd src
           
         - name: checkout
           uses: actions/checkout@v2
