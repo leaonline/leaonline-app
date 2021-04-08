@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - move-to-react-native
+      
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - name: checkout
+          uses: actions/checkout@v2
+        
+        - name: setup node
+          uses: actions/setup-node@v1
+          with:
+            node-version: '12.x'
+        
+        - name: install node modules
+          run: npm install
+        
+        - name: run jest tests
+          run: jest
