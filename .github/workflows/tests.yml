@@ -11,6 +11,10 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+        
+        - name: open src folder
+          uses: cd src
+          
         - name: checkout
           uses: actions/checkout@v2
         
