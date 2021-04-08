@@ -12,8 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         
-        - name: open src folder
-          run: cd src
+        
           
         - name: checkout
           uses: actions/checkout@v2
@@ -22,6 +21,12 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: '12.x'
+        
+        - name: print folder
+          run: ls 
+            
+        - name: open src folder
+          run: cd src
         
         - name: install node modules
           run: npm init -y && npm install
