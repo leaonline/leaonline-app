@@ -22,5 +22,8 @@ jobs:
         - name: install node modules
           run: npm init -y && npm install
         
+        - name: intall jest 
+          run: npm install --save-dev jest 
+        
         - name: run jest tests
-          run: jest
+          run: npm test
