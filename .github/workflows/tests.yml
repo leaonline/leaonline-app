@@ -23,4 +23,4 @@ jobs:
           run: npm init -y && npm install
         
         - name: run jest tests
-          run: npm test
+          run: jest
