@@ -14,7 +14,6 @@ it('renders correctly', () => {
 
 test('render welcome text component correctly', () => {
     const rendered = render(<App/>);
-
     const textComponent = rendered.getByTestId('textField');
 
     expect(textComponent.props.children).toEqual('Test Meteor Application');

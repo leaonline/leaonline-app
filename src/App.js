@@ -4,7 +4,10 @@ import { Alert, Button, StyleSheet, Text, View } from 'react-native'
 import Meteor, { Mongo, withTracker } from '@meteorrn/core';
 
 
+
+
 //Meteor.connect("ws://127.0.0.1:3000/websocket");
+
 
 export default function App () {
   return (
@@ -14,7 +17,8 @@ export default function App () {
 
       <Button
         title="Press This Button"
-        onPress={() => Alert.alert(Meteor.userId())}
+        //onPress={() => Alert.alert(Meteor.userId())}
+        onPress={() => console.log(Meteor.userId())}
       />
     </View>
 

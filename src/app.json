@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "leaonline-app",
-    "slug": "leaonline-app",
+    "name": "leaonline",
+    "slug": "leaonline",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
