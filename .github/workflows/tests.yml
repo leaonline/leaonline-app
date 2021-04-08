@@ -32,4 +32,4 @@ jobs:
           run: npm install && npm install jest
              
         - name: run jest tests
-          run: npm run test
+          run: cd src && npm test
