@@ -20,5 +20,5 @@ jobs:
     - name: install node modules
       run: npm install
     - name: run standard js
-      run: npx standard
+      run: npx standard --env jest --env mocha
       
