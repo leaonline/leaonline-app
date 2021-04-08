@@ -29,10 +29,7 @@ jobs:
           run: cd src
         
         - name: install node modules
-          run: npm init -y && npm install
-        
-        - name: intall jest 
-          run: npm install --save-dev jest 
-        
+          run: npm install && npm install jest
+             
         - name: run jest tests
-          run: jest
+          run: npm test
