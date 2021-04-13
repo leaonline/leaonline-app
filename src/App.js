@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View, Alert } from 'react-native'
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
-import Meteor from '@meteorrn/core'
+// import Meteor from '@meteorrn/core'
 
 // Meteor.connect("ws://127.0.0.1:3000/websocket");
 
@@ -13,9 +13,9 @@ export default function App () {
       <StatusBar style='auto' />
 
       <Button
+        testID='Button'
         title='Press This Button'
-        // onPress={() => Alert.alert(Meteor.userId())}
-        onPress={() => console.log(Meteor.userId())}
+        onPress={() => Alert.alert('Button is working')}
       />
     </View>
 

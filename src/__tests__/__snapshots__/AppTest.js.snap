@@ -33,6 +33,7 @@ exports[`renders correctly 1`] = `
         "opacity": 1,
       }
     }
+    testID="Button"
   >
     <View
       style={
