@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: '12.x'
     - name: install node modules
-      run: cd src && npm install && npm install expo-cli
+      run: cd src && npm install && npm install --global expo-cli
       
     - name: eject from expo project
       run: cd src && npx expo eject --non-interactive
