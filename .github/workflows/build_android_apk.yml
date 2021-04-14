@@ -22,10 +22,10 @@ jobs:
       with:
         node-version: '12.x'
     - name: install node modules
-      run: cd src && npm install
+      run: cd src && npm install && npm install expo-cli
       
     - name: eject from expo project
-      run: expo eject --non-interactive
+      run: cd src && expo eject --non-interactive
       
     - name: build apk
       run: cd src/Android && ./gradlew assembleRelease
