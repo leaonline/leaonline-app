@@ -1,0 +1,31 @@
+name: buildAndroidAPK
+
+on:
+  push:
+    branches:
+      - release
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: install node modules
+      run: cd src && npm install
+      
+    - name: eject from expo project
+      run: cd src && expo eject --non-interactive
+      
+    - name: build apk
+      run: cd src/Android && ./gradlew assembleRelease
+    
+    - name: upload apk file
+      uses: actions/upload-artifact@v1
+      with:
+        name: app-release.apk
+        path: android/app/build/outputs/apk/release/
