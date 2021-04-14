@@ -28,7 +28,7 @@ jobs:
       run: cd src && npx expo eject --non-interactive
       
     - name: build apk
-      run: cd src/Android && ./gradlew assembleRelease
+      run: cd src/android && ./gradlew assembleRelease
     
     - name: upload apk file
       uses: actions/upload-artifact@v1
