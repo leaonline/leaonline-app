@@ -25,7 +25,7 @@ jobs:
       run: cd src && npm install
       
     - name: eject from expo project
-      run: cd src && expo eject --non-interactive
+      run: expo eject --non-interactive
       
     - name: build apk
       run: cd src/Android && ./gradlew assembleRelease
