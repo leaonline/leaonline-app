@@ -17,17 +17,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.testCompany.leaonline"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "test.test"
+      "package": "com.testCompany.leaonline"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    } 
+   }
   }
-}
