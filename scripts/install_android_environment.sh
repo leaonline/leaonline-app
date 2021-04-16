@@ -33,13 +33,15 @@ cd ~ || exit
 
 
 echo -e "${RED}Download and unpack android tools"
-if [ ! -d $ANDROID_HOME/tools/bin ]; then
+if [ ! -d $ANDROID_HOME ]; then
+  sudo mkdir $ANDROID_HOME
   wget https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
   unzip tools_r25.2.3-linux.zip
-  rm tools_r25.2.3-linux.zip
   sudo rm -rf $ANDROID_HOME/tools
-  sudo mv tools $ANDROID_HOME/tools
+  sudo mv tools $ANDROID_HOME
 fi
+
+rm tools_r25.2.3-linux.zip
 
 #setup env variables
 
@@ -55,13 +57,13 @@ export JRE_HOME
 export PATH
 
 echo -e "Set Java version to 8"
-sudo update-alternatives --config java <<< '2'
+sudo update-alternatives --config java <<< '3'
 sudo update-alternatives --config javac <<< '2'
 
 echo -e "Accept Java license"
 if [ ! -f "$ANDROID_HOME"/licenses/android-sdk-license ]; then
   
   sudo chown "$USER":"$USER" "$ANDROID_HOME" -R
-  yes | "$ANDROID_HOME"/tools/bin/sdkmanager "build-tools;25.0.2"
+  yes | "$ANDROID_HOME"/bin/sdkmanager "build-tools;25.0.2"
 
 fi
