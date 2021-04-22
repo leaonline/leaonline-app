@@ -51,7 +51,7 @@ else
 fi
 
 if [ -d $ANDROID_HOME ]; then
-    echo -e "${RED}Anddroid home found under $ANDROID_HOME, purge existing folder"
+    echo -e "${RED}Android home found under $ANDROID_HOME, purge existing folder"
     sudo rm -rf $ANDROID_HOME
 fi
 
@@ -91,7 +91,7 @@ sudo update-alternatives --config javac <<< '2'
 
 if [ ! -f "$ANDROID_HOME/tools/licenses/android-sdk-license" ]; then
   echo -e "Accept Java license"
-  yes yyy | "$ANDROID_HOME"/tools/bin/sdkmanager "build-tools;25.0.2"
+  yes | "$ANDROID_HOME"/tools/bin/sdkmanager "build-tools;25.0.2"
 else
     echo -e "${RED}No license found under $ANDROID_HOME/tools/licenses/android-sdk-license"
     exit 1
