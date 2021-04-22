@@ -6,7 +6,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 if ! [ $(id -u) = 0 ]; then
-   echo "${RED}You must run this script with sudo privileges but not as root user!"
+   echo -e "${RED}You must run this script with sudo privileges but not as root user!"
    exit 1
 fi
 
@@ -57,13 +57,15 @@ fi
 
 echo -e "${NC}Create new Android home under $ANDROID_HOME"
 sudo mkdir $ANDROID_HOME
+sudo mkdir $ANDROID_HOME/tools
 
 echo -e "Move archive to $ANDROID_HOME"
-cp -R /tmp/${TOOLS_ZIP}/* ${ANDROID_HOME}
+cp -R /tmp/${TOOLS_ZIP}/* ${ANDROID_HOME}/tools
+sudo chown "$SUDO_USER":"$SUDO_USER" "$ANDROID_HOME" -R
 
 echo -e "Verify folders"
 
-if [ ! -f "/$ANDROID_HOME/android" ]; then
+if [ ! -f "/$ANDROID_HOME/tools/android" ]; then
     echo -e "${RED}Folder integrity failed:"
     ls -la ${ANDROID_HOME}
     exit 1
@@ -87,12 +89,11 @@ echo -e "Set Java version to 8"
 sudo update-alternatives --config java <<< '3'
 sudo update-alternatives --config javac <<< '2'
 
-if [ ! -f "$ANDROID_HOME/licenses/android-sdk-license" ]; then
+if [ ! -f "$ANDROID_HOME/tools/licenses/android-sdk-license" ]; then
   echo -e "Accept Java license"
-  sudo chown "$SUDO_USER":"$SUDO_USER" "$ANDROID_HOME" -R
-  yes yyy | "$ANDROID_HOME"/bin/sdkmanager "build-tools;25.0.2"
+  yes yyy | "$ANDROID_HOME"/tools/bin/sdkmanager "build-tools;25.0.2"
 else
-    echo -e "${RED}No license found under $ANDROID_HOME/licenses/android-sdk-license"
+    echo -e "${RED}No license found under $ANDROID_HOME/tools/licenses/android-sdk-license"
     exit 1
 fi
 
