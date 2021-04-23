@@ -16,8 +16,8 @@ METEOR_PROJECT_PATH=$(pwd)
 
 
 echo -e "Update and Upgrade System"
-sudo apt-get update
-sudo apt-get upgrade
+yes | sudo apt-get update
+yes | sudo apt-get upgrade
 
 # prepare development environment by installing JAVA-8 Version
 
@@ -86,7 +86,7 @@ export JRE_HOME
 export PATH
 
 echo -e "Set Java version to 8"
-sudo update-alternatives --config java <<< '3'
+sudo update-alternatives --config java <<< '2'
 sudo update-alternatives --config javac <<< '2'
 
 if [ ! -f "$ANDROID_HOME/tools/licenses/android-sdk-license" ]; then
