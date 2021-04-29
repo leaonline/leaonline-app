@@ -7,7 +7,7 @@ npm install
 ```
 
 
-** ** Installation for Android Application ** ** 
+**Installation for Android Application**
 
 First of all you'll need to prepare your development environment to start the java application of leaonline
 For that we prepared a batch script that install all necessary files
@@ -18,4 +18,4 @@ sudo ./install_android_environment.sh
 ```
 
 
-** ** Installation for iOS Application ** ** 
+**Installation for iOS Application** 
