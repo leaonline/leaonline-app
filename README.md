@@ -23,7 +23,8 @@ sudo ./install_android_environment.sh
 To start leaonline on an iOS Emulator you will need an macOS operation system and the latest xcode version.  
 Just run the following:
 
-´´´
+```
 expo start
-´´´
-After expo started just press ** _ i _ ** on your keyboard and expo will run leaonline on your iOS Emulator
+```
+
+After expo started just press **_i_** on your keyboard and expo will run leaonline on your iOS Emulator
