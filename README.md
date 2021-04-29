@@ -7,7 +7,7 @@ npm install
 ```
 
 
-**Installation for _Android_ **
+**Installation for _Android_**
 
 First of all you'll need to prepare your development environment to start the java application of leaonline.  
 For that we prepared a shell script that install all necessary files.  
@@ -30,7 +30,7 @@ expo start
 After expo started just press **_a_** on your keyboard and expo will run leaonline on your previous created Android Emulator
 
 
-**Installation for _iOS_ ** 
+**Installation for _iOS_** 
 
 To start leaonline on an iOS Emulator you will need an macOS operation system and the latest xcode version.  
 Just run the following:
