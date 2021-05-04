@@ -21,5 +21,5 @@ echo "y" |${ANDROID_HOME}/tools/android update sdk --no-ui
 echo -e "Install abi"
 echo "y" | /usr/lib/android-sdk/tools/android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-28,sys-img-x86_64-android-28
 echo -e "Install emulator"
-echo "no" | ${ANDROID_HOME}/tools/android create avd -n "pixel" -t "android-28" --abi "default/x86_64"
+echo "no" | ${ANDROID_HOME}/tools/android create avd -n "pixel" -t "android-28" --abi "default/x86_64" --force
  
