@@ -21,6 +21,12 @@ After installing all necessary android files to run the emulator with leaonline,
 ```
 sudo ./install_emulator.sh
 ```
+
+Before we run our project we need to start out emulator first with:
+```
+/usr/lib/android-sdk/emulator/emulator -avd pixel
+```
+
 Now you can start the leaonline app on an android emulator:
 
 ```
