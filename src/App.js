@@ -11,16 +11,14 @@ export default function App () {
   return (
     <View style={styles.container}>
       <Text testID='textField'>Test Meteor Application
-      
-      <Header
-        leftComponent={{ icon: 'menu', color: '#fff' }}
-        centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-        rightComponent={{ icon: 'home', color: '#fff' }}
-      />
+
+        <Header
+          leftComponent={{ icon: 'menu', color: '#fff' }}
+          centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+          rightComponent={{ icon: 'home', color: '#fff' }}
+        />
       </Text>
       <StatusBar style='auto' />
-
-      
 
       <Button
         testID='Button'
