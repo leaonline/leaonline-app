@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Button, StyleSheet, Text, View, Alert } from 'react-native'
+import { Header } from 'react-native-elements'
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
 // import Meteor from '@meteorrn/core'
 
@@ -9,8 +10,17 @@ import { Button, StyleSheet, Text, View, Alert } from 'react-native'
 export default function App () {
   return (
     <View style={styles.container}>
-      <Text testID='textField'>Test Meteor Application</Text>
+      <Text testID='textField'>Test Meteor Application
+      
+      <Header
+        leftComponent={{ icon: 'menu', color: '#fff' }}
+        centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+        rightComponent={{ icon: 'home', color: '#fff' }}
+      />
+      </Text>
       <StatusBar style='auto' />
+
+      
 
       <Button
         testID='Button'
