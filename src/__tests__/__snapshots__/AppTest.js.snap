@@ -54,7 +54,7 @@ exports[`renders correctly 1`] = `
           ]
         }
       >
-        Press This Button
+        Press This Button, please
       </Text>
     </View>
   </View>
