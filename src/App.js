@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Button, StyleSheet, Text, View, Alert } from 'react-native'
 import { Header } from 'react-native-elements'
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
 // import Meteor from '@meteorrn/core'
 
@@ -10,30 +9,26 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App () {
   return (
-    
-    <View style= {styles.header}>
+
+    <View style={styles.header}>
       <Header
-  leftComponent={{ icon: 'menu', color: '#fff' }}
-  centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
-  rightComponent={{ icon: 'home', color: '#fff' }}
-/>
-    <View style={styles.container}>
-        
-        
-      <Text testID='textField'>Test Meteor Application
-      </Text>
-      <StatusBar style='auto' />
-
-      <Button
-        testID='Button'
-        title='Press This Button, please'
-        onPress={() => Alert.alert('Button is working')}
+        leftComponent={{ icon: 'menu', color: '#fff' }}
+        centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
+        rightComponent={{ icon: 'home', color: '#fff' }}
       />
-    </View>
-    </View>
+      <View style={styles.container}>
 
+        <Text testID='textField'>Test Meteor Application
+        </Text>
+        <StatusBar style='auto' />
 
- 
+        <Button
+          testID='Button'
+          title='Press This Button, please'
+          onPress={() => Alert.alert('Button is working')}
+        />
+      </View>
+    </View>
 
   )
 }
@@ -48,7 +43,7 @@ const styles = StyleSheet.create({
 
   header: {
     width: '100%',
-    height: '100%',
+    height: '100%'
 
   }
 })

@@ -6,7 +6,7 @@ import App from '../App'
 
 const tree = renderer.create(<App />).toJSON()
 
-jest.mock('react-native/Libraries/LogBox/LogBox');
+jest.mock('react-native/Libraries/LogBox/LogBox')
 
 it('renders correctly', () => {
   expect(tree).toMatchSnapshot()
