@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Button, StyleSheet, Text, View, Alert } from 'react-native'
 import { Header } from 'react-native-elements'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
 // import Meteor from '@meteorrn/core'
 
@@ -9,14 +10,17 @@ import { Header } from 'react-native-elements'
 
 export default function App () {
   return (
+    
+    <View style= {styles.header}>
+      <Header
+  leftComponent={{ icon: 'menu', color: '#fff' }}
+  centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
+  rightComponent={{ icon: 'home', color: '#fff' }}
+/>
     <View style={styles.container}>
+        
+        
       <Text testID='textField'>Test Meteor Application
-
-        <Header
-          leftComponent={{ icon: 'menu', color: '#fff' }}
-          centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-          rightComponent={{ icon: 'home', color: '#fff' }}
-        />
       </Text>
       <StatusBar style='auto' />
 
@@ -26,6 +30,10 @@ export default function App () {
         onPress={() => Alert.alert('Button is working')}
       />
     </View>
+    </View>
+
+
+ 
 
   )
 }
@@ -36,5 +44,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+
+  header: {
+    width: '100%',
+    height: '100%',
+
   }
 })
