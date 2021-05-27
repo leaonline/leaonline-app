@@ -10,8 +10,7 @@ import AboutScreen from './AboutScreen';
 
 const Stack = createStackNavigator();
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
-// import Meteor from '@meteorrn/core'
-
+// import Meteor from '@meteorrn/core'git
 // Meteor.connect("ws://127.0.0.1:3000/websocket");
 
 export default function App() {
@@ -38,7 +37,6 @@ export default function App() {
             <Text testID='textField'>Test Meteor Application
             </Text>
             <StatusBar style='auto' />
-
             <Button
               testID='Button'
               title='Press This Button, please'
