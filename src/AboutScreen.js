@@ -1,20 +1,19 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, Button } from 'react-native'
 
 class AboutScreen extends React.Component {
-  render() {
+  render () {
     return (
       <View style={styles.container}>
         <Text>About this application</Text>
 
         <Button
-          title="Back to home"
+          title='Back to home'
           onPress={() =>
-            this.props.navigation.navigate('Home')
-          }
+            this.props.navigation.navigate('Home')}
         />
       </View>
-    );
+    )
   }
 }
 
@@ -23,8 +22,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    justifyContent: 'center'
+  }
+})
 
-export default AboutScreen;
+export default AboutScreen

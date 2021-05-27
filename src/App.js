@@ -1,32 +1,32 @@
-import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar'
+import 'react-native-gesture-handler'
 import React from 'react'
-import { Button, StyleSheet, Text, View, Alert } from 'react-native'
-import { Header } from 'react-native-elements'
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './HomeScreen';
-import AboutScreen from './AboutScreen';
+import { NavigationContainer } from '@react-navigation/native'
+// import { StatusBar } from 'expo-status-bar'
+// import { Button, StyleSheet, Text, View, Alert } from 'react-native'
+// import { Header } from 'react-native-elements'
+import { createStackNavigator } from '@react-navigation/stack'
+import HomeScreen from './HomeScreen'
+import AboutScreen from './AboutScreen'
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
 // import Meteor from '@meteorrn/core'git
 // Meteor.connect("ws://127.0.0.1:3000/websocket");
 
-export default function App() {
+export default function App () {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name='Home'
           component={HomeScreen}
         />
         <Stack.Screen
-          name="About"
+          name='About'
           component={AboutScreen}
         />
-     </Stack.Navigator>
-     {/*  <View style={styles.header}>
+      </Stack.Navigator>
+      {/*  <View style={styles.header}>
           <Header
             leftComponent={{ icon: 'menu', color: '#fff' }}
             centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
@@ -45,21 +45,21 @@ export default function App() {
           </View>
         </View> */}
     </NavigationContainer>
-    
+
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  header: {
-    width: '100%',
-    height: '100%'
-
-  }
-})
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center'
+//   },
+//
+//   header: {
+//     width: '100%',
+//     height: '100%'
+//
+//   }
+// })
