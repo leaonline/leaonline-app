@@ -107,3 +107,9 @@ dist
 .vscode
 .idea
 .expo
+
+# Font datatypes
+.ttf
+.otf
+.woff
+.woff2
