@@ -109,7 +109,7 @@ dist
 .expo
 
 # Font datatypes
-.ttf
-.otf
-.woff
-.woff2
+*.ttf
+*.otf
+*.woff
+*.woff2
