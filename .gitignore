@@ -113,3 +113,6 @@ dist
 *.otf
 *.woff
 *.woff2
+
+# Font directory
+src/assets/fonts/
