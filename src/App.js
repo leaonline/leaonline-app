@@ -1,49 +1,44 @@
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
+import React, {useState} from 'react'
 import { Button, StyleSheet, Text, View, Alert } from 'react-native'
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+
 import { Header } from 'react-native-elements'
 // import Meteor, { Mongo, withTracker } from '@meteorrn/core'
 // import Meteor from '@meteorrn/core'
 
 // Meteor.connect("ws://127.0.0.1:3000/websocket");
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+    'semikolon': require('./assets/fonts/SemikolonPlus-Regular.ttf')
+  });
+};
+
 export default function App () {
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  if (!fontLoaded) {
+    return (<AppLoading startAsync={fetchFonts} onFinish={() => setFontLoaded(true)}
+                        onError={(error) => console.warn(error)}/>);
+  };
+
   return (
-
-    <View style={styles.header}>
-      <Header
-        leftComponent={{ icon: 'menu', color: '#fff' }}
-        centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
-        rightComponent={{ icon: 'home', color: '#fff' }}
-      />
-      <View style={styles.container}>
-
-        <Text testID='textField'>Test Meteor Application
-        </Text>
-        <StatusBar style='auto' />
-
-        <Button
-          testID='Button'
-          title='Press This Button, please'
-          onPress={() => Alert.alert('Button is working')}
-        />
-      </View>
+    <View style={styles.text}>
+      <Text style={{fontFamily: 'semikolon'}}>
+        Willkommen
+      </Text>
     </View>
-
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    textAlign: 'center'
   },
-
-  header: {
-    width: '100%',
-    height: '100%'
-
+  text: {
+    fontFamily: 'semikolon'
   }
 })
