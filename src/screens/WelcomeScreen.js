@@ -4,12 +4,13 @@ import {Image, StyleSheet, View} from "react-native";
 import TitleText from "../components/TitleText";
 import {Icon} from "react-native-elements";
 import * as Speech from 'expo-speech';
+import Colors from "../constants/Colors";
 
 const WelcomeScreen = props => {
     const[welcomeText, setWelcomeText] = useState('Welcome to lea-online App my name is Arthur and I am the best')
     const speak = () => {
         Speech.speak(welcomeText, {
-            language: 'en',
+            language: 'ger',
             pitch: 1,
             rate: 1
         });
@@ -23,8 +24,9 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                <TitleText text={welcomeText}></TitleText>
-                <Icon onPress={speak} name={"volume-2"} type={"feather"}></Icon>
+                <Icon style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"}></Icon>
+                <TitleText style={styles.text} text={welcomeText}></TitleText>
+
 
             </View>
         </View>
@@ -35,12 +37,13 @@ const WelcomeScreen = props => {
 const styles = StyleSheet.create({
         container: {
             flex:1,
-            padding: 50
+            margin: 20
         },
 
         header: {
             flex: 1,
             alignItems: 'center',
+            margin: 20
         },
         logo: {
             width: 300,
@@ -50,6 +53,15 @@ const styles = StyleSheet.create({
 
         body: {
             flex:2,
+            flexDirection: 'row'
+        },
+
+        text: {
+            color: Colors.primary
+        },
+
+        icon: {
+            marginHorizontal: 5
         }
     }
 );
