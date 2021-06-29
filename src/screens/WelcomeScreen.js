@@ -24,7 +24,8 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                <Icon onPress={speak} style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"}></Icon>
+                
+                <Icon style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"} onPress={speak}></Icon>
                 <TitleText style={styles.text} text={welcomeText}></TitleText>
 
 
