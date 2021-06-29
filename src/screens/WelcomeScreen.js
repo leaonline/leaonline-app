@@ -24,7 +24,7 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                <Icon style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"}></Icon>
+                <Icon onPress={speak} style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"}></Icon>
                 <TitleText style={styles.text} text={welcomeText}></TitleText>
 
 
@@ -37,13 +37,12 @@ const WelcomeScreen = props => {
 const styles = StyleSheet.create({
         container: {
             flex:1,
-            margin: 20
         },
 
         header: {
             flex: 1,
             alignItems: 'center',
-            margin: 20
+            margin: 60
         },
         logo: {
             width: 300,
@@ -53,7 +52,8 @@ const styles = StyleSheet.create({
 
         body: {
             flex:2,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            marginHorizontal: 32
         },
 
         text: {
