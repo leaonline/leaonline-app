@@ -3,7 +3,12 @@ import React, {useEffect, useState} from 'react'
 import { Button, StyleSheet, Text, View, Alert } from 'react-native'
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import {enableScreens} from 'react-native-screens';
+
+import Navigator from "./navigation/navigator"
 import WelcomeScreen from "./screens/WelcomeScreen";
+
+enableScreens();
 
 const fetchFonts = () => {
 
@@ -38,7 +43,7 @@ export default function App () {
 
   return (
       <View style={styles.screen}>
-        <WelcomeScreen />
+        <Navigator />
       </View>
 
   )

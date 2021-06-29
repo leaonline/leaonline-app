@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
 
-import {Image, StyleSheet, View} from "react-native";
+import {Button, Image, StyleSheet, View} from "react-native";
 import TitleText from "../components/TitleText";
 import {Icon} from "react-native-elements";
 import * as Speech from 'expo-speech';
 import Colors from "../constants/Colors";
 
 const WelcomeScreen = props => {
-    const[welcomeText, setWelcomeText] = useState('Welcome to lea-online App my name is Arthur and I am the best')
+    const[welcomeText, setWelcomeText] = useState('Herzlich Willkommen zu lea online')
     const speak = () => {
         Speech.speak(welcomeText, {
             language: 'ger',
@@ -24,15 +24,20 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                
-                <Icon style={styles.icon} marginonPress={speak} name={"volume-2"} type={"feather"} onPress={speak}></Icon>
+                <Icon style={styles.icon} color={Colors.primary} marginonPress={speak} name={"volume-2"} type={"feather"} onPress={speak}></Icon>
                 <TitleText style={styles.text} text={welcomeText}></TitleText>
 
-
             </View>
+            <Icon style={styles.icon} name={"arrow-right-circle"} type={"feather"} size={35} onPress={() => {props.navigation.navigate({routeName: 'TandC'}) }} ></Icon>
         </View>
     )
 }
+
+WelcomeScreen.navigationOptions = (navData) => {
+    return {
+        headerShown: false,
+    };
+};
 
 
 const styles = StyleSheet.create({
@@ -52,17 +57,18 @@ const styles = StyleSheet.create({
         },
 
         body: {
-            flex:2,
+            flex: 2,
             flexDirection: 'row',
             marginHorizontal: 32
         },
 
         text: {
-            color: Colors.primary
+            color: Colors.primary,
+            paddingLeft: 5
         },
 
         icon: {
-            marginHorizontal: 5
+            paddingBottom: 5
         }
     }
 );
