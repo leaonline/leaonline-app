@@ -7,7 +7,7 @@ import * as Speech from 'expo-speech';
 import Colors from "../constants/Colors";
 
 const WelcomeScreen = props => {
-    const[welcomeText, setWelcomeText] = useState('Herzlich Willkommen zu lea online')
+    const [welcomeText, setWelcomeText] = useState('Herzlich Willkommen zu lea online')
     const speak = () => {
         Speech.speak(welcomeText, {
             language: 'ger',
@@ -17,18 +17,25 @@ const WelcomeScreen = props => {
 
     };
     return (
+
         <View style={styles.container}>
+
             <View style={styles.header}>
                 <Image style={styles.logo} source={require('../assets/logo-footer.png')}/>
             </View>
 
             <View style={styles.body}>
 
-                <Icon style={styles.icon} color={Colors.primary} marginonPress={speak} name={"volume-2"} type={"feather"} onPress={speak}></Icon>
+                <Icon style={styles.icon} color={Colors.primary} marginonPress={speak} name={"volume-2"}
+                      type={"feather"} onPress={speak}></Icon>
                 <TitleText style={styles.text} text={welcomeText}></TitleText>
 
             </View>
-            <Icon style={styles.icon} name={"arrow-right-circle"} type={"feather"} size={35} onPress={() => {props.navigation.navigate({routeName: 'TandC'}) }} ></Icon>
+            <View style={styles.navigationButton}>
+                <Icon style={styles.icon} name={"arrow-right-circle"} type={"feather"} size={35} onPress={() => {
+                    props.navigation.navigate({routeName: 'TandC'})
+                }}></Icon>
+            </View>
         </View>
     )
 }
@@ -42,13 +49,15 @@ WelcomeScreen.navigationOptions = (navData) => {
 
 const styles = StyleSheet.create({
         container: {
-            flex:1,
+            flex: 1,
+            alignItems: 'center',
+            margin: 30
         },
 
         header: {
             flex: 1,
             alignItems: 'center',
-            margin: 60
+            margin: 30
         },
         logo: {
             width: 300,
@@ -68,7 +77,11 @@ const styles = StyleSheet.create({
         },
 
         icon: {
-            paddingBottom: 5
+            paddingBottom: 5,
+
+        },
+        navigationButton: {
+            flexDirection: 'row',
         }
     }
 );

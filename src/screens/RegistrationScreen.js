@@ -36,12 +36,11 @@ const styles = StyleSheet.create({
         container: {
             flex: 1,
             alignItems: 'center',
-            margin: 60
+            margin: 30
         },
 
         header: {
             flex: 1,
-            margin: 60
         },
         body: {
             flex: 2,

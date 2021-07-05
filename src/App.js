@@ -6,7 +6,7 @@ import AppLoading from 'expo-app-loading';
 import {enableScreens} from 'react-native-screens';
 
 import Navigator from "./navigation/navigator"
-import WelcomeScreen from "./screens/WelcomeScreen";
+
 
 enableScreens();
 
@@ -14,6 +14,7 @@ const fetchFonts = () => {
 
   return Font.loadAsync({
     'semicolon': require('./assets/fonts/SemikolonPlus-Regular.ttf')
+
   });
 };
 
