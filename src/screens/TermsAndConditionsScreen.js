@@ -6,18 +6,12 @@ import {CheckBox, Icon} from "react-native-elements";
 import * as Speech from 'expo-speech';
 import Colors from "../constants/Colors";
 import WelcomeScreen from "./WelcomeScreen";
+import Tts from "../components/Tts"
 
 const TermsAndConditionsScreen = props => {
     const TandCText = "Hiermit stimme ich folgenden Bedingungen zu ...";
+    const checkBoxText = "Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu";
     const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false);
-    const speak = () => {
-        Speech.speak(TandCText, {
-            language: 'ger',
-            pitch: 1,
-            rate: 1
-        });
-
-    };
 
     const checkboxHandler = () => {
         setTermsAndConditionsCheck(!termsAndConditionsIsChecked);
@@ -26,24 +20,20 @@ const TermsAndConditionsScreen = props => {
         <View style={styles.container}>
             <View style={styles.body}>
 
-                <Icon style={styles.iconTextToSpeech} color={Colors.primary} marginonPress={speak} name={"volume-2"}
-                      type={"feather"} onPress={speak}></Icon>
-                <TitleText style={styles.text} text={TandCText}></TitleText>
+                <Tts color={Colors.primary} text={TandCText}></Tts>
+
 
             </View>
 
             <View style={styles.checkBox}>
-                <Icon style={styles.iconTextToSpeech} color={Colors.primary} marginonPress={speak} name={"volume-2"}
-                      type={"feather"} onPress={speak}></Icon>
-                <CheckBox title="Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu"
-                          iconRight={true} checked={termsAndConditionsIsChecked} onPress={checkboxHandler}/>
+                <Tts color={Colors.gray} text={checkBoxText}></Tts>
+                <CheckBox iconRight={true} checked={termsAndConditionsIsChecked} onPress={checkboxHandler}/>
             </View>
 
             <View style={styles.navigationButtons}>
-                <TouchableOpacity>
-                    <Icon style={styles.iconNavigation} name={"arrow-left-circle"} type={"feather"} size={35} onPress={() => {
-                        props.navigation.navigate({routeName: 'WelcomeScreen'})
-                    }}></Icon>
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate({routeName: 'WelcomeScreen'})}}>
+                    <Icon  style={styles.iconNavigation} name={"arrow-left-circle"} type={"feather"} size={35}></Icon>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     props.navigation.navigate({routeName: 'Registration'})}} disabled={!termsAndConditionsIsChecked}>
@@ -58,7 +48,7 @@ const TermsAndConditionsScreen = props => {
 
 TermsAndConditionsScreen.navigationOptions = (navData) => {
     return {
-        headerTitle: 'Allgemeinen Geschäftsbedingungen',
+        headerTitle: 'Allgemeine Geschäftsbedingungen',
         headerLeft: () => null,
     };
 };
@@ -90,10 +80,11 @@ const styles = StyleSheet.create({
 
         iconNavigation: {
             paddingBottom: 5,
-            padding: 125,
+            padding: 100,
         },
         checkBox: {
             flexDirection: 'row',
+            alignItems: 'center',
         },
         navigationButtons: {
             flexDirection: 'row',

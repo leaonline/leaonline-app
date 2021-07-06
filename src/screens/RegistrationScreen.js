@@ -1,11 +1,8 @@
 import React, {useState} from 'react'
 
 import {Button, Image, StyleSheet, Text, View} from "react-native";
-import TitleText from "../components/TitleText";
 import {CheckBox, Icon} from "react-native-elements";
-import * as Speech from 'expo-speech';
 import Colors from "../constants/Colors";
-import WelcomeScreen from "./WelcomeScreen";
 
 const RegistrationScreen = props => {
     return (

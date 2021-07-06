@@ -5,17 +5,10 @@ import TitleText from "../components/TitleText";
 import {Icon} from "react-native-elements";
 import * as Speech from 'expo-speech';
 import Colors from "../constants/Colors";
+import Tts from "../components/Tts"
 
 const WelcomeScreen = props => {
-    const [welcomeText, setWelcomeText] = useState('Herzlich Willkommen zu lea online')
-    const speak = () => {
-        Speech.speak(welcomeText, {
-            language: 'ger',
-            pitch: 1,
-            rate: 1
-        });
-
-    };
+    const welcomeText = "Herzlich Willkommen zu lea online"
     return (
 
         <View style={styles.container}>
@@ -26,9 +19,7 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                <Icon style={styles.icon} color={Colors.primary} marginonPress={speak} name={"volume-2"}
-                      type={"feather"} onPress={speak}></Icon>
-                <TitleText style={styles.text} text={welcomeText}></TitleText>
+                <Tts text={welcomeText} color={Colors.primary}></Tts>
 
             </View>
             <View style={styles.navigationButton}>
@@ -69,11 +60,6 @@ const styles = StyleSheet.create({
             flex: 2,
             flexDirection: 'row',
             marginHorizontal: 32
-        },
-
-        text: {
-            color: Colors.primary,
-            paddingLeft: 5
         },
 
         icon: {
