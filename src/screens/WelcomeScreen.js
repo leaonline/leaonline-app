@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         body: {
             flex: 2,
             flexDirection: 'row',
-            marginHorizontal: 32
         },
 
         icon: {

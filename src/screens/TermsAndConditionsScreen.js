@@ -10,7 +10,7 @@ import Tts from "../components/Tts"
 
 const TermsAndConditionsScreen = props => {
     const TandCText = "Hiermit stimme ich folgenden Bedingungen zu ...";
-    const checkBoxText = "Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu";
+    const checkBoxText = "Ich habe die allgemeine Geschäftsbedingungen gelesen und stimme ihnen zu";
     const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false);
 
     const checkboxHandler = () => {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         body: {
             flex: 2,
             flexDirection: 'row',
-            marginHorizontal: 32
+
         },
         text: {
             color: Colors.primary,
