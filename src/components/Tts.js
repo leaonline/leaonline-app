@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Button, Image, StyleSheet, View} from "react-native";
+import {Alert, Button, Image, StyleSheet, View} from "react-native";
 import * as Speech from 'expo-speech';
 
 import {Icon} from "react-native-elements";
@@ -24,39 +24,52 @@ const Tts = props => {
     /**
      * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
      */
-    const speak = () => {
-        Speech.speak(props.text, {
-            language: 'ger',
-            pitch: 1,
-            rate: 1,
-            onStart: () => startSpeak(),
-            onDone: () => stopSpeak()
-        });
+    const speak = async () => {
+        let isSpeaking = await Speech.isSpeakingAsync();
+        if(!isSpeaking) {
+            Speech.speak(props.text, {
+                language: 'ger',
+                pitch: 1,
+                rate: 1,
+                onStart: () => startSpeak(),
+                onDone: () => stopSpeak()
+            });
+        }
+        else
+        {
+           Alert.alert("Stop", "Es wird noch geredet ! \n Bitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig")
+        }
 
     }
     /**
      * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
      */
-    const stopSpeak = () => {
+    const stopSpeak =  () => {
+
         setTtsColorIcon(props.color)
+        setCurrentlyPlaying(false);
         Speech.stop();
-        setCurrentlyPlaying(false)
+
     }
     /**
      * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
      */
-    const startSpeak = () => {
-        setTtsColorIcon(Colors.success)
-        setCurrentlyPlaying(true)
-
+    const startSpeak =  () => {
+        {
+            setTtsColorIcon(Colors.success)
+            setCurrentlyPlaying(true)
+        }
     }
+
 
 
     return (
         <View style={styles.body}>
-            <Icon reverse={true} style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak} name={"volume-2"}
+            <Icon reverse={true} style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
+                  name={"volume-2"}
                   type={"feather"} onPress={() => isCurrentlyPlaying ? stopSpeak() : speak()}></Icon>
-            <TitleText style={{color: props.color, paddingLeft: 5, textAlign: props.align }} text={props.text}></TitleText>
+            <TitleText style={{color: props.color, paddingLeft: 5, textAlign: props.align}}
+                       text={props.text}></TitleText>
         </View>
 
     )
