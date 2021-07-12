@@ -19,14 +19,11 @@ const TermsAndConditionsScreen = props => {
     return (
         <View style={styles.container}>
             <View style={styles.body}>
-
                 <Tts color={Colors.primary} text={TandCText}></Tts>
-
-
             </View>
 
             <View style={styles.checkBox}>
-                <Tts color={Colors.gray} text={checkBoxText}></Tts>
+                <Tts color={Colors.gray} text={checkBoxText} align={'left'}></Tts>
                 <CheckBox iconRight={true} checked={termsAndConditionsIsChecked} onPress={checkboxHandler}/>
             </View>
 
@@ -74,17 +71,12 @@ const styles = StyleSheet.create({
             paddingLeft: 5
         },
 
-        iconTextToSpeech: {
-            paddingBottom: 5,
-        },
-
         iconNavigation: {
             paddingBottom: 5,
             padding: 100,
         },
         checkBox: {
             flexDirection: 'row',
-            alignItems: 'center',
         },
         navigationButtons: {
             flexDirection: 'row',

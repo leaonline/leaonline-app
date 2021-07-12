@@ -19,7 +19,7 @@ const WelcomeScreen = props => {
 
             <View style={styles.body}>
 
-                <Tts text={welcomeText} color={Colors.primary}></Tts>
+                <Tts text={welcomeText} color={Colors.primary} align={'center'}></Tts>
 
             </View>
             <View style={styles.navigationButton}>
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
             height: 50,
 
         },
-
         body: {
             flex: 2,
             flexDirection: 'row',

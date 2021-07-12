@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     body: {
         fontFamily: 'semicolon',
         fontSize:18,
-        textAlign: 'center',
 
     }
 });
