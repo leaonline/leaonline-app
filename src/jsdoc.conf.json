@@ -4,7 +4,14 @@
     "dictionaries": ["jsdoc", "closure"]
   },
   "source": {
-    "include": ["src"],
+    "include": ["."],
+    "exclude": [
+      ".expo",
+      ".expo-shared",
+      "__mocks__",
+      "__tests__",
+      "node_modules"
+    ],
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
@@ -15,8 +22,8 @@
     }
   },
   "opts": {
-    "destination": "docs",
+    "destination": "../docs",
     "recurse": true,
-    "readme": "README.md"
+    "readme": "../README.md"
   }
 }
