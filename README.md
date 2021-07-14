@@ -46,3 +46,17 @@ expo start
 ```
 
 After expo started just press **_i_** on your keyboard and expo will run leaonline on your iOS Emulator
+
+
+## Building
+
+### Documentation
+
+We use jsDoc with markdown and [better-docs plugins](https://www.npmjs.com/package/better-docs#component-plugin-beta)
+to document React components. To build the docs run:
+
+```bash
+$ npm run docs
+```
+
+The docs are generated in the output folder `docs`.
