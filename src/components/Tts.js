@@ -34,7 +34,7 @@ const Tts = props => {
 
     if (isSpeaking) {
       //asyncTimeout(5) // wait 5 ms if not already stopped
-      Alert.alert('Stop', 'Es wird noch geredet ! \n Bitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+      Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
     } else {
       Speech.speak(props.text, {
         language: 'ger',

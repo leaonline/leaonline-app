@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import Tts from '../components/Tts'
-import {Speech} from "expo/build/removed.web";
+import * as Speech from 'expo-speech'
 
 const TermsAndConditionsScreen = props => {
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
@@ -28,16 +28,14 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'WelcomeScreen' });
-
+          Speech.isSpeakingAsync() ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'WelcomeScreen' });
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate({ routeName: 'Registration' })
-          }} disabled={!termsAndConditionsIsChecked}
+        <TouchableOpacity onPress={() => {
+          Speech.isSpeakingAsync() ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'Registration' });
+        }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
         </TouchableOpacity>
