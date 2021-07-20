@@ -6,6 +6,11 @@ import Colors from '../constants/Colors'
 import Tts from '../components/Tts'
 import * as Speech from 'expo-speech'
 
+/**
+ * WelcomeScreen displays the welcome text.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const WelcomeScreen = props => {
   const welcomeText = 'Herzlich Willkommen zu lea online'
   return (

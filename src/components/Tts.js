@@ -14,12 +14,9 @@ import Colors from '../constants/Colors'
 
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
- * @param props:
- *          props.text: The displayed and spoken text
- *          props.color: The color of the icon and the text
- *          - contants/Colors.js
- *          props.align: The parameter to change the text alignment
- *          - ['left', 'right', 'center', 'justify']
+ * @param {string} props.text: The displayed and spoken text
+ * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
+ * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @returns {JSX.Element}
  * @constructor
  */
