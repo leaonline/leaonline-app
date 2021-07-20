@@ -33,17 +33,20 @@ const Tts = props => {
     const isSpeaking = await Speech.isSpeakingAsync()
 
     if (isSpeaking) {
-      await Speech.stop()
-      // asyncTimeout(5) // wait 5 ms if not already stopped
+      //asyncTimeout(5) // wait 5 ms if not already stopped
+      Alert.alert('Stop', 'Es wird noch geredet ! \n Bitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+    } else {
+      Speech.speak(props.text, {
+        language: 'ger',
+        pitch: 1,
+        rate: 1,
+        onStart: () => startSpeak(),
+        onStopped: () => stopSpeak(),
+        onDone: () => stopSpeak()
+      })
     }
 
-    Speech.speak(props.text, {
-      language: 'ger',
-      pitch: 1,
-      rate: 1,
-      onStart: () => startSpeak(),
-      onDone: () => stopSpeak()
-    })
+
   }
   /**
      * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false

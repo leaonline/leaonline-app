@@ -4,11 +4,13 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import Tts from '../components/Tts'
+import {Speech} from "expo/build/removed.web";
 
 const TermsAndConditionsScreen = props => {
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
   const checkBoxText = 'Ich habe die allgemeine Geschäftsbedingungen gelesen und stimme ihnen zu'
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
+
 
   const checkboxHandler = () => {
     setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
@@ -26,7 +28,8 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'WelcomeScreen' })
+          props.navigation.navigate({ routeName: 'WelcomeScreen' });
+
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
