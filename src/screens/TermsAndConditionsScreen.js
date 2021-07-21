@@ -39,7 +39,11 @@ const TermsAndConditionsScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'Registration' });
+          ttsIsCurrentlyPlaying ?
+              Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') :
+              termsAndConditionsIsChecked ?
+                  props.navigation.navigate({ routeName: 'Registration' }):
+                  Alert.alert("You need to accept the terms and conditions to continue");
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
