@@ -23,14 +23,19 @@ import Colors from '../constants/Colors'
  * @returns {JSX.Element}
  * @constructor
  */
+
 const Tts = props => {
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
+
+  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying;
+
   /**
      * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
      */
   const speak = async () => {
-    const isSpeaking = await Speech.isSpeakingAsync()
+    const isSpeaking = await Speech.isSpeakingAsync();
+
 
     if (isSpeaking) {
       //asyncTimeout(5) // wait 5 ms if not already stopped

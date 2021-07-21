@@ -29,7 +29,8 @@
     "react-native-screens": "^3.4.0",
     "react-native-tts": "^4.1.0",
     "react-native-vector-icons": "^8.1.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "redux": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

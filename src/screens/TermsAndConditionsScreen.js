@@ -28,13 +28,13 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          Speech.isSpeakingAsync() ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'WelcomeScreen' });
+          ttsIsCurrentlyPlaying ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'WelcomeScreen' });
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          Speech.isSpeakingAsync() ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'Registration' });
+          ttsIsCurrentlyPlaying ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'Registration' });
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
