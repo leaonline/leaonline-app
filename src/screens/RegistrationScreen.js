@@ -4,6 +4,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 
+/**
+ * RegistrationScreen displays the formular for the user registration.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const RegistrationScreen = props => {
   return (
     <View style={styles.container}>

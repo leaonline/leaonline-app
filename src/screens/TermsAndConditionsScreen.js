@@ -6,6 +6,11 @@ import Colors from '../constants/Colors'
 import Tts from '../components/Tts'
 import * as Speech from 'expo-speech'
 
+/**
+ * TermsAndConditionsScreen displays the terms and conditions the user must agree to.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const TermsAndConditionsScreen = props => {
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
   const checkBoxText = 'Ich habe die allgemeine Geschäftsbedingungen gelesen und stimme ihnen zu'
