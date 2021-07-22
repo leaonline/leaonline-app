@@ -1,10 +1,9 @@
-import React, {useState} from 'react'
+import React from 'react'
 
-import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import Tts from '../components/Tts'
-
 
 /**
  * WelcomeScreen displays the welcome text.
@@ -12,7 +11,7 @@ import Tts from '../components/Tts'
  * @constructor
  */
 const WelcomeScreen = props => {
-  const welcomeText = 'Herzlich Willkommen zu lea online';
+  const welcomeText = 'Herzlich Willkommen zu lea online'
 
   return (
 
@@ -29,9 +28,9 @@ const WelcomeScreen = props => {
       </View>
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ?
-              Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') :
-              props.navigation.navigate({ routeName: 'TandC' });
+          ttsIsCurrentlyPlaying
+            ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+            : props.navigation.navigate({ routeName: 'TandC' })
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />

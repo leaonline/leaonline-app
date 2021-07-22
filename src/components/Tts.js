@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import * as Speech from 'expo-speech'
 
 import { Icon } from 'react-native-elements'
@@ -7,9 +7,9 @@ import TitleText from './TitleText'
 import Colors from '../constants/Colors'
 
 // const asyncTimeout = ms => new Promise(resolve => {
-//   setTimeout(() => {
-//     resolve()
-//   }, ms)
+//    setTimeout(() => {
+//        resolve()
+//    }, ms)
 // })
 
 /**
@@ -23,32 +23,32 @@ import Colors from '../constants/Colors'
 
 const Tts = props => {
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
+  const isCurrentlyPlayingText = useState(props.text)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
-  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying;
+  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
 
   /**
      * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
      */
   const speak = async () => {
-    const isSpeaking = await Speech.isSpeakingAsync();
-
+    const isSpeaking = await Speech.isSpeakingAsync()
 
     if (isSpeaking) {
-      //asyncTimeout(5) // wait 5 ms if not already stopped
-      Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
-    } else {
-      Speech.speak(props.text, {
-        language: 'ger',
-        pitch: 1,
-        rate: 1,
-        onStart: () => startSpeak(),
-        onStopped: () => stopSpeak(),
-        onDone: () => stopSpeak()
-      })
+      stopSpeak()
+      await speak()
+      // asyncTimeout(100) // wait 5 ms if not already stopped
+      // Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
     }
 
-
+    Speech.speak(props.text, {
+      language: 'ger',
+      pitch: 1,
+      rate: 1,
+      onStart: () => startSpeak(),
+      onStopped: () => stopSpeak(),
+      onDone: () => stopSpeak()
+    })
   }
   /**
      * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
@@ -71,7 +71,8 @@ const Tts = props => {
       <Icon
         reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
         name='volume-2'
-        type='feather' onPress={() => isCurrentlyPlaying ? stopSpeak() : speak()}
+        type='feather'
+        onPress={() => ((isCurrentlyPlayingText === props.text) && isCurrentlyPlaying) ? stopSpeak() : speak()}
       />
       <TitleText
         style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}

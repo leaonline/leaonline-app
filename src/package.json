@@ -30,7 +30,8 @@
     "react-native-tts": "^4.1.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
-    "redux": "^4.1.0"
+    "redux": "^4.1.0",
+    "standard": "^16.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
