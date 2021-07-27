@@ -21,11 +21,11 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={TandCText} />
+        <Tts color={Colors.primary} text={TandCText} id={2} />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={Colors.gray} text={checkBoxText} align='left' />
+        <Tts color={Colors.gray} text={checkBoxText} align='left' id={3} />
         <CheckBox iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler} />
       </View>
 

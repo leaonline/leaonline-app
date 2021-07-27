@@ -6,11 +6,11 @@ import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
 import Colors from '../constants/Colors'
 
-// const asyncTimeout = ms => new Promise(resolve => {
-//    setTimeout(() => {
-//        resolve()
-//    }, ms)
-// })
+ const asyncTimeout = ms => new Promise(resolve => {
+    setTimeout(() => {
+        resolve()
+    }, ms)
+ })
 
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
@@ -23,7 +23,7 @@ import Colors from '../constants/Colors'
 
 const Tts = props => {
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
-  const isCurrentlyPlayingText = useState(props.text)
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
@@ -36,9 +36,8 @@ const Tts = props => {
 
     if (isSpeaking) {
       stopSpeak()
+      await asyncTimeout(5)
       await speak()
-      // asyncTimeout(100) // wait 5 ms if not already stopped
-      // Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
     }
 
     Speech.speak(props.text, {
@@ -56,6 +55,7 @@ const Tts = props => {
   const stopSpeak = () => {
     setTtsColorIcon(props.color)
     setCurrentlyPlaying(false)
+    setCurrentlyPlayingId(0)
     Speech.stop()
   }
   /**
@@ -64,6 +64,7 @@ const Tts = props => {
   const startSpeak = () => {
     setTtsColorIcon(Colors.success)
     setCurrentlyPlaying(true)
+    setCurrentlyPlayingId(props.id)
   }
 
   return (
@@ -72,7 +73,7 @@ const Tts = props => {
         reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
         name='volume-2'
         type='feather'
-        onPress={() => ((isCurrentlyPlayingText === props.text) && isCurrentlyPlaying) ? stopSpeak() : speak()}
+        onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
       />
       <TitleText
         style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
