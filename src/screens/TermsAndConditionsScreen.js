@@ -15,11 +15,20 @@ const TermsAndConditionsScreen = props => {
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
   const checkBoxText = 'Ich habe die allgemeine Geschäftsbedingungen gelesen und stimme ihnen zu'
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
+  const [termsAndconditionsColor, setTermsAndConditionsColor] = useState(Colors.gray);
 
 
   const checkboxHandler = () => {
     setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
+    setTermsAndConditionsColor(Colors.gray)
   }
+
+  const checkBoxIsNotChecked = () => {
+    Alert.alert("Alert", "You need to accept the terms and conditions to continue");
+    setTermsAndConditionsColor(Colors.danger);
+
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -27,8 +36,8 @@ const TermsAndConditionsScreen = props => {
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={Colors.gray} text={checkBoxText} align='left' />
-        <CheckBox iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler} />
+        <Tts color={termsAndconditionsColor} text={checkBoxText} align='left' />
+        <CheckBox iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler} uncheckedColor={termsAndconditionsColor} />
       </View>
 
       <View style={styles.navigationButtons}>
@@ -42,8 +51,7 @@ const TermsAndConditionsScreen = props => {
           ttsIsCurrentlyPlaying ?
               Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') :
               termsAndConditionsIsChecked ?
-                  props.navigation.navigate({ routeName: 'Registration' }):
-                  Alert.alert("You need to accept the terms and conditions to continue");
+                  props.navigation.navigate({ routeName: 'Registration' }): checkBoxIsNotChecked();
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
