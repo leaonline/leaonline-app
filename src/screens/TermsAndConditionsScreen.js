@@ -11,6 +11,8 @@ import Tts from '../components/Tts'
  * @constructor
  */
 const TermsAndConditionsScreen = props => {
+
+  // TODO move all language specific text sections to i18n file
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
   const checkBoxText = 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
@@ -22,11 +24,13 @@ const TermsAndConditionsScreen = props => {
   }
 
   const checkBoxIsNotChecked = () => {
+    // TODO also move all alert messages to i18n file
     Alert.alert("Alert", "You need to accept the terms and conditions to continue");
     setTermsAndConditionsColor(Colors.danger);
 
   }
 
+  // TODO TandCText needs to be replaced with global variable from i18n file
   return (
     <View style={styles.container}>
       <View style={styles.body}>

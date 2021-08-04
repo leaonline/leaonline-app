@@ -11,6 +11,7 @@ import Tts from '../components/Tts'
  * @constructor
  */
 const WelcomeScreen = props => {
+  // TODO also here i18n file
   const welcomeText = 'Herzlich Willkommen zu lea online'
 
   return (
@@ -28,6 +29,7 @@ const WelcomeScreen = props => {
       </View>
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
+          // TODO get alert message from i18n file
           ttsIsCurrentlyPlaying
             ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
             : props.navigation.navigate({ routeName: 'TandC' })
