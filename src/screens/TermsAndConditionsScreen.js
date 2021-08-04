@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+/* global ttsIsCurrentlyPlaying */
 
+import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
@@ -11,12 +12,11 @@ import Tts from '../components/Tts'
  * @constructor
  */
 const TermsAndConditionsScreen = props => {
-
   // TODO move all language specific text sections to i18n file
   const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
   const checkBoxText = 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
-  const [termsAndconditionsColor, setTermsAndConditionsColor] = useState(Colors.gray);
+  const [termsAndconditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
 
   const checkboxHandler = () => {
     setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
@@ -25,9 +25,8 @@ const TermsAndConditionsScreen = props => {
 
   const checkBoxIsNotChecked = () => {
     // TODO also move all alert messages to i18n file
-    Alert.alert("Alert", "You need to accept the terms and conditions to continue");
-    setTermsAndConditionsColor(Colors.danger);
-
+    Alert.alert('Alert', 'You need to accept the terms and conditions to continue')
+    setTermsAndConditionsColor(Colors.danger)
   }
 
   // TODO TandCText needs to be replaced with global variable from i18n file
@@ -39,7 +38,10 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.checkBox}>
         <Tts color={termsAndconditionsColor} text={checkBoxText} align='left' id={3} />
-        <CheckBox iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler} uncheckedColor={termsAndconditionsColor} />
+        <CheckBox
+          iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
+          uncheckedColor={termsAndconditionsColor}
+        />
       </View>
 
       <View style={styles.navigationButtons}>
@@ -50,11 +52,11 @@ const TermsAndConditionsScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-
-          ttsIsCurrentlyPlaying ?
-              Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') :
-              termsAndConditionsIsChecked ?
-                  props.navigation.navigate({ routeName: 'Registration' }): checkBoxIsNotChecked();
+          ttsIsCurrentlyPlaying
+            ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+            : termsAndConditionsIsChecked
+              ? props.navigation.navigate({ routeName: 'Registration' })
+              : checkBoxIsNotChecked()
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />

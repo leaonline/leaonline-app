@@ -1,15 +1,15 @@
-import React, {useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 import * as Speech from 'expo-speech'
 
-import {Icon} from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
 import Colors from '../constants/Colors'
 
 const asyncTimeout = ms => new Promise(resolve => {
-    setTimeout(() => {
-        resolve()
-    }, ms)
+  setTimeout(() => {
+    resolve()
+  }, ms)
 })
 
 /**
@@ -22,77 +22,77 @@ const asyncTimeout = ms => new Promise(resolve => {
  */
 
 const Tts = props => {
-    const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
-    const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
-    const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
+  const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
+  const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
-    global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
 
-    /**
+  /**
      * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
      */
-    const speak = async () => {
-        const isSpeaking = await Speech.isSpeakingAsync()
+  const speak = async () => {
+    const isSpeaking = await Speech.isSpeakingAsync()
 
-        if (isSpeaking) {
-            stopSpeak()
-            await asyncTimeout(5)
-            await speak()
-        }
-
-        Speech.speak(props.text, {
-            language: 'ger',
-            pitch: 1,
-            rate: 1,
-            onStart: () => startSpeak(),
-            onStopped: () => stopSpeak(),
-            onDone: () => stopSpeak()
-        })
+    if (isSpeaking) {
+      stopSpeak()
+      await asyncTimeout(5)
+      await speak()
     }
-    /**
+
+    Speech.speak(props.text, {
+      language: 'ger',
+      pitch: 1,
+      rate: 1,
+      onStart: () => startSpeak(),
+      onStopped: () => stopSpeak(),
+      onDone: () => stopSpeak()
+    })
+  }
+  /**
      * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
      */
-    const stopSpeak = () => {
-        setTtsColorIcon(props.color)
-        setCurrentlyPlaying(false)
-        setCurrentlyPlayingId(0)
-        Speech.stop()
-    }
-    /**
+  const stopSpeak = () => {
+    setTtsColorIcon(props.color)
+    setCurrentlyPlaying(false)
+    setCurrentlyPlayingId(0)
+    Speech.stop()
+  }
+  /**
      * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
      */
-    const startSpeak = () => {
-        setTtsColorIcon(Colors.success)
-        setCurrentlyPlaying(true)
-        setCurrentlyPlayingId(props.id)
-    }
+  const startSpeak = () => {
+    setTtsColorIcon(Colors.success)
+    setCurrentlyPlaying(true)
+    setCurrentlyPlayingId(props.id)
+  }
 
-    return (
-        <View style={styles.body}>
-            <Icon
-                reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
-                name='volume-2'
-                type='feather'
-                onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
-            />
-            <TitleText
-                style={{color: props.color, paddingLeft: 5, textAlign: props.align}}
-                text={props.text}
-            />
-        </View>
+  return (
+    <View style={styles.body}>
+      <Icon
+        reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
+        name='volume-2'
+        type='feather'
+        onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
+      />
+      <TitleText
+        style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
+        text={props.text}
+      />
+    </View>
 
-    )
+  )
 }
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 2,
-        flexDirection: 'row',
-        marginHorizontal: 32
-    },
-    icon: {
-        paddingBottom: 5
-    }
+  body: {
+    flex: 2,
+    flexDirection: 'row',
+    marginHorizontal: 32
+  },
+  icon: {
+    paddingBottom: 5
+  }
 })
 
 export default Tts

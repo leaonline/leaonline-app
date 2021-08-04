@@ -18,7 +18,7 @@ export default function App () {
 
   useEffect(() => {
     if (fontLoaded) {
-      //TODO Timeout variable should be later set in a separate global environment file
+      // TODO Timeout variable should be later set in a separate global environment file
       setTimeout(() => {
         setWaitThreeSeconds(true)
       }, 1000)
