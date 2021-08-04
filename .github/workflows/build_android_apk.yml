@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - release
-      - move-to-react-native
+
 jobs:
   build:
     runs-on: ubuntu-latest
