@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
-import { enableScreens } from 'react-native-screens'
 
 import Navigator from './navigation/navigator'
-
-enableScreens()
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -17,17 +14,18 @@ const fetchFonts = () => {
 
 export default function App () {
   const [fontLoaded, setFontLoaded] = useState(false)
-  const [waitThreeSeconds, setWaitThreeSeconds] = useState(false)
+  const [waitForInterval, setWaitThreeSeconds] = useState(false)
 
   useEffect(() => {
     if (fontLoaded) {
+      //TODO Timeout variable should be later set in a separate global environment file
       setTimeout(() => {
         setWaitThreeSeconds(true)
       }, 1000)
     }
   }, [fontLoaded])
 
-  if (!waitThreeSeconds) {
+  if (!waitForInterval) {
     return (
       <AppLoading
         startAsync={fetchFonts}
