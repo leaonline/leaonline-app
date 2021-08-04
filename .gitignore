@@ -108,6 +108,9 @@ dist
 .idea
 .expo
 
+#macOS
+.DS_Store
+
 # Font datatypes
 *.ttf
 *.otf
