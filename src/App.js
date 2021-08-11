@@ -1,49 +1,51 @@
-import { StatusBar } from 'expo-status-bar'
-import React from 'react'
-import { Button, StyleSheet, Text, View, Alert } from 'react-native'
-import { Header } from 'react-native-elements'
-// import Meteor, { Mongo, withTracker } from '@meteorrn/core'
-// import Meteor from '@meteorrn/core'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
 
-// Meteor.connect("ws://127.0.0.1:3000/websocket");
+import Navigator from './navigation/navigator'
+
+const fetchFonts = () => {
+  return Font.loadAsync({
+    semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
+
+  })
+}
 
 export default function App () {
-  return (
+  const [fontLoaded, setFontLoaded] = useState(false)
+  const [waitForInterval, setWaitThreeSeconds] = useState(false)
 
-    <View style={styles.header}>
-      <Header
-        leftComponent={{ icon: 'menu', color: '#fff' }}
-        centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
-        rightComponent={{ icon: 'home', color: '#fff' }}
+  useEffect(() => {
+    if (fontLoaded) {
+      // TODO Timeout variable should be later set in a separate global environment file
+      setTimeout(() => {
+        setWaitThreeSeconds(true)
+      }, 1000)
+    }
+  }, [fontLoaded])
+
+  if (!waitForInterval) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setFontLoaded(true)}
+        onError={(error) => console.warn(error)}
       />
-      <View style={styles.container}>
+    )
+  }
 
-        <Text testID='textField'>Test Meteor Application
-        </Text>
-        <StatusBar style='auto' />
-
-        <Button
-          testID='Button'
-          title='Press This Button, please'
-          onPress={() => Alert.alert('Button is working')}
-        />
-      </View>
+  return (
+    <View style={styles.screen}>
+      <Navigator />
     </View>
 
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  header: {
-    width: '100%',
-    height: '100%'
-
+  screen: {
+    flex: 1
   }
+
 })

@@ -107,3 +107,15 @@ dist
 .vscode
 .idea
 .expo
+
+#macOS
+.DS_Store
+
+# Font datatypes
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# Font directory
+src/assets/fonts/
