@@ -21,4 +21,4 @@ jobs:
     - name: install node modules
       run: npm install
     - name: run standard js
-      run: npm run lint
+      run: cd src && npm run lint
