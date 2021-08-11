@@ -1,0 +1,24 @@
+name: JSDOC Test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    
+    - name: install node modules
+      run: cd src && npm install
+    - name: run jsdoc
+      run: cd src && npm run jsdoc
