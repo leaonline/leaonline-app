@@ -1,5 +1,4 @@
 /* global ttsIsCurrentlyPlaying */
-
 import React from 'react'
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'

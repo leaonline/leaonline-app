@@ -7,7 +7,8 @@ import RegistrationScreen from '../screens/RegistrationScreen'
 
 /**
  * WizardNavigator navigates between screens.
- * @type {import("react-navigation").NavigationNavigator<any, import("react-navigation").NavigationProp<import("react-navigation").NavigationState>>}
+ * @type {NavigationNavigator}
+ * @component
  */
 const WizardNavigator = createStackNavigator({
   WelcomeScreen: WelcomeScreen,

@@ -1,4 +1,4 @@
-name: Lint Test
+name: JSDOC Test
 
 on:
   push:
@@ -20,5 +20,5 @@ jobs:
     
     - name: install node modules
       run: cd src && npm install
-    - name: run standard js
-      run: cd src && npm run lint
+    - name: run jsdoc
+      run: cd src && npm run docs

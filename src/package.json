@@ -6,7 +6,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "lint": "standard --env jest --env mocha | snazzy",
+    "test": "jest",
+    "docs": "jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
     "@babel/preset-react": "^7.13.13",
@@ -30,17 +32,20 @@
     "react-native-tts": "^4.1.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
-    "redux": "^4.1.0",
-    "standard": "^16.0.3"
+    "redux": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@testing-library/react-native": "^7.2.0",
     "@types/react-test-renderer": "^17.0.1",
+    "better-docs": "^2.3.2",
     "jest": "^26.6.3",
+    "jsdoc": "^3.6.7",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
-    "react-test-renderer": "^17.0.2"
+    "react-test-renderer": "^17.0.2",
+    "snazzy": "^9.0.0",
+    "standard": "^16.0.3"
   },
   "standard": {
     "env": [
