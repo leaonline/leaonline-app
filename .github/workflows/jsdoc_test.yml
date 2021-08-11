@@ -21,4 +21,4 @@ jobs:
     - name: install node modules
       run: cd src && npm install
     - name: run jsdoc
-      run: cd src && npm run jsdoc
+      run: cd src && npm run docs
