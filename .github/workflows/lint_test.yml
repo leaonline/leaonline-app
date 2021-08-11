@@ -19,6 +19,6 @@ jobs:
         node-version: '12.x'
     
     - name: install node modules
-      run: npm install
+      run: cd src && npm install
     - name: run standard js
       run: cd src && npm run lint
