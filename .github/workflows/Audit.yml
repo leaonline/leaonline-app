@@ -1,14 +1,15 @@
-name: Lint Test
+name: Check for vulnerabilities 
 
-on:
+on: 
   push:
     branches:
       - main
-
+  
   pull_request:
 
-jobs:
-  build:
+
+jobs: 
+  build: 
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -24,8 +25,11 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-
-    - name: install node modules
+     
+    - name: open src folder and install node modules
       run: cd src && npm install
-    - name: run standard js
-      run: cd src && npm run lint
+    - name: open src folder and check for vulnerabilities
+      run: cd src && npm audit
+     
+
+      
