@@ -19,7 +19,7 @@ const WelcomeScreen = props => {
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <Image style={styles.logo} source={require('../assets/logo-footer.png')} />
+        <Image style={styles.logo} source={{uri:'../assets/logo-footer.png'}} />
       </View>
 
       <View style={styles.body}>

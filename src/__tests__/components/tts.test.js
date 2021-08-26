@@ -1,8 +1,14 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Tts from '../../components/Tts'
 import TitleText from '../../components/TitleText';
 import Colors from '../../constants/Colors'
+
+
+jest.mock('expo-speech', () => {
+  return () => ({
+    maxSpeechInputLength: jest.fn();
+  })
+})
 
 test('Text alignment left', () => {
   const tree = renderer.create(<TitleText style={{ color: Colors.primary, paddingLeft: 5, textAlign: 'left' }} text={'Hallo'} />);
