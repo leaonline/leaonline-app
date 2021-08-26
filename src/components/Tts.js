@@ -74,6 +74,7 @@ const Tts = props => {
         name='volume-2'
         type='feather'
         onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
+        testID="TextToSpeech.Button"
       />
       <TitleText
         style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
