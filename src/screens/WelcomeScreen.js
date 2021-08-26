@@ -24,7 +24,7 @@ const WelcomeScreen = props => {
 
       <View style={styles.body}>
 
-        <Tts text={welcomeText} color={Colors.primary} id={1} align='center' />
+        <Tts text={welcomeText} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
 
       </View>
       <View style={styles.navigationButton}>

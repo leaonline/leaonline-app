@@ -70,11 +70,11 @@ const Tts = props => {
   return (
     <View style={styles.body}>
       <Icon
+        testID={props.testId}
         reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
         name='volume-2'
         type='feather'
         onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
-        testID="TextToSpeech.Button"
       />
       <TitleText
         style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
