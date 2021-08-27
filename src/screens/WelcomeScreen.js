@@ -3,7 +3,9 @@ import React from 'react'
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import Tts from '../components/Tts'
+import { TTSengine } from '../components/Tts'
+
+const Tts = TTSengine.component()
 
 /**
  * WelcomeScreen displays the welcome text.

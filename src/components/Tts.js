@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import * as Speech from 'expo-speech'
-
 import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
 import Colors from '../constants/Colors'
@@ -12,6 +10,10 @@ const asyncTimeout = ms => new Promise(resolve => {
   }, ms)
 })
 
+
+/** @private **/
+let Speech = null
+
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  * @param {string} props.text: The displayed and spoken text
@@ -21,7 +23,7 @@ const asyncTimeout = ms => new Promise(resolve => {
  * @constructor
  */
 
-const Tts = props => {
+const ttsComponent = props => {
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
@@ -29,15 +31,15 @@ const Tts = props => {
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
 
   /**
-     * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
-     */
+   * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
+   */
   const speak = async () => {
     const isSpeaking = await Speech.isSpeakingAsync()
 
     if (isSpeaking) {
       stopSpeak()
       await asyncTimeout(5)
-      await speak()
+      return await speak()
     }
 
     Speech.speak(props.text, {
@@ -50,8 +52,8 @@ const Tts = props => {
     })
   }
   /**
-     * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
-     */
+   * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
+   */
   const stopSpeak = () => {
     setTtsColorIcon(props.color)
     setCurrentlyPlaying(false)
@@ -59,8 +61,8 @@ const Tts = props => {
     Speech.stop()
   }
   /**
-     * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
-     */
+   * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
+   */
   const startSpeak = () => {
     setTtsColorIcon(Colors.success)
     setCurrentlyPlaying(true)
@@ -85,6 +87,14 @@ const Tts = props => {
   )
 }
 
+
+export const TTSengine = {
+  setSpeech (s) {
+    Speech = s
+  },
+  component: () => ttsComponent
+}
+
 const styles = StyleSheet.create({
   body: {
     flex: 2,
@@ -95,5 +105,3 @@ const styles = StyleSheet.create({
     paddingBottom: 5
   }
 })
-
-export default Tts

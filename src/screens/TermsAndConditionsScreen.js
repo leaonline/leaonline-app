@@ -4,7 +4,9 @@ import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import Tts from '../components/Tts'
+import { TTSengine } from '../components/Tts'
+
+const Tts = TTSengine.component()
 
 /**
  * TermsAndConditionsScreen displays the terms and conditions the user must agree to.
