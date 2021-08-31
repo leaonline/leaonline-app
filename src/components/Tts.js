@@ -10,7 +10,6 @@ const asyncTimeout = ms => new Promise(resolve => {
   }, ms)
 })
 
-
 /** @private **/
 let Speech = null
 
@@ -86,7 +85,6 @@ const ttsComponent = props => {
 
   )
 }
-
 
 export const TTSengine = {
   setSpeech (s) {

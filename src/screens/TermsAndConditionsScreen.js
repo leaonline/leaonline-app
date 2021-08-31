@@ -27,7 +27,7 @@ const TermsAndConditionsScreen = props => {
 
   const checkBoxIsNotChecked = () => {
     // TODO also move all alert messages to i18n file
-    Alert.alert('Alert', 'You need to accept the terms and conditions to continue')
+    Alert.alert('Stop', 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren')
     setTermsAndConditionsColor(Colors.danger)
   }
 
@@ -35,11 +35,11 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={TandCText} id={2} />
+        <Tts color={Colors.primary} text={TandCText} id={2} testId='tandc1' />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={termsAndconditionsColor} text={checkBoxText} align='left' id={3} />
+        <Tts color={termsAndconditionsColor} text={checkBoxText} align='left' id={3} testId='tandc2' />
         <CheckBox
           iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndconditionsColor}
