@@ -2,7 +2,8 @@ import React from 'react'
 import WelcomeScreen from '../../screens/WelcomeScreen'
 import TandCScreen from '../../screens/TermsAndConditionsScreen'
 import { TTSengine } from '../../components/Tts'
-import { fireEvent, render, waitFor } from '@testing-library/react-native'
+import { fireEvent, render, waitFor, act } from '@testing-library/react-native'
+import { asyncTimeout } from '../../utils/asyncTimeout'
 
 it('find button via testId', () => {
   const { getByTestId } = render(<WelcomeScreen />)
@@ -47,26 +48,31 @@ it('stop tts process if its already active ', async () => {
     isSpeakingAsync: async function () {
       return false
     },
-    speak: t => {
-      expect(t).toBe('Herzlich Willkommen zu lea online')
-      global.ttsIsCurrentlyPlaying = true
+    speak: (text, options) => {
+      expect(text).toBe('Herzlich Willkommen zu lea online')
       speakCalled = true
+      options.onStart()
+      setTimeout(() => options.onDone(), 100)
     },
     stop: () => {
       stopCalled = true
-      global.ttsIsCurrentlyPlaying = false
     }
   })
 
   const { getByTestId } = render(<WelcomeScreen />)
   const foundButton = getByTestId('welcomeScreen1')
-  fireEvent.press(foundButton)
-  fireEvent.press(foundButton)
-  await waitFor(() => {
-    expect(global.ttsIsCurrentlyPlaying).toBe(false)
-    expect(speakCalled).toBe(true)
-    expect(stopCalled).toBe(true)
-  })
+
+  act(() => fireEvent.press(foundButton))
+  await asyncTimeout(10)
+  expect(TTSengine.isSpeaking).toBe(true)
+  expect(TTSengine.speakId).toBe(1)
+  expect(speakCalled).toBe(true)
+
+  act(() => fireEvent.press(foundButton))
+  await asyncTimeout(10)
+  expect(TTSengine.isSpeaking).toBe(false)
+  expect(TTSengine.speakId).toBe(0)
+  expect(stopCalled).toBe(true)
 })
 
 it('start 2 different tts processes successively', async () => {

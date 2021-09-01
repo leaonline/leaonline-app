@@ -3,12 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
 import Colors from '../constants/Colors'
-
-const asyncTimeout = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve()
-  }, ms)
-})
+import { asyncTimeout } from '../utils/asyncTimeout'
 
 /** @private **/
 let Speech = null
@@ -28,6 +23,8 @@ const ttsComponent = props => {
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+  TTSengine.isSpeaking = isCurrentlyPlaying
+  TTSengine.speakId = currentlyPlayingId
 
   /**
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
@@ -90,6 +87,8 @@ export const TTSengine = {
   setSpeech (s) {
     Speech = s
   },
+  isSpeaking: false,
+  speakId: 0,
   component: () => ttsComponent
 }
 
