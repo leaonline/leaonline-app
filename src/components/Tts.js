@@ -13,6 +13,8 @@ let Speech = null
  * @param {string} props.text: The displayed and spoken text
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
+ * @param {string} props.testID: The parameter to identify the buttons for testing
+ * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
  */
@@ -25,6 +27,7 @@ const ttsComponent = props => {
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
   TTSengine.isSpeaking = isCurrentlyPlaying
   TTSengine.speakId = currentlyPlayingId
+  TTSengine.iconColor = ttsColorIcon
 
   /**
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
@@ -89,6 +92,7 @@ export const TTSengine = {
   },
   isSpeaking: false,
   speakId: 0,
+  iconColor: null,
   component: () => ttsComponent
 }
 

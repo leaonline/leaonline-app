@@ -4,6 +4,7 @@ import TandCScreen from '../../screens/TermsAndConditionsScreen'
 import { TTSengine } from '../../components/Tts'
 import { fireEvent, render, waitFor, act } from '@testing-library/react-native'
 import { asyncTimeout } from '../../utils/asyncTimeout'
+import Colors from '../../constants/Colors'
 
 it('find button via testId', () => {
   const { getByTestId } = render(<WelcomeScreen />)
@@ -40,7 +41,7 @@ it('tts (async) speak', async () => {
   })
 })
 
-it('stop tts process if its already active ', async () => {
+it('stop tts process if its already active', async () => {
   let speakCalled = false
   let stopCalled = false
 
@@ -104,4 +105,42 @@ it('start 2 different tts processes successively', async () => {
     expect(speakCalled).toBe(true)
     expect(stopCalled).toBe(false)
   })
+})
+
+it('checks for icon color', async () => {
+  let speakCalled = false
+  let stopCalled = false
+
+  TTSengine.setSpeech({
+    isSpeakingAsync: async function () {
+      return false
+    },
+    speak: (text, options) => {
+      expect(text).toBe('Herzlich Willkommen zu lea online')
+      speakCalled = true
+      options.onStart()
+      setTimeout(() => options.onDone(), 100)
+    },
+    stop: () => {
+      stopCalled = true
+    }
+  })
+
+  const { getByTestId } = render(<WelcomeScreen />)
+  const foundButton = getByTestId('welcomeScreen1')
+
+  expect(TTSengine.iconColor).toBe(Colors.primary)
+  act(() => fireEvent.press(foundButton))
+  await asyncTimeout(10)
+  expect(TTSengine.isSpeaking).toBe(true)
+  expect(TTSengine.speakId).toBe(1)
+  expect(speakCalled).toBe(true)
+  expect(TTSengine.iconColor).toBe(Colors.success)
+
+  act(() => fireEvent.press(foundButton))
+  await asyncTimeout(10)
+  expect(TTSengine.isSpeaking).toBe(false)
+  expect(TTSengine.speakId).toBe(0)
+  expect(stopCalled).toBe(true)
+  expect(TTSengine.iconColor).toBe(Colors.primary)
 })
