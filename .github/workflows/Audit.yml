@@ -3,9 +3,11 @@ name: Check for vulnerabilities
 on: 
   push:
     branches:
-      - main
+      - release
   
   pull_request:
+    branches:
+      - release
 
 
 jobs: 
@@ -29,7 +31,4 @@ jobs:
     - name: open src folder and install node modules
       run: cd src && npm install
     - name: open src folder and check for vulnerabilities
-      run: cd src && npm audit
-     
-
-      
+      run: cd src && npm audit --production
