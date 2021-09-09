@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
-
+import * as Speech from 'expo-speech'
+import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 
 const fetchFonts = () => {
@@ -11,6 +12,8 @@ const fetchFonts = () => {
 
   })
 }
+
+TTSengine.setSpeech(Speech)
 
 export default function App () {
   const [fontLoaded, setFontLoaded] = useState(false)

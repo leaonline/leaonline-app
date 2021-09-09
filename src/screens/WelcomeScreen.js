@@ -3,7 +3,9 @@ import React from 'react'
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import Tts from '../components/Tts'
+import { TTSengine } from '../components/Tts'
+
+const Tts = TTSengine.component()
 
 /**
  * WelcomeScreen displays the welcome text.
@@ -19,12 +21,12 @@ const WelcomeScreen = props => {
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <Image style={styles.logo} source={require('../assets/logo-footer.png')} />
+        <Image style={styles.logo} source={{ uri: '../assets/logo-footer.png' }} />
       </View>
 
       <View style={styles.body}>
 
-        <Tts text={welcomeText} color={Colors.primary} id={1} align='center' />
+        <Tts text={welcomeText} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
 
       </View>
       <View style={styles.navigationButton}>
