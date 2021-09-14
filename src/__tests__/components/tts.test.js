@@ -5,6 +5,8 @@ import { TTSengine } from '../../components/Tts'
 import { fireEvent, render, waitFor, act } from '@testing-library/react-native'
 import { asyncTimeout } from '../../utils/asyncTimeout'
 import Colors from '../../constants/Colors'
+import i18n from '../../i18n'
+import { I18nextProvider } from 'react-i18next'
 
 it('find button via testId', () => {
   const { getByTestId } = render(<WelcomeScreen />)
@@ -31,7 +33,11 @@ it('tts (async) speak', async () => {
     }
   })
 
-  const { getByTestId } = render(<WelcomeScreen />)
+  const { getByTestId } = render(
+    <I18nextProvider i18n={i18n}>
+      <WelcomeScreen />
+    </I18nextProvider>
+  )
   const foundButton = getByTestId('welcomeScreen1')
   await fireEvent.press(foundButton)
   await waitFor(() => {
