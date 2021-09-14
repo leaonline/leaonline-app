@@ -5,6 +5,7 @@ import AppLoading from 'expo-app-loading'
 import * as Speech from 'expo-speech'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
+import './i18n'
 
 const fetchFonts = () => {
   return Font.loadAsync({

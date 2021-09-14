@@ -4,6 +4,7 @@ import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
+import { useTranslation } from 'react-i18next'
 
 const Tts = TTSengine.component()
 
@@ -13,8 +14,7 @@ const Tts = TTSengine.component()
  * @constructor
  */
 const WelcomeScreen = props => {
-  // TODO also here i18n file
-  const welcomeText = 'Herzlich Willkommen zu lea online'
+  const { t } = useTranslation()
 
   return (
 
@@ -26,14 +26,13 @@ const WelcomeScreen = props => {
 
       <View style={styles.body}>
 
-        <Tts text={welcomeText} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
+        <Tts text={t('Welcome to lea')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
 
       </View>
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
-          // TODO get alert message from i18n file
           ttsIsCurrentlyPlaying
-            ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+            ? Alert.alert(t('alert message title'), t('alert message navigation'))
             : props.navigation.navigate({ routeName: 'TandC' })
         }}
         >
