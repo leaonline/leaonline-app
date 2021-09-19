@@ -26,13 +26,13 @@ const WelcomeScreen = props => {
 
       <View style={styles.body}>
 
-        <Tts text={t('Welcome to lea')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
+        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
 
       </View>
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert message title'), t('alert message navigation'))
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
             : props.navigation.navigate({ routeName: 'TandC' })
         }}
         >

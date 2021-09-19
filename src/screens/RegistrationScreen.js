@@ -3,6 +3,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
+import i18n from 'i18next'
 
 /**
  * RegistrationScreen displays the formular for the user registration.
@@ -29,7 +30,7 @@ const RegistrationScreen = props => {
 
 RegistrationScreen.navigationOptions = (navData) => {
   return {
-    headerTitle: 'Registrierung',
+    headerTitle: i18n.t('registrationScreen.headerTitle'),
     headerLeft: () => null
   }
 }

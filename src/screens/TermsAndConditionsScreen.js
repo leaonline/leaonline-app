@@ -6,6 +6,7 @@ import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 const Tts = TTSengine.component()
 
@@ -26,18 +27,18 @@ const TermsAndConditionsScreen = props => {
   }
 
   const checkBoxIsNotChecked = () => {
-    Alert.alert(t('alert message title'), t('alert message checkBox'))
+    Alert.alert(t('alert.title'), t('alert.checkBox'))
     setTermsAndConditionsColor(Colors.danger)
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={t('TandC Text')} id={2} testId='tandc1' />
+        <Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={termsAndConditionsColor} text={t('CheckBox Text')} align='left' id={3} testId='tandc2' />
+        <Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
         <CheckBox
           iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
@@ -46,14 +47,14 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert message title'), t('alert message navigation')) : props.navigation.navigate({ routeName: 'WelcomeScreen' })
+          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate({ routeName: 'WelcomeScreen' })
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert message title'), t('alert message navigation'))
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
             : termsAndConditionsIsChecked
               ? props.navigation.navigate({ routeName: 'Registration' })
               : checkBoxIsNotChecked()
@@ -69,7 +70,7 @@ const TermsAndConditionsScreen = props => {
 
 TermsAndConditionsScreen.navigationOptions = (navData) => {
   return {
-    headerTitle: 'Allgemeine Geschäftsbedingungen',
+    headerTitle: i18n.t('TandCScreen.headerTitle'),
     headerLeft: () => null
   }
 }
