@@ -21,7 +21,10 @@ const resources = {
       headerTitle: 'General terms and conditions',
       text: 'I hereby agree to the following conditions ...',
       checkBoxText: 'I have read and agree to the general terms and conditions'
-    }
+    },
+    HomeScreen: {},
+    OverviewScreen: {},
+    TaskScreen: {}
   },
   de: {
     alert: {
@@ -39,7 +42,10 @@ const resources = {
       headerTitle: 'Allgemeine Geschäftsbedingungen',
       text: 'Hiermit stimme ich folgenden Bedingungen zu ...',
       checkBoxText: 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
-    }
+    },
+    HomeScreen: {},
+    OverviewScreen: {},
+    TaskScreen: {}
   }
 }
 

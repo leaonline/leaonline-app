@@ -1,5 +1,4 @@
 /* global ttsIsCurrentlyPlaying */
-
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
@@ -80,10 +79,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     margin: 30
-  },
-
-  header: {
-    flex: 1
   },
   body: {
     flex: 2,

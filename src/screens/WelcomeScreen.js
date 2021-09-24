@@ -15,13 +15,14 @@ const Tts = TTSengine.component()
  */
 const WelcomeScreen = props => {
   const { t } = useTranslation()
+  const headerPath = require('../assets/logo-footer.png')
 
   return (
 
     <View style={styles.container}>
 
       <View style={styles.header}>
-        <Image style={styles.logo} source={{ uri: '../assets/logo-footer.png' }} />
+        <Image style={styles.logo} source={headerPath} />
       </View>
 
       <View style={styles.body}>
@@ -29,6 +30,7 @@ const WelcomeScreen = props => {
         <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
 
       </View>
+
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
@@ -77,6 +79,10 @@ const styles = StyleSheet.create({
   },
   navigationButton: {
     flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
   }
 }
 )
