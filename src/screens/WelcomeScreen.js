@@ -18,17 +18,13 @@ const WelcomeScreen = props => {
   const headerPath = require('../assets/logo-footer.png')
 
   return (
-
     <View style={styles.container}>
-
       <View style={styles.header}>
         <Image style={styles.logo} source={headerPath} />
       </View>
 
       <View style={styles.body}>
-
         <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
-
       </View>
 
       <View style={styles.navigationButton}>
@@ -57,7 +53,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-
   header: {
     flex: 1,
     alignItems: 'center',
@@ -66,16 +61,13 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 50
-
   },
   body: {
     flex: 2,
     flexDirection: 'row'
   },
-
   icon: {
     paddingBottom: 5
-
   },
   navigationButton: {
     flexDirection: 'row'

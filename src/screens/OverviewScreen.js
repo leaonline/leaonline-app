@@ -4,12 +4,9 @@ import { Icon } from 'react-native-elements'
 
 const OverviewScreen = props => {
   return (
-
     <View style={styles.container}>
       <View style={styles.body}>
-
         <Text>OverviewScreen (/Map)</Text>
-
       </View>
 
       <View style={styles.navigationButtons}>
@@ -27,7 +24,6 @@ const OverviewScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }

@@ -4,12 +4,9 @@ import { Icon } from 'react-native-elements'
 
 const TaskScreen = props => {
   return (
-
     <View style={styles.container}>
       <View style={styles.body}>
-
         <Text>TaskScreen</Text>
-
       </View>
 
       <View style={styles.navigationButtons}>
@@ -20,7 +17,6 @@ const TaskScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }
@@ -40,7 +36,6 @@ const styles = StyleSheet.create({
   body: {
     flex: 2,
     flexDirection: 'row'
-
   }
 })
 

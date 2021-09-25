@@ -20,15 +20,11 @@ const RegistrationScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-
         <Text>Formular</Text>
-
       </View>
 
       <View style={styles.body}>
-
         <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
-
       </View>
 
       <View style={styles.navigationButtons}>
@@ -87,7 +83,6 @@ const styles = StyleSheet.create({
   navigationButtons: {
     flexDirection: 'row'
   }
-
 }
 )
 

@@ -62,7 +62,6 @@ const TermsAndConditionsScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }
@@ -83,13 +82,11 @@ const styles = StyleSheet.create({
   body: {
     flex: 2,
     flexDirection: 'row'
-
   },
   text: {
     color: Colors.primary,
     paddingLeft: 5
   },
-
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
