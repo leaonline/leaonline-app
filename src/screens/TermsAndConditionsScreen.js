@@ -1,5 +1,4 @@
 /* global ttsIsCurrentlyPlaying */
-
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
@@ -63,7 +62,6 @@ const TermsAndConditionsScreen = props => {
           <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }
@@ -81,20 +79,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-
-  header: {
-    flex: 1
-  },
   body: {
     flex: 2,
     flexDirection: 'row'
-
   },
   text: {
     color: Colors.primary,
     paddingLeft: 5
   },
-
   iconNavigation: {
     paddingBottom: 5,
     padding: 100

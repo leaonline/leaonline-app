@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
   body: {
     fontFamily: 'semicolon',
     fontSize: 18
-
   }
 })
 
