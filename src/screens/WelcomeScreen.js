@@ -24,7 +24,7 @@ const WelcomeScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} align='center' testId='welcomeScreen1' />
+        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='welcomeScreen1' />
       </View>
 
       <View style={styles.navigationButton}>
@@ -34,7 +34,7 @@ const WelcomeScreen = props => {
             : props.navigation.navigate({ routeName: 'TandC' })
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>
     </View>

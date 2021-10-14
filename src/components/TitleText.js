@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { Text } from 'react-native'
 
 /**
  * TitleText is a component of Tts. It displays the spoken text.
@@ -8,13 +8,6 @@ import { Text, StyleSheet } from 'react-native'
  * @returns {JSX.Element}
  * @constructor
  */
-const TitleText = props => <Text style={{ ...styles.body, ...props.style }}>{props.text}</Text>
-
-const styles = StyleSheet.create({
-  body: {
-    fontFamily: 'semicolon',
-    fontSize: 18
-  }
-})
+const TitleText = props => <Text style={props.style}>{props.text}</Text>
 
 export default TitleText

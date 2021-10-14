@@ -49,7 +49,7 @@ const TermsAndConditionsScreen = props => {
           ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate({ routeName: 'WelcomeScreen' })
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
@@ -59,7 +59,7 @@ const TermsAndConditionsScreen = props => {
               : checkBoxIsNotChecked()
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>
     </View>

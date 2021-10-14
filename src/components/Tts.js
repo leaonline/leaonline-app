@@ -73,12 +73,12 @@ const ttsComponent = props => {
       <Icon
         testID={props.testId}
         reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
-        name='volume-2'
-        type='feather'
+        name='volume-up'
+        type='font-awesome-5'
         onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
       />
       <TitleText
-        style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
+        style={{ color: props.color, paddingLeft: 1, flexShrink: 1, fontSize: 18, textAlign: props.align }}
         text={props.text}
       />
     </View>
@@ -98,9 +98,8 @@ export const TTSengine = {
 
 const styles = StyleSheet.create({
   body: {
-    flex: 2,
-    flexDirection: 'row',
-    marginHorizontal: 32
+    flex: 1,
+    flexDirection: 'row'
   },
   icon: {
     paddingBottom: 5
