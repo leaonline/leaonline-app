@@ -25,6 +25,9 @@ const resources = {
     homeScreen: {
       text: 'Welcome! Please select an area.'
     },
+    profileScreen: {
+      headerTitle: 'Your Profile'
+    },
     overviewScreen: {},
     taskScreen: {}
   },
@@ -47,6 +50,9 @@ const resources = {
     },
     homeScreen: {
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
+    },
+    profileScreen: {
+      headerTitle: 'Dein Profil'
     },
     overviewScreen: {},
     taskScreen: {}

@@ -11,6 +11,7 @@ let Speech = null
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  * @param {string} props.text: The displayed and spoken text
+ * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @param {string} props.testID: The parameter to identify the buttons for testing
@@ -68,19 +69,27 @@ const ttsComponent = props => {
     setCurrentlyPlayingId(props.id)
   }
 
+  const displayedText = () => {
+    if(!props.dontShowText) {
+      return (
+        <TitleText
+        style={{ color: props.color, flexShrink: 1, fontSize: 18, textAlign: props.align }}
+        text={props.text}
+      />
+      )
+    }
+  }
+
   return (
     <View style={styles.body}>
       <Icon
         testID={props.testId}
-        reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
+        reverse style={styles.icon} color={ttsColorIcon} size={20} marginonPress={speak}
         name='volume-up'
         type='font-awesome-5'
         onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
       />
-      <TitleText
-        style={{ color: props.color, paddingLeft: 1, flexShrink: 1, fontSize: 18, textAlign: props.align }}
-        text={props.text}
-      />
+      {displayedText()}
     </View>
 
   )
@@ -98,7 +107,6 @@ export const TTSengine = {
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
     flexDirection: 'row'
   },
   icon: {

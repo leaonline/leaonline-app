@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
-import Task from '../components/Task'
+import RouteButton from '../components/RouteButton'
 import * as data from '../taskData.json'
 
 const Tts = TTSengine.component()
@@ -15,8 +15,7 @@ const HomeScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        {/* TODO make it to an component and link it to profileScreen */}
-        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} />
+        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate({ routeName: 'Profile'}) } />
       </View>
       <View style={styles.header}>
         <Tts text={t('homeScreen.text')} color={Colors.secondary} id={5} testId='homeScreen1' />
@@ -24,23 +23,13 @@ const HomeScreen = props => {
 
       <View style={styles.body}>
 
-        {/* TODO make it to an component */}
         <View style={styles.button}>
-          <Task title={data.dimensions[0].title} icon={data.dimensions[0].icon} />
-          <Task title={data.dimensions[1].title} icon={data.dimensions[1].icon} />
-          <Task title={data.dimensions[2].title} icon={data.dimensions[2].icon} />
-          <Task title={data.dimensions[3].title} icon={data.dimensions[3].icon} />
+          <RouteButton title={data.dimensions[0].title} icon={data.dimensions[0].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
+          <RouteButton title={data.dimensions[1].title} icon={data.dimensions[1].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
+          <RouteButton title={data.dimensions[2].title} icon={data.dimensions[2].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
+          <RouteButton title={data.dimensions[3].title} icon={data.dimensions[3].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
 
         </View>
-      </View>
-
-      <View style={styles.navigationButton}>
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Overview' })
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
       </View>
     </View>
   )
@@ -73,6 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   button: {
+    alignItems: 'center',
     flex: 1
   }
 })
