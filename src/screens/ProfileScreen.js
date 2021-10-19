@@ -15,7 +15,7 @@ const ProfileScreen = props => {
 
 ProfileScreen.navigationOptions = (navData) => {
   return {
-    headerTitle: i18n.t('profileScreen.headerTitle'),
+    headerTitle: i18n.t('profileScreen.headerTitle')
   }
 }
 
@@ -32,4 +32,3 @@ const styles = StyleSheet.create({
 })
 
 export default ProfileScreen
-

@@ -70,12 +70,12 @@ const ttsComponent = props => {
   }
 
   const displayedText = () => {
-    if(!props.dontShowText) {
+    if (!props.dontShowText) {
       return (
         <TitleText
-        style={{ color: props.color, flexShrink: 1, fontSize: 18, textAlign: props.align }}
-        text={props.text}
-      />
+          style={{ color: props.color, flexShrink: 1, fontSize: 18, textAlign: props.align }}
+          text={props.text}
+        />
       )
     }
   }

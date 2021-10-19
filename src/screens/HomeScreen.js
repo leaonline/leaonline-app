@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +15,7 @@ const HomeScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate({ routeName: 'Profile'}) } />
+        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate({ routeName: 'Profile' })} />
       </View>
       <View style={styles.header}>
         <Tts text={t('homeScreen.text')} color={Colors.secondary} id={5} testId='homeScreen1' />
@@ -24,10 +24,10 @@ const HomeScreen = props => {
       <View style={styles.body}>
 
         <View style={styles.button}>
-          <RouteButton title={data.dimensions[0].title} icon={data.dimensions[0].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
-          <RouteButton title={data.dimensions[1].title} icon={data.dimensions[1].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
-          <RouteButton title={data.dimensions[2].title} icon={data.dimensions[2].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
-          <RouteButton title={data.dimensions[3].title} icon={data.dimensions[3].icon} screen={() => props.navigation.navigate({ routeName: 'Overview'})} />
+          <RouteButton title={data.dimensions[0].title} icon={data.dimensions[0].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
+          <RouteButton title={data.dimensions[1].title} icon={data.dimensions[1].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
+          <RouteButton title={data.dimensions[2].title} icon={data.dimensions[2].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
+          <RouteButton title={data.dimensions[3].title} icon={data.dimensions[3].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
 
         </View>
       </View>
