@@ -12,6 +12,17 @@ const Tts = TTSengine.component()
 const HomeScreen = props => {
   const { t } = useTranslation()
 
+  /**
+   * Renders the RouteButtons for the Homescreen
+   */
+  const renderButtons = () => {
+    return data.dimensions.map((item, key) => {
+      return (
+        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
+      )
+    })
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
@@ -24,18 +35,14 @@ const HomeScreen = props => {
       <View style={styles.body}>
 
         <View style={styles.button}>
-          <RouteButton title={data.dimensions[0].title} icon={data.dimensions[0].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
-          <RouteButton title={data.dimensions[1].title} icon={data.dimensions[1].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
-          <RouteButton title={data.dimensions[2].title} icon={data.dimensions[2].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
-          <RouteButton title={data.dimensions[3].title} icon={data.dimensions[3].icon} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
-
+          {renderButtons()}
         </View>
       </View>
     </View>
   )
 }
 
-HomeScreen.navigationOptions = (navData) => {
+HomeScreen.navigationOptions = () => {
   return {
     headerShown: false
   }

@@ -69,6 +69,9 @@ const ttsComponent = props => {
     setCurrentlyPlayingId(props.id)
   }
 
+  /**
+   * Displays the spoken text if "dontShowText" is false.
+   */
   const displayedText = () => {
     if (!props.dontShowText) {
       return (

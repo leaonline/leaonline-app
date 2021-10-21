@@ -21,7 +21,7 @@ const TaskScreen = props => {
   )
 }
 
-TaskScreen.navigationOptions = (navData) => {
+TaskScreen.navigationOptions = () => {
   return {
     headerShown: false
   }

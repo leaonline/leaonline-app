@@ -10,7 +10,7 @@ const Tts = TTSengine.component()
  * RouteButton contains an icon and a button.
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
- * @param {function} props.screen The screen to be navigated
+ * @param {function} props.handleScreen The screen to be navigated
  * @returns {JSX.Element}
  * @constructor
  */
