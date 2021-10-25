@@ -14,14 +14,14 @@ const TaskScreen = props => {
           props.navigation.navigate({ routeName: 'Overview' })
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>
     </View>
   )
 }
 
-TaskScreen.navigationOptions = (navData) => {
+TaskScreen.navigationOptions = () => {
   return {
     headerShown: false
   }

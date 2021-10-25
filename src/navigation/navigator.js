@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen'
 import OverviewScreen from '../screens/OverviewScreen'
 import TaskScreen from '../screens/TaskScreen'
 import RegistrationScreen from '../screens/RegistrationScreen'
+import ProfileScreen from '../screens/ProfileScreen'
 
 /**
  * WizardNavigator navigates between screens.
@@ -19,7 +20,8 @@ const WizardNavigator = createStackNavigator({
   Registration: RegistrationScreen,
   Home: HomeScreen,
   Overview: OverviewScreen,
-  Task: TaskScreen
+  Task: TaskScreen,
+  Profile: ProfileScreen
 })
 
 export default createAppContainer(WizardNavigator)

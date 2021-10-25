@@ -39,7 +39,7 @@ const TermsAndConditionsScreen = props => {
       <View style={styles.checkBox}>
         <Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
         <CheckBox
-          iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
+          center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
         />
       </View>
@@ -49,7 +49,7 @@ const TermsAndConditionsScreen = props => {
           ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate({ routeName: 'WelcomeScreen' })
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
@@ -59,7 +59,7 @@ const TermsAndConditionsScreen = props => {
               : checkBoxIsNotChecked()
         }}
         >
-          <Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>
     </View>
@@ -83,15 +83,12 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row'
   },
-  text: {
-    color: Colors.primary,
-    paddingLeft: 5
-  },
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
   },
   checkBox: {
+    alignItems: 'center',
     flexDirection: 'row'
   },
   navigationButtons: {

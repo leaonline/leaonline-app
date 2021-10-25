@@ -22,9 +22,14 @@ const resources = {
       text: 'I hereby agree to the following conditions ...',
       checkBoxText: 'I have read and agree to the general terms and conditions'
     },
-    HomeScreen: {},
-    OverviewScreen: {},
-    TaskScreen: {}
+    homeScreen: {
+      text: 'Welcome! Please select an area.'
+    },
+    profileScreen: {
+      headerTitle: 'Your Profile'
+    },
+    overviewScreen: {},
+    taskScreen: {}
   },
   de: {
     alert: {
@@ -43,9 +48,14 @@ const resources = {
       text: 'Hiermit stimme ich folgenden Bedingungen zu ...',
       checkBoxText: 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
     },
-    HomeScreen: {},
-    OverviewScreen: {},
-    TaskScreen: {}
+    homeScreen: {
+      text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
+    },
+    profileScreen: {
+      headerTitle: 'Dein Profil'
+    },
+    overviewScreen: {},
+    taskScreen: {}
   }
 }
 
