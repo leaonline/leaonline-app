@@ -1,0 +1,51 @@
+{
+  "progress": {
+    "global": 0.65, // global progress
+    "dimensions": [
+      {
+        "title": "Schreiben",
+        "color": "danger",
+        "value": 50.0,
+        "fields": [
+          { "title": "Allgemein", "current": 3, "max": 5 },
+          { "title": "Pflege", "current": 2, "max": 5 },
+          { "title": "Technik", "current": 4, "max": 5 },
+          { "title": "Lebensmittel", "current": 1, "max": 5 }
+        ]
+      },
+      {
+        "title": "Lesen",
+        "color": "danger",
+        "value": 10.4,
+        "fields": [
+          { "title": "Allgemein", "current": 3, "max": 5 },
+          { "title": "Pflege", "current": 2, "max": 5 },
+          { "title": "Technik", "current": 4, "max": 5 },
+          { "title": "Lebensmittel", "current": 1, "max": 5 }
+        ]
+      },
+      {
+        "title": "Rechnen",
+        "color": "danger",
+        "value": 50.0,
+        "fields": [
+          { "title": "Allgemein", "current": 3, "max": 5 },
+          { "title": "Pflege", "current": 2, "max": 5 },
+          { "title": "Technik", "current": 4, "max": 5 },
+          { "title": "Lebensmittel", "current": 1, "max": 5 }
+        ]
+      },
+      {
+        "title": "Sprachgefühl",
+        "color": "danger",
+        "value": 25.1,
+        "fields": [
+          { "title": "Allgemein", "current": 3, "max": 5 },
+          { "title": "Pflege", "current": 2, "max": 5 },
+          { "title": "Technik", "current": 4, "max": 5 },
+          { "title": "Lebensmittel", "current": 1, "max": 5 }
+        ]
+      }
+    ]
+  }
+}

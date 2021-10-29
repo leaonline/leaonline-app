@@ -18,7 +18,9 @@ const RouteButton = props => {
   return (
     <View style={styles.body}>
       <Tts text={props.title} color={Colors.primary} id={6} testId='routeButton' dontShowText />
-      <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15 }} type='outline' onPress={props.handleScreen} />
+      <View style={styles.button}>
+        <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
+      </View>
     </View>
   )
 }
@@ -32,6 +34,9 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     padding: 30,
     width: '75%'
+  },
+  button: {
+    paddingTop: 5
   }
 })
 
