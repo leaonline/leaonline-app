@@ -74,9 +74,9 @@ const ProfileScreen = props => {
         noIcon
         content={
           <>
-            <Tts text={myData.dimensions[0].title} color={Colors.danger} id={6} testId='routeButton' dontShowText />
+            <Tts text={myData.dimensions[0].title} color={myData.dimensions[0].color} id={6} testId='routeButton' dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: Colors.danger, fontSize: 24 }}>{myData.dimensions[0].title}</ListItem.Title>
+              <ListItem.Title style={{ color: myData.dimensions[0].color, fontSize: 24 }}>{myData.dimensions[0].title}</ListItem.Title>
             </ListItem.Content>
           </>
         }
@@ -107,9 +107,9 @@ const ProfileScreen = props => {
         noIcon
         content={
           <>
-            <Tts text={myData.dimensions[1].title} color={Colors.danger} id={6} testId='routeButton' dontShowText />
+            <Tts text={myData.dimensions[1].title} color={myData.dimensions[1].color} id={6} testId='routeButton' dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: Colors.danger, fontSize: 24 }}>{myData.dimensions[1].title}</ListItem.Title>
+              <ListItem.Title style={{ color: myData.dimensions[1].color, fontSize: 24 }}>{myData.dimensions[1].title}</ListItem.Title>
             </ListItem.Content>
           </>
         }
@@ -140,9 +140,9 @@ const ProfileScreen = props => {
         noIcon
         content={
           <>
-            <Tts text={myData.dimensions[2].title} color={Colors.danger} id={6} testId='routeButton' dontShowText />
+            <Tts text={myData.dimensions[2].title} color={myData.dimensions[2].color} id={6} testId='routeButton' dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: Colors.danger, fontSize: 24 }}>{myData.dimensions[2].title}</ListItem.Title>
+              <ListItem.Title style={{ color: myData.dimensions[2].color, fontSize: 24 }}>{myData.dimensions[2].title}</ListItem.Title>
             </ListItem.Content>
           </>
         }
@@ -173,9 +173,9 @@ const ProfileScreen = props => {
         noIcon
         content={
           <>
-            <Tts text={myData.dimensions[3].title} color={Colors.danger} id={6} testId='routeButton' dontShowText />
+            <Tts text={myData.dimensions[3].title} color={myData.dimensions[3].color} id={6} testId='routeButton' dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: Colors.danger, fontSize: 24 }}>{myData.dimensions[3].title}</ListItem.Title>
+              <ListItem.Title style={{ color: myData.dimensions[3].color, fontSize: 24 }}>{myData.dimensions[3].title}</ListItem.Title>
             </ListItem.Content>
           </>
         }
