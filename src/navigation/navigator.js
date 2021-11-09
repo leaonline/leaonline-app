@@ -22,6 +22,7 @@ const WizardNavigator = createStackNavigator({
   Overview: OverviewScreen,
   Task: TaskScreen,
   Profile: ProfileScreen
-})
+},
+{ transparentCard: true })
 
 export default createAppContainer(WizardNavigator)
