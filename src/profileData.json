@@ -4,7 +4,7 @@
     "dimensions": [
       {
         "title": "Schreiben",
-        "color": "#86c4f1",
+        "color": "info",
         "value": 50.0,
         "fields": [
           { "title": "Allgemein", "current": 3, "max": 5 },
@@ -15,7 +15,7 @@
       },
       {
         "title": "Lesen",
-        "color": "#d95a7d",
+        "color": "danger",
         "value": 10.4,
         "fields": [
           { "title": "Allgemein", "current": 3, "max": 5 },
@@ -26,7 +26,7 @@
       },
       {
         "title": "Rechnen",
-        "color": "#00ddb6",
+        "color": "success",
         "value": 50.0,
         "fields": [
           { "title": "Allgemein", "current": 3, "max": 5 },
@@ -37,7 +37,7 @@
       },
       {
         "title": "Sprachgefühl",
-        "color": "#FFC800",
+        "color": "warning",
         "value": 25.1,
         "fields": [
           { "title": "Allgemein", "current": 3, "max": 5 },

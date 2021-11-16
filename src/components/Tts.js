@@ -15,6 +15,9 @@ let Speech = null
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
+ * @param {number} props.shrink: The parameter to shrink the text. Default: 1
+ * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
+ * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {string} props.testID: The parameter to identify the buttons for testing
  * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
@@ -77,7 +80,7 @@ const ttsComponent = props => {
     if (!props.dontShowText) {
       return (
         <TitleText
-          style={{ color: props.color, flexShrink: 1, fontSize: 18, textAlign: props.align, paddingTop: 8 }}
+          style={{ color: props.color, flexShrink: props.shrink || 1, fontSize: props.fontSize || 18, textAlign: props.align, paddingTop: props.paddingTop || 8 }}
           text={props.text}
         />
       )

@@ -9,14 +9,27 @@ import * as data from '../profileData.json'
 
 const Tts = TTSengine.component()
 
+function changeColor (list) {
+  for (const i in list) {
+    if (list[i].color === 'primary') list[i].color = Colors.primary
+    if (list[i].color === 'secondary') list[i].color = Colors.secondary
+    if (list[i].color === 'light') list[i].color = Colors.light
+    if (list[i].color === 'gray') list[i].color = Colors.gray
+    if (list[i].color === 'dark') list[i].color = Colors.dark
+    if (list[i].color === 'warning') list[i].color = Colors.warning
+    if (list[i].color === 'danger') list[i].color = Colors.danger
+    if (list[i].color === 'success') list[i].color = Colors.success
+    if (list[i].color === 'info') list[i].color = Colors.info
+  }
+}
+
 const ProfileScreen = props => {
   const { t } = useTranslation()
-  const [expanded, setExpanded] = useState(false)
-  const [expanded1, setExpanded1] = useState(false)
-  const [expanded2, setExpanded2] = useState(false)
-  const [expanded3, setExpanded3] = useState(false)
+  const expandedStates = data.progress.dimensions.map((entry, index) => useState(false))
+  console.log(expandedStates)
 
-  const myData = data.progress
+  const myData = data.progress.dimensions
+  console.log(myData)
 
   const renderPoints = (item) => {
     return [...Array(item.current)].map((item, key) => {
@@ -33,17 +46,18 @@ const ProfileScreen = props => {
       )
     })
   }
+  const renderProfileProgress = ({ index, dimensions }) => {
+    const current = dimensions[index]
+    const [expanded, setExpanded] = expandedStates[index]
 
-  /* const renderProfileProgress = () => {
-    return (myData.dimensions.map((item, key) => (
+    return (
       <ListItem.Accordion
         noIcon
-        key={key}
         content={
           <>
-            <Tts text={item.title} color={Colors.danger} id={6} testId='routeButton' dontShowText />
+            <Tts text={current.title} color={current.color} id={6} testId='routeButton' dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: Colors.danger, fontSize: 24 }}>{item.title}</ListItem.Title>
+              <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
             </ListItem.Content>
           </>
         }
@@ -52,139 +66,7 @@ const ProfileScreen = props => {
           setExpanded(!expanded)
         }}
       >
-        {expanded && item.fields.map((item, key) => (
-          <ListItem key={key}>
-            <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
-              <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
-              <View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
-                {renderPoints(item)}
-                {renderMaxPoints(item)}
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-      </ListItem.Accordion>
-    )))
-  } */
-
-  const renderProfileProgress = () => {
-    return (
-      <ListItem.Accordion
-        noIcon
-        content={
-          <>
-            <Tts text={myData.dimensions[0].title} color={myData.dimensions[0].color} id={6} testId='routeButton' dontShowText />
-            <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: myData.dimensions[0].color, fontSize: 24 }}>{myData.dimensions[0].title}</ListItem.Title>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expanded}
-        onPress={() => {
-          setExpanded(!expanded)
-        }}
-      >
-        {expanded && myData.dimensions[0].fields.map((item, key) => (
-          <ListItem key={key}>
-            <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
-              <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
-              <View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
-                {renderPoints(item)}
-                {renderMaxPoints(item)}
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-      </ListItem.Accordion>
-    )
-  }
-
-  const renderProfileProgress1 = () => {
-    return (
-      <ListItem.Accordion
-        noIcon
-        content={
-          <>
-            <Tts text={myData.dimensions[1].title} color={myData.dimensions[1].color} id={6} testId='routeButton' dontShowText />
-            <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: myData.dimensions[1].color, fontSize: 24 }}>{myData.dimensions[1].title}</ListItem.Title>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expanded1}
-        onPress={() => {
-          setExpanded1(!expanded1)
-        }}
-      >
-        {expanded1 && myData.dimensions[1].fields.map((item, key) => (
-          <ListItem key={key}>
-            <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
-              <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
-              <View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
-                {renderPoints(item)}
-                {renderMaxPoints(item)}
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-      </ListItem.Accordion>
-    )
-  }
-
-  const renderProfileProgress2 = () => {
-    return (
-      <ListItem.Accordion
-        noIcon
-        content={
-          <>
-            <Tts text={myData.dimensions[2].title} color={myData.dimensions[2].color} id={6} testId='routeButton' dontShowText />
-            <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: myData.dimensions[2].color, fontSize: 24 }}>{myData.dimensions[2].title}</ListItem.Title>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expanded2}
-        onPress={() => {
-          setExpanded2(!expanded2)
-        }}
-      >
-        {expanded2 && myData.dimensions[2].fields.map((item, key) => (
-          <ListItem key={key}>
-            <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
-              <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
-              <View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
-                {renderPoints(item)}
-                {renderMaxPoints(item)}
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
-      </ListItem.Accordion>
-    )
-  }
-
-  const renderProfileProgress3 = () => {
-    return (
-      <ListItem.Accordion
-        noIcon
-        content={
-          <>
-            <Tts text={myData.dimensions[3].title} color={myData.dimensions[3].color} id={6} testId='routeButton' dontShowText />
-            <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: myData.dimensions[3].color, fontSize: 24 }}>{myData.dimensions[3].title}</ListItem.Title>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expanded3}
-        onPress={() => {
-          setExpanded3(!expanded3)
-        }}
-      >
-        {expanded3 && myData.dimensions[3].fields.map((item, key) => (
+        {expanded && current.fields.map((item, key) => (
           <ListItem key={key}>
             <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
               <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
@@ -207,10 +89,7 @@ const ProfileScreen = props => {
           <View style={{ alignItems: 'center' }}>
             <Tts text={t('profileScreen.title')} color={Colors.secondary} id={7} testId='profilescreen-header' smallButton />
           </View>
-          {renderProfileProgress()}
-          {renderProfileProgress1()}
-          {renderProfileProgress2()}
-          {renderProfileProgress3()}
+          {renderProfileProgress({ myData })}
           <View style={styles.body} />
 
           <View style={styles.progressTitle}>
