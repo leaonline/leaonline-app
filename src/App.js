@@ -10,7 +10,6 @@ import './i18n'
 const fetchFonts = () => {
   return Font.loadAsync({
     semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
-
   })
 }
 

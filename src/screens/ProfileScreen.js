@@ -5,31 +5,27 @@ import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
-import * as data from '../profileData.json'
+import profileData from '../resources/profileData.js'
 
 const Tts = TTSengine.component()
 
-function changeColor (list) {
-  for (const i in list) {
-    if (list[i].color === 'primary') list[i].color = Colors.primary
-    if (list[i].color === 'secondary') list[i].color = Colors.secondary
-    if (list[i].color === 'light') list[i].color = Colors.light
-    if (list[i].color === 'gray') list[i].color = Colors.gray
-    if (list[i].color === 'dark') list[i].color = Colors.dark
-    if (list[i].color === 'warning') list[i].color = Colors.warning
-    if (list[i].color === 'danger') list[i].color = Colors.danger
-    if (list[i].color === 'success') list[i].color = Colors.success
-    if (list[i].color === 'info') list[i].color = Colors.info
-  }
-}
+/**
+ * Transforms colors list to use color values from Colors
+ * @param list {Array}
+ * @return {Array}
+ * @example:
+ * [{ color: 'primary' }] => [{ type: 'primary', color: '#f59d1d' }]
+ */
+const changeColor = list => list.map(element => ({
+  ...element,
+  type: element.color, // primary, secondary
+  color: Colors[element.color]
+}))
 
 const ProfileScreen = props => {
   const { t } = useTranslation()
-  const expandedStates = data.progress.dimensions.map((entry, index) => useState(false))
-  console.log(expandedStates)
-
-  const myData = data.progress.dimensions
-  console.log(myData)
+  const allDimensions = changeColor(profileData.progress.dimensions)
+  const expandedStates = allDimensions.map((entry, index) => useState(false))
 
   const renderPoints = (item) => {
     return [...Array(item.current)].map((item, key) => {
@@ -46,13 +42,13 @@ const ProfileScreen = props => {
       )
     })
   }
-  const renderProfileProgress = ({ index, dimensions }) => {
-    const current = dimensions[index]
+  const renderProfileProgress = (dimensions) => dimensions.map((current, index) => {
     const [expanded, setExpanded] = expandedStates[index]
-
+    const key = `dimensions-${index}`
     return (
       <ListItem.Accordion
         noIcon
+        key={key}
         content={
           <>
             <Tts text={current.title} color={current.color} id={6} testId='routeButton' dontShowText />
@@ -60,7 +56,7 @@ const ProfileScreen = props => {
               <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
             </ListItem.Content>
           </>
-        }
+          }
         isExpanded={expanded}
         onPress={() => {
           setExpanded(!expanded)
@@ -80,7 +76,7 @@ const ProfileScreen = props => {
         ))}
       </ListItem.Accordion>
     )
-  }
+  })
 
   return (
     <SafeAreaView>
@@ -89,13 +85,12 @@ const ProfileScreen = props => {
           <View style={{ alignItems: 'center' }}>
             <Tts text={t('profileScreen.title')} color={Colors.secondary} id={7} testId='profilescreen-header' smallButton />
           </View>
-          {renderProfileProgress({ myData })}
+          {renderProfileProgress(allDimensions)}
           <View style={styles.body} />
-
           <View style={styles.progressTitle}>
             <Tts text={t('profileScreen.progress')} color={Colors.primary} id={8} testId='profilescreen-fortschritt' smallButton />
           </View>
-          <LinearProgress color={Colors.primary} variant='determinate' value={data.progress.global} style={{ borderRadius: 15, height: 15 }} />
+          <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
         </View>
       </ScrollView>
     </SafeAreaView>
