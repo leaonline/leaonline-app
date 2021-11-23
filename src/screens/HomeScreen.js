@@ -5,7 +5,7 @@ import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
-import * as data from '../taskData.json'
+import * as data from '../resources/taskData.json'
 
 const Tts = TTSengine.component()
 
