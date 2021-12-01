@@ -32,7 +32,11 @@ const ttsComponent = props => {
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
+  /**
+   * @deprecated use TTSEngine.isSpeaking
+   **/
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+  
   TTSengine.isSpeaking = isCurrentlyPlaying
   TTSengine.speakId = currentlyPlayingId
   TTSengine.iconColor = ttsColorIcon
