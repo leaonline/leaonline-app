@@ -78,12 +78,16 @@ const ttsComponent = props => {
    */
   const displayedText = () => {
     if (!props.dontShowText) {
-      return (
-        <TitleText
-          style={{ color: props.color, flexShrink: props.shrink || 1, fontSize: props.fontSize || 18, textAlign: props.align, paddingTop: props.paddingTop || 8 }}
-          text={props.text}
-        />
-      )
+      // color always detaults to secondary and align always to left
+      const styleProps = {
+        color: props.color,
+        flexShrink: props.shrink || 1,
+        fontSize: props.fontSize || 18,
+        textAlign: props.align,
+        paddingTop: props.paddingTop || 8
+      }
+
+      return (<TitleText style={styleProps} text={props.text} />)
     }
   }
 
