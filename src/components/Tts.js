@@ -25,6 +25,9 @@ let Speech = null
  */
 
 const ttsComponent = props => {
+  // FIXME: Warning: Can't perform a React state update on an unmounted component.
+  // FIXME: This is a no-op, but it indicates a memory leak in your application.
+  // FIXME: To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
