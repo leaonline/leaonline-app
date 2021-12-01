@@ -26,6 +26,6 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: install node modules
-      run: cd src && npm install
+      run: cd src && npm ci
     - name: run standard js
       run: cd src && npm run lint
