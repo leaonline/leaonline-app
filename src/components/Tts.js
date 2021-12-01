@@ -12,8 +12,12 @@ let Speech = null
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
+ * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
+ * @param {number} props.shrink: The parameter to shrink the text. Default: 1
+ * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
+ * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {string} props.testID: The parameter to identify the buttons for testing
  * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
@@ -21,11 +25,18 @@ let Speech = null
  */
 
 const ttsComponent = props => {
+  // FIXME: Warning: Can't perform a React state update on an unmounted component.
+  // FIXME: This is a no-op, but it indicates a memory leak in your application.
+  // FIXME: To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
+  /**
+   * @deprecated use TTSEngine.isSpeaking
+   **/
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+
   TTSengine.isSpeaking = isCurrentlyPlaying
   TTSengine.speakId = currentlyPlayingId
   TTSengine.iconColor = ttsColorIcon
@@ -74,12 +85,16 @@ const ttsComponent = props => {
    */
   const displayedText = () => {
     if (!props.dontShowText) {
-      return (
-        <TitleText
-          style={{ color: props.color, flexShrink: 1, fontSize: 18, textAlign: props.align }}
-          text={props.text}
-        />
-      )
+      // color always detaults to secondary and align always to left
+      const styleProps = {
+        color: props.color,
+        flexShrink: props.shrink || 1,
+        fontSize: props.fontSize || 18,
+        textAlign: props.align,
+        paddingTop: props.paddingTop || 8
+      }
+
+      return (<TitleText style={styleProps} text={props.text} />)
     }
   }
 
@@ -87,7 +102,7 @@ const ttsComponent = props => {
     <View style={styles.body}>
       <Icon
         testID={props.testId}
-        reverse style={styles.icon} color={ttsColorIcon} size={20} marginonPress={speak}
+        reverse style={styles.icon} color={ttsColorIcon} size={props.smallButton ? 15 : 20} marginonPress={speak}
         name='volume-up'
         type='font-awesome-5'
         onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
@@ -113,6 +128,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   icon: {
-    paddingBottom: 5
+    paddingBottom: 120
   }
 })

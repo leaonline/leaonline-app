@@ -29,7 +29,7 @@ jobs:
               ${{ runner.os }}-node-
        
         - name: install node modules
-          run: cd src && npm install
+          run: cd src && npm ci
              
         - name: run jest tests
           run: cd src && npm test

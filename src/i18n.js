@@ -26,7 +26,9 @@ const resources = {
       text: 'Welcome! Please select an area.'
     },
     profileScreen: {
-      headerTitle: 'Your Profile'
+      headerTitle: 'Your Profile',
+      progress: 'Overall progress',
+      title: 'My successes'
     },
     overviewScreen: {},
     taskScreen: {}
@@ -52,7 +54,9 @@ const resources = {
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
     },
     profileScreen: {
-      headerTitle: 'Dein Profil'
+      headerTitle: 'Dein Profil',
+      progress: 'Gesamter Fortschritt',
+      title: 'Meine Erfolge'
     },
     overviewScreen: {},
     taskScreen: {}

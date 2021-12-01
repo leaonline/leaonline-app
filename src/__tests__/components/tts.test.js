@@ -2,7 +2,7 @@ import React from 'react'
 import WelcomeScreen from '../../screens/WelcomeScreen'
 import TandCScreen from '../../screens/TermsAndConditionsScreen'
 import { TTSengine } from '../../components/Tts'
-import { fireEvent, render, waitFor, act } from '@testing-library/react-native'
+import { fireEvent, render, act } from '@testing-library/react-native'
 import { asyncTimeout } from '../../utils/asyncTimeout'
 import Colors from '../../constants/Colors'
 import i18n from '../../i18n'
@@ -24,12 +24,10 @@ it('tts (async) speak', async () => {
     },
     speak: t => {
       expect(t).toBe('Herzlich Willkommen zu lea online')
-      global.ttsIsCurrentlyPlaying = true
       speakCalled = true
     },
     stop: () => {
       stopCalled = true
-      global.ttsIsCurrentlyPlaying = false
     }
   })
 
@@ -40,11 +38,9 @@ it('tts (async) speak', async () => {
   )
   const foundButton = getByTestId('welcomeScreen1')
   await fireEvent.press(foundButton)
-  await waitFor(() => {
-    expect(global.ttsIsCurrentlyPlaying).toBeTruthy()
-    expect(speakCalled).toBe(true)
-    expect(stopCalled).toBe(false)
-  })
+  await asyncTimeout(50)
+  expect(speakCalled).toBe(true)
+  expect(stopCalled).toBe(false)
 })
 
 it('stop tts process if its already active', async () => {
@@ -70,13 +66,13 @@ it('stop tts process if its already active', async () => {
   const foundButton = getByTestId('welcomeScreen1')
 
   act(() => fireEvent.press(foundButton))
-  await asyncTimeout(10)
+  await asyncTimeout(5)
   expect(TTSengine.isSpeaking).toBe(true)
   expect(TTSengine.speakId).toBe(1)
   expect(speakCalled).toBe(true)
 
   act(() => fireEvent.press(foundButton))
-  await asyncTimeout(10)
+  await asyncTimeout(5)
   expect(TTSengine.isSpeaking).toBe(false)
   expect(TTSengine.speakId).toBe(0)
   expect(stopCalled).toBe(true)
@@ -92,25 +88,22 @@ it('start 2 different tts processes successively', async () => {
     },
     speak: t => {
       expect(t).toBe('Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu')
-      global.ttsIsCurrentlyPlaying = true
       speakCalled = true
     },
     stop: () => {
       stopCalled = true
-      global.ttsIsCurrentlyPlaying = false
     }
   })
 
   const { getByTestId } = render(<TandCScreen />)
   const foundButton1 = getByTestId('tandc1')
   const foundButton2 = getByTestId('tandc2')
-  fireEvent.press(foundButton1)
-  fireEvent.press(foundButton2)
-  await waitFor(() => {
-    expect(global.ttsIsCurrentlyPlaying).toBeTruthy()
-    expect(speakCalled).toBe(true)
-    expect(stopCalled).toBe(false)
-  })
+  act(() => fireEvent.press(foundButton1))
+  act(() => fireEvent.press(foundButton2))
+  await asyncTimeout(50)
+
+  expect(speakCalled).toBe(true)
+  expect(stopCalled).toBe(false)
 })
 
 it('checks for icon color', async () => {
