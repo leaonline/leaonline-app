@@ -36,7 +36,7 @@ const ttsComponent = props => {
    * @deprecated use TTSEngine.isSpeaking
    **/
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
-  
+
   TTSengine.isSpeaking = isCurrentlyPlaying
   TTSengine.speakId = currentlyPlayingId
   TTSengine.iconColor = ttsColorIcon
