@@ -23,7 +23,8 @@ jobs:
         node-version: '12.x'
 
     - name: fetch Semikolon font file
-      env: FONT_URL: ${{ secrets.FONT_URL }}
+      env:
+        FONT_URL: ${{ secrets.FONT_URL }}
       run: |
         FILE_NAME=$(basename FONT_URL)
         wget -q FONT_URL -O src/assets/fonts/${FILE_NAME}
