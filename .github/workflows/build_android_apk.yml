@@ -39,7 +39,7 @@ jobs:
       run: cd src/android && ./gradlew assembleRelease
     
     - name: upload apk file
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
-        name: app-release.apk
+        name: android-release-${{ github.event.inputs.releasetag }}
         path: src/android/app/build/outputs/apk/release/
