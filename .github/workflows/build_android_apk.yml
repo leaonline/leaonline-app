@@ -26,9 +26,8 @@ jobs:
       env:
         FONT_URL: ${{ secrets.FONT_URL }}
       run: |
-        FILE_NAME=$(basename $FONT_URL)
-        mkdir -p src/assets/fonts
-        wget -q FONT_URL -O src/assets/fonts/SemikolonPlus-Regular.ttf
+        mkdir -p ./src/assets/fonts
+        wget -q $FONT_URL -O ./src/assets/fonts/SemikolonPlus-Regular.ttf
 
     - name: install node modules
       run: cd src && npm ci && npm install --global expo-cli
