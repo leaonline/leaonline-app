@@ -2,11 +2,11 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-const OverviewScreen = props => {
+const MapScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Text>OverviewScreen (/Map)</Text>
+        <Text>MapScreen</Text>
       </View>
 
       <View style={styles.navigationButtons}>
@@ -18,7 +18,7 @@ const OverviewScreen = props => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Task' })
+          props.navigation.navigate({ routeName: 'Unit' })
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
@@ -28,7 +28,7 @@ const OverviewScreen = props => {
   )
 }
 
-OverviewScreen.navigationOptions = (navData) => {
+MapScreen.navigationOptions = (navData) => {
   return {
     headerShown: false
   }
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default OverviewScreen
+export default MapScreen

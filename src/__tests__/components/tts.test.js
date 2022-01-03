@@ -1,5 +1,5 @@
 import React from 'react'
-import WelcomeScreen from '../../screens/WelcomeScreen'
+import SplashScreen from '../../screens/SplashScreen'
 import TandCScreen from '../../screens/TermsAndConditionsScreen'
 import { TTSengine } from '../../components/Tts'
 import { fireEvent, render, act } from '@testing-library/react-native'
@@ -9,8 +9,8 @@ import i18n from '../../i18n'
 import { I18nextProvider } from 'react-i18next'
 
 it('find button via testId', () => {
-  const { getByTestId } = render(<WelcomeScreen />)
-  const foundButton = getByTestId('welcomeScreen1')
+  const { getByTestId } = render(<SplashScreen />)
+  const foundButton = getByTestId('splashScreen1')
   expect(foundButton).toBeTruthy()
 })
 
@@ -33,10 +33,10 @@ it('tts (async) speak', async () => {
 
   const { getByTestId } = render(
     <I18nextProvider i18n={i18n}>
-      <WelcomeScreen />
+      <SplashScreen />
     </I18nextProvider>
   )
-  const foundButton = getByTestId('welcomeScreen1')
+  const foundButton = getByTestId('splashScreen1')
   await fireEvent.press(foundButton)
   await asyncTimeout(50)
   expect(speakCalled).toBe(true)
@@ -62,8 +62,8 @@ it('stop tts process if its already active', async () => {
     }
   })
 
-  const { getByTestId } = render(<WelcomeScreen />)
-  const foundButton = getByTestId('welcomeScreen1')
+  const { getByTestId } = render(<SplashScreen />)
+  const foundButton = getByTestId('splashScreen1')
 
   act(() => fireEvent.press(foundButton))
   await asyncTimeout(5)
@@ -125,8 +125,8 @@ it('checks for icon color', async () => {
     }
   })
 
-  const { getByTestId } = render(<WelcomeScreen />)
-  const foundButton = getByTestId('welcomeScreen1')
+  const { getByTestId } = render(<SplashScreen />)
+  const foundButton = getByTestId('splashScreen1')
 
   expect(TTSengine.iconColor).toBe(Colors.primary)
   act(() => fireEvent.press(foundButton))

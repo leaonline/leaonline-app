@@ -9,11 +9,11 @@ import { useTranslation } from 'react-i18next'
 const Tts = TTSengine.component()
 
 /**
- * WelcomeScreen displays the welcome text.
+ * SplashScreen displays the welcome text.
  * @returns {JSX.Element}
  * @constructor
  */
-const WelcomeScreen = props => {
+const SplashScreen = props => {
   const { t } = useTranslation()
   const headerPath = require('../assets/logo-footer.png')
 
@@ -24,7 +24,7 @@ const WelcomeScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='welcomeScreen1' />
+        <Tts text={t('splashScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
       </View>
 
       <View style={styles.navigationButton}>
@@ -41,7 +41,7 @@ const WelcomeScreen = props => {
   )
 }
 
-WelcomeScreen.navigationOptions = (navData) => {
+SplashScreen.navigationOptions = (navData) => {
   return {
     headerShown: false
   }
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
 }
 )
 
-export default WelcomeScreen
+export default SplashScreen
