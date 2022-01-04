@@ -18,7 +18,7 @@ const HomeScreen = props => {
   const renderButtons = () => {
     return data.dimensions.map((item, key) => {
       return (
-        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate({ routeName: 'Overview' })} />
+        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate({ routeName: 'Map' })} />
       )
     })
   }

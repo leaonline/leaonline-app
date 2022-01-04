@@ -1,13 +1,14 @@
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
 
-import WelcomeScreen from '../screens/WelcomeScreen'
+import SplashScreen from '../screens/SplashScreen'
 import TermsAndConditionsScreen from '../screens/TermsAndConditionsScreen'
 import HomeScreen from '../screens/HomeScreen'
-import OverviewScreen from '../screens/OverviewScreen'
-import TaskScreen from '../screens/TaskScreen'
+import MapScreen from '../screens/MapScreen'
+import UnitScreen from '../screens/UnitScreen'
 import RegistrationScreen from '../screens/RegistrationScreen'
 import ProfileScreen from '../screens/ProfileScreen'
+import CompleteScreen from '../screens/CompleteScreen'
 
 /**
  * WizardNavigator navigates between screens.
@@ -15,13 +16,14 @@ import ProfileScreen from '../screens/ProfileScreen'
  * @component
  */
 const WizardNavigator = createStackNavigator({
-  WelcomeScreen: WelcomeScreen,
+  SplashScreen: SplashScreen,
   TandC: TermsAndConditionsScreen,
   Registration: RegistrationScreen,
   Home: HomeScreen,
-  Overview: OverviewScreen,
-  Task: TaskScreen,
-  Profile: ProfileScreen
+  Map: MapScreen,
+  Unit: UnitScreen,
+  Profile: ProfileScreen,
+  Complete: CompleteScreen
 },
 { transparentCard: true })
 
