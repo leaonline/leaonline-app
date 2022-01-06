@@ -1,12 +1,17 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
+import Colors from '../constants/Colors'
 
 const UnitScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
         <Text>UnitScreen</Text>
+      </View>
+
+      <View style={styles.body}>
+        <Text>Aufgabe</Text>
       </View>
 
       <View style={styles.navigationButtons}>
@@ -18,10 +23,17 @@ const UnitScreen = props => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Complete' })
+          props.navigation.navigate({ routeName: 'Unit' })
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          props.navigation.navigate({ routeName: 'Complete' })
+        }}
+        >
+          <Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>
     </View>
@@ -46,7 +58,7 @@ const styles = StyleSheet.create({
   },
   iconNavigation: {
     paddingBottom: 5,
-    padding: 100
+    padding: 50
   },
   navigationButtons: {
     flexDirection: 'row'

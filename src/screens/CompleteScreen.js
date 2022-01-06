@@ -9,6 +9,10 @@ const CompleteScreen = props => {
         <Text>CompleteScreen</Text>
       </View>
 
+      <View style={styles.body}>
+        <Text>Du hast es geschafft</Text>
+      </View>
+
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
           props.navigation.navigate({ routeName: 'Map' })
