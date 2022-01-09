@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
-import i18n from 'i18next'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
@@ -48,6 +47,7 @@ const ProfileScreen = props => {
     return (
       <ListItem.Accordion
         noIcon
+        containerStyle={{ backgroundColor: 'transparent' }}
         key={key}
         content={
           <>
@@ -63,7 +63,7 @@ const ProfileScreen = props => {
         }}
       >
         {expanded && current.fields.map((item, key) => (
-          <ListItem key={key}>
+          <ListItem key={key} containerStyle={{ backgroundColor: 'transparent' }}>
             <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
               <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
               <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
@@ -95,12 +95,6 @@ const ProfileScreen = props => {
       </ScrollView>
     </SafeAreaView>
   )
-}
-
-ProfileScreen.navigationOptions = (navData) => {
-  return {
-    headerTitle: i18n.t('profileScreen.headerTitle')
-  }
 }
 
 const styles = StyleSheet.create({

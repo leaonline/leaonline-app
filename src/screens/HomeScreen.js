@@ -18,7 +18,7 @@ const HomeScreen = props => {
   const renderButtons = () => {
     return data.dimensions.map((item, key) => {
       return (
-        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate({ routeName: 'Map' })} />
+        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate('Map')} />
       )
     })
   }
@@ -26,7 +26,7 @@ const HomeScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate({ routeName: 'Profile' })} />
+        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate('Profile')} />
       </View>
       <View style={styles.header}>
         <Tts text={t('homeScreen.text')} color={Colors.secondary} id={5} testId='homeScreen1' />
@@ -40,12 +40,6 @@ const HomeScreen = props => {
       </View>
     </View>
   )
-}
-
-HomeScreen.navigationOptions = () => {
-  return {
-    headerShown: false
-  }
 }
 
 const styles = StyleSheet.create({

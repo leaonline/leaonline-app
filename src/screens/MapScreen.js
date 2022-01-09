@@ -11,14 +11,14 @@ const MapScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Home' })
+          props.navigation.navigate('Home')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Unit' })
+          props.navigation.navigate('Unit')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
@@ -26,12 +26,6 @@ const MapScreen = props => {
       </View>
     </View>
   )
-}
-
-MapScreen.navigationOptions = (navData) => {
-  return {
-    headerShown: false
-  }
 }
 
 const styles = StyleSheet.create({

@@ -15,7 +15,7 @@ const CompleteScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Map' })
+          props.navigation.navigate('Map')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
@@ -23,12 +23,6 @@ const CompleteScreen = props => {
       </View>
     </View>
   )
-}
-
-CompleteScreen.navigationOptions = () => {
-  return {
-    headerShown: false
-  }
 }
 
 const styles = StyleSheet.create({

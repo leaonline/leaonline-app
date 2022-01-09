@@ -3,7 +3,6 @@ import React from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import i18n from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
 
@@ -29,7 +28,7 @@ const RegistrationScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate({ routeName: 'TandC' })
+          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('TandC')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
@@ -38,7 +37,7 @@ const RegistrationScreen = props => {
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
             ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate({ routeName: 'Home' })
+            : props.navigation.navigate('Home')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
@@ -46,13 +45,6 @@ const RegistrationScreen = props => {
       </View>
     </View>
   )
-}
-
-RegistrationScreen.navigationOptions = (navData) => {
-  return {
-    headerTitle: i18n.t('registrationScreen.headerTitle'),
-    headerLeft: () => null
-  }
 }
 
 const styles = StyleSheet.create({
