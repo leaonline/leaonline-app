@@ -16,7 +16,7 @@ const UnitScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Map')
+          props.navigation.navigate('Dimension')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
