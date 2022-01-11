@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
-import TTSText from './TTSText '
+import TTSText from './TTSText'
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 
