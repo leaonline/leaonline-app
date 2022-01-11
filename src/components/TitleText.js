@@ -3,8 +3,10 @@ import { Text } from 'react-native'
 
 /**
  * TitleText is a component of Tts. It displays the spoken text.
+ *
+ * @category Components
  * @param {string} props.text: The displayed text
- * @param {css} props.style: The style elements for the text
+ * @param {StyleSheet} props.style: The style elements for the text
  * @returns {JSX.Element}
  * @constructor
  */

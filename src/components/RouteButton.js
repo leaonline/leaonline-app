@@ -4,10 +4,34 @@ import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
+/**
+ * @private
+ */
 const Tts = TTSengine.component()
 
 /**
- * RouteButton contains an icon and a button.
+ * @private
+ */
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  buttonTitle: {
+    color: Colors.primary,
+    padding: 30,
+    width: '75%'
+  },
+  button: {
+    paddingTop: 5
+  }
+})
+
+/**
+ * RouteButton contains an icon and a button and a handler for the routing.
+ * It renders with default styles.
+ *
+ * @category Components
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
@@ -24,20 +48,5 @@ const RouteButton = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  }
-})
 
 export default RouteButton

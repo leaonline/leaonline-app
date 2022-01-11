@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -95,10 +95,34 @@ import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
+/**
+ * @private
+ */
 const Tts = TTSengine.component()
 
 /**
- * RouteButton contains an icon and a button.
+ * @private
+ */
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  buttonTitle: {
+    color: Colors.primary,
+    padding: 30,
+    width: '75%'
+  },
+  button: {
+    paddingTop: 5
+  }
+})
+
+/**
+ * RouteButton contains an icon and a button and a handler for the routing.
+ * It renders with default styles.
+ *
+ * @category Components
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
@@ -115,21 +139,6 @@ const RouteButton = props => {
     &lt;/View>
   )
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  }
-})
 
 export default RouteButton
 </code></pre>

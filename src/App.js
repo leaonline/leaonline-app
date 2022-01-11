@@ -32,6 +32,7 @@ TTSengine.setSpeech(Speech)
 
 /**
  * Main Application entry point
+ * @category Global
  * @component
  * @returns {JSX.Element}
  */

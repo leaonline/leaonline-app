@@ -17,7 +17,8 @@ import { useTranslation } from 'react-i18next'
 /**
  * StackNavigator navigates between screens in a push/pop fashion.
  * We use left-to-right / right-to-left transitions as animations.
- *
+
+ * @category  Controller
  * @type {StackNavigator}
  * @component
  * @returns {JSX.Element}

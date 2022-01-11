@@ -70,7 +70,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -160,6 +160,79 @@
             
                 <div class="member">
 
+<h4 class="name" id="asyncTimeout">
+    <a class="href-link" href="#asyncTimeout">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        asyncTimeout
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Asynchronous timeout using Promises</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="utils_asyncTimeout.js.html" class="button">View Source</a>
+            <span>
+                <a href="utils_asyncTimeout.js.html">utils/asyncTimeout.js</a>, <a href="utils_asyncTimeout.js.html#line7">line 7</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
     <span class="method-parameter is-pulled-right">
         <label>Type:</label>
         
@@ -228,7 +301,227 @@ We use left-to-right / right-to-left transitions as animations.</p>
         <p class="tag-source">
             <a href="navigation_navigator.js.html" class="button">View Source</a>
             <span>
-                <a href="navigation_navigator.js.html">navigation/navigator.js</a>, <a href="navigation_navigator.js.html#line25">line 25</a>
+                <a href="navigation_navigator.js.html">navigation/navigator.js</a>, <a href="navigation_navigator.js.html#line26">line 26</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="TTSengine">
+    <a class="href-link" href="#TTSengine">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        TTSengine
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Global Text-To-Speech engine. The actual tts-processor engine is injected,
+this is only a wrapper to connect it with react components.</p>
+<p>Designed to have always only one instance of speech being active.</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>setSpeech</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">function</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>use to inject tts implementation</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>isSpeaking</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>indicate if currently there is a
+speech ongoing</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>speakId</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>id of the target that is used for tts</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>iconColor</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">null</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>current color of the speech icon</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>component</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">function</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>returns the react component {ttsComponent}</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="components_Tts.js.html" class="button">View Source</a>
+            <span>
+                <a href="components_Tts.js.html">components/Tts.js</a>, <a href="components_Tts.js.html#line154">line 154</a>
             </span>
         </p>
     
@@ -1437,7 +1730,8 @@ On &quot;back&quot; if navigates back to the {TermsAnsConditionsScreen}.</p>
     
     
     <div class="description">
-        <p>RouteButton contains an icon and a button.</p>
+        <p>RouteButton contains an icon and a button and a handler for the routing.
+It renders with default styles.</p>
     </div>
     
 
@@ -1589,7 +1883,7 @@ On &quot;back&quot; if navigates back to the {TermsAnsConditionsScreen}.</p>
         <p class="tag-source">
             <a href="components_RouteButton.js.html" class="button">View Source</a>
             <span>
-                <a href="components_RouteButton.js.html">components/RouteButton.js</a>, <a href="components_RouteButton.js.html#line17">line 17</a>
+                <a href="components_RouteButton.js.html">components/RouteButton.js</a>, <a href="components_RouteButton.js.html#line41">line 41</a>
             </span>
         </p>
     

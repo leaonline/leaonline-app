@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -99,8 +99,21 @@ import { asyncTimeout } from '../utils/asyncTimeout'
 /** @private **/
 let Speech = null
 
+/** @private stylesheet **/
+const styles = StyleSheet.create({
+  body: {
+    flexDirection: 'row'
+  },
+  icon: {
+    paddingBottom: 120
+  }
+})
+
+
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
+ *
+ * @category Components
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
@@ -215,6 +228,20 @@ const ttsComponent = props => {
   )
 }
 
+/**
+ * Global Text-To-Speech engine. The actual tts-processor engine is injected,
+ * this is only a wrapper to connect it with react components.
+ *
+ * Designed to have always only one instance of speech being active.
+ *
+ *
+ * @property setSpeech {function} use to inject tts implementation
+ * @property isSpeaking {boolean} indicate if currently there is a
+ *  speech ongoing
+ * @property speakId {number} id of the target that is used for tts
+ * @property iconColor {null} current color of the speech icon
+ * @property component {function} returns the react component {ttsComponent}
+ */
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
@@ -224,15 +251,6 @@ export const TTSengine = {
   iconColor: null,
   component: () => ttsComponent
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flexDirection: 'row'
-  },
-  icon: {
-    paddingBottom: 120
-  }
-})
 </code></pre>
         </article>
     </section>

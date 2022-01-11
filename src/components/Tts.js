@@ -8,8 +8,21 @@ import { asyncTimeout } from '../utils/asyncTimeout'
 /** @private **/
 let Speech = null
 
+/** @private stylesheet **/
+const styles = StyleSheet.create({
+  body: {
+    flexDirection: 'row'
+  },
+  icon: {
+    paddingBottom: 120
+  }
+})
+
+
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
+ *
+ * @category Components
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
@@ -124,6 +137,20 @@ const ttsComponent = props => {
   )
 }
 
+/**
+ * Global Text-To-Speech engine. The actual tts-processor engine is injected,
+ * this is only a wrapper to connect it with react components.
+ *
+ * Designed to have always only one instance of speech being active.
+ *
+ *
+ * @property setSpeech {function} use to inject tts implementation
+ * @property isSpeaking {boolean} indicate if currently there is a
+ *  speech ongoing
+ * @property speakId {number} id of the target that is used for tts
+ * @property iconColor {null} current color of the speech icon
+ * @property component {function} returns the react component {ttsComponent}
+ */
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
@@ -133,12 +160,3 @@ export const TTSengine = {
   iconColor: null,
   component: () => ttsComponent
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flexDirection: 'row'
-  },
-  icon: {
-    paddingBottom: 120
-  }
-})
