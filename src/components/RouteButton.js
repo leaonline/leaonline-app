@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 const RouteButton = props => {
   return (
     <View style={styles.body}>
-      <Tts text={props.title} color={Colors.primary} id={6} testId='routeButton' dontShowText />
+      <Tts text={props.title} color={Colors.primary} id={`${props.title}-tts`} dontShowText />
       <View style={styles.button}>
         <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
       </View>

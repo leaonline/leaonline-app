@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-  header: {
+  headerr: {
     flex: 1
   },
   body: {
@@ -66,7 +66,11 @@ const RegistrationScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
+        <Tts
+          id='registrationScreen.form.text'
+          text={t('registrationScreen.form.text')}
+          color={Colors.primary}
+        />
       </View>
 
       <View style={styles.navigationButtons}>

@@ -65,7 +65,11 @@ const WelcomeScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
+        <Tts
+          id='welcomeScreen.text'
+          text={t('welcomeScreen.text')}
+          color={Colors.primary}
+        />
       </View>
 
       <View style={styles.navigationButton}>

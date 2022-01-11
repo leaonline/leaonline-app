@@ -65,11 +65,16 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        <Tts color={Colors.primary} text={t('TandCScreen.text')} id='TandCScreen.text' />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
+        <Tts
+          id='TandCScreen.checkBoxText'
+          text={t('TandCScreen.checkBoxText')}
+          color={termsAndConditionsColor}
+          align='left'
+        />
         <CheckBox
           center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
