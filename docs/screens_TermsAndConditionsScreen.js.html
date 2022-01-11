@@ -27,12 +27,14 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global ttsIsCurrentlyPlaying */
-
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import Tts from '../components/Tts'
+import { TTSengine } from '../components/Tts'
+import { useTranslation } from 'react-i18next'
+
+const Tts = TTSengine.component()
 
 /**
  * TermsAndConditionsScreen displays the terms and conditions the user must agree to.
@@ -40,11 +42,10 @@ import Tts from '../components/Tts'
  * @constructor
  */
 const TermsAndConditionsScreen = props => {
-  // TODO move all language specific text sections to i18n file
-  const TandCText = 'Hiermit stimme ich folgenden Bedingungen zu ...'
-  const checkBoxText = 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
+  const { t } = useTranslation()
+
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
-  const [termsAndconditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
+  const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
 
   const checkboxHandler = () => {
     setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
@@ -52,54 +53,44 @@ const TermsAndConditionsScreen = props => {
   }
 
   const checkBoxIsNotChecked = () => {
-    // TODO also move all alert messages to i18n file
-    Alert.alert('Alert', 'You need to accept the terms and conditions to continue')
+    Alert.alert(t('alert.title'), t('alert.checkBox'))
     setTermsAndConditionsColor(Colors.danger)
   }
 
-  // TODO TandCText needs to be replaced with global variable from i18n file
   return (
     &lt;View style={styles.container}>
       &lt;View style={styles.body}>
-        &lt;Tts color={Colors.primary} text={TandCText} id={2} />
+        &lt;Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
       &lt;/View>
 
       &lt;View style={styles.checkBox}>
-        &lt;Tts color={termsAndconditionsColor} text={checkBoxText} align='left' id={3} />
+        &lt;Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
         &lt;CheckBox
-          iconRight checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
-          uncheckedColor={termsAndconditionsColor}
+          center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
+          uncheckedColor={termsAndConditionsColor}
         />
       &lt;/View>
 
       &lt;View style={styles.navigationButtons}>
         &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig') : props.navigation.navigate({ routeName: 'WelcomeScreen' })
+          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
         }}
         >
-          &lt;Icon style={styles.iconNavigation} name='arrow-left-circle' type='feather' size={35} />
+          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         &lt;/TouchableOpacity>
         &lt;TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
-            ? Alert.alert('Stop', 'Es wird noch geredet ! \nBitte warten Sie bis zu Ende gespochen wurde oder beenden Sie es vorzeitig')
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
             : termsAndConditionsIsChecked
-              ? props.navigation.navigate({ routeName: 'Registration' })
+              ? props.navigation.navigate('Registration')
               : checkBoxIsNotChecked()
         }}
         >
-          &lt;Icon style={styles.iconNavigation} name='arrow-right-circle' type='feather' size={35} />
+          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         &lt;/TouchableOpacity>
       &lt;/View>
-
     &lt;/View>
   )
-}
-
-TermsAndConditionsScreen.navigationOptions = (navData) => {
-  return {
-    headerTitle: 'Allgemeine Geschäftsbedingungen',
-    headerLeft: () => null
-  }
 }
 
 const styles = StyleSheet.create({
@@ -108,25 +99,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-
-  header: {
-    flex: 1
-  },
   body: {
     flex: 2,
     flexDirection: 'row'
-
   },
-  text: {
-    color: Colors.primary,
-    paddingLeft: 5
-  },
-
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
   },
   checkBox: {
+    alignItems: 'center',
     flexDirection: 'row'
   },
   navigationButtons: {
@@ -146,13 +128,13 @@ export default TermsAndConditionsScreen
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="Tts.html">Tts</a></li><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#WizardNavigator">WizardNavigator</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="RouteButton.html">RouteButton</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#Stack">Stack</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Aug 11 2021 11:45:48 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jan 11 2022 08:22:30 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

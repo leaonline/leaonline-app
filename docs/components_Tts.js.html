@@ -26,46 +26,66 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
-import * as Speech from 'expo-speech'
-
 import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
 import Colors from '../constants/Colors'
+import { asyncTimeout } from '../utils/asyncTimeout'
 
-const asyncTimeout = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve()
-  }, ms)
-})
+/** @private **/
+let Speech = null
 
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  * @param {string} props.text: The displayed and spoken text
+ * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
+ * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
+ * @param {number} props.shrink: The parameter to shrink the text. Default: 1
+ * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
+ * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
+ * @param {string} props.testID: The parameter to identify the buttons for testing
+ * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
  */
 
-const Tts = props => {
+const ttsComponent = props => {
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
-  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+  // since TTS has events, that runs async and calls back to this component
+  // we need a flag to prevent updating state when the component is unmounted
+  let unmounted = false
 
   /**
-     * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
-     */
+   * @deprecated use TTSEngine.isSpeaking
+   **/
+  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+
+  useEffect(() => {
+    TTSengine.isSpeaking = isCurrentlyPlaying
+    TTSengine.speakId = currentlyPlayingId
+    TTSengine.iconColor = ttsColorIcon
+
+    return () => {
+      unmounted = true
+    }
+  }, [isCurrentlyPlaying])
+
+  /**
+   * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
+   */
   const speak = async () => {
     const isSpeaking = await Speech.isSpeakingAsync()
 
     if (isSpeaking) {
       stopSpeak()
       await asyncTimeout(5)
-      await speak()
+      return await speak()
     }
 
     Speech.speak(props.text, {
@@ -78,52 +98,78 @@ const Tts = props => {
     })
   }
   /**
-     * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
-     */
+   * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
+   */
   const stopSpeak = () => {
-    setTtsColorIcon(props.color)
-    setCurrentlyPlaying(false)
-    setCurrentlyPlayingId(0)
+    if (!unmounted) {
+      setTtsColorIcon(props.color)
+      setCurrentlyPlaying(false)
+      setCurrentlyPlayingId(0)
+    }
     Speech.stop()
   }
   /**
-     * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
-     */
+   * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
+   */
   const startSpeak = () => {
-    setTtsColorIcon(Colors.success)
-    setCurrentlyPlaying(true)
-    setCurrentlyPlayingId(props.id)
+    if (!unmounted) {
+      setTtsColorIcon(Colors.success)
+      setCurrentlyPlaying(true)
+      setCurrentlyPlayingId(props.id)
+    }
+  }
+
+  /**
+   * Displays the spoken text if "dontShowText" is false.
+   */
+  const displayedText = () => {
+    if (!props.dontShowText) {
+      // color always detaults to secondary and align always to left
+      const styleProps = {
+        color: props.color,
+        flexShrink: props.shrink || 1,
+        fontSize: props.fontSize || 18,
+        textAlign: props.align,
+        paddingTop: props.paddingTop || 8
+      }
+
+      return (&lt;TitleText style={styleProps} text={props.text} />)
+    }
   }
 
   return (
     &lt;View style={styles.body}>
       &lt;Icon
-        reverse style={styles.icon} color={ttsColorIcon} size={22} marginonPress={speak}
-        name='volume-2'
-        type='feather'
+        testID={props.testId}
+        reverse style={styles.icon} color={ttsColorIcon} size={props.smallButton ? 15 : 20} marginonPress={speak}
+        name='volume-up'
+        type='font-awesome-5'
         onPress={() => ((currentlyPlayingId === props.id) &amp;&amp; isCurrentlyPlaying) ? stopSpeak() : speak()}
       />
-      &lt;TitleText
-        style={{ color: props.color, paddingLeft: 5, textAlign: props.align }}
-        text={props.text}
-      />
+      {displayedText()}
     &lt;/View>
 
   )
 }
 
+export const TTSengine = {
+  setSpeech (s) {
+    Speech = s
+  },
+  isSpeaking: false,
+  speakId: 0,
+  iconColor: null,
+  component: () => ttsComponent
+}
+
 const styles = StyleSheet.create({
   body: {
-    flex: 2,
-    flexDirection: 'row',
-    marginHorizontal: 32
+    flexDirection: 'row'
   },
   icon: {
-    paddingBottom: 5
+    paddingBottom: 120
   }
 })
-
-export default Tts
 </code></pre>
         </article>
     </section>
@@ -134,13 +180,13 @@ export default Tts
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="Tts.html">Tts</a></li><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#WizardNavigator">WizardNavigator</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="RouteButton.html">RouteButton</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#Stack">Stack</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Aug 11 2021 11:45:48 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jan 11 2022 08:22:30 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
