@@ -3,6 +3,45 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 
+/**
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 50
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * On this screen, the respective Unit is displayed and the users can interact
+ * with it, by solving the tasks on it's pages.
+ *
+ * If a unit is completed and there is no next unit in the queue, it navigates
+ * the users to the {CompleteScreen}.
+ *
+ * If a next unit exists, it will load this next unit.
+ *
+ * On cancel, it navigates users back to the {MapScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
 const UnitScreen = props => {
   return (
     <View style={styles.container}>
@@ -39,24 +78,5 @@ const UnitScreen = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 50
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  }
-})
 
 export default UnitScreen

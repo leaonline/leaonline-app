@@ -7,18 +7,40 @@ import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 import './i18n'
 
+/**
+ * @private used to load our custom font
+ * @return {Promise<void>}
+ */
 const fetchFonts = () => {
   return Font.loadAsync({
     semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
   })
 }
 
+/**
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1
+  }
+})
+
+// inject expo-speech as our current
+// speech-synthesis implementation
 TTSengine.setSpeech(Speech)
 
+/**
+ * Main Application entry point
+ * @component
+ * @returns {JSX.Element}
+ */
 export default function App () {
   const [fontLoaded, setFontLoaded] = useState(false)
   const [waitForInterval, setWaitThreeSeconds] = useState(false)
 
+  // use this effect to make the splash screen remain
+  // for a few seconds, once the font has been loaded
   useEffect(() => {
     if (fontLoaded) {
       // TODO Timeout variable should be later set in a separate global environment file
@@ -45,10 +67,3 @@ export default function App () {
 
   )
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1
-  }
-
-})

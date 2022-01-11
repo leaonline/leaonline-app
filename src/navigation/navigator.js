@@ -15,9 +15,12 @@ import CompleteScreen from '../screens/CompleteScreen'
 import { useTranslation } from 'react-i18next'
 
 /**
- * AppNavigator navigates between screens.
- * @type {NavigationNavigator}
+ * StackNavigator navigates between screens in a push/pop fashion.
+ * We use left-to-right / right-to-left transitions as animations.
+ *
+ * @type {StackNavigator}
  * @component
+ * @returns {JSX.Element}
  */
 const Stack = createStackNavigator()
 

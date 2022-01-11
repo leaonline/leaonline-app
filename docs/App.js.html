@@ -1,86 +1,163 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: App.js</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> App.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
 </head>
 
-<body>
 
-<div id="main">
 
-    <h1 class="page-title">Source: App.js</h1>
-
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
     
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>App.js</h1>
+                </header>
+                
 
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { StatusBar } from 'expo-status-bar'
-import React from 'react'
-import { Button, StyleSheet, Text, View, Alert } from 'react-native'
-import { Header } from 'react-native-elements'
-// import Meteor, { Mongo, withTracker } from '@meteorrn/core'
-// import Meteor from '@meteorrn/core'
-
-// Meteor.connect("ws://127.0.0.1:3000/websocket");
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+import * as Speech from 'expo-speech'
+import { TTSengine } from './components/Tts'
+import Navigator from './navigation/navigator'
+import './i18n'
 
 /**
- * The Application root
- * @comonent
- * @return {*}
- * @constructor
+ * @private used to load our custom font
+ * @return {Promise&lt;void>}
+ */
+const fetchFonts = () => {
+  return Font.loadAsync({
+    semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
+  })
+}
+
+/**
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1
+  }
+})
+
+// inject expo-speech as our current
+// speech-synthesis implementation
+TTSengine.setSpeech(Speech)
+
+/**
+ * Main Application entry point
+ * @component
+ * @returns {JSX.Element}
  */
 export default function App () {
-  return (
+  const [fontLoaded, setFontLoaded] = useState(false)
+  const [waitForInterval, setWaitThreeSeconds] = useState(false)
 
-    &lt;View style={styles.header}>
-      &lt;Header
-        leftComponent={{ icon: 'menu', color: '#fff' }}
-        centerComponent={{ text: 'lea.online Application ', style: { color: '#fff' } }}
-        rightComponent={{ icon: 'home', color: '#fff' }}
+  // use this effect to make the splash screen remain
+  // for a few seconds, once the font has been loaded
+  useEffect(() => {
+    if (fontLoaded) {
+      // TODO Timeout variable should be later set in a separate global environment file
+      setTimeout(() => {
+        setWaitThreeSeconds(true)
+      }, 1000)
+    }
+  }, [fontLoaded])
+
+  if (!waitForInterval) {
+    return (
+      &lt;AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setFontLoaded(true)}
+        onError={(error) => console.warn(error)}
       />
-      &lt;View style={styles.container}>
+    )
+  }
 
-        &lt;Text testID='textField'>Test Meteor Application
-        &lt;/Text>
-        &lt;StatusBar style='auto' />
-
-        &lt;Button
-          testID='Button'
-          title='Press This Button, please'
-          onPress={() => Alert.alert('Button is working')}
-        />
-      &lt;/View>
+  return (
+    &lt;View style={styles.screen}>
+      &lt;Navigator />
     &lt;/View>
 
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  header: {
-    width: '100%',
-    height: '100%'
-
-  }
-})
 </code></pre>
         </article>
     </section>
@@ -88,19 +165,25 @@ const styles = StyleSheet.create({
 
 
 
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Jul 14 2021 11:41:25 GMT+0200 (Central European Summer Time)
-</footer>
-
-<script> prettyPrint(); </script>
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
 </body>
 </html>

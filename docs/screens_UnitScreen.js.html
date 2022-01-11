@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Home</title>
+  <title> screens/UnitScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -77,69 +79,101 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>screens/UnitScreen.js</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>leaonline-app</h1>
-<p>To run the leaonline app you need to install the dependencies first with:</p>
-<pre class="prettyprint source"><code>npm install 
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Icon } from 'react-native-elements'
+import Colors from '../constants/Colors'
+
+/**
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 50
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * On this screen, the respective Unit is displayed and the users can interact
+ * with it, by solving the tasks on it's pages.
+ *
+ * If a unit is completed and there is no next unit in the queue, it navigates
+ * the users to the {CompleteScreen}.
+ *
+ * If a next unit exists, it will load this next unit.
+ *
+ * On cancel, it navigates users back to the {MapScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
+const UnitScreen = props => {
+  return (
+    &lt;View style={styles.container}>
+      &lt;View style={styles.body}>
+        &lt;Text>UnitScreen&lt;/Text>
+      &lt;/View>
+
+      &lt;View style={styles.body}>
+        &lt;Text>Aufgabe&lt;/Text>
+      &lt;/View>
+
+      &lt;View style={styles.navigationButtons}>
+        &lt;TouchableOpacity onPress={() => {
+          props.navigation.navigate('Dimension')
+        }}
+        >
+          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
+        &lt;/TouchableOpacity>
+
+        &lt;TouchableOpacity onPress={() => {
+          props.navigation.navigate('Unit')
+        }}
+        >
+          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
+        &lt;/TouchableOpacity>
+
+        &lt;TouchableOpacity onPress={() => {
+          props.navigation.navigate('Complete')
+        }}
+        >
+          &lt;Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
+        &lt;/TouchableOpacity>
+      &lt;/View>
+    &lt;/View>
+  )
+}
+
+export default UnitScreen
 </code></pre>
-<p><strong>Installation for <em>Android</em></strong></p>
-<p>First of all you'll need to prepare your development environment to start the java application of leaonline.<br>
-For that we prepared a shell script that install all necessary files.<br>
-To run the shell script just type:</p>
-<pre class="prettyprint source"><code>sudo ./install_android_environment.sh
-</code></pre>
-<p>After installing all necessary android files to run the emulator with leaonline, we need to create a virtual android device with:</p>
-<pre class="prettyprint source"><code>sudo ./install_emulator.sh
-</code></pre>
-<p>Before we run our project we need to start our emulator first with:</p>
-<pre class="prettyprint source"><code>/usr/lib/android-sdk/emulator/emulator -avd pixel
-</code></pre>
-<p>Now you can start the leaonline app on an android emulator:</p>
-<pre class="prettyprint source"><code>expo start 
-</code></pre>
-<p>After expo started just press <strong><em>a</em></strong> on your keyboard and expo will run leaonline on your previous created Android Emulator</p>
-<p><strong>Installation for <em>iOS</em></strong></p>
-<p>To start leaonline on an iOS Emulator you will need an macOS operation system and the latest xcode version.<br>
-Just run the following:</p>
-<pre class="prettyprint source"><code>expo start
-</code></pre>
-<p>After expo started just press <strong><em>i</em></strong> on your keyboard and expo will run leaonline on your iOS Emulator</p>
-<h2>Building</h2>
-<h3>Documentation</h3>
-<p>We use jsDoc with markdown and <a href="https://www.npmjs.com/package/better-docs#component-plugin-beta">better-docs plugins</a>
-to document React components. To build the docs run:</p>
-<pre class="prettyprint source lang-bash"><code>$ npm run docs
-</code></pre>
-<p>The docs are generated in the output folder <code>docs</code>.</p></article>
+        </article>
     </section>
-
-
 
 
 

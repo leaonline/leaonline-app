@@ -11,8 +11,8 @@ const Tts = TTSengine.component()
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
+ * @component
  * @returns {JSX.Element}
- * @constructor
  */
 const RouteButton = props => {
   return (
