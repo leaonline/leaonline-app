@@ -112,8 +112,9 @@ it('start 2 different tts processes successively', async () => {
   await act(async () => fireEvent.press(foundButton1))
   await act(async () => fireEvent.press(foundButton2))
   await asyncTimeout(50)
-
   expect(speakCalled).toBe(true)
+
+  await asyncTimeout(75)
   expect(stopCalled).toBe(true)
 })
 
