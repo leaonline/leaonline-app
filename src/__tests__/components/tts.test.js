@@ -1,5 +1,5 @@
 import React from 'react'
-import SplashScreen from '../../screens/SplashScreen'
+import WelcomeScreen from '../../screens/WelcomeScreen'
 import TandCScreen from '../../screens/TermsAndConditionsScreen'
 import { TTSengine } from '../../components/Tts'
 import { fireEvent, render, act } from '@testing-library/react-native'
@@ -9,7 +9,7 @@ import i18n from '../../i18n'
 import { I18nextProvider } from 'react-i18next'
 
 it('find button via testId', () => {
-  const { getByTestId } = render(<SplashScreen />)
+  const { getByTestId } = render(<WelcomeScreen />)
   const foundButton = getByTestId('splashScreen1')
   expect(foundButton).toBeTruthy()
 })
@@ -34,7 +34,7 @@ it('tts (async) speak', async () => {
 
   const { getByTestId } = render(
     <I18nextProvider i18n={i18n}>
-      <SplashScreen />
+      <WelcomeScreen />
     </I18nextProvider>
   )
   const foundButton = getByTestId('splashScreen1')
@@ -137,7 +137,7 @@ it('checks for icon color', async () => {
     }
   })
 
-  const { getByTestId } = render(<SplashScreen />)
+  const { getByTestId } = render(<WelcomeScreen />)
   const foundButton = getByTestId('splashScreen1')
 
   expect(TTSengine.iconColor).toBe(Colors.primary)
