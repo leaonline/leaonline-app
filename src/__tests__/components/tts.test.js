@@ -22,9 +22,10 @@ it('tts (async) speak', async () => {
     isSpeakingAsync: async function () {
       return false
     },
-    speak: t => {
+    speak: (t, options) => {
       expect(t).toBe('Herzlich Willkommen zu lea online')
       speakCalled = true
+      setTimeout(() => options.onDone(), 100)
     },
     stop: () => {
       stopCalled = true
@@ -37,7 +38,7 @@ it('tts (async) speak', async () => {
     </I18nextProvider>
   )
   const foundButton = getByTestId('splashScreen1')
-  await fireEvent.press(foundButton)
+  await act(async () => fireEvent.press(foundButton))
   await asyncTimeout(50)
   expect(speakCalled).toBe(true)
   expect(stopCalled).toBe(false)
@@ -51,8 +52,8 @@ it('stop tts process if its already active', async () => {
     isSpeakingAsync: async function () {
       return false
     },
-    speak: (text, options) => {
-      expect(text).toBe('Herzlich Willkommen zu lea online')
+    speak: (t, options) => {
+      expect(t).toBe('Herzlich Willkommen zu lea online')
       speakCalled = true
       options.onStart()
       setTimeout(() => options.onDone(), 100)
@@ -62,16 +63,19 @@ it('stop tts process if its already active', async () => {
     }
   })
 
-  const { getByTestId } = render(<SplashScreen />)
+  const { getByTestId } = render(
+    <I18nextProvider i18n={i18n}>
+      <SplashScreen />
+    </I18nextProvider>
+  )
   const foundButton = getByTestId('splashScreen1')
-
-  act(() => fireEvent.press(foundButton))
-  await asyncTimeout(5)
+  await act(async () => fireEvent.press(foundButton))
   expect(TTSengine.isSpeaking).toBe(true)
-  expect(TTSengine.speakId).toBe(1)
+  await asyncTimeout(5)
+  expect(TTSengine.speakId).toBe(0)
   expect(speakCalled).toBe(true)
 
-  act(() => fireEvent.press(foundButton))
+  await act(async () => fireEvent.press(foundButton))
   await asyncTimeout(5)
   expect(TTSengine.isSpeaking).toBe(false)
   expect(TTSengine.speakId).toBe(0)
@@ -82,13 +86,20 @@ it('start 2 different tts processes successively', async () => {
   let speakCalled = false
   let stopCalled = false
 
+  // TODO keep these strings untranslated during tests so we can test against
+  // TODO correct i18n id
+  const texts = [
+    'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu',
+    'Hiermit stimme ich folgenden Bedingungen zu ...'
+  ]
   TTSengine.setSpeech({
     isSpeakingAsync: async function () {
       return false
     },
-    speak: t => {
-      expect(t).toBe('Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu')
+    speak: (t, options) => {
+      expect(t).toBe(texts.pop())
       speakCalled = true
+      setTimeout(() => options.onDone(), 100)
     },
     stop: () => {
       stopCalled = true
@@ -98,12 +109,12 @@ it('start 2 different tts processes successively', async () => {
   const { getByTestId } = render(<TandCScreen />)
   const foundButton1 = getByTestId('tandc1')
   const foundButton2 = getByTestId('tandc2')
-  act(() => fireEvent.press(foundButton1))
-  act(() => fireEvent.press(foundButton2))
+  await act(async () => fireEvent.press(foundButton1))
+  await act(async () => fireEvent.press(foundButton2))
   await asyncTimeout(50)
 
   expect(speakCalled).toBe(true)
-  expect(stopCalled).toBe(false)
+  expect(stopCalled).toBe(true)
 })
 
 it('checks for icon color', async () => {
@@ -114,10 +125,11 @@ it('checks for icon color', async () => {
     isSpeakingAsync: async function () {
       return false
     },
-    speak: (text, options) => {
-      expect(text).toBe('Herzlich Willkommen zu lea online')
+    speak: (t, options) => {
+      expect(t).toBe('Herzlich Willkommen zu lea online')
       speakCalled = true
       options.onStart()
+      // simulate speak end aftet 100ms
       setTimeout(() => options.onDone(), 100)
     },
     stop: () => {
@@ -129,14 +141,14 @@ it('checks for icon color', async () => {
   const foundButton = getByTestId('splashScreen1')
 
   expect(TTSengine.iconColor).toBe(Colors.primary)
-  act(() => fireEvent.press(foundButton))
+  await act(async () => fireEvent.press(foundButton))
   await asyncTimeout(10)
   expect(TTSengine.isSpeaking).toBe(true)
-  expect(TTSengine.speakId).toBe(1)
+  expect(TTSengine.speakId).toBe(0)
   expect(speakCalled).toBe(true)
   expect(TTSengine.iconColor).toBe(Colors.success)
 
-  act(() => fireEvent.press(foundButton))
+  await act(async () => fireEvent.press(foundButton))
   await asyncTimeout(10)
   expect(TTSengine.isSpeaking).toBe(false)
   expect(TTSengine.speakId).toBe(0)
