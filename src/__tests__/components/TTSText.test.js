@@ -1,10 +1,10 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
-import TitleText from '../../components/TitleText'
+import TTSText from '../../components/TTSText '
 import Colors from '../../constants/Colors'
 
 test('Text alignment left', () => {
-  const tree = renderer.create(<TitleText
+  const tree = renderer.create(<TTSText
     style={{ color: Colors.primary, paddingLeft: 5, textAlign: 'left' }}
     text='Hallo'
                                />)
@@ -12,7 +12,7 @@ test('Text alignment left', () => {
 })
 
 test('Text alignment right', () => {
-  const tree = renderer.create(<TitleText
+  const tree = renderer.create(<TTSText
     style={{ color: Colors.primary, paddingLeft: 5, textAlign: 'right' }}
     text='Hallo'
                                />)
@@ -20,7 +20,7 @@ test('Text alignment right', () => {
 })
 
 test('Text alignment center', () => {
-  const tree = renderer.create(<TitleText
+  const tree = renderer.create(<TTSText
     style={{ color: Colors.primary, paddingLeft: 5, textAlign: 'center' }}
     text='Hallo'
                                />)
@@ -28,7 +28,7 @@ test('Text alignment center', () => {
 })
 
 test('Text color secondary', () => {
-  const tree = renderer.create(<TitleText
+  const tree = renderer.create(<TTSText
     style={{ color: Colors.secondary, paddingLeft: 5, textAlign: 'center' }}
     text='Hallo'
                                />)

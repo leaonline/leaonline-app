@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
-import TitleText from './TitleText'
+import TTSText from './TTSText '
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 
@@ -117,7 +117,7 @@ const ttsComponent = props => {
         paddingTop: props.paddingTop || 8
       }
 
-      return (<TitleText style={styleProps} text={props.text} />)
+      return (<TTSText style={styleProps} text={props.text} />)
     }
   }
 
