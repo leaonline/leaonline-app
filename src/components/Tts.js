@@ -29,6 +29,8 @@ const ttsComponent = props => {
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
 
+  // since TTS has events, that runs async and calls back to this component
+  // we need a flag to prevent updating state when the component is unmounted
   let unmounted = false
 
   /**

@@ -65,7 +65,7 @@ it('stop tts process if its already active', async () => {
 
   const { getByTestId } = render(
     <I18nextProvider i18n={i18n}>
-      <SplashScreen />
+      <WelcomeScreen />
     </I18nextProvider>
   )
   const foundButton = getByTestId('splashScreen1')
