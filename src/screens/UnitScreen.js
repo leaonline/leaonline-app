@@ -16,21 +16,21 @@ const UnitScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Map' })
+          props.navigation.navigate('Dimension')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Unit' })
+          props.navigation.navigate('Unit')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          props.navigation.navigate({ routeName: 'Complete' })
+          props.navigation.navigate('Complete')
         }}
         >
           <Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
@@ -38,12 +38,6 @@ const UnitScreen = props => {
       </View>
     </View>
   )
-}
-
-UnitScreen.navigationOptions = () => {
-  return {
-    headerShown: false
-  }
 }
 
 const styles = StyleSheet.create({

@@ -9,11 +9,13 @@ import { useTranslation } from 'react-i18next'
 const Tts = TTSengine.component()
 
 /**
- * SplashScreen displays the welcome text.
+ * WelcomeScreen displays the welcome text.
+ *
+ * @category Screens
  * @returns {JSX.Element}
  * @constructor
  */
-const SplashScreen = props => {
+const WelcomeScreen = props => {
   const { t } = useTranslation()
   const headerPath = require('../assets/logo-footer.png')
 
@@ -24,14 +26,14 @@ const SplashScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text={t('splashScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
+        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
       </View>
 
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying
             ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate({ routeName: 'TandC' })
+            : props.navigation.navigate('TandC')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
@@ -39,12 +41,6 @@ const SplashScreen = props => {
       </View>
     </View>
   )
-}
-
-SplashScreen.navigationOptions = (navData) => {
-  return {
-    headerShown: false
-  }
 }
 
 const styles = StyleSheet.create({
@@ -79,4 +75,4 @@ const styles = StyleSheet.create({
 }
 )
 
-export default SplashScreen
+export default WelcomeScreen

@@ -11,7 +11,7 @@ const resources = {
       navText: 'Please wait until the end of the recording or end it prematurely',
       checkBox: 'You must accept the terms and conditions to continue'
     },
-    splashScreen: {
+    welcomeScreen: {
       text: 'Welcome to lea online'
     },
     registrationScreen: {
@@ -40,7 +40,7 @@ const resources = {
       navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
       checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren'
     },
-    splashScreen: {
+    welcomeScreen: {
       text: 'Herzlich Willkommen zu lea online'
     },
     registrationScreen: {
@@ -68,6 +68,7 @@ const resources = {
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    compatibilityJSON: 'v3',
     resources,
     keySeparator: false,
     nsSeparator: '.',

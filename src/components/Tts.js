@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TitleText from './TitleText'
@@ -25,21 +25,28 @@ let Speech = null
  */
 
 const ttsComponent = props => {
-  // FIXME: Warning: Can't perform a React state update on an unmounted component.
-  // FIXME: This is a no-op, but it indicates a memory leak in your application.
-  // FIXME: To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
   const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
   const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
+
+  // since TTS has events, that runs async and calls back to this component
+  // we need a flag to prevent updating state when the component is unmounted
+  let unmounted = false
 
   /**
    * @deprecated use TTSEngine.isSpeaking
    **/
   global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
 
-  TTSengine.isSpeaking = isCurrentlyPlaying
-  TTSengine.speakId = currentlyPlayingId
-  TTSengine.iconColor = ttsColorIcon
+  useEffect(() => {
+    TTSengine.isSpeaking = isCurrentlyPlaying
+    TTSengine.speakId = currentlyPlayingId
+    TTSengine.iconColor = ttsColorIcon
+
+    return () => {
+      unmounted = true
+    }
+  }, [isCurrentlyPlaying])
 
   /**
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
@@ -66,18 +73,22 @@ const ttsComponent = props => {
    * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
    */
   const stopSpeak = () => {
-    setTtsColorIcon(props.color)
-    setCurrentlyPlaying(false)
-    setCurrentlyPlayingId(0)
+    if (!unmounted) {
+      setTtsColorIcon(props.color)
+      setCurrentlyPlaying(false)
+      setCurrentlyPlayingId(0)
+    }
     Speech.stop()
   }
   /**
    * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
    */
   const startSpeak = () => {
-    setTtsColorIcon(Colors.success)
-    setCurrentlyPlaying(true)
-    setCurrentlyPlayingId(props.id)
+    if (!unmounted) {
+      setTtsColorIcon(Colors.success)
+      setCurrentlyPlaying(true)
+      setCurrentlyPlayingId(props.id)
+    }
   }
 
   /**

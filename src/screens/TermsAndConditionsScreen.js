@@ -5,7 +5,6 @@ import { CheckBox, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
-import i18n from 'i18next'
 
 const Tts = TTSengine.component()
 
@@ -46,7 +45,7 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate({ routeName: 'SplashScreen' })
+          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
@@ -55,7 +54,7 @@ const TermsAndConditionsScreen = props => {
           ttsIsCurrentlyPlaying
             ? Alert.alert(t('alert.title'), t('alert.navText'))
             : termsAndConditionsIsChecked
-              ? props.navigation.navigate({ routeName: 'Registration' })
+              ? props.navigation.navigate('Registration')
               : checkBoxIsNotChecked()
         }}
         >
@@ -64,13 +63,6 @@ const TermsAndConditionsScreen = props => {
       </View>
     </View>
   )
-}
-
-TermsAndConditionsScreen.navigationOptions = (navData) => {
-  return {
-    headerTitle: i18n.t('TandCScreen.headerTitle'),
-    headerLeft: () => null
-  }
 }
 
 const styles = StyleSheet.create({

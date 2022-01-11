@@ -1,3 +1,6 @@
+/**
+ * Global color palette for the app theme.
+ */
 export default {
   primary: '#f59d1d',
   secondary: '#193b5e',
