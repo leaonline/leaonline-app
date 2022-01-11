@@ -8,12 +8,12 @@ import RouteButton from '../components/RouteButton'
 import * as data from '../resources/taskData.json'
 
 /**
- * @private
+ * @private TTS Ref
  */
 const Tts = TTSengine.component()
 
 /**
- * @private
+ * @private stylesheet
  */
 const styles = StyleSheet.create({
   profile: {

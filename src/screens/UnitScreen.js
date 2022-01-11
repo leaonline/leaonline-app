@@ -1,7 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
-import Colors from '../constants/Colors'
+import { StyleSheet, Text, View } from 'react-native'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private stylesheet
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
 
 /**
  * On this screen, the respective Unit is displayed and the users can interact
- * with it, by solving the tasks on it's pages.
+ * with it, by solving the tasks on its pages.
  *
  * If a unit is completed and there is no next unit in the queue, it navigates
  * the users to the {CompleteScreen}.
@@ -54,26 +53,26 @@ const UnitScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Dimension')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-left' handleScreen={() => {
+            props.navigation.navigate('Dimension')
+          }}
+        />
 
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Unit')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            props.navigation.navigate('Unit')
+          }}
+        />
 
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Complete')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='check-circle' handleScreen={() => {
+            props.navigation.navigate('Complete')
+          }}
+        />
       </View>
     </View>
   )

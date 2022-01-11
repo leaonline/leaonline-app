@@ -1,10 +1,11 @@
 /* global ttsIsCurrentlyPlaying */
 import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { CheckBox, Icon } from 'react-native-elements'
+import { Alert, StyleSheet, View } from 'react-native'
+import { CheckBox } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private tts ref
@@ -78,22 +79,24 @@ const TermsAndConditionsScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : termsAndConditionsIsChecked
-              ? props.navigation.navigate('Registration')
-              : checkBoxIsNotChecked()
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-left' handleScreen={() => {
+            ttsIsCurrentlyPlaying
+              ? Alert.alert(t('alert.title'), t('alert.navText'))
+              : props.navigation.navigate('Welcome')
+          }}
+        />
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            ttsIsCurrentlyPlaying
+              ? Alert.alert(t('alert.title'), t('alert.navText'))
+              : termsAndConditionsIsChecked
+                ? props.navigation.navigate('Registration')
+                : checkBoxIsNotChecked()
+          }}
+        />
       </View>
     </View>
   )
