@@ -6,12 +6,46 @@ import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * @private tts ref
+ */
 const Tts = TTSengine.component()
 
 /**
- * TermsAndConditionsScreen displays the terms and conditions the user must agree to.
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
+  },
+  checkBox: {
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * TermsAndConditionsScreen displays the terms and conditions
+ * the user must agree to use this application.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
- * @constructor
  */
 const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
@@ -64,29 +98,5 @@ const TermsAndConditionsScreen = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  checkBox: {
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  }
-}
-)
 
 export default TermsAndConditionsScreen

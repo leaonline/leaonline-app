@@ -1,5 +1,7 @@
 /**
  * Global color palette for the app theme.
+ *
+ * @category Constants
  */
 export default {
   primary: '#f59d1d',

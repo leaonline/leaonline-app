@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="RouteButton.html">RouteButton</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Classes</h3><ul><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -97,12 +97,56 @@ import Colors from '../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
 
+/**
+ * @private tts
+ */
 const Tts = TTSengine.component()
 
 /**
- * RegistrationScreen displays the formular for the user registration.
+ * @private styles
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  header: {
+    flex: 1
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row',
+    marginHorizontal: 32
+  },
+  text: {
+    color: Colors.primary,
+    paddingLeft: 5
+  },
+  icon: {
+    paddingBottom: 5
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * Displays the registration form which is required to create a new lea.online
+ * account.
+ *
+ * On complete, it navigates the user to the {HomeScreen}.
+ * On "back" if navigates back to the {TermsAnsConditionsScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
- * @constructor
  */
 const RegistrationScreen = props => {
   const { t } = useTranslation()
@@ -137,37 +181,6 @@ const RegistrationScreen = props => {
     &lt;/View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  header: {
-    flex: 1
-  },
-  body: {
-    flex: 2,
-    flexDirection: 'row',
-    marginHorizontal: 32
-  },
-  text: {
-    color: Colors.primary,
-    paddingLeft: 5
-  },
-  icon: {
-    paddingBottom: 5
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  }
-}
-)
 
 export default RegistrationScreen
 </code></pre>

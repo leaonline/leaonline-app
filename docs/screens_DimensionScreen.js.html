@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> screens/TermsAndConditionsScreen.js</title>
+  <title> screens/DimensionScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>screens/TermsAndConditionsScreen.js</h1>
+                    <h1>screens/DimensionScreen.js</h1>
                 </header>
                 
 
@@ -89,21 +89,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global ttsIsCurrentlyPlaying */
-import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { CheckBox, Icon } from 'react-native-elements'
-import Colors from '../constants/Colors'
-import { TTSengine } from '../components/Tts'
-import { useTranslation } from 'react-i18next'
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Icon } from 'react-native-elements'
 
 /**
- * @private tts ref
- */
-const Tts = TTSengine.component()
-
-/**
- * @private stylesheet
+ * @private styles
  */
 const styles = StyleSheet.create({
   container: {
@@ -119,18 +110,19 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     padding: 100
   },
-  checkBox: {
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
   navigationButtons: {
     flexDirection: 'row'
   }
 })
 
 /**
- * TermsAndConditionsScreen displays the terms and conditions
- * the user must agree to use this application.
+ * On this screen the users select a current Dimension to work with,
+ * which can be reading, writing etc.
+ *
+ * This navigates the user to the {UnitScreen}, once the corresponding Unit
+ * has been loaded.
+ *
+ * On cancel it navigates back to the {MapScreen}
  *
  * @category Screens
  * @component
@@ -138,49 +130,27 @@ const styles = StyleSheet.create({
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const TermsAndConditionsScreen = props => {
-  const { t } = useTranslation()
-
-  const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
-  const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
-
-  const checkboxHandler = () => {
-    setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
-    setTermsAndConditionsColor(Colors.gray)
-  }
-
-  const checkBoxIsNotChecked = () => {
-    Alert.alert(t('alert.title'), t('alert.checkBox'))
-    setTermsAndConditionsColor(Colors.danger)
-  }
-
+const DimensionScreen = props => {
   return (
     &lt;View style={styles.container}>
       &lt;View style={styles.body}>
-        &lt;Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        &lt;Text>DimensionScreen&lt;/Text>
       &lt;/View>
 
-      &lt;View style={styles.checkBox}>
-        &lt;Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
-        &lt;CheckBox
-          center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
-          uncheckedColor={termsAndConditionsColor}
-        />
+      &lt;View style={styles.body}>
+        &lt;Text>Dimension(/Unit) auswählen&lt;/Text>
       &lt;/View>
 
       &lt;View style={styles.navigationButtons}>
         &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
+          props.navigation.navigate('Map')
         }}
         >
           &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         &lt;/TouchableOpacity>
+
         &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : termsAndConditionsIsChecked
-              ? props.navigation.navigate('Registration')
-              : checkBoxIsNotChecked()
+          props.navigation.navigate('Unit')
         }}
         >
           &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
@@ -190,7 +160,7 @@ const TermsAndConditionsScreen = props => {
   )
 }
 
-export default TermsAndConditionsScreen
+export default DimensionScreen
 </code></pre>
         </article>
     </section>

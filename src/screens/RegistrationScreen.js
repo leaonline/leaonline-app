@@ -6,12 +6,56 @@ import Colors from '../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
 
+/**
+ * @private tts
+ */
 const Tts = TTSengine.component()
 
 /**
- * RegistrationScreen displays the formular for the user registration.
+ * @private styles
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  header: {
+    flex: 1
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row',
+    marginHorizontal: 32
+  },
+  text: {
+    color: Colors.primary,
+    paddingLeft: 5
+  },
+  icon: {
+    paddingBottom: 5
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * Displays the registration form which is required to create a new lea.online
+ * account.
+ *
+ * On complete, it navigates the user to the {HomeScreen}.
+ * On "back" if navigates back to the {TermsAnsConditionsScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
- * @constructor
  */
 const RegistrationScreen = props => {
   const { t } = useTranslation()
@@ -46,36 +90,5 @@ const RegistrationScreen = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  header: {
-    flex: 1
-  },
-  body: {
-    flex: 2,
-    flexDirection: 'row',
-    marginHorizontal: 32
-  },
-  text: {
-    color: Colors.primary,
-    paddingLeft: 5
-  },
-  icon: {
-    paddingBottom: 5
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  }
-}
-)
 
 export default RegistrationScreen

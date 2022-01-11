@@ -6,43 +6,14 @@ import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * @private TTS Ref
+ */
 const Tts = TTSengine.component()
 
 /**
- * WelcomeScreen displays the welcome text.
- *
- * @category Screens
- * @returns {JSX.Element}
- * @constructor
+ * @private stylesheet
  */
-const WelcomeScreen = props => {
-  const { t } = useTranslation()
-  const headerPath = require('../assets/logo-footer.png')
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image style={styles.logo} source={headerPath} />
-      </View>
-
-      <View style={styles.body}>
-        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
-      </View>
-
-      <View style={styles.navigationButton}>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate('TandC')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,7 +43,44 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     padding: 100
   }
+})
+
+/**
+ * WelcomeScreen displays the welcome text as an introduction for the new
+ * arrived users.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
+const WelcomeScreen = props => {
+  const { t } = useTranslation()
+  const headerPath = require('../assets/logo-footer.png')
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image style={styles.logo} source={headerPath} />
+      </View>
+
+      <View style={styles.body}>
+        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
+      </View>
+
+      <View style={styles.navigationButton}>
+        <TouchableOpacity onPress={() => {
+          ttsIsCurrentlyPlaying
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
+            : props.navigation.navigate('TandC')
+        }}
+        >
+          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 }
-)
 
 export default WelcomeScreen

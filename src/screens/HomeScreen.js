@@ -7,8 +7,51 @@ import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
 import * as data from '../resources/taskData.json'
 
+/**
+ * @private
+ */
 const Tts = TTSengine.component()
 
+/**
+ * @private
+ */
+const styles = StyleSheet.create({
+  profile: {
+    display: 'flex',
+    marginLeft: 'auto'
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  button: {
+    alignItems: 'center',
+    flex: 1
+  }
+})
+
+/**
+ * The main screen for registered users. From here they can navigate to their
+ * profile ({ProfileScreen}) or select a field of work to start new units (which navigates them
+ * to the {MapScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
 const HomeScreen = props => {
   const { t } = useTranslation()
 
@@ -41,31 +84,5 @@ const HomeScreen = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  profile: {
-    display: 'flex',
-    marginLeft: 'auto'
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  body: {
-    flex: 2,
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  button: {
-    alignItems: 'center',
-    flex: 1
-  }
-})
 
 export default HomeScreen

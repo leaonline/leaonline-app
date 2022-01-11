@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="RouteButton.html">RouteButton</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Classes</h3><ul><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -98,8 +98,51 @@ import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
 import * as data from '../resources/taskData.json'
 
+/**
+ * @private
+ */
 const Tts = TTSengine.component()
 
+/**
+ * @private
+ */
+const styles = StyleSheet.create({
+  profile: {
+    display: 'flex',
+    marginLeft: 'auto'
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  button: {
+    alignItems: 'center',
+    flex: 1
+  }
+})
+
+/**
+ * The main screen for registered users. From here they can navigate to their
+ * profile ({ProfileScreen}) or select a field of work to start new units (which navigates them
+ * to the {MapScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
 const HomeScreen = props => {
   const { t } = useTranslation()
 
@@ -132,32 +175,6 @@ const HomeScreen = props => {
     &lt;/View>
   )
 }
-
-const styles = StyleSheet.create({
-  profile: {
-    display: 'flex',
-    marginLeft: 'auto'
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  body: {
-    flex: 2,
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  button: {
-    alignItems: 'center',
-    flex: 1
-  }
-})
 
 export default HomeScreen
 </code></pre>

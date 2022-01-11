@@ -2,6 +2,41 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 
+/**
+ * @private stylesheet
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 30
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * The MapScreen displays available "stages" (levels) of difficulty
+ * in form of a bottom-up Map.
+ *
+ * Selecting a stage will navigate the user to the {DimensionScreen}.
+ * Going back will navigate the user to the {HomeScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
 const MapScreen = props => {
   return (
     <View style={styles.container}>
@@ -27,24 +62,5 @@ const MapScreen = props => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  }
-})
 
 export default MapScreen

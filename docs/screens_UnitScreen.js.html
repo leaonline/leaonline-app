@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> screens/TermsAndConditionsScreen.js</title>
+  <title> screens/UnitScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>screens/TermsAndConditionsScreen.js</h1>
+                    <h1>screens/UnitScreen.js</h1>
                 </header>
                 
 
@@ -89,18 +89,10 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global ttsIsCurrentlyPlaying */
-import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { CheckBox, Icon } from 'react-native-elements'
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
-import { TTSengine } from '../components/Tts'
-import { useTranslation } from 'react-i18next'
-
-/**
- * @private tts ref
- */
-const Tts = TTSengine.component()
 
 /**
  * @private stylesheet
@@ -117,11 +109,7 @@ const styles = StyleSheet.create({
   },
   iconNavigation: {
     paddingBottom: 5,
-    padding: 100
-  },
-  checkBox: {
-    alignItems: 'center',
-    flexDirection: 'row'
+    padding: 50
   },
   navigationButtons: {
     flexDirection: 'row'
@@ -129,8 +117,15 @@ const styles = StyleSheet.create({
 })
 
 /**
- * TermsAndConditionsScreen displays the terms and conditions
- * the user must agree to use this application.
+ * On this screen, the respective Unit is displayed and the users can interact
+ * with it, by solving the tasks on it's pages.
+ *
+ * If a unit is completed and there is no next unit in the queue, it navigates
+ * the users to the {CompleteScreen}.
+ *
+ * If a next unit exists, it will load this next unit.
+ *
+ * On cancel, it navigates users back to the {MapScreen}.
  *
  * @category Screens
  * @component
@@ -138,59 +133,44 @@ const styles = StyleSheet.create({
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const TermsAndConditionsScreen = props => {
-  const { t } = useTranslation()
-
-  const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
-  const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
-
-  const checkboxHandler = () => {
-    setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
-    setTermsAndConditionsColor(Colors.gray)
-  }
-
-  const checkBoxIsNotChecked = () => {
-    Alert.alert(t('alert.title'), t('alert.checkBox'))
-    setTermsAndConditionsColor(Colors.danger)
-  }
-
+const UnitScreen = props => {
   return (
     &lt;View style={styles.container}>
       &lt;View style={styles.body}>
-        &lt;Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        &lt;Text>UnitScreen&lt;/Text>
       &lt;/View>
 
-      &lt;View style={styles.checkBox}>
-        &lt;Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
-        &lt;CheckBox
-          center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
-          uncheckedColor={termsAndConditionsColor}
-        />
+      &lt;View style={styles.body}>
+        &lt;Text>Aufgabe&lt;/Text>
       &lt;/View>
 
       &lt;View style={styles.navigationButtons}>
         &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
+          props.navigation.navigate('Dimension')
         }}
         >
           &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         &lt;/TouchableOpacity>
+
         &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : termsAndConditionsIsChecked
-              ? props.navigation.navigate('Registration')
-              : checkBoxIsNotChecked()
+          props.navigation.navigate('Unit')
         }}
         >
           &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
+        &lt;/TouchableOpacity>
+
+        &lt;TouchableOpacity onPress={() => {
+          props.navigation.navigate('Complete')
+        }}
+        >
+          &lt;Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
         &lt;/TouchableOpacity>
       &lt;/View>
     &lt;/View>
   )
 }
 
-export default TermsAndConditionsScreen
+export default UnitScreen
 </code></pre>
         </article>
     </section>

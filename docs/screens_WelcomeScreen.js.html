@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="RouteButton.html">RouteButton</a></li><li><a href="TermsAndConditionsScreen.html">TermsAndConditionsScreen</a></li><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Classes</h3><ul><li><a href="WelcomeScreen.html">WelcomeScreen</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -97,43 +97,14 @@ import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * @private TTS Ref
+ */
 const Tts = TTSengine.component()
 
 /**
- * WelcomeScreen displays the welcome text.
- *
- * @category Screens
- * @returns {JSX.Element}
- * @constructor
+ * @private stylesheet
  */
-const WelcomeScreen = props => {
-  const { t } = useTranslation()
-  const headerPath = require('../assets/logo-footer.png')
-
-  return (
-    &lt;View style={styles.container}>
-      &lt;View style={styles.header}>
-        &lt;Image style={styles.logo} source={headerPath} />
-      &lt;/View>
-
-      &lt;View style={styles.body}>
-        &lt;Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
-      &lt;/View>
-
-      &lt;View style={styles.navigationButton}>
-        &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate('TandC')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      &lt;/View>
-    &lt;/View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -163,8 +134,45 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     padding: 100
   }
+})
+
+/**
+ * WelcomeScreen displays the welcome text as an introduction for the new
+ * arrived users.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
+const WelcomeScreen = props => {
+  const { t } = useTranslation()
+  const headerPath = require('../assets/logo-footer.png')
+
+  return (
+    &lt;View style={styles.container}>
+      &lt;View style={styles.header}>
+        &lt;Image style={styles.logo} source={headerPath} />
+      &lt;/View>
+
+      &lt;View style={styles.body}>
+        &lt;Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
+      &lt;/View>
+
+      &lt;View style={styles.navigationButton}>
+        &lt;TouchableOpacity onPress={() => {
+          ttsIsCurrentlyPlaying
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
+            : props.navigation.navigate('TandC')
+        }}
+        >
+          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
+        &lt;/TouchableOpacity>
+      &lt;/View>
+    &lt;/View>
+  )
 }
-)
 
 export default WelcomeScreen
 </code></pre>
