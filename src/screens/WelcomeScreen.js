@@ -1,4 +1,3 @@
-/* global ttsIsCurrentlyPlaying */
 import React from 'react'
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
@@ -71,7 +70,7 @@ const WelcomeScreen = props => {
 
       <View style={styles.navigationButton}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
+          TTSengine.isSpeaking
             ? Alert.alert(t('alert.title'), t('alert.navText'))
             : props.navigation.navigate('TandC')
         }}

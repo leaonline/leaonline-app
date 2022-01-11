@@ -1,4 +1,3 @@
-/* global ttsIsCurrentlyPlaying */
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
@@ -79,13 +78,15 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
+          TTSengine.isSpeaking
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
+            : props.navigation.navigate('Welcome')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
+          TTSengine.isSpeaking
             ? Alert.alert(t('alert.title'), t('alert.navText'))
             : termsAndConditionsIsChecked
               ? props.navigation.navigate('Registration')
