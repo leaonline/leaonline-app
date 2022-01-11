@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
   }
 })
 
-
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  *
