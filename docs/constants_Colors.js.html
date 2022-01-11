@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Global</title>
+  <title> constants/Colors.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -77,358 +79,33 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Title</p>
-                    <h1>Global</h1>
+                    <p>Source</p>
+                    <h1>constants/Colors.js</h1>
                 </header>
                 
 
 
 
-
-<section>
-
-<header>
     
-        <h2></h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Members</h1>
-            <div class="members">
-            
-                <div class="member">
-
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<span class="param-type">NavigationNavigator</span>
-
-
-    </span>
-
-<h4 class="name" id="Stack">
-    <a class="href-link" href="#Stack">#</a>
-    
-        
-            <span class='tag'>constant</span>
-        
-    
-    <span class="code-name">
-        Stack
-    </span>
-    
-</h4>
-
-
-
-
-<div class="description">
-    <p>AppNavigator navigates between screens.</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="navigation_navigator.js.html" class="button">View Source</a>
-            <span>
-                <a href="navigation_navigator.js.html">navigation/navigator.js</a>, <a href="navigation_navigator.js.html#line22">line 22</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Methods</h1>
-            <div class="members">
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="changeColor">
-        <a class="href-link" href="#changeColor">#</a>
-        
-        <span class="code-name">
-            
-                changeColor<span class="signature">(list)</span><span class="type-signature"> &rarr; {Array}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Transforms colors list to use color values from Colors</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>list</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Array</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="screens_ProfileScreen.js.html" class="button">View Source</a>
-            <span>
-                <a href="screens_ProfileScreen.js.html">screens/ProfileScreen.js</a>, <a href="screens_ProfileScreen.js.html#line18">line 18</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Array</span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Global color palette for the app theme.
+ */
+export default {
+  primary: '#f59d1d',
+  secondary: '#193b5e',
+  light: '#f5f5f5',
+  gray: '#a6a6a6',
+  dark: '#646464',
+  warning: '#FFC800',
+  danger: '#d95a7d',
+  success: '#00ddb6',
+  info: '#86c4f1'
+}
+</code></pre>
+        </article>
+    </section>
 
 
 

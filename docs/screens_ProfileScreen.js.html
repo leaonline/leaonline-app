@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> navigation/navigator.js</title>
+  <title> screens/ProfileScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>navigation/navigator.js</h1>
+                    <h1>screens/ProfileScreen.js</h1>
                 </header>
                 
 
@@ -89,50 +89,122 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer } from '@react-navigation/native'
-
-import WelcomeScreen from '../screens/WelcomeScreen'
-import TermsAndConditionsScreen from '../screens/TermsAndConditionsScreen'
-import HomeScreen from '../screens/HomeScreen'
-import MapScreen from '../screens/MapScreen'
-import DimensionScreen from '../screens/DimensionScreen'
-import UnitScreen from '../screens/UnitScreen'
-import RegistrationScreen from '../screens/RegistrationScreen'
-import ProfileScreen from '../screens/ProfileScreen'
-import CompleteScreen from '../screens/CompleteScreen'
-
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
+import Colors from '../constants/Colors'
+import { TTSengine } from '../components/Tts'
+import profileData from '../resources/profileData.js'
+
+const Tts = TTSengine.component()
 
 /**
- * AppNavigator navigates between screens.
- * @type {NavigationNavigator}
- * @component
+ * Transforms colors list to use color values from Colors
+ * @param list {Array}
+ * @return {Array}
+ * @example:
+ * [{ color: 'primary' }] => [{ type: 'primary', color: '#f59d1d' }]
  */
-const Stack = createStackNavigator()
+const changeColor = list => list.map(element => ({
+  ...element,
+  type: element.color, // primary, secondary
+  color: Colors[element.color]
+}))
 
-export default function navigator () {
+const ProfileScreen = props => {
   const { t } = useTranslation()
-  return (
-    &lt;NavigationContainer>
-      &lt;Stack.Navigator screenOptions={{
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-      }}
+  const allDimensions = changeColor(profileData.progress.dimensions)
+  const expandedStates = allDimensions.map((entry, index) => useState(false))
+
+  const renderPoints = (item) => {
+    return [...Array(item.current)].map((item, key) => {
+      return (
+        &lt;Icon key={key} name='gem' solid type='font-awesome-5' color={Colors.secondary} />
+      )
+    })
+  }
+
+  const renderMaxPoints = (item) => {
+    return [...Array(5 - item.current)].map((item, key) => {
+      return (
+        &lt;Icon key={key} name='gem' type='font-awesome-5' color={Colors.secondary} />
+      )
+    })
+  }
+  const renderProfileProgress = (dimensions) => dimensions.map((current, index) => {
+    const [expanded, setExpanded] = expandedStates[index]
+    const key = `dimensions-${index}`
+    return (
+      &lt;ListItem.Accordion
+        noIcon
+        containerStyle={{ backgroundColor: 'transparent' }}
+        key={key}
+        content={
+          &lt;>
+            &lt;Tts text={current.title} color={current.color} id={6} testId='routeButton' dontShowText />
+            &lt;ListItem.Content style={{ alignItems: 'center' }}>
+              &lt;ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}&lt;/ListItem.Title>
+            &lt;/ListItem.Content>
+          &lt;/>
+          }
+        isExpanded={expanded}
+        onPress={() => {
+          setExpanded(!expanded)
+        }}
       >
-        &lt;Stack.Screen name='Welcome' component={WelcomeScreen} options={{ headerShown: false }} />
-        &lt;Stack.Screen name='TandC' component={TermsAndConditionsScreen} options={{ title: t('TandCScreen.headerTitle'), headerLeft: () => null }} />
-        &lt;Stack.Screen name='Registration' component={RegistrationScreen} options={{ title: t('registrationScreen.headerTitle'), headerLeft: () => null }} />
-        &lt;Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
-        &lt;Stack.Screen name='Map' component={MapScreen} options={{ headerShown: false }} />
-        &lt;Stack.Screen name='Dimension' component={DimensionScreen} options={{ headerShown: false }} />
-        &lt;Stack.Screen name='Unit' component={UnitScreen} options={{ headerShown: false }} />
-        &lt;Stack.Screen name='Profile' component={ProfileScreen} options={{ title: t('profileScreen.headerTitle') }} />
-        &lt;Stack.Screen name='Complete' component={CompleteScreen} options={{ headerShown: false }} />
-      &lt;/Stack.Navigator>
-    &lt;/NavigationContainer>
+        {expanded &amp;&amp; current.fields.map((item, key) => (
+          &lt;ListItem key={key} containerStyle={{ backgroundColor: 'transparent' }}>
+            &lt;ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+              &lt;Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
+              &lt;ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}&lt;/ListItem.Title>
+              &lt;View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
+                {renderPoints(item)}
+                {renderMaxPoints(item)}
+              &lt;/View>
+            &lt;/ListItem.Content>
+          &lt;/ListItem>
+        ))}
+      &lt;/ListItem.Accordion>
+    )
+  })
+
+  return (
+    &lt;SafeAreaView>
+      &lt;ScrollView>
+        &lt;View style={styles.container}>
+          &lt;View style={{ alignItems: 'center' }}>
+            &lt;Tts text={t('profileScreen.title')} color={Colors.secondary} id={7} testId='profilescreen-header' smallButton />
+          &lt;/View>
+          {renderProfileProgress(allDimensions)}
+          &lt;View style={styles.body} />
+          &lt;View style={styles.progressTitle}>
+            &lt;Tts text={t('profileScreen.progress')} color={Colors.primary} id={8} testId='profilescreen-fortschritt' smallButton />
+          &lt;/View>
+          &lt;LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
+        &lt;/View>
+      &lt;/ScrollView>
+    &lt;/SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    margin: 10,
+    paddingBottom: 10
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  progressTitle: {
+    alignItems: 'center',
+    margin: 10
+  }
+})
+
+export default ProfileScreen
 </code></pre>
         </article>
     </section>

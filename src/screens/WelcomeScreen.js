@@ -10,6 +10,8 @@ const Tts = TTSengine.component()
 
 /**
  * WelcomeScreen displays the welcome text.
+ *
+ * @category Screens
  * @returns {JSX.Element}
  * @constructor
  */
