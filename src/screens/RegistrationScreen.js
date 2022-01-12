@@ -1,4 +1,3 @@
-/* global ttsIsCurrentlyPlaying */
 import React from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Icon } from 'react-native-elements'
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-  header: {
+  headerr: {
     flex: 1
   },
   body: {
@@ -67,19 +66,25 @@ const RegistrationScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
+        <Tts
+          id='registrationScreen.form.text'
+          text={t('registrationScreen.form.text')}
+          color={Colors.primary}
+        />
       </View>
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('TandC')
+          TTSengine.isSpeaking
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
+            : props.navigation.navigate('TandC')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
+          TTSengine.isSpeaking
             ? Alert.alert(t('alert.title'), t('alert.navText'))
             : props.navigation.navigate('Home')
         }}

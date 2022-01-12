@@ -1,4 +1,3 @@
-/* global ttsIsCurrentlyPlaying */
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { CheckBox, Icon } from 'react-native-elements'
@@ -66,11 +65,16 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        <Tts color={Colors.primary} text={t('TandCScreen.text')} id='TandCScreen.text' />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
+        <Tts
+          id='TandCScreen.checkBoxText'
+          text={t('TandCScreen.checkBoxText')}
+          color={termsAndConditionsColor}
+          align='left'
+        />
         <CheckBox
           center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
@@ -79,13 +83,15 @@ const TermsAndConditionsScreen = props => {
 
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
+          TTSengine.isSpeaking
+            ? Alert.alert(t('alert.title'), t('alert.navText'))
+            : props.navigation.navigate('Welcome')
         }}
         >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
+          TTSengine.isSpeaking
             ? Alert.alert(t('alert.title'), t('alert.navText'))
             : termsAndConditionsIsChecked
               ? props.navigation.navigate('Registration')
