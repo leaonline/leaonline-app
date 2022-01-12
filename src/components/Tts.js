@@ -30,41 +30,51 @@ const styles = StyleSheet.create({
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
- * @param {string} props.testID: The parameter to identify the buttons for testing
  * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
  */
 
 const ttsComponent = props => {
-  const [isCurrentlyPlaying, setCurrentlyPlaying] = useState(false)
-  const [currentlyPlayingId, setCurrentlyPlayingId] = useState(0)
-  const [ttsColorIcon, setTtsColorIcon] = useState(props.color)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isDone, setIsDone] = useState(false)
+  const [speakingId, setSpeakingId] = useState(0)
+  const [iconColor, setIconColor] = useState(props.color)
 
-  // since TTS has events, that runs async and calls back to this component
-  // we need a flag to prevent updating state when the component is unmounted
-  let unmounted = false
-
-  /**
-   * @deprecated use TTSEngine.isSpeaking
-   **/
-  global.ttsIsCurrentlyPlaying = isCurrentlyPlaying
+  const debug = props.debug || TTSengine.debug
+    ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
+    : () => {}
 
   useEffect(() => {
-    TTSengine.isSpeaking = isCurrentlyPlaying
-    TTSengine.speakId = currentlyPlayingId
-    TTSengine.iconColor = ttsColorIcon
+    debug('set isSpeaking', isSpeaking)
+    TTSengine.isSpeaking = isSpeaking
+  }, [isSpeaking])
 
-    return () => {
-      unmounted = true
+  useEffect(() => {
+    debug('set speakingId', speakingId)
+    TTSengine.speakId = speakingId
+  }, [speakingId])
+
+  useEffect(() => {
+    debug('set icon color', iconColor)
+    TTSengine.iconColor = iconColor
+  }, [iconColor])
+
+  useEffect(() => {
+    if (isDone) {
+      debug('reset after done')
+      setIconColor(props.color)
+      setIsSpeaking(false)
+      setSpeakingId(0)
     }
-  }, [isCurrentlyPlaying])
+  }, [isDone])
 
   /**
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
    */
   const speak = async () => {
     const isSpeaking = await Speech.isSpeakingAsync()
+    debug('speak', isSpeaking)
 
     if (isSpeaking) {
       stopSpeak()
@@ -76,31 +86,39 @@ const ttsComponent = props => {
       language: 'ger',
       pitch: 1,
       rate: 1,
-      onStart: () => startSpeak(),
-      onStopped: () => stopSpeak(),
-      onDone: () => stopSpeak()
+      onStart: () => {
+        debug('onStart')
+        startSpeak()
+      },
+      onStopped: () => {
+        debug('onStopped')
+        stopSpeak()
+      },
+      onDone: () => {
+        debug('onDone')
+        setIsDone(true)
+      }
     })
   }
   /**
    * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
    */
   const stopSpeak = () => {
-    if (!unmounted) {
-      setTtsColorIcon(props.color)
-      setCurrentlyPlaying(false)
-      setCurrentlyPlayingId(0)
-    }
+    debug('stop')
+    setIconColor(props.color)
+    setIsSpeaking(false)
+    setSpeakingId(0)
+    setIsDone(false)
     Speech.stop()
   }
   /**
    * Changes the color of the icon to green and sets CurrentlyPlaying to true, at the start
    */
   const startSpeak = () => {
-    if (!unmounted) {
-      setTtsColorIcon(Colors.success)
-      setCurrentlyPlaying(true)
-      setCurrentlyPlayingId(props.id)
-    }
+    debug('start')
+    setIsSpeaking(true)
+    setSpeakingId(props.id)
+    setIconColor(Colors.success)
   }
 
   /**
@@ -124,11 +142,12 @@ const ttsComponent = props => {
   return (
     <View style={styles.body}>
       <Icon
-        testID={props.testId}
-        reverse style={styles.icon} color={ttsColorIcon} size={props.smallButton ? 15 : 20} marginonPress={speak}
+        testID={props.id}
+        reverse style={styles.icon} color={iconColor}
+        size={props.smallButton ? 15 : 20} marginonPress={speak}
         name='volume-up'
         type='font-awesome-5'
-        onPress={() => ((currentlyPlayingId === props.id) && isCurrentlyPlaying) ? stopSpeak() : speak()}
+        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
       />
       {displayedText()}
     </View>
@@ -149,6 +168,7 @@ const ttsComponent = props => {
  * @property speakId {number} id of the target that is used for tts
  * @property iconColor {null} current color of the speech icon
  * @property component {function} returns the react component {ttsComponent}
+ * @property debug {boolean} debugs all internal tts events if true
  */
 export const TTSengine = {
   setSpeech (s) {
@@ -157,5 +177,6 @@ export const TTSengine = {
   isSpeaking: false,
   speakId: 0,
   iconColor: null,
+  debug: false,
   component: () => ttsComponent
 }

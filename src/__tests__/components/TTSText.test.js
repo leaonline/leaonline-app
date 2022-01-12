@@ -1,6 +1,6 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
-import TTSText from '../../components/TTSText '
+import TTSText from '../../components/TTSText'
 import Colors from '../../constants/Colors'
 
 test('Text alignment left', () => {

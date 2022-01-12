@@ -1,4 +1,3 @@
-/* global ttsIsCurrentlyPlaying */
 import React from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 30
   },
-  header: {
+  headerr: {
     flex: 1
   },
   body: {
@@ -67,14 +66,18 @@ const RegistrationScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
+        <Tts
+          id='registrationScreen.form.text'
+          text={t('registrationScreen.form.text')}
+          color={Colors.primary}
+        />
       </View>
 
       <View style={styles.navigationButtons}>
         <RouteButton
           onlyIcon
           icon='arrow-alt-circle-left' handleScreen={() => {
-            ttsIsCurrentlyPlaying
+            TTSengine.isSpeaking
               ? Alert.alert(t('alert.title'), t('alert.navText'))
               : props.navigation.navigate('TandC')
           }}
@@ -83,7 +86,7 @@ const RegistrationScreen = props => {
         <RouteButton
           onlyIcon
           icon='arrow-alt-circle-right' handleScreen={() => {
-            ttsIsCurrentlyPlaying
+            TTSengine.isSpeaking
               ? Alert.alert(t('alert.title'), t('alert.navText'))
               : props.navigation.navigate('Home')
           }}
