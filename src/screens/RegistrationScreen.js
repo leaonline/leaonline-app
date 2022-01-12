@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
+import { createUser } from '../meteor/createUser'
 
 /**
  * @private tts
@@ -70,11 +71,16 @@ const RegistrationScreen = props => {
         <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
       </View>
 
+      <View >
+        <TouchableOpacity onPress={() => createUser()}>
+          <Icon style={styles.iconNavigation} name='user' type='font-awesome-5' size={35} />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('TandC')
-        }}
-        >
+        }}>
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 

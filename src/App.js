@@ -6,6 +6,7 @@ import * as Speech from 'expo-speech'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 import './i18n'
+import { connectMeteor } from './meteor/connect'
 
 /**
  * @private used to load our custom font
@@ -50,6 +51,10 @@ export default function App () {
       }, 1000)
     }
   }, [fontLoaded])
+
+  useEffect(() => {
+    connectMeteor()
+  }, [])
 
   if (!waitForInterval) {
     return (
