@@ -37,10 +37,6 @@ const styles = StyleSheet.create({
   },
   navigationButton: {
     flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
   }
 })
 
@@ -75,6 +71,7 @@ const WelcomeScreen = props => {
       <View style={styles.navigationButton}>
         <RouteButton
           onlyIcon
+          style={{ padding: 130, paddingBottom: 5 }}
           icon='arrow-alt-circle-right' handleScreen={() => {
             TTSengine.isSpeaking
               ? Alert.alert(t('alert.title'), t('alert.navText'))

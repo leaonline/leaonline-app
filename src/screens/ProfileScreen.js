@@ -21,6 +21,12 @@ const changeColor = list => list.map(element => ({
   color: Colors[element.color]
 }))
 
+/**
+ *  TODO
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ProfileScreen = props => {
   const { t } = useTranslation()
   const allDimensions = changeColor(profileData.progress.dimensions)
@@ -97,6 +103,9 @@ const ProfileScreen = props => {
   )
 }
 
+/**
+ * @private stylesheet
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

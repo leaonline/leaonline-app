@@ -11,16 +11,13 @@ import RouteButton from '../components/RouteButton'
 const Tts = TTSengine.component()
 
 /**
- * @private styles
+ * @private stylesheet
  */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     margin: 30
-  },
-  headerr: {
-    flex: 1
   },
   body: {
     flex: 2,

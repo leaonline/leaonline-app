@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
@@ -9,9 +9,6 @@ import Colors from '../constants/Colors'
  */
 const Tts = TTSengine.component()
 
-/**
- * @private
- */
 const styles = StyleSheet.create({
   body: {
     flex: 1,
@@ -27,7 +24,7 @@ const styles = StyleSheet.create({
   },
   iconNavigation: {
     paddingBottom: 5,
-    padding: 100
+    padding: 50
   }
 })
 
@@ -59,7 +56,9 @@ const RouteButton = props => {
       )
     } else {
       return (
-        <Icon onPress={props.handleScreen} style={styles.iconNavigation} name={props.icon} type='font-awesome-5' size={35} />
+        <TouchableOpacity onPress={props.handleScreen}>
+          <Icon style={props.style || styles.iconNavigation} name={props.icon} type='font-awesome-5' size={35} />
+        </TouchableOpacity>
       )
     }
   }

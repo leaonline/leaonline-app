@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import RouteButton from '../components/RouteButton'
 
 /**
- * @private styles
+ * @private stylesheet
  */
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
  * This navigates the user to the {UnitScreen}, once the corresponding Unit
  * has been loaded.
  *
- * On cancel it navigates back to the {MapScreen}
+ * On cancel, it navigates back to the {MapScreen}
  *
  * @category Screens
  * @component
