@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { StyleSheet, Text, View } from 'react-native'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private styles
@@ -51,19 +51,19 @@ const DimensionScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Map')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-left' handleScreen={() => {
+            props.navigation.navigate('Map')
+          }}
+        />
 
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Unit')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            props.navigation.navigate('Unit')
+          }}
+        />
       </View>
     </View>
   )

@@ -53,7 +53,7 @@ const ProfileScreen = props => {
         key={key}
         content={
           <>
-            <Tts text={current.title} color={current.color} id={6} testId='routeButton' dontShowText />
+            <Tts text={current.title} color={current.color} id={`${current.title}-tts`} dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
               <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
             </ListItem.Content>
@@ -67,7 +67,7 @@ const ProfileScreen = props => {
         {expanded && current.fields.map((item, key) => (
           <ListItem key={key} containerStyle={{ backgroundColor: 'transparent' }}>
             <ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Tts text={item.title} color={Colors.secondary} id={6} testId='routeButton' dontShowText />
+              <Tts text={item.title} color={Colors.secondary} id={`${item.title}-tts`} dontShowText />
               <ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}</ListItem.Title>
               <View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
                 {renderPoints(item)}
@@ -96,12 +96,12 @@ const ProfileScreen = props => {
       <ScrollView>
         <View style={styles.container}>
           <View style={{ alignItems: 'center' }}>
-            <Tts text={t('profileScreen.title')} color={Colors.secondary} id={7} testId='profilescreen-header' smallButton />
+            <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
           </View>
           {renderProfileProgress(allDimensions)}
           <View style={styles.body} />
           <View style={styles.progressTitle}>
-            <Tts text={t('profileScreen.progress')} color={Colors.primary} id={8} testId='profilescreen-fortschritt' smallButton />
+            <Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
           </View>
           <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
         </View>

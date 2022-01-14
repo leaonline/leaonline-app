@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { StyleSheet, Text, View } from 'react-native'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private stylesheet
@@ -13,6 +13,13 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 2,
+    flexDirection: 'row'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 50
+  },
+  navigationButtons: {
     flexDirection: 'row'
   }
 })
@@ -41,12 +48,12 @@ const CompleteScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('Map')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            props.navigation.navigate('Map')
+          }}
+        />
       </View>
     </View>
   )

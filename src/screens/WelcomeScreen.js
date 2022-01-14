@@ -1,10 +1,9 @@
-/* global ttsIsCurrentlyPlaying */
 import React from 'react'
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Alert, Image, StyleSheet, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private TTS Ref
@@ -66,18 +65,22 @@ const WelcomeScreen = props => {
       </View>
 
       <View style={styles.body}>
-        <Tts text={t('welcomeScreen.text')} color={Colors.primary} id={1} testId='splashScreen1' />
+        <Tts
+          id='welcomeScreen.text'
+          text={t('welcomeScreen.text')}
+          color={Colors.primary}
+        />
       </View>
 
       <View style={styles.navigationButton}>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate('TandC')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            TTSengine.isSpeaking
+              ? Alert.alert(t('alert.title'), t('alert.navText'))
+              : props.navigation.navigate('TandC')
+          }}
+        />
       </View>
     </View>
   )

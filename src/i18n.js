@@ -19,7 +19,10 @@ const resources = {
       text: 'Welcome to lea online'
     },
     registrationScreen: {
-      headerTitle: 'Registration'
+      headerTitle: 'Registration',
+      form: {
+        text: 'form'
+      }
     },
     TandCScreen: {
       headerTitle: 'General terms and conditions',
@@ -48,7 +51,10 @@ const resources = {
       text: 'Herzlich Willkommen zu lea online'
     },
     registrationScreen: {
-      headerTitle: 'Registrierung'
+      headerTitle: 'Nutzerkonto anlegen',
+      form: {
+        text: 'Formulartext'
+      }
     },
     TandCScreen: {
       headerTitle: 'Allgemeine Geschäftsbedingungen',

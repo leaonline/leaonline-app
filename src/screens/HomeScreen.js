@@ -8,12 +8,12 @@ import RouteButton from '../components/RouteButton'
 import * as data from '../resources/taskData.json'
 
 /**
- * @private
+ * @private TTS Ref
  */
 const Tts = TTSengine.component()
 
 /**
- * @private
+ * @private stylesheet
  */
 const styles = StyleSheet.create({
   profile: {
@@ -72,7 +72,7 @@ const HomeScreen = props => {
         <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse style size={17} onPress={() => props.navigation.navigate('Profile')} />
       </View>
       <View style={styles.header}>
-        <Tts text={t('homeScreen.text')} color={Colors.secondary} id={5} testId='homeScreen1' />
+        <Tts text={t('homeScreen.text')} color={Colors.secondary} id='homeScreen.text' />
       </View>
 
       <View style={styles.body}>

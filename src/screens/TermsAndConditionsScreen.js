@@ -1,10 +1,10 @@
-/* global ttsIsCurrentlyPlaying */
 import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { CheckBox, Icon } from 'react-native-elements'
+import { Alert, StyleSheet, View } from 'react-native'
+import { CheckBox } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private tts ref
@@ -66,11 +66,16 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        <Tts color={Colors.primary} text={t('TandCScreen.text')} id='TandCScreen.text' />
       </View>
 
       <View style={styles.checkBox}>
-        <Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
+        <Tts
+          id='TandCScreen.checkBoxText'
+          text={t('TandCScreen.checkBoxText')}
+          color={termsAndConditionsColor}
+          align='left'
+        />
         <CheckBox
           center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
@@ -78,22 +83,24 @@ const TermsAndConditionsScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : termsAndConditionsIsChecked
-              ? props.navigation.navigate('Registration')
-              : checkBoxIsNotChecked()
-        }}
-        >
-          <Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        </TouchableOpacity>
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-left' handleScreen={() => {
+            TTSengine.isSpeaking
+              ? Alert.alert(t('alert.title'), t('alert.navText'))
+              : props.navigation.navigate('Welcome')
+          }}
+        />
+        <RouteButton
+          onlyIcon
+          icon='arrow-alt-circle-right' handleScreen={() => {
+            TTSengine.isSpeaking
+              ? Alert.alert(t('alert.title'), t('alert.navText'))
+              : termsAndConditionsIsChecked
+                ? props.navigation.navigate('Registration')
+                : checkBoxIsNotChecked()
+          }}
+        />
       </View>
     </View>
   )
