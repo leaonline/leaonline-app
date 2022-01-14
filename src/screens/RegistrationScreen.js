@@ -61,6 +61,13 @@ const styles = StyleSheet.create({
 const RegistrationScreen = props => {
   const { t } = useTranslation()
 
+  const register = async () => {
+    console.debug('register account')
+    const user = await createUser()
+    console.debug('new account:', user)
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -72,7 +79,7 @@ const RegistrationScreen = props => {
       </View>
 
       <View >
-        <TouchableOpacity onPress={() => createUser()}>
+        <TouchableOpacity onPress={() => register()}>
           <Icon style={styles.iconNavigation} name='user' type='font-awesome-5' size={35} />
         </TouchableOpacity>
       </View>

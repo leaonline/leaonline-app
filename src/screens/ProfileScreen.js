@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, View, Button } from 'react-native'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import profileData from '../resources/profileData.js'
+import { deleteAccount } from '../meteor/deleteAccount'
+import { Log } from '../infrastructure/Log'
 
 const Tts = TTSengine.component()
 
@@ -78,6 +80,17 @@ const ProfileScreen = props => {
     )
   })
 
+  const deleteMeteorAccount = () => {
+    const log = Log.create('deleteMeteorAccount')
+
+    deleteAccount({
+      prepare: () => log('send delete request'),
+      receive: () => log('response receive'),
+      success: () => log('successful deleted'),
+      failure: error => Log.error(error)
+    })
+  }
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -91,6 +104,13 @@ const ProfileScreen = props => {
             <Tts text={t('profileScreen.progress')} color={Colors.primary} id={8} testId='profilescreen-fortschritt' smallButton />
           </View>
           <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
+        </View>
+        <View style={styles.progressTitle}>
+          <Tts text={'Account löschen'} id={'delete account'} />
+          <Button
+            onPress={deleteMeteorAccount}
+            title="Account löschen"
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
