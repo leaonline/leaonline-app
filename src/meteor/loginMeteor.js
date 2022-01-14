@@ -1,5 +1,5 @@
 import Meteor from '@meteorrn/core'
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from 'expo-secure-store'
 
 // TODO get this from config / dot env etc.
 const usernameKey = 'lea-app-username'
@@ -28,8 +28,7 @@ const loginWithPassword = (username, password) => new Promise((resolve, reject) 
   Meteor.loginWithPassword({ username }, password, (error) => {
     if (error) {
       reject(error)
-    }
-    else {
+    } else {
       resolve(Meteor.user())
     }
   })

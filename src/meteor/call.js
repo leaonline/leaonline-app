@@ -4,7 +4,7 @@ export const callMeteor = ({ name, args, prepare, receive, success, failure }) =
   const status = Meteor.status()
 
   if (!status.connected) {
-    return failure(new Error(`Not connected to Meteor backend.`))
+    return failure(new Error('Not connected to Meteor backend.'))
   }
 
   const promise = call({ name, args, prepare, receive })

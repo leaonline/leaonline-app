@@ -1,5 +1,5 @@
 import Meteor from '@meteorrn/core'
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from 'expo-secure-store'
 import { callMeteor } from './call'
 import { hasLogin } from './hasLogin'
 import { loginMeteor } from './loginMeteor'
@@ -9,7 +9,7 @@ import { Log } from '../infrastructure/Log'
 const usernameKey = 'lea-app-username'
 const debug = Log.create('createUser', 'debug')
 
-export const createUser = async ({ override = true} = {}) => {
+export const createUser = async ({ override = true } = {}) => {
   if (Meteor.user()) {
     debug('user exists and is logged in')
     return Meteor.user()

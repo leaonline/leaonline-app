@@ -67,7 +67,6 @@ const RegistrationScreen = props => {
     console.debug('new account:', user)
   }
 
-
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -78,7 +77,7 @@ const RegistrationScreen = props => {
         <Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
       </View>
 
-      <View >
+      <View>
         <TouchableOpacity onPress={() => register()}>
           <Icon style={styles.iconNavigation} name='user' type='font-awesome-5' size={35} />
         </TouchableOpacity>
@@ -87,7 +86,8 @@ const RegistrationScreen = props => {
       <View style={styles.navigationButtons}>
         <TouchableOpacity onPress={() => {
           ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('TandC')
-        }}>
+        }}
+        >
           <Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
         </TouchableOpacity>
 

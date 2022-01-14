@@ -106,10 +106,10 @@ const ProfileScreen = props => {
           <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
         </View>
         <View style={styles.progressTitle}>
-          <Tts text={'Account löschen'} id={'delete account'} />
+          <Tts text='Account löschen' id='delete account' />
           <Button
             onPress={deleteMeteorAccount}
-            title="Account löschen"
+            title='Account löschen'
           />
         </View>
       </ScrollView>

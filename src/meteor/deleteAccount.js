@@ -1,6 +1,6 @@
 import Meteor from '@meteorrn/core'
 import { callMeteor } from './call'
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from 'expo-secure-store'
 
 const usernameKey = 'lea-app-username'
 

@@ -44,9 +44,7 @@ export default function navigator (props) {
         </Stack.Navigator>
       </NavigationContainer>
     )
-  }
-
-  else {
+  } else {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{

@@ -47,9 +47,9 @@ const timestamp = () => {
 Log.levels = () => ({ ...allLevels })
 
 Log.setLevel = level => {
-  const allLevels = Object.values(allLevels)
+  const indices = Object.values(allLevels)
 
-  if (!allLevels.includes(level)) {
+  if (!indices.includes(level)) {
     throw new Error(`Unsupported log level: ${level}`)
   }
 

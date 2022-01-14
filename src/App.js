@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Log } from './infrastructure/Log'
 import { connectMeteor } from './meteor/connect'
 import { loginMeteor } from './meteor/loginMeteor'
@@ -43,7 +43,6 @@ const startApp = async () => {
     throw new Error('Implement interval!')
   }
 }
-
 
 /**
  * @private used to load our custom font
