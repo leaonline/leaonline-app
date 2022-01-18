@@ -66,7 +66,6 @@ const RegistrationScreen = props => {
         <Tts
           id='registrationScreen.form.text'
           text={t('registrationScreen.form.text')}
-          color={Colors.primary}
         />
       </View>
 

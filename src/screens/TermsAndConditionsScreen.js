@@ -66,7 +66,7 @@ const TermsAndConditionsScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Tts color={Colors.primary} text={t('TandCScreen.text')} id='TandCScreen.text' />
+        <Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
       </View>
 
       <View style={styles.checkBox}>

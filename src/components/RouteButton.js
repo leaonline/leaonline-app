@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
+ * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
  * @component
  * @returns {JSX.Element}
  */
@@ -48,7 +49,7 @@ const RouteButton = props => {
     if (!props.onlyIcon) {
       return (
         <View style={styles.body}>
-          <Tts text={props.title} color={Colors.primary} id={`${props.title}-tts`} dontShowText />
+          <Tts text={props.title} id={`${props.title}-tts`} dontShowText />
           <View style={styles.button}>
             <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
           </View>
@@ -57,7 +58,7 @@ const RouteButton = props => {
     } else {
       return (
         <TouchableOpacity onPress={props.handleScreen}>
-          <Icon style={props.style || styles.iconNavigation} name={props.icon} type='font-awesome-5' size={35} />
+          <Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
         </TouchableOpacity>
       )
     }

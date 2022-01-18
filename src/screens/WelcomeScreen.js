@@ -1,6 +1,5 @@
 import React from 'react'
 import { Alert, Image, StyleSheet, View } from 'react-native'
-import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import RouteButton from '../components/RouteButton'
@@ -64,7 +63,6 @@ const WelcomeScreen = props => {
         <Tts
           id='welcomeScreen.text'
           text={t('welcomeScreen.text')}
-          color={Colors.primary}
         />
       </View>
 

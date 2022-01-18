@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import RouteButton from '../components/RouteButton'
+import Colors from '../constants/Colors'
 
 /**
  * @private stylesheet
@@ -55,6 +56,7 @@ const UnitScreen = props => {
       <View style={styles.navigationButtons}>
         <RouteButton
           onlyIcon
+          style={{ paddingBottom: 5, padding: 30 }}
           icon='arrow-alt-circle-left' handleScreen={() => {
             props.navigation.navigate('Dimension')
           }}
@@ -62,6 +64,7 @@ const UnitScreen = props => {
 
         <RouteButton
           onlyIcon
+          style={{ paddingBottom: 5, padding: 30 }}
           icon='arrow-alt-circle-right' handleScreen={() => {
             props.navigation.navigate('Unit')
           }}
@@ -69,6 +72,8 @@ const UnitScreen = props => {
 
         <RouteButton
           onlyIcon
+          iconColor={Colors.success}
+          style={{ paddingBottom: 5, padding: 30 }}
           icon='check-circle' handleScreen={() => {
             props.navigation.navigate('Complete')
           }}

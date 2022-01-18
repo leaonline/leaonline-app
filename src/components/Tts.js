@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
- * @param {string} props.color: The color of the icon and the text, in hexadecimal format  (examples in ./constants/Colors.js)
+ * @param {string} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.primary  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
@@ -39,7 +39,7 @@ const ttsComponent = props => {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
-  const [iconColor, setIconColor] = useState(props.color)
+  const [iconColor, setIconColor] = useState(props.color || Colors.primary)
 
   const debug = props.debug || TTSengine.debug
     ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
@@ -105,7 +105,7 @@ const ttsComponent = props => {
    */
   const stopSpeak = () => {
     debug('stop')
-    setIconColor(props.color)
+    setIconColor(props.color || Colors.primary)
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
@@ -128,7 +128,7 @@ const ttsComponent = props => {
     if (!props.dontShowText) {
       // color always detaults to secondary and align always to left
       const styleProps = {
-        color: props.color,
+        color: props.color || Colors.primary,
         flexShrink: props.shrink || 1,
         fontSize: props.fontSize || 18,
         textAlign: props.align,

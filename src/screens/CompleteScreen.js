@@ -15,10 +15,6 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row'
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 50
-  },
   navigationButtons: {
     flexDirection: 'row'
   }
@@ -50,6 +46,7 @@ const CompleteScreen = props => {
       <View style={styles.navigationButtons}>
         <RouteButton
           onlyIcon
+          style={{ padding: 130, paddingBottom: 5 }}
           icon='arrow-alt-circle-right' handleScreen={() => {
             props.navigation.navigate('Map')
           }}
