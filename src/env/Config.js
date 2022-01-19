@@ -1,4 +1,4 @@
-let debugLayoutBorders = true
+const debugLayoutBorders = true
 
 export const Config = {}
 

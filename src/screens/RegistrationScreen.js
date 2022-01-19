@@ -38,7 +38,7 @@ const styles = createStyleSheet({
   routeButtonContainer: {
     width: '100%',
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'center'
   }
 })
 
@@ -73,27 +73,27 @@ const RegistrationScreen = props => {
 
       <View style={styles.navigationButtons}>
         <View style={styles.routeButtonContainer}>
-        <RouteButton
-          onlyIcon
-          style={styles.routeButton}
-          icon='arrow-alt-circle-left' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('TandC')
-          }}
-        />
+          <RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
+          />
         </View>
 
         <View style={styles.routeButtonContainer}>
-        <RouteButton
-          onlyIcon
-          style={styles.routeButton}
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('Home')
-          }}
-        />
+          <RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('Home')
+            }}
+          />
         </View>
       </View>
     </View>
