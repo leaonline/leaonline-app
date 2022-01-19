@@ -1,7 +1,8 @@
 import React from 'react'
-import { Alert, Image, StyleSheet, View } from 'react-native'
+import { Alert, Image, View } from 'react-native'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import RouteButton from '../components/RouteButton'
 
 /**
@@ -12,7 +13,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',

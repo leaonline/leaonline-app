@@ -11,8 +11,6 @@ const Tts = TTSengine.component()
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
-    flexDirection: 'row'
   },
   buttonTitle: {
     color: Colors.primary,
@@ -20,11 +18,11 @@ const styles = StyleSheet.create({
     width: '75%'
   },
   button: {
-    paddingTop: 5
+    paddingTop: 0
   },
   iconNavigation: {
-    paddingBottom: 5,
-    padding: 50
+    paddingBottom: 0,
+    padding: 0
   }
 })
 

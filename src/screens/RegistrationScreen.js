@@ -1,8 +1,9 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
-import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
+import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import RouteButton from '../components/RouteButton'
 
 /**
@@ -13,7 +14,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -31,12 +32,13 @@ const styles = StyleSheet.create({
   icon: {
     paddingBottom: 5
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center',
   }
 })
 
@@ -70,23 +72,29 @@ const RegistrationScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
+        <View style={styles.routeButtonContainer}>
         <RouteButton
           onlyIcon
+          style={styles.routeButton}
           icon='arrow-alt-circle-left' handleScreen={() => {
             TTSengine.isSpeaking
               ? Alert.alert(t('alert.title'), t('alert.navText'))
               : props.navigation.navigate('TandC')
           }}
         />
+        </View>
 
+        <View style={styles.routeButtonContainer}>
         <RouteButton
           onlyIcon
+          style={styles.routeButton}
           icon='arrow-alt-circle-right' handleScreen={() => {
             TTSengine.isSpeaking
               ? Alert.alert(t('alert.title'), t('alert.navText'))
               : props.navigation.navigate('Home')
           }}
         />
+        </View>
       </View>
     </View>
   )

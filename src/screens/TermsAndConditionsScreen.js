@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import RouteButton from '../components/RouteButton'
 
 /**
@@ -14,7 +15,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
