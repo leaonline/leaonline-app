@@ -32,11 +32,13 @@ const styles = createStyleSheet({
     flex: 2,
     flexDirection: 'row'
   },
-  icon: {
-    paddingBottom: 5
-  },
   navigationButton: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -68,15 +70,16 @@ const WelcomeScreen = props => {
       </View>
 
       <View style={styles.navigationButton}>
-        <RouteButton
-          onlyIcon
-          style={{ padding: 130, paddingBottom: 5 }}
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('TandC')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
+          />
+        </View>
       </View>
     </View>
   )

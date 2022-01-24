@@ -11,6 +11,8 @@ const Tts = TTSengine.component()
 
 const styles = StyleSheet.create({
   body: {
+    flex: 1,
+    flexDirection: 'row'
   },
   buttonTitle: {
     color: Colors.primary,
@@ -18,11 +20,9 @@ const styles = StyleSheet.create({
     width: '75%'
   },
   button: {
-    paddingTop: 0
+    paddingTop: 5
   },
   iconNavigation: {
-    paddingBottom: 0,
-    padding: 0
   }
 })
 
@@ -63,7 +63,7 @@ const RouteButton = props => {
   }
 
   return (
-    <View style={styles.body}>
+    <View style={props.onlyIcon ? '' : styles.body}>
       {renderRouteButton()}
     </View>
   )

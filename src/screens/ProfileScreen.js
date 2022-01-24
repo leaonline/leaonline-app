@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import profileData from '../resources/profileData.js'
 
 const Tts = TTSengine.component()
@@ -106,7 +107,7 @@ const ProfileScreen = props => {
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     margin: 10,

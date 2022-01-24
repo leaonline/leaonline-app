@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import * as data from '../resources/taskData.json'
 
 /**
@@ -15,7 +16,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   profile: {
     display: 'flex',
     marginLeft: 'auto'
@@ -32,8 +33,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 2,
-    alignItems: 'center',
-    flexDirection: 'column'
+    alignItems: 'center'
   },
   button: {
     alignItems: 'center',

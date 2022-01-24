@@ -35,6 +35,11 @@ const styles = createStyleSheet({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -84,24 +89,28 @@ const TermsAndConditionsScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-left' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('Welcome')
-          }}
-        />
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : termsAndConditionsIsChecked
-                ? props.navigation.navigate('Registration')
-                : checkBoxIsNotChecked()
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('Welcome')
+            }}
+          />
+        </View>
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : termsAndConditionsIsChecked
+                  ? props.navigation.navigate('Registration')
+                  : checkBoxIsNotChecked()
+            }}
+          />
+        </View>
       </View>
     </View>
   )

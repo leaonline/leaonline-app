@@ -1,12 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import RouteButton from '../components/RouteButton'
 import Colors from '../constants/Colors'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -22,6 +23,11 @@ const styles = StyleSheet.create({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -54,30 +60,33 @@ const UnitScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <RouteButton
-          onlyIcon
-          style={{ paddingBottom: 5, padding: 30 }}
-          icon='arrow-alt-circle-left' handleScreen={() => {
-            props.navigation.navigate('Dimension')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              props.navigation.navigate('Dimension')
+            }}
+          />
+        </View>
 
-        <RouteButton
-          onlyIcon
-          style={{ paddingBottom: 5, padding: 30 }}
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            props.navigation.navigate('Unit')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              props.navigation.navigate('Unit')
+            }}
+          />
+        </View>
 
-        <RouteButton
-          onlyIcon
-          iconColor={Colors.success}
-          style={{ paddingBottom: 5, padding: 30 }}
-          icon='check-circle' handleScreen={() => {
-            props.navigation.navigate('Complete')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            iconColor={Colors.success}
+            icon='check-circle' handleScreen={() => {
+              props.navigation.navigate('Complete')
+            }}
+          />
+        </View>
       </View>
     </View>
   )
