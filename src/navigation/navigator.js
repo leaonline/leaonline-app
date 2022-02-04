@@ -9,7 +9,7 @@ import MapScreen from '../screens/MapScreen'
 import DimensionScreen from '../screens/DimensionScreen'
 import UnitScreen from '../screens/UnitScreen'
 import RegistrationScreen from '../screens/RegistrationScreen'
-import ProfileScreen from '../screens/ProfileScreen'
+import ProfileScreen from '../screens/profile/ProfileScreen'
 import CompleteScreen from '../screens/CompleteScreen'
 
 import { useTranslation } from 'react-i18next'

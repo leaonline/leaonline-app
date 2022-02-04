@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View, Button } from 'react-native'
+import { View } from 'react-native'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
+import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import Colors from '../constants/Colors'
-import { TTSengine } from '../components/Tts'
-import profileData from '../resources/profileData.js'
-import { deleteAccount } from '../meteor/deleteAccount'
-import { ActionButton } from '../components/ActionButton'
-import { RecoverCode } from '../components/RecoverCode'
-import { Log } from '../infrastructure/Log'
+import profileData from '../../resources/profileData'
+import { TTSengine } from '../../components/Tts'
+import { createStyleSheet } from '../../styles/createStyleSheet'
 
 const Tts = TTSengine.component()
 
@@ -25,10 +22,15 @@ const changeColor = list => list.map(element => ({
   color: Colors[element.color]
 }))
 
-const ProfileScreen = props => {
+/**
+ *
+ * @return {*}
+ * @constructor
+ */
+export const Achievements = () => {
   const { t } = useTranslation()
   const allDimensions = changeColor(profileData.progress.dimensions)
-  const expandedStates = allDimensions.map((entry, index) => useState(false))
+  const expandedStates = allDimensions.map((/* entry, index */) => useState(false))
 
   const renderPoints = (item) => {
     return [...Array(item.current)].map((item, key) => {
@@ -60,7 +62,7 @@ const ProfileScreen = props => {
               <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
             </ListItem.Content>
           </>
-          }
+        }
         isExpanded={expanded}
         onPress={() => {
           setExpanded(!expanded)
@@ -82,47 +84,25 @@ const ProfileScreen = props => {
     )
   })
 
-  const deleteMeteorAccount = () => {
-    const log = Log.create('deleteMeteorAccount')
-
-    deleteAccount({
-      prepare: () => log('send delete request'),
-      receive: () => log('response receive'),
-      success: () => log('successful deleted'),
-      failure: error => Log.error(error)
-    })
-  }
-
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={{ alignItems: 'center' }}>
-            <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
-          </View>
-          {renderProfileProgress(allDimensions)}
-          <View style={styles.body} />
-          <View style={styles.progressTitle}>
-            <Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
-          </View>
-          <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
-        </View>
-
-        <RecoverCode />
-        <ActionButton text='löschen'  onPress={deleteMeteorAccount} />
-        <View style={styles.progressTitle}>
-          <Tts text='Account löschen' id='delete account' />
-          <Button
-            onPress={deleteMeteorAccount}
-            title='Account löschen'
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <View style={{ alignItems: 'center' }}>
+        <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
+      </View>
+      {renderProfileProgress(allDimensions)}
+      <View style={styles.body} />
+      <View style={styles.progressTitle}>
+        <Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
+      </View>
+      <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
+    </View>
   )
 }
 
-const styles = StyleSheet.create({
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
   container: {
     flex: 1,
     margin: 10,
@@ -137,5 +117,3 @@ const styles = StyleSheet.create({
     margin: 10
   }
 })
-
-export default ProfileScreen

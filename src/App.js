@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+import * as Speech from 'expo-speech'
 import { Log } from './infrastructure/Log'
 import { connectMeteor } from './meteor/connect'
 import { loginMeteor } from './meteor/loginMeteor'
 import { loggedIn } from './meteor/loggedIn'
-import { StyleSheet, View } from 'react-native'
-import * as Font from 'expo-font'
-import AppLoading from 'expo-app-loading'
-import * as Speech from 'expo-speech'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
+import { createStyleSheet } from './styles/createStyleSheet'
 import './i18n'
 
 const log = Log.create('App')
@@ -17,15 +18,28 @@ const startApp = async () => {
   log('init App')
   log('fetch fonts')
   await fetchFonts()
+  await connect()
+}
+
+const connect = async () => {
   log('connect to meteor')
-  log(process.env)
   try {
     await connectMeteor({ endpoint: 'ws://192.168.178.49:8080/websocket' })
-  } catch (connectError) {
-    Log.error(connectError)
-    // what to do here?
   }
 
+  // if we have not a connection, we wait for
+  // a longer timeout and try to reconnect
+  // TODO ADD MODAL WITH CONNECTION NOTIFICATION
+  catch (connectError) {
+    Log.error(connectError)
+    return setTimeout(() => connect(), 5000)
+  }
+
+  // once connected we can continue as expected
+  return onConnected()
+}
+
+const onConnected = async () => {
   log('Meteor connected, attempt login')
   let loginSuccessful = false
 
@@ -58,7 +72,7 @@ const fetchFonts = async () => {
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   screen: {
     flex: 1
   }

@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import RouteButton from '../components/RouteButton'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 /**
- * @private styles
+ * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -21,6 +22,11 @@ const styles = StyleSheet.create({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -31,7 +37,7 @@ const styles = StyleSheet.create({
  * This navigates the user to the {UnitScreen}, once the corresponding Unit
  * has been loaded.
  *
- * On cancel it navigates back to the {MapScreen}
+ * On cancel, it navigates back to the {MapScreen}
  *
  * @category Screens
  * @component
@@ -51,19 +57,23 @@ const DimensionScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-left' handleScreen={() => {
-            props.navigation.navigate('Map')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              props.navigation.navigate('Map')
+            }}
+          />
+        </View>
 
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            props.navigation.navigate('Unit')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              props.navigation.navigate('Unit')
+            }}
+          />
+        </View>
       </View>
     </View>
   )
