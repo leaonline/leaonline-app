@@ -1,4 +1,25 @@
-import { Ramdom } from 'meteor/random'
+import { Accounts } from 'meteor/accounts-base'
+import { Random } from 'meteor/random'
+import { encrypt } from './crypto'
+
+Accounts.config({
+  sendVerificationEmail: false,
+  forbidClientAccountCreation: true,
+  loginExpirationInDays: null,
+  ambiguousErrorMessages: true,
+  defaultFieldSelector: {
+    _id: 1,
+    username: 1,
+    restore: 1
+  }
+})
+
+Meteor.publish(null, function () {
+  const { userId } = this
+  const user = Meteor.users.find(userId, { fields: { email: 0, services: 0 } })
+  console.debug('sub:', user.fetch())
+  return user
+})
 
 Meteor.onConnection(function (...args) {
   console.debug('connection established')
@@ -12,10 +33,27 @@ Meteor.methods({
 })
 
 Meteor.methods({
-  createMobileUser () {
-    const code = Random.id(5).toUpperCase()
-    const userId  = Accounts.createUser({ username: code, password: code })
-    return Meteor.users.findOne(userId, { fields: { services: 0 } })
+  createMobileUser (options) {
+    const email = options?.email
+    const username = Random.hexString(32)
+    const password = Random.secret()
+    const restore = [Random.id(4), Random.id(4), Random.id(4)]
+
+    const userId  = Accounts.createUser({ username, password })
+    const updateDoc = { restore }
+
+    // email can be optional and is used for restoring accounts
+    if (email) {
+      updateDoc.email = encrypt(email)
+    }
+
+    Meteor.users.update(userId, { $set: updateDoc })
+
+    const user = Meteor.users.findOne(userId, { fields: { services: 0 } })
+    console.debug('user created:', user)
+
+
+    return { user, password }
   },
 
   deleteMobileAccount (user = {}) {
