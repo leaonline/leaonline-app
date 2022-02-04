@@ -1,15 +1,27 @@
-import React from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { SafeAreaView, TextInput } from 'react-native';
+import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
+import { Log } from '../infrastructure/Log'
 import { createUser } from '../meteor/createUser'
 import RouteButton from '../components/RouteButton'
+import { createSchema, RegEx } from '../schema/createSchema'
+
+const emailSchema = createSchema({
+  email: {
+    type: String,
+    regEx: RegEx.EmailWithTLD
+  }
+})
 
 /**
  * @private tts
  */
 const Tts = TTSengine.component()
+const debug = Log.create('RegistrationScreen', 'debug')
 
 /**
  * @private styles
@@ -41,6 +53,9 @@ const styles = StyleSheet.create({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  input: {
+
   }
 })
 
@@ -58,12 +73,33 @@ const styles = StyleSheet.create({
  * @returns {JSX.Element}
  */
 const RegistrationScreen = props => {
+  const [email, onChangeEmail] = useState()
+  const [complete, setComplete] = useState(false)
   const { t } = useTranslation()
 
   const register = async () => {
-    console.debug('register account')
-    const user = await createUser()
-    console.debug('new account:', user)
+    debug('validate email, if given')
+
+    if (email && email.length > 0) {
+      const ctx = emailSchema.newContext()
+      ctx.validate({ email })
+
+      if (!ctx.isValid()) {
+        return Alert.alert('invalid email')
+      }
+    }
+
+
+    debug('register account')
+    try {
+      const user = await createUser({ email })
+      debug('new account:', user)
+      setComplete(true)
+    } catch (e) {
+      console.error(e)
+      debug('account creation failed')
+      // TODO handle this situation
+    }
   }
 
   return (
@@ -79,6 +115,18 @@ const RegistrationScreen = props => {
           color={Colors.primary}
         />
       </View>
+
+      <SafeAreaView>
+        <TextInput
+          style={{
+            borderBottomColor: '#000000',
+            borderBottomWidth: 1,
+          }}
+          placeholder={t('registrationScreen.form.placeholder')}
+          keyboardType="email-address"
+          onChangeText={onChangeEmail}
+        />
+      </SafeAreaView>
 
       <View>
         <TouchableOpacity onPress={() => register()}>

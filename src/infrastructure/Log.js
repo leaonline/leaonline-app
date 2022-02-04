@@ -1,6 +1,6 @@
 export const Log = {}
 
-let logLevel = 2 // default log level is 2
+let logLevel = 0 // default log level is 2 TODO get from config
 
 const allLevels = {
   debug: {
@@ -61,7 +61,7 @@ Log.create = (name, type = 'log') => {
     throw new Error(`Unsupported log type: ${type}`)
   }
 
-  const logName = `[${name}]:`
+  const logName = `${type} [${name}]:`
   const logFn = allLevels[type].run
 
   if (!logFn) {

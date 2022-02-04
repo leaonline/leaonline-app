@@ -18,8 +18,9 @@ const startApp = async () => {
   log('fetch fonts')
   await fetchFonts()
   log('connect to meteor')
+  log(process.env)
   try {
-    await connectMeteor({ endpoint: 'ws://192.168.12.44:8080/websocket' })
+    await connectMeteor({ endpoint: 'ws://192.168.178.49:8080/websocket' })
   } catch (connectError) {
     Log.error(connectError)
     // what to do here?
@@ -30,17 +31,17 @@ const startApp = async () => {
 
   try {
     const loginStatus = await loginMeteor()
-    log('login result:', JSON.stringify(loginStatus))
     loginSuccessful = !loginStatus.failed && loginStatus._id && loginStatus.username
+    log('login successful:', loginSuccessful)
   } catch (loginError) {
-    Log.error(loginError)
-    // what to do here?
+    loginSuccessful = false
+    log('login failed', loginError.message)
   }
 
   // if we are logged-in but the user is not available yet, we
   // set an interval and wait for the user to be available
   if (loginSuccessful && !loggedIn()) {
-    throw new Error('Implement interval!')
+    throw new Error('Implement intverval to wait for logged-in user!')
   }
 }
 

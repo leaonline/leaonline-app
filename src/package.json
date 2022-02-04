@@ -26,6 +26,7 @@
     "colors": "1.4.0",
     "expo": "~43.0.3",
     "expo-app-loading": "^1.2.1",
+    "expo-crypto": "~10.0.3",
     "expo-device": "~4.0.3",
     "expo-font": "~10.0.3",
     "expo-secure-store": "~11.0.3",
@@ -44,8 +45,8 @@
     "react-native-tts": "^4.1.0",
     "react-native-vector-icons": "^9.0.0",
     "react-native-web": "~0.17.5",
-    "uuid": "^8.3.2",
-    "expo-crypto": "~10.0.3"
+    "simpl-schema": "^1.12.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

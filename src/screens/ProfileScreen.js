@@ -6,6 +6,8 @@ import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import profileData from '../resources/profileData.js'
 import { deleteAccount } from '../meteor/deleteAccount'
+import { ActionButton } from '../components/ActionButton'
+import { RecoverCode } from '../components/RecoverCode'
 import { Log } from '../infrastructure/Log'
 
 const Tts = TTSengine.component()
@@ -105,6 +107,9 @@ const ProfileScreen = props => {
           </View>
           <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
         </View>
+
+        <RecoverCode />
+        <ActionButton text='löschen'  onPress={deleteMeteorAccount} />
         <View style={styles.progressTitle}>
           <Tts text='Account löschen' id='delete account' />
           <Button
