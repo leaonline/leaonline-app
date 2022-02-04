@@ -1,16 +1,23 @@
-import Meteor from '@meteorrn/core'
+import { MeteorLoginStorage } from './MeteorLoginStorage'
 import { callMeteor } from './call'
-import * as SecureStore from 'expo-secure-store'
+import { ensureLoggedIn } from './ensureLoggedIn'
 
-const usernameKey = 'lea-app-username'
+const deleteAccountMethodName = 'deleteMobileAccount'
 
+/**
+ * Deletes a current user account and cleans the cached login credentials.
+ *
+ * @param prepare
+ * @param receive
+ * @param failure
+ * @param success
+ * @return {Promise<any>}
+ */
 export const deleteAccount = ({ prepare, receive, failure, success } = {}) => {
-  const user = Meteor.user()
-
-  if (!user) { throw new Error('notLoggedIn') }
+  const user = ensureLoggedIn()
 
   return callMeteor({
-    name: 'deleteMobileAccount',
+    name: deleteAccountMethodName,
     args: user,
     prepare,
     receive,
@@ -20,7 +27,7 @@ export const deleteAccount = ({ prepare, receive, failure, success } = {}) => {
         return failure(new Error('notDeleted'))
       }
 
-      await SecureStore.deleteItemAsync(usernameKey)
+      await MeteorLoginStorage.deleteCredentials()
 
       return success(deleted)
     }

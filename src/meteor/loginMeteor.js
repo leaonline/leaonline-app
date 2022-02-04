@@ -1,34 +1,47 @@
 import Meteor from '@meteorrn/core'
-import * as SecureStore from 'expo-secure-store'
+import { MeteorLoginStorage } from './MeteorLoginStorage'
 
-// TODO get this from config / dot env etc.
-const usernameKey = 'lea-app-username'
-
+/**
+ * Attempts a login to the Meteor backend.
+ *
+ * Resolves to an error, if
+ * - no connection is established to the backend
+ * - no credentials are stored
+ *
+ * Otherwise, resolves to the logged-in user object (document)
+ *
+ * @return {Promise<*>}
+ */
 export const loginMeteor = async () => {
-  if (Meteor.user()) {
-    return Meteor.user()
-  }
+  // skip if user exists, since there is no further login required
+  if (Meteor.user()) { return Meteor.user() }
 
   const status = Meteor.status()
 
   if (!status.connected) {
-    return { failed: 'notConnected' }
+    throw new Error('notConnected')
   }
 
-  const username = await SecureStore.getItemAsync(usernameKey)
+  const { username, password } = await MeteorLoginStorage.getCredentials()
 
-  if (!username) {
-    return { failed: 'noCredentials' }
+  if (!username || !password) {
+    throw new Error('noCredentials')
   }
 
-  return loginWithPassword(username, username)
+  return loginWithPassword(username, password)
 }
 
+/**
+ * The actual login call, wrapped in a promise
+ * @private
+ */
 const loginWithPassword = (username, password) => new Promise((resolve, reject) => {
   Meteor.loginWithPassword({ username }, password, (error) => {
     if (error) {
       reject(error)
-    } else {
+    }
+
+    else {
       resolve(Meteor.user())
     }
   })

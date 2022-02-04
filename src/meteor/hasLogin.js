@@ -1,8 +1,7 @@
-import * as SecureStore from 'expo-secure-store'
+import { MeteorLoginStorage } from './MeteorLoginStorage'
 
-const usernameKey = 'lea-app-username'
-
-export const hasLogin = async () => {
-  const username = await SecureStore.getItemAsync(usernameKey)
-  return typeof username === 'string' && username.length === 5
-}
+/**
+ * Returns, whether a login is currently securely stored on the devices
+ * @return {Promise<boolean>} true/false
+ */
+export const hasLogin = async () => MeteorLoginStorage.hasLogin()
