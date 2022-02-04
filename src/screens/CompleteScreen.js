@@ -1,11 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import RouteButton from '../components/RouteButton'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -15,12 +16,13 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row'
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 50
-  },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -48,12 +50,14 @@ const CompleteScreen = props => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            props.navigation.navigate('Map')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              props.navigation.navigate('Map')
+            }}
+          />
+        </View>
       </View>
     </View>
   )

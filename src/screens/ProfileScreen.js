@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import profileData from '../resources/profileData.js'
 
 const Tts = TTSengine.component()
@@ -21,6 +22,12 @@ const changeColor = list => list.map(element => ({
   color: Colors[element.color]
 }))
 
+/**
+ *  TODO
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ProfileScreen = props => {
   const { t } = useTranslation()
   const allDimensions = changeColor(profileData.progress.dimensions)
@@ -97,7 +104,10 @@ const ProfileScreen = props => {
   )
 }
 
-const styles = StyleSheet.create({
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
   container: {
     flex: 1,
     margin: 10,

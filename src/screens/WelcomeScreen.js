@@ -1,8 +1,8 @@
 import React from 'react'
-import { Alert, Image, StyleSheet, View } from 'react-native'
-import Colors from '../constants/Colors'
+import { Alert, Image, View } from 'react-native'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
 import RouteButton from '../components/RouteButton'
 
 /**
@@ -13,7 +13,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -32,15 +32,13 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row'
   },
-  icon: {
-    paddingBottom: 5
-  },
   navigationButton: {
     flexDirection: 'row'
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -68,19 +66,20 @@ const WelcomeScreen = props => {
         <Tts
           id='welcomeScreen.text'
           text={t('welcomeScreen.text')}
-          color={Colors.primary}
         />
       </View>
 
       <View style={styles.navigationButton}>
-        <RouteButton
-          onlyIcon
-          icon='arrow-alt-circle-right' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('TandC')
-          }}
-        />
+        <View style={styles.routeButtonContainer}>
+          <RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
+          />
+        </View>
       </View>
     </View>
   )

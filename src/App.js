@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import * as Speech from 'expo-speech'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
+import { createStyleSheet } from './styles/createStyleSheet'
 import './i18n'
 
 /**
@@ -20,7 +21,7 @@ const fetchFonts = () => {
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   screen: {
     flex: 1
   }
