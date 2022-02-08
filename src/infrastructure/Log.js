@@ -1,6 +1,6 @@
 export const Log = {}
 
-let logLevel = 0 // default log level is 2 TODO get from config
+let logLevel = 2 // default log level is 2 TODO get from config
 
 const allLevels = {
   debug: {

@@ -1,14 +1,11 @@
 import Meteor from '@meteorrn/core'
 import { callMeteor } from './call'
 import { hasLogin } from './hasLogin'
-import { loginMeteor } from './loginMeteor'
 import { Log } from '../infrastructure/Log'
 import { MeteorLoginStorage } from './MeteorLoginStorage'
 import { check } from '../schema/check'
+import { createSchema, RegEx } from '../schema/createSchema'
 
-
-const createUserMethodName = 'createMobileUser' // TODO get this from config / dot env etc.
-const debug = Log.create('createUser', 'debug')
 
 /**
  * Creates a new user-account on the Meteor server.
@@ -18,10 +15,10 @@ const debug = Log.create('createUser', 'debug')
  *
  *
  * @param override {boolean} flag that is used to override an already saved login
- * @return {Promise<Object>} promise, that resolves to a user-account object (document)
+ * @return {Promise<Object|null>} promise, that resolves to a user-account object (document)
  */
-export const createUser = async ({ email, override = true } = {}) => {
-  check(override, Boolean)
+export const createUser = async ({ email, override = false } = {}) => {
+  check({ email, override }, schema, { debug: true })
 
   if (Meteor.user()) {
     debug('user exists and is logged in')
@@ -31,16 +28,41 @@ export const createUser = async ({ email, override = true } = {}) => {
   const loginExists = await hasLogin()
   debug('login exists:', loginExists)
 
+  // we only create a new user if there is no login yet or
+  // we explicitly override it using the override flag
   if (!loginExists || override) {
     debug('create user, override:', override)
-    await createNewUser({ email })
+    return await createNewUser({ email })
   }
 
-  // if user creation is successful we try to login
-  // and return the logged-in user
-  debug('attempt login')
-  return await loginMeteor()
+  // return null indicates, that no new user has been created
+  return null
 }
+
+// INTERNALS
+
+const createUserMethodName = 'createMobileUser' // TODO get this from config / dot env etc.
+const debug = Log.create('createUser', 'debug')
+const schema = createSchema({
+  email: {
+    type: String,
+    optional: true,
+    regEx: RegEx.EmailWithTLD
+  },
+  override: Boolean
+})
+
+const responseSchema = createSchema({
+  user: createSchema({
+    _id: String,
+    username: String,
+    email: {
+      type: String,
+      optional: true
+    }
+  }),
+  password: String
+})
 
 /**
  * The actual call to the user-creation method on the server
@@ -48,15 +70,18 @@ export const createUser = async ({ email, override = true } = {}) => {
  */
 const createNewUser = async ({ email }) => {
   debug('create user in backend')
-  const { user, password } = await callMeteor({ name: createUserMethodName, args: { email } })
+  const response = await callMeteor({ name: createUserMethodName, args: { email } })
 
-  if (!user) {
-    throw new Error('no user has been created')
+  try {
+    responseSchema.validate(response || {})
+  } catch (e) {
+    const err = new Error('invalidResponse')
+    err.details = e.message
+    throw err
   }
 
-  if (!password) {
-    throw new Error('no secret has been created')
-  }
+  const user = response .user
+  const password = response .password
 
   debug('store user credentials')
 
