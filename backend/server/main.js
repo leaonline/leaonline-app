@@ -1,6 +1,7 @@
 import { Accounts } from 'meteor/accounts-base'
 import { Random } from 'meteor/random'
 import { encrypt } from './crypto'
+import { createRestoreCode } from './createRestoreCode'
 
 Accounts.config({
   sendVerificationEmail: false,
@@ -37,7 +38,11 @@ Meteor.methods({
     const email = options?.email
     const username = Random.hexString(32)
     const password = Random.secret()
-    const restore = [Random.id(4), Random.id(4), Random.id(4)]
+    const restore = [
+      createRestoreCode(),
+      createRestoreCode(),
+      createRestoreCode()
+    ]
 
     const userId  = Accounts.createUser({ username, password })
     const updateDoc = { restore }
