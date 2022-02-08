@@ -3,7 +3,7 @@ import Meteor from '@meteorrn/core'
 import sinon from 'sinon'
 import { MeteorLoginStorage } from '../../meteor/MeteorLoginStorage'
 
-const stub = (target, prop, fn) =>  {
+const stub = (target, prop, fn) => {
   const stub = sinon.stub(target, prop)
   stub.callsFake(fn)
   return stub
@@ -109,42 +109,54 @@ it('throws if the server responded with invalid data', async () => {
 
 it('creates a new user', async () => {
   let storageUpdated = false
+  const expectedUser = {
+    _id: 'foo',
+    username: 'john doe',
+    createdAt: new Date(),
+    restore: ['1234']
+  }
   stub(Meteor, 'user', () => null)
   stub(Meteor, 'status', () => ({ connected: true }))
   stub(MeteorLoginStorage, 'hasLogin', () => false)
   stub(Meteor, 'call', (name, args, cb) => {
     cb(undefined, {
-      user: { _id: 'foo', username: 'john doe' },
-      password: '1234'
+      user: expectedUser,
+      password: '123456789012345678901234567890123'
     })
   })
-  stub(MeteorLoginStorage, 'setCredentials', ({ username, password}) => {
+  stub(MeteorLoginStorage, 'setCredentials', ({ username, password }) => {
     expect(username).toEqual('john doe')
-    expect(password).toEqual('1234')
+    expect(password).toEqual('123456789012345678901234567890123')
     storageUpdated = true
   })
 
   const user = await createUser()
-  expect(user).toEqual({ _id: 'foo', username: 'john doe' })
+  expect(user).toEqual(expectedUser)
   expect(storageUpdated).toEqual(true)
 })
 
 it('returns null if no new user has been created', async () => {
   let storageUpdated = false
   let called = false
+  const expectedUser = {
+    _id: 'foo',
+    username: 'john doe',
+    createdAt: new Date(),
+    restore: ['1234']
+  }
   stub(Meteor, 'user', () => null)
   stub(Meteor, 'status', () => ({ connected: true }))
   stub(MeteorLoginStorage, 'hasLogin', () => true)
   stub(Meteor, 'call', (name, args, cb) => {
     cb(undefined, {
-      user: { _id: 'foo', username: 'john doe' },
-      password: '1234'
+      user: expectedUser,
+      password: '123456789012345678901234567890123'
     })
     called = true
   })
-  stub(MeteorLoginStorage, 'setCredentials', ({ username, password}) => {
+  stub(MeteorLoginStorage, 'setCredentials', ({ username, password }) => {
     expect(username).toEqual('john doe')
-    expect(password).toEqual('1234')
+    expect(password).toEqual('123456789012345678901234567890123')
     storageUpdated = true
   })
 
@@ -155,7 +167,7 @@ it('returns null if no new user has been created', async () => {
 
   // however: force-override
   const user2 = await createUser({ override: true })
-  expect(user2).toEqual({ _id: 'foo', username: 'john doe' })
+  expect(user2).toEqual(expectedUser)
   expect(storageUpdated).toEqual(true)
   expect(called).toEqual(true)
 })
