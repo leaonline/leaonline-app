@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
@@ -47,15 +47,18 @@ export const ActionButton = props => {
   const ttsText = props.tts || props.text
   return (
     <View style={styles.body}>
-      <Tts text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
-           dontShowText/>
+      <Tts
+        text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
+        dontShowText
+      />
       <View style={styles.button}>
         <Button
           title={props.text || props.tts}
           titleStyle={styles.buttonTitle}
           buttonStyle={{ borderRadius: 15, paddingTop: 10 }}
           type='outline'
-          onPress={props.onPress}/>
+          onPress={props.onPress}
+        />
       </View>
     </View>
   )

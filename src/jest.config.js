@@ -1,4 +1,4 @@
-module.exports =   {
+module.exports = {
   preset: 'jest-expo', // 👈 note this preset
   transform: {
     '\\.[jt]sx?$': 'babel-jest' // 👈 note this transform key

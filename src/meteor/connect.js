@@ -8,7 +8,7 @@ const interval = 250
 const argsSchema = createSchema({
   endpoint: {
     type: String,
-    regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:\-]+\/websocket$/i
+    regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:-]+\/websocket$/i
   }
 })
 /**

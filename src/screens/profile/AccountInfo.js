@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {  View, Modal } from 'react-native'
+import { View, Modal } from 'react-native'
 import { TTSengine } from '../../components/Tts'
 import { currentUser } from '../../meteor/currentUser'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +27,7 @@ export const AccountInfo = () => {
 
   const renderCodes = () => {
     if (!user?.restore) {
-      return (<View/>)
+      return (<View />)
     }
     return user.restore.map((code, index) => {
       return (
@@ -39,22 +39,23 @@ export const AccountInfo = () => {
   }
 
   return (
-      <View style={{ alignItems: 'center' }}>
-        <ActionButton text={t('accountInfo.restoreCodes')} onPress={() => setModalVisible(true)} />
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={modalVisible}
-          onRequestClose={() => {
-            console.debug("Modal has been closed.")
-            setModalVisible(!modalVisible)
-          }}>
-          <View style={{ alignItems: 'center' }}>
-          { renderCodes() }
-          </View>
+    <View style={{ alignItems: 'center' }}>
+      <ActionButton text={t('accountInfo.restoreCodes')} onPress={() => setModalVisible(true)} />
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {
+          console.debug('Modal has been closed.')
+          setModalVisible(!modalVisible)
+        }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          {renderCodes()}
+        </View>
 
-          <ActionButton text={'X ' + t('actions.close')} onPress={() => setModalVisible(!modalVisible)} />
-        </Modal>
-      </View>
+        <ActionButton text={'X ' + t('actions.close')} onPress={() => setModalVisible(!modalVisible)} />
+      </Modal>
+    </View>
   )
 }

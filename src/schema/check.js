@@ -1,7 +1,6 @@
 import { isSchemaInstance } from './isSchemaInstance'
 import { createSchema } from './createSchema'
 
-
 export const check = (target, schema) => {
   // if we already have a simple schema instance we
   // immediately delegate validation to this one

@@ -5,7 +5,6 @@
  * @extends {Error}
  */
 export class ConnectionError extends Error {
-
   /**
    * Use the message for the main error message.
    * Messages should not be in plain text but an i18n compatible

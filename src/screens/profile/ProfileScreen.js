@@ -10,8 +10,6 @@ import { Log } from '../../infrastructure/Log'
 
 const Tts = TTSengine.component()
 
-
-
 /**
  *  TODO
  * @param props
@@ -19,8 +17,6 @@ const Tts = TTSengine.component()
  * @constructor
  */
 const ProfileScreen = () => {
-
-
   const deleteMeteorAccount = () => {
     const log = Log.create('deleteMeteorAccount')
 
@@ -36,8 +32,8 @@ const ProfileScreen = () => {
     <SafeAreaView>
       <ScrollView>
         <Achievements />
-        <AccountInfo  />
-        <ActionButton text='löschen'  onPress={deleteMeteorAccount} />
+        <AccountInfo />
+        <ActionButton text='löschen' onPress={deleteMeteorAccount} />
         <View>
           <Tts text='Account löschen' id='delete account' />
           <Button
@@ -49,6 +45,5 @@ const ProfileScreen = () => {
     </SafeAreaView>
   )
 }
-
 
 export default ProfileScreen

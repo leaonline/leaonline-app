@@ -3,7 +3,7 @@ import SimpleSchema from 'simpl-schema'
 /**
  * @private
  */
-const defaultOptions =   {
+const defaultOptions = {
   clean: {
     autoConvert: true,
     extendAutoValueContext: {},
@@ -11,7 +11,7 @@ const defaultOptions =   {
     getAutoValues: true,
     removeEmptyStrings: true,
     removeNullsFromArrays: false,
-    trimStrings: true,
+    trimStrings: true
   },
   humanizeAutoLabels: false,
   requiredByDefault: true

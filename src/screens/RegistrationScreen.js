@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, View } from 'react-native'
-import { SafeAreaView, TextInput, ActivityIndicator, Text } from 'react-native'
+import { Alert, View, SafeAreaView, TextInput, ActivityIndicator, Text } from 'react-native'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { Log } from '../infrastructure/Log'
@@ -113,12 +112,11 @@ const RegistrationScreen = props => {
 
       await loginMeteor()
       setComplete(true)
-    }
-
+    } catch (e) {
       // during user creation there are multiple errors that can occur:
       // - not connected
       // -
-    catch (e) {
+
       console.error(e)
       log('account creation failed')
 
@@ -129,11 +127,11 @@ const RegistrationScreen = props => {
       if (e.message === 'notConnected') {
         // TODO handle this situation
       }
-    }
+    } finally {
+      // during user creation there are multiple errors that can occur:
+      // - not connected
+      // -
 
-      // we use a timeout to prevent flickering
-      // in case the response was very short
-    finally {
       setTimeout(() => {
         log('stop registering screen')
         setRegistering(false)
@@ -144,7 +142,7 @@ const RegistrationScreen = props => {
   const renderRegistering = () => (
     <View style={styles.container}>
       <View>
-        <ActivityIndicator size="large" color={Colors.secondary}/>
+        <ActivityIndicator size='large' color={Colors.secondary} />
       </View>
       <View style={styles.body}>
         <Tts
@@ -179,10 +177,10 @@ const RegistrationScreen = props => {
           <TextInput
             style={{
               borderBottomColor: '#000000',
-              borderBottomWidth: 1,
+              borderBottomWidth: 1
             }}
             placeholder={t('registrationScreen.form.placeholder')}
-            keyboardType="email-address"
+            keyboardType='email-address'
             onChangeText={onChangeEmail}
           />
         </View>
@@ -194,7 +192,8 @@ const RegistrationScreen = props => {
         <ActionButton
           tts={t('registrationScreen.form.register')}
           onPress={() => register()}
-          disabled={true}/>
+          disabled
+        />
       </View>
 
       {/* optional: navigate back */}
@@ -205,10 +204,10 @@ const RegistrationScreen = props => {
             onlyIcon
             style={styles.routeButton}
             icon='arrow-alt-circle-left' handleScreen={() => {
-            TTSengine.isSpeaking
-              ? Alert.alert(t('alert.title'), t('alert.navText'))
-              : props.navigation.navigate('TandC')
-          }}
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
           />
         </View>
       </View>
@@ -256,7 +255,8 @@ const RegistrationScreen = props => {
             onlyIcon
             style={styles.routeButton}
             icon='arrow-alt-circle-right'
-            handleScreen={() => props.navigation.navigate('Home')} />
+            handleScreen={() => props.navigation.navigate('Home')}
+          />
         </View>
       </View>
     </View>

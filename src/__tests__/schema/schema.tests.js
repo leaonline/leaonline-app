@@ -25,5 +25,5 @@ it('creates a schema on the fly in check when no schema is passed', function () 
     'foo.$': String
   }
   expect(() => check({ foo: [1] }, arraySchema)).toThrow('foo must be of type String')
-  expect(()=> check(1, String)).toThrow('target must be of type String')
+  expect(() => check(1, String)).toThrow('target must be of type String')
 })

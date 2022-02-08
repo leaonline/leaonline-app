@@ -43,9 +43,7 @@ const loginWithPassword = (username, password) => new Promise((resolve, reject) 
     if (error) {
       // we convert server responses to MeteorError
       reject(MeteorError.from(error))
-    }
-
-    else {
+    } else {
       resolve(Meteor.user())
     }
   })

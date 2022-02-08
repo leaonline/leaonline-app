@@ -71,8 +71,8 @@ const createNewUser = async ({ email }) => {
     throw err
   }
 
-  const user = response .user
-  const password = response .password
+  const user = response.user
+  const password = response.password
 
   debug('store user credentials')
 
@@ -82,10 +82,8 @@ const createNewUser = async ({ email }) => {
     password: password
   })
 
-
   return user
 }
-
 
 /**
  * Creates a new user-account on the Meteor server.
@@ -118,4 +116,3 @@ export const createUser = async ({ email, override = false } = {}) => {
   // return null indicates, that no new user has been created
   return null
 }
-
