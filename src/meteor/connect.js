@@ -1,10 +1,16 @@
 import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
+import { createSchema } from '../schema/createSchema'
 
 // TODO move this into env config
 const maxTimeout = 10000
 const interval = 250
-
+const argsSchema = createSchema({
+  endpoint: {
+    type: String,
+    regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:\-]+\/websocket$/i
+  }
+})
 /**
  * Connects to a Meteor server by given endpoint. Returns a Promise.
  *
@@ -18,10 +24,7 @@ const interval = 250
  *  status on success
  */
 export const connectMeteor = ({ endpoint }) => {
-  check(endpoint, {
-    type: String,
-    regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:\-]+\/websocket$/i
-  })
+  check({ endpoint }, argsSchema)
 
   return new Promise((resolve, reject) => {
     const status = Meteor.status()

@@ -1,6 +1,7 @@
 import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
 import { ensureConnected } from './ensureConnected'
+import { MeteorError } from '../errors/MeteorError'
 
 /**
  * Wraps a Meteor.call in a promise but also allows to hook in various
@@ -59,7 +60,8 @@ const call = ({ name, args, prepare, receive }) => new Promise((resolve, reject)
     if (typeof receive === 'function') { receive() }
 
     if (error) {
-      return reject(error)
+      // we convert server responses to MeteorError
+      return reject(MeteorError.from(error))
     }
 
     return resolve(result)

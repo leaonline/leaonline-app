@@ -1,5 +1,8 @@
 import Meteor from '@meteorrn/core'
 import { MeteorLoginStorage } from './MeteorLoginStorage'
+import { ensureConnected } from './ensureConnected'
+import { MeteorError } from '../errors/MeteorError'
+import { AuthenticationError } from '../errors/AuthenticationError'
 
 /**
  * Attempts a login to the Meteor backend.
@@ -10,22 +13,22 @@ import { MeteorLoginStorage } from './MeteorLoginStorage'
  *
  * Otherwise, resolves to the logged-in user object (document)
  *
- * @return {Promise<*>}
+ * @throws {ConnectionError} if not connected
+ * @throws {Error} if any error
+ * @return {Promise<Object>}
  */
 export const loginMeteor = async () => {
   // skip if user exists, since there is no further login required
   if (Meteor.user()) { return Meteor.user() }
 
-  const status = Meteor.status()
-
-  if (!status.connected) {
-    throw new Error('notConnected')
-  }
+  // login requires a connection, which is why you should always
+  // handle exceptions in the screen calling to this function
+  ensureConnected()
 
   const { username, password } = await MeteorLoginStorage.getCredentials()
 
   if (!username || !password) {
-    throw new Error('noCredentials')
+    throw new AuthenticationError('noCredentials')
   }
 
   return loginWithPassword(username, password)
@@ -38,7 +41,8 @@ export const loginMeteor = async () => {
 const loginWithPassword = (username, password) => new Promise((resolve, reject) => {
   Meteor.loginWithPassword({ username }, password, (error) => {
     if (error) {
-      reject(error)
+      // we convert server responses to MeteorError
+      reject(MeteorError.from(error))
     }
 
     else {

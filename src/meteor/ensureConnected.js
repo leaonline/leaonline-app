@@ -1,4 +1,5 @@
 import Meteor from '@meteorrn/core'
+import { ConnectionError } from '../errors/ConnectionError'
 
 /**
  * Throws, if not connected to the backend
@@ -8,7 +9,7 @@ export const ensureConnected = () => {
   const status = Meteor.status()
 
   if (!status.connected) {
-    throw new Error('notConnected')
+    throw new ConnectionError('notConnected')
   }
 
   return status

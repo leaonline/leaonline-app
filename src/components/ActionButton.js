@@ -51,7 +51,7 @@ export const ActionButton = props => {
            dontShowText/>
       <View style={styles.button}>
         <Button
-          title={props.text}
+          title={props.text || props.tts}
           titleStyle={styles.buttonTitle}
           buttonStyle={{ borderRadius: 15, paddingTop: 10 }}
           type='outline'
