@@ -41,6 +41,7 @@ const ttsComponent = props => {
   const [speakingId, setSpeakingId] = useState(0)
   const [iconColor, setIconColor] = useState(props.color || Colors.primary)
 
+  const getIdleColor = () => props.color || Colors.primary
   const debug = props.debug || TTSengine.debug
     ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
     : () => {}
@@ -63,7 +64,7 @@ const ttsComponent = props => {
   useEffect(() => {
     if (isDone) {
       debug('reset after done')
-      setIconColor(props.color)
+      setIconColor(getIdleColor())
       setIsSpeaking(false)
       setSpeakingId(0)
     }
@@ -105,7 +106,7 @@ const ttsComponent = props => {
    */
   const stopSpeak = () => {
     debug('stop')
-    setIconColor(props.color || Colors.primary)
+    setIconColor(getIdleColor())
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
@@ -128,7 +129,7 @@ const ttsComponent = props => {
     if (!props.dontShowText) {
       // color always detaults to secondary and align always to left
       const styleProps = {
-        color: props.color || Colors.primary,
+        color: getIdleColor(),
         flexShrink: props.shrink || 1,
         fontSize: props.fontSize || 18,
         textAlign: props.align,

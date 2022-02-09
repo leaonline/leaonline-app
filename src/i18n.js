@@ -53,8 +53,12 @@ const resources = {
     registrationScreen: {
       headerTitle: 'Nutzerkonto anlegen',
       form: {
-        text: 'Formulartext'
-      }
+        text: 'Um die lea App nutzen zu können müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
+        placeholder: 'Ihre Email-Addresse',
+        register: 'Mein Konto jetzt anlegen'
+      },
+      registering: 'Ihr Konto wird angelegt',
+      complete: 'Ihr Konto wurde erfolgreich angelegt. Zur Wiederherstellung Ihres Kontos können Sie sich die folgenden Codes notieren. Sie können die Codes auch später noch in Ihrem Profil abrufen.'
     },
     TandCScreen: {
       headerTitle: 'Allgemeine Geschäftsbedingungen',

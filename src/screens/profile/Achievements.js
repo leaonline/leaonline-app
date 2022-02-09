@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import { LinearProgress, ListItem, Icon } from 'react-native-elements'
+import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import Colors from '../constants/Colors'
-import { TTSengine } from '../components/Tts'
-import { createStyleSheet } from '../styles/createStyleSheet'
-import profileData from '../resources/profileData.js'
+import profileData from '../../resources/profileData'
+import { TTSengine } from '../../components/Tts'
+import { createStyleSheet } from '../../styles/createStyleSheet'
 
 const Tts = TTSengine.component()
 
@@ -23,15 +23,14 @@ const changeColor = list => list.map(element => ({
 }))
 
 /**
- *  TODO
- * @param props
- * @returns {JSX.Element}
+ *
+ * @return {*}
  * @constructor
  */
-const ProfileScreen = props => {
+export const Achievements = () => {
   const { t } = useTranslation()
   const allDimensions = changeColor(profileData.progress.dimensions)
-  const expandedStates = allDimensions.map((entry, index) => useState(false))
+  const expandedStates = allDimensions.map((/* entry, index */) => useState(false))
 
   const renderPoints = (item) => {
     return [...Array(item.current)].map((item, key) => {
@@ -63,7 +62,7 @@ const ProfileScreen = props => {
               <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
             </ListItem.Content>
           </>
-          }
+        }
         isExpanded={expanded}
         onPress={() => {
           setExpanded(!expanded)
@@ -86,21 +85,17 @@ const ProfileScreen = props => {
   })
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={{ alignItems: 'center' }}>
-            <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
-          </View>
-          {renderProfileProgress(allDimensions)}
-          <View style={styles.body} />
-          <View style={styles.progressTitle}>
-            <Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
-          </View>
-          <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <View style={{ alignItems: 'center' }}>
+        <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
+      </View>
+      {renderProfileProgress(allDimensions)}
+      <View style={styles.body} />
+      <View style={styles.progressTitle}>
+        <Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
+      </View>
+      <LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
+    </View>
   )
 }
 
@@ -122,5 +117,3 @@ const styles = createStyleSheet({
     margin: 10
   }
 })
-
-export default ProfileScreen

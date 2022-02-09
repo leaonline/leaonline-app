@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.15.4",
+    "meteor-node-stubs": "^1.1.0"
+  },
+  "meteor": {
+    "mainModule": {
+      "server": "server/main.js"
+    }
+  }
+}
