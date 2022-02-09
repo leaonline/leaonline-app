@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> meteor/createUser.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>meteor/createUser.js</h1>
                 </header>
                 
 
@@ -89,78 +89,124 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+            <pre class="prettyprint source linenums"><code>import Meteor from '@meteorrn/core'
+import { callMeteor } from './call'
+import { hasLogin } from './hasLogin'
+import { Log } from '../infrastructure/Log'
+import { MeteorLoginStorage } from './MeteorLoginStorage'
+import { check } from '../schema/check'
+import { createSchema, RegEx } from '../schema/createSchema'
+
+// INTERNALS
+
+/**
+ * The name of the server method to call when a new user will be created
+ * @private
+ */
+const createUserMethodName = 'createMobileUser' // TODO get this from config / dot env etc.
 
 /**
  * @private
  */
-const Tts = TTSengine.component()
+const debug = Log.create('createUser', 'debug')
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
+/**
+ * args schema for the exported {createUser} method
+ * @private
+ */
+const schema = createSchema({
+  email: {
+    type: String,
+    optional: true,
+    regEx: RegEx.EmailWithTLD
   },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
+  override: Boolean
+})
+
+/**
+ * schema for validating the server response
+ * @private
+ */
+const responseSchema = createSchema({
+  user: createSchema({
+    _id: String,
+    createdAt: Date,
+    username: String,
+    email: {
+      type: String,
+      optional: true,
+      regEx: RegEx.EmailWithTLD
+    },
+    restore: Array,
+    'restore.$': String
+  }),
+  password: {
+    type: String,
+    min: 32
   }
 })
 
 /**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
- *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
- * @returns {JSX.Element}
+ * The actual call to the user-creation method on the server
+ * @private
  */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
+const createNewUser = async ({ email }) => {
+  debug('create user in backend')
+  const response = await callMeteor({ name: createUserMethodName, args: { email } })
+
+  try {
+    responseSchema.validate(response || {})
+  } catch (e) {
+    const err = new Error('invalidResponse')
+    err.details = e.message
+    throw err
   }
 
-  return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
-    &lt;/View>
-  )
+  const user = response.user
+  const password = response.password
+
+  debug('store user credentials')
+
+  // update the credentials in a secure place
+  await MeteorLoginStorage.setCredentials({
+    username: user.username,
+    password: password
+  })
+
+  return user
 }
 
-export default RouteButton
+/**
+ * Creates a new user-account on the Meteor server.
+ *
+ * If there is a current logged-in user, this method will resolve to the current
+ * user object.
+ *
+ * @export
+ * @param override {boolean} flag that is used to override an already saved login
+ * @return {Promise&lt;Object|null>} promise, that resolves to a user-account object (document)
+ */
+export const createUser = async ({ email, override = false } = {}) => {
+  check({ email, override }, schema, { debug: true })
+
+  if (Meteor.user()) {
+    debug('user exists and is logged in')
+    return Meteor.user()
+  }
+
+  const loginExists = await hasLogin()
+  debug('login exists:', loginExists)
+
+  // we only create a new user if there is no login yet or
+  // we explicitly override it using the override flag
+  if (!loginExists || override) {
+    debug('create user, override:', override)
+    return await createNewUser({ email })
+  }
+
+  // return null indicates, that no new user has been created
+  return null
+}
 </code></pre>
         </article>
     </section>

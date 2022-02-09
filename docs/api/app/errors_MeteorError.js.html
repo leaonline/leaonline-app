@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> errors/MeteorError.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>errors/MeteorError.js</h1>
                 </header>
                 
 
@@ -89,78 +89,68 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+            <pre class="prettyprint source linenums"><code>import { hasOwnProp } from '../utils/hasOwnProp'
 
-/**
- * @private
- */
-const Tts = TTSengine.component()
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
-  }
-})
-
-/**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
- *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
- * @returns {JSX.Element}
- */
-const RouteButton = props => {
+export class MeteorError extends Error {
   /**
-   * Only displays the icon if "onlyIcon" is true.
+   * Checks, whether an object is similar to a MeteorError
+   * @param e {object} any error-like object
+   * @return {boolean}
    */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
+  static isLike (e) {
+    return e instanceof MeteorError ||
+      [
+        'error',
+        'reason',
+        'details',
+        'errorType'
+      ].every(prop => hasOwnProp(e, prop))
   }
 
-  return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
-    &lt;/View>
-  )
-}
+  /**
+   * Creates a new MeteorError from a given error e
+   * @param e {object} any error-like object
+   * @return {MeteorError}
+   */
+  static from (e) {
+    const err = new MeteorError(e.error, e.reason, e.details)
 
-export default RouteButton
+    if (MeteorError.isLike(e)) {
+      err.errorType = e.errorType
+      err.isClientSafe = e.isClientSafe
+    } else {
+    // native errors or their subclasses
+      err.errorType = e.name
+      err.message = e.message
+    }
+
+    // always copy the stack
+    err.stack = e.stack
+
+    return err
+  }
+
+  /**
+   * @param error {string} error code or name
+   * @param reason {string} error message
+   * @param details {object|string} string or EJSON-able object
+   */
+  constructor (error, reason = undefined, details = undefined) {
+    super()
+    this.errorType = 'Meteor.Error'
+    this.error = error
+    this.reason = reason
+
+    if (reason) {
+      this.message = `${reason} [${error}]`
+    } else {
+      this.message = `[${error}]`
+    }
+
+    this.details = details
+    this.isClientSafe = true
+  }
+}
 </code></pre>
         </article>
     </section>

@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> components/ActionButton.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>components/ActionButton.js</h1>
                 </header>
                 
 
@@ -90,8 +90,8 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { StyleSheet, View } from 'react-native'
+import { Button } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
@@ -100,6 +100,9 @@ import Colors from '../constants/Colors'
  */
 const Tts = TTSengine.component()
 
+/**
+ * @private
+ */
 const styles = StyleSheet.create({
   body: {
     flex: 1,
@@ -114,11 +117,13 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
   }
 })
 
 /**
- * RouteButton contains an icon and a button and a handler for the routing.
+ * ActionButton contains a TTS and a button and a handler for the action.
  * It renders with default styles.
  *
  * @category Components
@@ -126,41 +131,29 @@ const styles = StyleSheet.create({
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
  * @component
  * @returns {JSX.Element}
  */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
-  }
-
+export const ActionButton = props => {
+  const ttsText = props.tts || props.text
   return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
+    &lt;View style={styles.body}>
+      &lt;Tts
+        text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
+        dontShowText
+      />
+      &lt;View style={styles.button}>
+        &lt;Button
+          title={props.text || props.tts}
+          titleStyle={styles.buttonTitle}
+          buttonStyle={{ borderRadius: 15, paddingTop: 10 }}
+          type='outline'
+          onPress={props.onPress}
+        />
+      &lt;/View>
     &lt;/View>
   )
 }
-
-export default RouteButton
 </code></pre>
         </article>
     </section>

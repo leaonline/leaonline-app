@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="TTSText.html">TTSText</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -90,14 +90,15 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Text, View } from 'react-native'
+import RouteButton from '../components/RouteButton'
 import Colors from '../constants/Colors'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -113,12 +114,17 @@ const styles = StyleSheet.create({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
 /**
  * On this screen, the respective Unit is displayed and the users can interact
- * with it, by solving the tasks on it's pages.
+ * with it, by solving the tasks on its pages.
  *
  * If a unit is completed and there is no next unit in the queue, it navigates
  * the users to the {CompleteScreen}.
@@ -145,26 +151,33 @@ const UnitScreen = props => {
       &lt;/View>
 
       &lt;View style={styles.navigationButtons}>
-        &lt;TouchableOpacity onPress={() => {
-          props.navigation.navigate('Dimension')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              props.navigation.navigate('Dimension')
+            }}
+          />
+        &lt;/View>
 
-        &lt;TouchableOpacity onPress={() => {
-          props.navigation.navigate('Unit')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              props.navigation.navigate('Unit')
+            }}
+          />
+        &lt;/View>
 
-        &lt;TouchableOpacity onPress={() => {
-          props.navigation.navigate('Complete')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='check-circle' color={Colors.success} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            iconColor={Colors.success}
+            icon='check-circle' handleScreen={() => {
+              props.navigation.navigate('Complete')
+            }}
+          />
+        &lt;/View>
       &lt;/View>
     &lt;/View>
   )

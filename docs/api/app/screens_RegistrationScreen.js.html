@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="TTSText.html">TTSText</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -89,35 +89,52 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global ttsIsCurrentlyPlaying */
-import React from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { Alert, View, SafeAreaView, TextInput, ActivityIndicator, Text } from 'react-native'
 import Colors from '../constants/Colors'
-import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../components/Tts'
+import { Log } from '../infrastructure/Log'
+import { createUser } from '../meteor/createUser'
+import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import RouteButton from '../components/RouteButton'
+import { createSchema, RegEx } from '../schema/createSchema'
+import { ActionButton } from '../components/ActionButton'
+import { loginMeteor } from '../meteor/loginMeteor'
+
+const emailSchema = createSchema({
+  email: {
+    type: String,
+    regEx: RegEx.EmailWithTLD
+  }
+})
 
 /**
  * @private tts
  */
 const Tts = TTSengine.component()
+const log = Log.create('RegistrationScreen')
 
 /**
- * @private styles
+ * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
-    margin: 30
-  },
-  header: {
-    flex: 1
+    margin: 15
   },
   body: {
     flex: 2,
     flexDirection: 'row',
     marginHorizontal: 32
+  },
+  input: {
+    flex: 0,
+    width: '100%',
+    flexDirection: 'row',
+    margin: 0,
+    padding: 0
   },
   text: {
     color: Colors.primary,
@@ -126,11 +143,20 @@ const styles = StyleSheet.create({
   icon: {
     paddingBottom: 5
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
   navigationButtons: {
+    flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  codesContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    marginTop: '5%'
+  },
+  code: {
+    flex: 2,
     flexDirection: 'row'
   }
 })
@@ -149,37 +175,191 @@ const styles = StyleSheet.create({
  * @returns {JSX.Element}
  */
 const RegistrationScreen = props => {
+  const [email, onChangeEmail] = useState()
+  const [user, setUser] = useState()
+  const [registering, setRegistering] = useState(false)
+  const [complete, setComplete] = useState(false)
   const { t } = useTranslation()
 
-  return (
+  const register = async () => {
+    log('validate email, if given')
+
+    if (email &amp;&amp; email.length > 0) {
+      const ctx = emailSchema.newContext()
+      ctx.validate({ email })
+
+      if (!ctx.isValid()) {
+        return Alert.alert('invalid email')
+      }
+    }
+
+    log('register account')
+    try {
+      setRegistering(true)
+      const createdUser = await createUser({ email })
+      log('new account:', createdUser &amp;&amp; createdUser.username)
+
+      if (createdUser) setUser(createdUser)
+
+      await loginMeteor()
+      setComplete(true)
+    } catch (e) {
+      // during user creation there are multiple errors that can occur:
+      // - not connected
+      // -
+
+      console.error(e)
+      log('account creation failed')
+
+      if (e.message === 'invalidResponse') {
+        // TODO handle this situation
+      }
+
+      if (e.message === 'notConnected') {
+        // TODO handle this situation
+      }
+    } finally {
+      // during user creation there are multiple errors that can occur:
+      // - not connected
+      // -
+
+      setTimeout(() => {
+        log('stop registering screen')
+        setRegistering(false)
+      }, 1000)
+    }
+  }
+
+  const renderRegistering = () => (
     &lt;View style={styles.container}>
-      &lt;View style={styles.body}>
-        &lt;Text>Formular&lt;/Text>
+      &lt;View>
+        &lt;ActivityIndicator size='large' color={Colors.secondary} />
       &lt;/View>
-
       &lt;View style={styles.body}>
-        &lt;Tts text='Formulartext' color={Colors.primary} id={4} testId='registrationScreen1' />
-      &lt;/View>
-
-      &lt;View style={styles.navigationButtons}>
-        &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('TandC')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-
-        &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : props.navigation.navigate('Home')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
+        &lt;Tts
+          id='registrationScreen.registering'
+          text={t('registrationScreen.registering')}
+        />
       &lt;/View>
     &lt;/View>
   )
+
+  const renderRegistration = () => (
+    &lt;View style={styles.container}>
+
+      {/* inform about registration process */}
+
+      &lt;View style={styles.body}>
+        &lt;Tts
+          id='registrationScreen.form.text'
+          text={t('registrationScreen.form.text')}
+        />
+      &lt;/View>
+
+      {/* optional email form */}
+
+      &lt;SafeAreaView>
+        &lt;View style={styles.input}>
+          &lt;Tts
+            id='registrationScreen.form.placeholder'
+            text={t('registrationScreen.form.placeholder')}
+            dontShowText
+          />
+          &lt;TextInput
+            style={{
+              borderBottomColor: '#000000',
+              borderBottomWidth: 1
+            }}
+            placeholder={t('registrationScreen.form.placeholder')}
+            keyboardType='email-address'
+            onChangeText={onChangeEmail}
+          />
+        &lt;/View>
+      &lt;/SafeAreaView>
+
+      {/* REGISTER BUTTON */}
+
+      &lt;View style={styles.container}>
+        &lt;ActionButton
+          tts={t('registrationScreen.form.register')}
+          onPress={() => register()}
+          disabled
+        />
+      &lt;/View>
+
+      {/* optional: navigate back */}
+
+      &lt;View style={styles.navigationButtons}>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
+          />
+        &lt;/View>
+      &lt;/View>
+    &lt;/View>
+  )
+
+  const renderRestoreCodes = () => {
+    const codes = user?.restore
+    if (!codes?.length) return null
+
+    return codes.map((code, index) => {
+      const splitCode = code.split('').join(' ')
+      return (
+        &lt;View style={styles.code} key={`registrationScreen.restoreCode-${index}`}>
+          &lt;Tts
+            id={`registrationScreen.restoreCode-${index}`}
+            text={splitCode}
+            color={Colors.secondary}
+            dontShowText
+          />
+          &lt;Text style={{ fontSize: 44, color: Colors.secondary, fontWeight: 'bold' }}>{splitCode}&lt;/Text>
+        &lt;/View>
+      )
+    })
+  }
+
+  /**
+   * Rendered, once the user has completed the registration process.
+   */
+  const renderComplete = () => (
+    &lt;View style={styles.container}>
+      &lt;Tts
+        id='registrationScreen.complete'
+        text={t('registrationScreen.complete')}
+      />
+
+      &lt;View style={styles.codesContainer}>
+        {renderRestoreCodes()}
+      &lt;/View>
+      &lt;View style={styles.codesContainer} />
+
+      &lt;View style={styles.navigationButtons}>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-right'
+            handleScreen={() => props.navigation.navigate('Home')}
+          />
+        &lt;/View>
+      &lt;/View>
+    &lt;/View>
+  )
+
+  if (registering) {
+    return renderRegistering()
+  }
+
+  return complete
+    ? renderComplete()
+    : renderRegistration()
 }
 
 export default RegistrationScreen

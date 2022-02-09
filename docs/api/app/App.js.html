@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="TTSText.html">TTSText</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -90,19 +90,69 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import * as Speech from 'expo-speech'
+import { Log } from './infrastructure/Log'
+import { connectMeteor } from './meteor/connect'
+import { loginMeteor } from './meteor/loginMeteor'
+import { loggedIn } from './meteor/loggedIn'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
+import { createStyleSheet } from './styles/createStyleSheet'
 import './i18n'
+
+const log = Log.create('App')
+
+const startApp = async () => {
+  log('init App')
+  log('fetch fonts')
+  await fetchFonts()
+  await connect()
+}
+
+const connect = async () => {
+  log('connect to meteor')
+  try {
+    await connectMeteor({ endpoint: 'ws://192.168.178.49:8080/websocket' })
+  } catch (connectError) {
+    // if we have not a connection, we wait for
+    // a longer timeout and try to reconnect
+    // TODO ADD MODAL WITH CONNECTION NOTIFICATION
+    Log.error(connectError)
+    return setTimeout(() => connect(), 5000)
+  }
+
+  // once connected we can continue as expected
+  return onConnected()
+}
+
+const onConnected = async () => {
+  log('Meteor connected, attempt login')
+  let loginSuccessful = false
+
+  try {
+    const loginStatus = await loginMeteor()
+    loginSuccessful = !loginStatus.failed &amp;&amp; loginStatus._id &amp;&amp; loginStatus.username
+    log('login successful:', loginSuccessful)
+  } catch (loginError) {
+    loginSuccessful = false
+    log('login failed', loginError.message)
+  }
+
+  // if we are logged-in but the user is not available yet, we
+  // set an interval and wait for the user to be available
+  if (loginSuccessful &amp;&amp; !loggedIn()) {
+    throw new Error('Implement intverval to wait for logged-in user!')
+  }
+}
 
 /**
  * @private used to load our custom font
  * @return {Promise&lt;void>}
  */
-const fetchFonts = () => {
+const fetchFonts = async () => {
   return Font.loadAsync({
     semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
   })
@@ -111,7 +161,7 @@ const fetchFonts = () => {
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   screen: {
     flex: 1
   }
@@ -128,35 +178,34 @@ TTSengine.setSpeech(Speech)
  * @returns {JSX.Element}
  */
 export default function App () {
-  const [fontLoaded, setFontLoaded] = useState(false)
-  const [waitForInterval, setWaitThreeSeconds] = useState(false)
+  const [initialized, setInitialized] = useState(false)
+  const [waitTimeout, setTimeoutComplete] = useState(false)
 
   // use this effect to make the splash screen remain
   // for a few seconds, once the font has been loaded
   useEffect(() => {
-    if (fontLoaded) {
+    if (initialized) {
       // TODO Timeout variable should be later set in a separate global environment file
       setTimeout(() => {
-        setWaitThreeSeconds(true)
+        setTimeoutComplete(true)
       }, 1000)
     }
-  }, [fontLoaded])
+  }, [initialized])
 
-  if (!waitForInterval) {
+  if (!waitTimeout) {
     return (
       &lt;AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => setFontLoaded(true)}
-        onError={(error) => console.warn(error)}
+        startAsync={startApp}
+        onFinish={() => setInitialized(true)}
+        onError={(error) => console.error(error)}
       />
     )
   }
 
   return (
     &lt;View style={styles.screen}>
-      &lt;Navigator />
+      &lt;Navigator loggedIn={!!loggedIn()} />
     &lt;/View>
-
   )
 }
 </code></pre>

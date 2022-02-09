@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> screens/profile/Achievements.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>screens/profile/Achievements.js</h1>
                 </header>
                 
 
@@ -89,78 +89,125 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { View } from 'react-native'
+import { LinearProgress, ListItem, Icon } from 'react-native-elements'
+import Colors from '../../constants/Colors'
+import { useTranslation } from 'react-i18next'
+import profileData from '../../resources/profileData'
+import { TTSengine } from '../../components/Tts'
+import { createStyleSheet } from '../../styles/createStyleSheet'
 
-/**
- * @private
- */
 const Tts = TTSengine.component()
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
-  }
-})
+/**
+ * Transforms colors list to use color values from Colors
+ * @param list {Array}
+ * @return {Array}
+ * @example:
+ * [{ color: 'primary' }] => [{ type: 'primary', color: '#f59d1d' }]
+ */
+const changeColor = list => list.map(element => ({
+  ...element,
+  type: element.color, // primary, secondary
+  color: Colors[element.color]
+}))
 
 /**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
  *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
- * @returns {JSX.Element}
+ * @return {*}
+ * @constructor
  */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
+export const Achievements = () => {
+  const { t } = useTranslation()
+  const allDimensions = changeColor(profileData.progress.dimensions)
+  const expandedStates = allDimensions.map((/* entry, index */) => useState(false))
+
+  const renderPoints = (item) => {
+    return [...Array(item.current)].map((item, key) => {
       return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
+        &lt;Icon key={key} name='gem' solid type='font-awesome-5' color={Colors.secondary} />
       )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
+    })
   }
 
+  const renderMaxPoints = (item) => {
+    return [...Array(5 - item.current)].map((item, key) => {
+      return (
+        &lt;Icon key={key} name='gem' type='font-awesome-5' color={Colors.secondary} />
+      )
+    })
+  }
+  const renderProfileProgress = (dimensions) => dimensions.map((current, index) => {
+    const [expanded, setExpanded] = expandedStates[index]
+    const key = `dimensions-${index}`
+    return (
+      &lt;ListItem.Accordion
+        noIcon
+        containerStyle={{ backgroundColor: 'transparent' }}
+        key={key}
+        content={
+          &lt;>
+            &lt;Tts text={current.title} color={current.color} id={`${current.title}-tts`} dontShowText />
+            &lt;ListItem.Content style={{ alignItems: 'center' }}>
+              &lt;ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}&lt;/ListItem.Title>
+            &lt;/ListItem.Content>
+          &lt;/>
+        }
+        isExpanded={expanded}
+        onPress={() => {
+          setExpanded(!expanded)
+        }}
+      >
+        {expanded &amp;&amp; current.fields.map((item, key) => (
+          &lt;ListItem key={key} containerStyle={{ backgroundColor: 'transparent' }}>
+            &lt;ListItem.Content style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+              &lt;Tts text={item.title} color={Colors.secondary} id={`${item.title}-tts`} dontShowText />
+              &lt;ListItem.Title style={{ color: Colors.secondary, fontSize: 18, paddingTop: 10 }}>{item.title}&lt;/ListItem.Title>
+              &lt;View style={{ flexDirection: 'row', marginLeft: 'auto' }}>
+                {renderPoints(item)}
+                {renderMaxPoints(item)}
+              &lt;/View>
+            &lt;/ListItem.Content>
+          &lt;/ListItem>
+        ))}
+      &lt;/ListItem.Accordion>
+    )
+  })
+
   return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
+    &lt;View style={styles.container}>
+      &lt;View style={{ alignItems: 'center' }}>
+        &lt;Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
+      &lt;/View>
+      {renderProfileProgress(allDimensions)}
+      &lt;View style={styles.body} />
+      &lt;View style={styles.progressTitle}>
+        &lt;Tts text={t('profileScreen.progress')} color={Colors.primary} id='profileScreen.progress' smallButton />
+      &lt;/View>
+      &lt;LinearProgress color={Colors.primary} variant='determinate' value={profileData.progress.global} style={{ borderRadius: 15, height: 15 }} />
     &lt;/View>
   )
 }
 
-export default RouteButton
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: {
+    flex: 1,
+    margin: 10,
+    paddingBottom: 10
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  progressTitle: {
+    alignItems: 'center',
+    margin: 10
+  }
+})
 </code></pre>
         </article>
     </section>

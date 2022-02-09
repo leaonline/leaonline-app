@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="TitleText.html">TitleText</a></li><li><a href="ttsComponent.html">ttsComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="TTSText.html">TTSText</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
                 
             </nav>
         </div>
@@ -89,13 +89,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global ttsIsCurrentlyPlaying */
-import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { CheckBox, Icon } from 'react-native-elements'
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { Alert, View } from 'react-native'
+import { CheckBox } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import RouteButton from '../components/RouteButton'
 
 /**
  * @private tts ref
@@ -105,7 +106,7 @@ const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -125,6 +126,11 @@ const styles = StyleSheet.create({
   },
   navigationButtons: {
     flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
@@ -157,11 +163,16 @@ const TermsAndConditionsScreen = props => {
   return (
     &lt;View style={styles.container}>
       &lt;View style={styles.body}>
-        &lt;Tts color={Colors.primary} text={t('TandCScreen.text')} id={2} testId='tandc1' />
+        &lt;Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
       &lt;/View>
 
       &lt;View style={styles.checkBox}>
-        &lt;Tts color={termsAndConditionsColor} text={t('TandCScreen.checkBoxText')} align='left' id={3} testId='tandc2' />
+        &lt;Tts
+          id='TandCScreen.checkBoxText'
+          text={t('TandCScreen.checkBoxText')}
+          color={termsAndConditionsColor}
+          align='left'
+        />
         &lt;CheckBox
           center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
           uncheckedColor={termsAndConditionsColor}
@@ -169,22 +180,28 @@ const TermsAndConditionsScreen = props => {
       &lt;/View>
 
       &lt;View style={styles.navigationButtons}>
-        &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying ? Alert.alert(t('alert.title'), t('alert.navText')) : props.navigation.navigate('Welcome')
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-left' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-        &lt;TouchableOpacity onPress={() => {
-          ttsIsCurrentlyPlaying
-            ? Alert.alert(t('alert.title'), t('alert.navText'))
-            : termsAndConditionsIsChecked
-              ? props.navigation.navigate('Registration')
-              : checkBoxIsNotChecked()
-        }}
-        >
-          &lt;Icon style={styles.iconNavigation} name='arrow-alt-circle-right' type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('Welcome')
+            }}
+          />
+        &lt;/View>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            icon='arrow-alt-circle-right' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : termsAndConditionsIsChecked
+                  ? props.navigation.navigate('Registration')
+                  : checkBoxIsNotChecked()
+            }}
+          />
+        &lt;/View>
       &lt;/View>
     &lt;/View>
   )

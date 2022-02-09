@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> meteor/connect.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>meteor/connect.js</h1>
                 </header>
                 
 
@@ -89,78 +89,71 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+            <pre class="prettyprint source linenums"><code>import Meteor from '@meteorrn/core'
+import { check } from '../schema/check'
+import { createSchema } from '../schema/createSchema'
 
-/**
- * @private
- */
-const Tts = TTSengine.component()
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
+// TODO move this into env config
+const maxTimeout = 10000
+const interval = 250
+const argsSchema = createSchema({
+  endpoint: {
+    type: String,
+    regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:-]+\/websocket$/i
   }
 })
-
 /**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
+ * Connects to a Meteor server by given endpoint. Returns a Promise.
  *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
- * @returns {JSX.Element}
+ * Rejects the promise, if
+ * - error during connect
+ * - timeout exceeds maxTimeout
+ *
+ * @param endpoint {string} a valid websocket endpoint. Requires local ip on
+ *  development mode (192.188.x.y)
+ * @return {Promise&lt;Object>} a promise, resolving to the latest connection
+ *  status on success
  */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
+export const connectMeteor = ({ endpoint }) => {
+  check({ endpoint }, argsSchema)
+
+  return new Promise((resolve, reject) => {
+    const status = Meteor.status()
+
+    // skip with current status, if already connected
+    if (status.connected) { return resolve(status) }
+
+    // break early on any errors during connect attempt
+    try {
+      Meteor.connect(endpoint)
+    } catch (e) {
+      return reject(e)
     }
-  }
 
-  return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
-    &lt;/View>
-  )
+    // during Meteor.connect the internal connection status
+    // can change many times to various "states"
+    // so we need to wait until the state is actually "connected"
+    // or fail if the maximum timeout has been exceeded
+    let count = 0
+    let timer = setInterval(() => {
+      const updatedStatus = Meteor.status()
+
+      if (updatedStatus.connected) {
+        clearInterval(timer)
+        timer = null
+        return resolve(updatedStatus)
+      }
+
+      if (count > maxTimeout) {
+        clearInterval(timer)
+        timer = null
+        reject(new Error('connectMeteorTimeout'))
+      }
+
+      count += interval
+    }, interval)
+  })
 }
-
-export default RouteButton
 </code></pre>
         </article>
     </section>

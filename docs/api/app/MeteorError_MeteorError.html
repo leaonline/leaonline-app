@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> MeteorError</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -79,91 +77,258 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <p>Class</p>
+                    <h1>MeteorError</h1>
                 </header>
                 
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+        <h2><span class="attribs"><span class="type-signature"></span></span>MeteorError<span class="signature">(error, reason, details)</span><span class="type-signature"></span></h2>
+        
+    
+</header>
 
-/**
- * @private
- */
-const Tts = TTSengine.component()
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
-  }
-})
 
-/**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
- *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
- * @returns {JSX.Element}
- */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
-  }
+    
+    <h4 class="name" id="MeteorError">
+        <a class="href-link" href="#MeteorError">#</a>
+        
+        <span class="code-name">
+            
+                new MeteorError<span class="signature">(error, reason, details)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
 
-  return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
-    &lt;/View>
-  )
-}
+    
+    
 
-export default RouteButton
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>error</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>error code or name</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>reason</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>error message</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>details</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">object</span>
+|
+
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>string or EJSON-able object</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="errors_MeteorError.js.html" class="button">View Source</a>
+            <span>
+                <a href="errors_MeteorError.js.html">errors/MeteorError.js</a>, <a href="errors_MeteorError.js.html#line47">line 47</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> components/RouteButton.js</title>
+  <title> screens/profile/ProfileScreen.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -80,7 +80,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/RouteButton.js</h1>
+                    <h1>screens/profile/ProfileScreen.js</h1>
                 </header>
                 
 
@@ -90,77 +90,54 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
-import Colors from '../constants/Colors'
+import { SafeAreaView, ScrollView, View, Button } from 'react-native'
 
-/**
- * @private
- */
+import { TTSengine } from '../../components/Tts'
+import { deleteAccount } from '../../meteor/deleteAccount'
+import { ActionButton } from '../../components/ActionButton'
+import { AccountInfo } from './AccountInfo'
+import { Achievements } from './Achievements'
+import { Log } from '../../infrastructure/Log'
+
 const Tts = TTSengine.component()
 
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
-  },
-  iconNavigation: {
-  }
-})
-
 /**
- * RouteButton contains an icon and a button and a handler for the routing.
- * It renders with default styles.
- *
- * @category Components
- * @param {string} props.title: The displayed and spoken title
- * @param {string} props.icon: The icon for the button
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
- * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
- * @component
+ *  TODO
+ * @param props
  * @returns {JSX.Element}
+ * @constructor
  */
-const RouteButton = props => {
-  /**
-   * Only displays the icon if "onlyIcon" is true.
-   */
-  const renderRouteButton = () => {
-    if (!props.onlyIcon) {
-      return (
-        &lt;View style={styles.body}>
-          &lt;Tts text={props.title} id={`${props.title}-tts`} dontShowText />
-          &lt;View style={styles.button}>
-            &lt;Button icon={&lt;Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
-          &lt;/View>
-        &lt;/View>
-      )
-    } else {
-      return (
-        &lt;TouchableOpacity onPress={props.handleScreen}>
-          &lt;Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
-        &lt;/TouchableOpacity>
-      )
-    }
+const ProfileScreen = () => {
+  const deleteMeteorAccount = () => {
+    const log = Log.create('deleteMeteorAccount')
+
+    deleteAccount({
+      prepare: () => log('send delete request'),
+      receive: () => log('response receive'),
+      success: () => log('successful deleted'),
+      failure: error => Log.error(error)
+    })
   }
 
   return (
-    &lt;View style={props.onlyIcon ? '' : styles.body}>
-      {renderRouteButton()}
-    &lt;/View>
+    &lt;SafeAreaView>
+      &lt;ScrollView>
+        &lt;Achievements />
+        &lt;AccountInfo />
+        &lt;ActionButton text='löschen' onPress={deleteMeteorAccount} />
+        &lt;View>
+          &lt;Tts text='Account löschen' id='delete account' />
+          &lt;Button
+            onPress={deleteMeteorAccount}
+            title='Account löschen'
+          />
+        &lt;/View>
+      &lt;/ScrollView>
+    &lt;/SafeAreaView>
   )
 }
 
-export default RouteButton
+export default ProfileScreen
 </code></pre>
         </article>
     </section>
