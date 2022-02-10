@@ -1,9 +1,10 @@
 # Manual installation
 
-## Install NodeJs  and NPM
+## No need to install NodeJs  and NPM
 
-Please install NodeJS and NPM from https://nodejs.org by following their 
-instructions.
+You don't need to install NodeJs and NPM yourself, they will come bundled with
+Meteor and the Meteor installation will not mess up your current node/npm
+environment.
 
 ## Install Meteor
 
@@ -33,7 +34,7 @@ run the expo developer tools, which make it very easy to access you app-build
 from your mobile phone:
 
 ```bash
-$ npm install -g expo-cli
+$ meteor npm install -g expo-cli
 ``` 
 
 
@@ -53,8 +54,8 @@ To install the app dependencies and run it, please follow these steps:
 
 ```bash
 $ cd ../src # assumes you are still in <project root>/backend
-$ npm install
-$ npm run start
+$ meteor npm install
+$ meteor npm run start
 ```
 
 Now should all be set to run the app using expo.
@@ -87,7 +88,7 @@ Before we run our project we need to start our emulator first with:
 Now you can start the lea.online app on an android emulator:
 
 ```
-expo start 
+meteor expo start 
 ```
 
 After expo started just press **_a_** on your keyboard and expo will run lea.online on your previous created Android Emulator
@@ -99,7 +100,7 @@ To start lea.online on an iOS Emulator you will need an macOS operation system a
 Just run the following:
 
 ```
-expo start
+meteor expo start
 ```
 
 After expo started just press **_i_** on your keyboard and expo will run lea.online on your iOS Emulator

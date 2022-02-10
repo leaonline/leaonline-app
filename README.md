@@ -18,6 +18,13 @@ TBD, we will link the app store / play store links here, once we have a release
 
 ## Install for development
 
+This project heavily utilizes Meteor and it's tech-stack so the installation
+will install `Meteor` for you. Note, that Meteor already ships with NodeJs
+and NPM, so you don't need them to install yourself.
+
+However, if you have them already installed, Meteor won't mess up your
+environment, so it's safe to install it.
+
 We provide you an installation script, which you should run from your terminal:
 
 ```bash
@@ -41,10 +48,10 @@ contribution guidelines.
 We use jest (as default, defined by expo) to run the app tests and mocha to run
 the backend tests.
 
-To tun the tests on the backend, please execute the `test.sh` script in the 
+To tun the tests on the backend, please execute the `meteor npm run test` script in the 
 `backend` project folder.
 
-To run the tests for the app, please execute `npm run test` in the app's `src`
+To run the tests for the app, please execute `meteor npm run test` in the app's `src`
 folder.
 
 ### Documentation
@@ -53,7 +60,7 @@ We use jsDoc for api documentation of the app, as well as of the backend.
 In each projects you can simply run
 
 ```bash
-$ npm run docs
+$ meteor npm run docs
 ```
 
 The docs are generated in the output folder `docs`.
