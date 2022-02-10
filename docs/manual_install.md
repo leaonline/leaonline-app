@@ -45,17 +45,15 @@ This project is split into two applications: app and backend.
 To install the backend dependencies and run it, please follow these steps:
 
 ```bash
-$ cd backend
+$ cd backend/
 $ meteor npm install # important to use the meteor command here!
-$ ./run.sh
 ```
 
 To install the app dependencies and run it, please follow these steps:
 
 ```bash
-$ cd ../src # assumes you are still in <project root>/backend
+$ cd ../src/ # assumes you are still in <project root>/backend
 $ meteor npm install
-$ meteor npm run start
 ```
 
 Now should all be set to run the app using expo.
@@ -100,7 +98,7 @@ To start lea.online on an iOS Emulator you will need an macOS operation system a
 Just run the following:
 
 ```
-meteor expo start
+meteor  expo start
 ```
 
 After expo started just press **_i_** on your keyboard and expo will run lea.online on your iOS Emulator

@@ -11,10 +11,15 @@
 The lea.online app is a mobile app, developed using React-Native and Meteor.
 
 
-## Install the app
+## Get the app
 
 TBD, we will link the app store / play store links here, once we have a release
 
+
+## Development
+
+If you wish to participate in development, please make sure you have read our
+contribution guidelines.
 
 ## Install for development
 
@@ -37,11 +42,25 @@ The script will ask you several questions to optimize your installation, if you
 however wish to do a full manual installation, please visit the 
 [manual installation](./docs/manual_install.md) guide.
 
+### Run the apps
 
-## Development
+To run the apps, make sure you have installed everything first. See the prior
+section on how to install.
 
-If you wish to participate in development, please make sure you have read our
-contribution guidelines.
+To run the backend app, you need to do the following:
+
+```bash
+$ cd backend
+$ ./run.sh
+```
+
+To run the mobile app, you need to do the following:
+
+```bash
+$ cd src
+$ meteor npm run start
+```
+
 
 ### Run the tests
 
