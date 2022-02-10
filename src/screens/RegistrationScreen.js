@@ -219,7 +219,7 @@ const RegistrationScreen = props => {
     if (!codes?.length) return null
 
     return codes.map((code, index) => {
-      const splitCode = code.split('').join(' ')
+      const splitCode = code.split('   ').join(' ')
       return (
         <View style={styles.code} key={`registrationScreen.restoreCode-${index}`}>
           <Tts
@@ -227,6 +227,7 @@ const RegistrationScreen = props => {
             text={splitCode}
             color={Colors.secondary}
             dontShowText
+            speed={0.4}
           />
           <Text style={{ fontSize: 44, color: Colors.secondary, fontWeight: 'bold' }}>{splitCode}</Text>
         </View>

@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
+ * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
  * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
@@ -86,7 +87,7 @@ const ttsComponent = props => {
     Speech.speak(props.text, {
       language: 'ger',
       pitch: 1,
-      rate: 1,
+      rate: props.speed || 1,
       onStart: () => {
         debug('onStart')
         startSpeak()
