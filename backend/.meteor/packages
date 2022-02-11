@@ -20,3 +20,10 @@ typescript@4.4.1              # Enable TypeScript syntax in .ts and .tsx modules
 
 accounts-password
 random
+logging
+
+aldeed:collection2
+dburles:mongo-collection-instances
+leaonline:method-factory
+leaonline:publication-factory
+leaonline:ratelimit-factory

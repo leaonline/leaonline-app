@@ -6,7 +6,11 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "meteor-node-stubs": "^1.1.0"
+    "chalk": "^5.0.0",
+    "meteor-node-stubs": "^1.1.0",
+    "simpl-schema": "^1.12.0",
+    "snazzy": "^9.0.0",
+    "standardx": "^7.0.0"
   },
   "meteor": {
     "mainModule": {
