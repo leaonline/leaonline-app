@@ -68,7 +68,7 @@ RestoreCodes.generate = () => {
 const generateCode = () => {
   let count = 0
   let isValid = false
-  let code = undefined
+  let code
 
   while (!isValid && count++ < internal.maxRetries) {
     code = Random.id(internal.length)

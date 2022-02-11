@@ -1,5 +1,6 @@
+import { Meteor } from 'meteor/meteor'
 import { hasProp } from '../../api/utils/hasProp'
-import chalk from 'chalk';
+import chalk from 'chalk'
 
 const logLevel = Meteor.settings.log.level
 const internal = {
@@ -16,7 +17,7 @@ const internal = {
   log: {
     level: 2,
     color: s => chalk.blue(s),
-    run: (...args) => console.log(...args),
+    run: (...args) => console.log(...args)
 
   },
   info: {
@@ -56,7 +57,7 @@ export const createLog = function ({ name = 'system', type = 'log' } = {}) {
 
   // if the log level is not supported, wo return a no-op fn
   if (logType.level > logLevel) {
-    return (() => {})
+    return () => {}
   }
 
   return (...args) => {
@@ -76,7 +77,7 @@ const getLine = () => {
     }
 
     if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
-      return line.replace(/\s*at\s*[a-zA-Z0-9_\-]+\s*/, '')
+      return line.replace(/\s*at\s*[a-zA-Z0-9_-]+\s*/, '')
     }
   }
 }

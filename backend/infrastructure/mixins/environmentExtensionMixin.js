@@ -11,9 +11,6 @@ export const environmentExtensionMixin = function (options) {
   const { env } = options
   if (env === null || env === false) { return options }
 
-  const envOptions = env || {}
-  const { devOnly = true } = envOptions
-
   const log = createLog({ name: options.name })
   const runFct = options.run
 

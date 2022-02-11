@@ -1,4 +1,5 @@
-import { Accounts } from "meteor/accounts-base"
+import { Meteor } from 'meteor/meteor'
+import { Accounts } from 'meteor/accounts-base'
 
 // default accounts settings
 
@@ -13,7 +14,6 @@ Accounts.config({
     restore: 1
   }
 })
-
 
 // default publish fields override
 

@@ -29,5 +29,3 @@ Content.methods.get = {
     }
   })
 }
-
-

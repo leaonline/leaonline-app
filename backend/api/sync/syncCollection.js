@@ -12,7 +12,7 @@ export const syncCollection = (name, docs = []) => {
   const ids = docs.map(d => d._id)
 
   // first remove all docs, that are not in the list
-  const removed = collection.remove({ _id: { $nin: ids }})
+  const removed = collection.remove({ _id: { $nin: ids } })
 
   // then update all docs
   let inserted = 0

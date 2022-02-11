@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor'
+import { Accounts } from 'meteor/accounts-base'
 import { onServerExec } from '../infrastructure/arch/onServerExec'
 import { RestoreCodes } from '../api/accounts/RestoreCodes'
 import { UserEmail } from '../api/accounts/UserEmail'
@@ -12,7 +14,7 @@ Users.schema = {
   username: {
     type: String,
     min: 32,
-    regEx: /[a-f0-9]{32}/i,
+    regEx: /[a-f0-9]{32}/i
   },
 
   // we will know when this user has been created
@@ -115,7 +117,6 @@ Users.methods.delete = {
     username: String
   },
   run: onServerExec(function () {
-
     return function ({ _id, username }) {
       if (_id !== this.userId || Meteor.users.find({ _id, username }).count() === 0) {
         throw new Meteor.Error('403', 'permissionDenied', { _id })
