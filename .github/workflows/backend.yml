@@ -35,7 +35,8 @@ jobs:
     name: Meteor ${{ matrix.meteor }} tests
     runs-on: ubuntu-latest
     steps:
-
+      - name: checkout
+        uses: actions/checkout@v2
 
       # CACHING
       - name: Install Meteor
