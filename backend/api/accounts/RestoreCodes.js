@@ -10,7 +10,7 @@ const codeSettings = Meteor.settings.restore.codes
  * Internal settings that are fixed and cannot be altered at runtime.
  */
 const internal = {
-  numberOfCOdes: codeSettings.numberOfCOdes,
+  numberOfCOdes: codeSettings.numberOfCodes,
   length: codeSettings.length,
   uppercase: codeSettings.uppercase,
   forbidden: new RegExp(codeSettings.forbidden.source, codeSettings.forbidden.flags),

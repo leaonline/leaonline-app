@@ -6,7 +6,7 @@
   },
   "restore": {
     "codes": {
-      "numberOfCOdes": 3,
+      "numberOfCodes": 3,
       "length": 4,
       "uppercase": true,
       "forbidden": {
