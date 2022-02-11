@@ -22,7 +22,8 @@
   "meteor": {
     "mainModule": {
       "server": "server/main.js"
-    }
+    },
+    "testModule": "tests/main.js"
   },
   "babel": {},
   "eslintConfig": {

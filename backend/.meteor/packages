@@ -27,3 +27,5 @@ dburles:mongo-collection-instances
 leaonline:method-factory
 leaonline:publication-factory
 leaonline:ratelimit-factory
+
+meteortesting:mocha
