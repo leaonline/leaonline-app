@@ -79,7 +79,7 @@ jobs:
         run: cd backend && meteor npm ci
 
       - name: Run Tests
-        run: cd backend && sh ./test.sh -c
+        run: cd backend && sh ./test.sh -c -o
 
 # TODO add coverage checks etc.
 #      - name: Upload coverage
