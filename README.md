@@ -67,7 +67,7 @@ $ meteor npm run start
 We use jest (as default, defined by expo) to run the app tests and mocha to run
 the backend tests.
 
-To tun the tests on the backend, please execute the `meteor npm run test` script in the 
+To tun the tests on the backend, please execute the `./test.sh` script in the 
 `backend` project folder.
 
 To run the tests for the app, please execute `meteor npm run test` in the app's `src`
