@@ -2,19 +2,43 @@
   "name": "backend",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "lint:code": "standardx -v | snazzy",
+    "lint:code-fix": "standardx --fix -v | snazzy"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "chalk": "^5.0.0",
     "meteor-node-stubs": "^1.1.0",
-    "simpl-schema": "^1.12.0",
+    "simpl-schema": "^1.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/eslint-parser": "^7.17.0",
+    "chai": "^4.3.6",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
   },
   "meteor": {
     "mainModule": {
       "server": "server/main.js"
+    }
+  },
+  "babel": {},
+  "eslintConfig": {
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": true
+    },
+    "rules": {
+      "brace-style": [
+        "error",
+        "stroustrup",
+        {
+          "allowSingleLine": true
+        }
+      ]
     }
   }
 }
