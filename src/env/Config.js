@@ -12,5 +12,4 @@ Config.styles = {}
 
 Config.styles.containerMargin = 30
 
-//color
-
+// color
