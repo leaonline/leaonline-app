@@ -3,6 +3,7 @@ import { Alert, Image, View } from 'react-native'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { GlobalStyles } from "../env/GlobalStyles";
 import RouteButton from '../components/RouteButton'
 
 /**
