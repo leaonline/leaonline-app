@@ -103,8 +103,8 @@ const TermsAndConditionsScreen = props => {
             waitForSpeech
             icon='arrow-alt-circle-right' handleScreen={() => {
               termsAndConditionsIsChecked
-                  ? props.navigation.navigate('Registration')
-                  : checkBoxIsNotChecked()
+                ? props.navigation.navigate('Registration')
+                : checkBoxIsNotChecked()
             }}
           />
         </View>

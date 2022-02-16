@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Image, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../styles/createStyleSheet'
