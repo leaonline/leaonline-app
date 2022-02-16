@@ -92,20 +92,17 @@ const TermsAndConditionsScreen = props => {
         <View style={styles.routeButtonContainer}>
           <RouteButton
             onlyIcon
-            icon='arrow-alt-circle-left' handleScreen={() => {
-              TTSengine.isSpeaking
-                ? Alert.alert(t('alert.title'), t('alert.navText'))
-                : props.navigation.navigate('Welcome')
-            }}
+            waitForSpeech
+            icon='arrow-alt-circle-left'
+            handleScreen={() => props.navigation.navigate('Welcome')}
           />
         </View>
         <View style={styles.routeButtonContainer}>
           <RouteButton
             onlyIcon
+            waitForSpeech
             icon='arrow-alt-circle-right' handleScreen={() => {
-              TTSengine.isSpeaking
-                ? Alert.alert(t('alert.title'), t('alert.navText'))
-                : termsAndConditionsIsChecked
+              termsAndConditionsIsChecked
                   ? props.navigation.navigate('Registration')
                   : checkBoxIsNotChecked()
             }}

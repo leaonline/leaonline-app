@@ -1,8 +1,9 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
+import { useTranslation } from 'react-i18next'
 
 /**
  * @private
@@ -36,10 +37,24 @@ const styles = StyleSheet.create({
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
  * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
+ * @param {boolean} props.waitForSpeech It throws an alert that tts is still speaking and prevents the navigation, if false the tts is stopped (Default 'false')
  * @component
  * @returns {JSX.Element}
  */
 const RouteButton = props => {
+  const { t } = useTranslation()
+
+  const navigationHandler = () => {
+    if (props.waitForSpeech) {
+      TTSengine.isSpeaking
+        ? Alert.alert(t('alert.title'), t('alert.navText'))
+        : props.handleScreen()
+    } else {
+      TTSengine.stop()
+      props.handleScreen()
+    }
+  }
+
   /**
    * Only displays the icon if "onlyIcon" is true.
    */
@@ -49,13 +64,13 @@ const RouteButton = props => {
         <View style={styles.body}>
           <Tts text={props.title} id={`${props.title}-tts`} dontShowText />
           <View style={styles.button}>
-            <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
+            <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={navigationHandler()} />
           </View>
         </View>
       )
     } else {
       return (
-        <TouchableOpacity onPress={props.handleScreen}>
+        <TouchableOpacity onPress={navigationHandler}>
           <Icon style={props.style || styles.iconNavigation} name={props.icon} color={props.iconColor || Colors.gray} type='font-awesome-5' size={35} />
         </TouchableOpacity>
       )

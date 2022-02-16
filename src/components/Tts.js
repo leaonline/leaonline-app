@@ -99,6 +99,7 @@ const ttsComponent = props => {
       onDone: () => {
         debug('onDone')
         setIsDone(true)
+        stopSpeak()
       }
     })
   }
@@ -128,7 +129,7 @@ const ttsComponent = props => {
    */
   const displayedText = () => {
     if (!props.dontShowText) {
-      // color always detaults to secondary and align always to left
+      // color always defaults to secondary and align always to left
       const styleProps = {
         color: getIdleColor(),
         flexShrink: props.shrink || 1,
@@ -175,6 +176,9 @@ const ttsComponent = props => {
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
+  },
+  stop () {
+    Speech.stop()
   },
   isSpeaking: false,
   speakId: 0,

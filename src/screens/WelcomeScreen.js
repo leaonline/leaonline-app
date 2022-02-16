@@ -73,11 +73,9 @@ const WelcomeScreen = props => {
         <View style={styles.routeButtonContainer}>
           <RouteButton
             onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              TTSengine.isSpeaking
-                ? Alert.alert(t('alert.title'), t('alert.navText'))
-                : props.navigation.navigate('TandC')
-            }}
+            waitForSpeech
+            icon='arrow-alt-circle-right'
+            handleScreen={() => props.navigation.navigate('TandC')}
           />
         </View>
       </View>
