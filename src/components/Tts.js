@@ -99,7 +99,7 @@ const ttsComponent = props => {
       onDone: () => {
         debug('onDone')
         setIsDone(true)
-        //stopSpeak()
+        // stopSpeak()
       }
     })
   }
