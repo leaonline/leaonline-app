@@ -46,6 +46,7 @@ leaonline:ejson-regexp@1.0.0
 leaonline:method-factory@1.1.0
 leaonline:publication-factory@1.0.0
 leaonline:ratelimit-factory@1.0.0
+leaonline:service-registry@1.0.0
 lmieulet:meteor-coverage@3.2.0
 localstorage@1.2.0
 logging@1.3.1

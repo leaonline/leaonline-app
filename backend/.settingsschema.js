@@ -4,7 +4,19 @@ const schema = def => new SimpleSchema(def)
 const settingsSchema = schema({
   remotes: schema({
     content: schema({
-      url: String
+      url: String,
+      jwt: schema({
+        key: String,
+        sub: String
+      }),
+      sync: schema({
+        "field": Boolean,
+        "unit": Boolean,
+        "unitSet": Boolean,
+        "dimension": Boolean,
+        "level": Boolean,
+        "testCycle": Boolean
+      })
     })
   }),
   restore: schema({

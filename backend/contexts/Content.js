@@ -1,4 +1,4 @@
-import { ContentServer } from '../api/remotes/ContentServer'
+import { ContentServer } from '../api/remotes/content/ContentServer'
 import { onServerExec } from '../infrastructure/arch/onServerExec'
 
 /**

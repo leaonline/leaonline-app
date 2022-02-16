@@ -1,7 +1,19 @@
 {
   "remotes": {
     "content": {
-      "url": "localhost:3030"
+      "url": "localhost:3030",
+      "jwt": {
+        "key": "0123456789001234567890",
+        "sub": "app-backend-01234567890"
+      },
+      "sync": {
+        "field": true,
+        "unit": true,
+        "unitSet": true,
+        "dimension": true,
+        "level": true,
+        "testCycle": true
+      }
     }
   },
   "restore": {

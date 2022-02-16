@@ -77,7 +77,7 @@ const getLine = () => {
     }
 
     if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
-      return line.replace(/\s*at\s*[a-zA-Z0-9_-]+\s*/, '')
+      return line.replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '').replace(/[()]+/g, '')
     }
   }
 }
