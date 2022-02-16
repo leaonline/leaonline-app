@@ -1,8 +1,9 @@
 import { MeteorLoginStorage } from './MeteorLoginStorage'
 import { callMeteor } from './call'
 import { ensureLoggedIn } from './ensureLoggedIn'
+import { Config } from '../env/Config'
 
-const deleteAccountMethodName = 'deleteMobileAccount'
+const deleteAccountMethodName = Config.methods.deleteUser
 
 /**
  * Deletes a current user account and cleans the cached login credentials.
@@ -18,7 +19,7 @@ export const deleteAccount = ({ prepare, receive, failure, success } = {}) => {
 
   return callMeteor({
     name: deleteAccountMethodName,
-    args: user,
+    args: { _id: user._id, username: user.username },
     prepare,
     receive,
     failure,

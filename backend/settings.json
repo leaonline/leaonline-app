@@ -1,0 +1,22 @@
+{
+  "remotes": {
+    "content": {
+      "url": "localhost:3030"
+    }
+  },
+  "restore": {
+    "codes": {
+      "numberOfCodes": 3,
+      "length": 4,
+      "uppercase": true,
+      "forbidden": {
+        "source": "[0oq17ij5s]+",
+        "flags": "gi"
+      },
+      "maxRetries": 50
+    }
+  },
+  "log": {
+    "level": 2
+  }
+}

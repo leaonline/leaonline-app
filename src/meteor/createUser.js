@@ -5,6 +5,7 @@ import { Log } from '../infrastructure/Log'
 import { MeteorLoginStorage } from './MeteorLoginStorage'
 import { check } from '../schema/check'
 import { createSchema, RegEx } from '../schema/createSchema'
+import { Config } from '../env/Config'
 
 // INTERNALS
 
@@ -12,7 +13,7 @@ import { createSchema, RegEx } from '../schema/createSchema'
  * The name of the server method to call when a new user will be created
  * @private
  */
-const createUserMethodName = 'createMobileUser' // TODO get this from config / dot env etc.
+const createUserMethodName = Config.methods.createUser
 
 /**
  * @private
