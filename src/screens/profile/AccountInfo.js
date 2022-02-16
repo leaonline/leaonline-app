@@ -32,7 +32,7 @@ export const AccountInfo = () => {
     return user.restore.map((code, index) => {
       return (
         <View key={`restore-code-${index}`}>
-          <Tts text={code.split('').join(' ')} />
+          <Tts speed={0.4} text={code.split('').join(' ')} />
         </View>
       )
     })

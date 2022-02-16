@@ -6,6 +6,12 @@ Config.debug = {}
 
 Config.debug.layoutBorders = () => debugLayoutBorders
 
+// Default values for GlobalStyles
+
+Config.styles = {}
+
+Config.styles.containerMargin = 30
+
 Config.methods = {}
 
 Config.methods.createUser = 'users.methods.create'
