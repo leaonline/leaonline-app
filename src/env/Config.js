@@ -12,4 +12,7 @@ Config.styles = {}
 
 Config.styles.containerMargin = 30
 
-// color
+Config.methods = {}
+
+Config.methods.createUser = 'users.methods.create'
+Config.methods.deleteUser = 'users.methods.delete'

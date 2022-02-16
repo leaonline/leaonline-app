@@ -1,62 +1,85 @@
-# leaonline-app
+# lea.online App
 
-To run the leaonline app you need to install the dependencies first with:  
+[![Build Android APK](https://github.com/leaonline/leaonline-app/actions/workflows/build_android_apk.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/build_android_apk.yml)
+[![Test suite](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml)
+[![Lint Test](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+![GitHub](https://img.shields.io/github/license/leaonline/leaonline-app)
 
-``` 
-npm install 
+## About
+
+The lea.online app is a mobile app, developed using React-Native and Meteor.
+
+
+## Get the app
+
+TBD, we will link the app store / play store links here, once we have a release
+
+
+## Development
+
+If you wish to participate in development, please make sure you have read our
+contribution guidelines.
+
+## Install for development
+
+This project heavily utilizes Meteor and it's tech-stack so the installation
+will install `Meteor` for you. Note, that Meteor already ships with NodeJs
+and NPM, so you don't need them to install yourself.
+
+However, if you have them already installed, Meteor won't mess up your
+environment, so it's safe to install it.
+
+We provide you an installation script, which you should run from your terminal:
+
+```bash
+$ ./scripts/install.sh
+```
+
+Do not run the script with `sudo` and do not cd into the `scripts` directory. 
+
+The script will ask you several questions to optimize your installation, if you
+however wish to do a full manual installation, please visit the 
+[manual installation](./docs/manual_install.md) guide.
+
+### Run the apps
+
+To run the apps, make sure you have installed everything first. See the prior
+section on how to install.
+
+To run the backend app, you need to do the following:
+
+```bash
+$ cd backend
+$ ./run.sh
+```
+
+To run the mobile app, you need to do the following:
+
+```bash
+$ cd src
+$ meteor npm run start
 ```
 
 
-**Installation for _Android_**
+### Run the tests
 
-First of all you'll need to prepare your development environment to start the java application of leaonline.  
-For that we prepared a shell script that install all necessary files.  
-To run the shell script just type:
+We use jest (as default, defined by expo) to run the app tests and mocha to run
+the backend tests.
 
-```
-sudo ./install_android_environment.sh
-```
-After installing all necessary android files to run the emulator with leaonline, we need to create a virtual android device with:
+To tun the tests on the backend, please execute the `./test.sh` script in the 
+`backend` project folder.
 
-```
-sudo ./install_emulator.sh
-```
-
-Before we run our project we need to start our emulator first with:
-```
-/usr/lib/android-sdk/emulator/emulator -avd pixel
-```
-
-Now you can start the leaonline app on an android emulator:
-
-```
-expo start 
-```
-
-After expo started just press **_a_** on your keyboard and expo will run leaonline on your previous created Android Emulator
-
-
-**Installation for _iOS_** 
-
-To start leaonline on an iOS Emulator you will need an macOS operation system and the latest xcode version.  
-Just run the following:
-
-```
-expo start
-```
-
-After expo started just press **_i_** on your keyboard and expo will run leaonline on your iOS Emulator
-
-
-## Building
+To run the tests for the app, please execute `meteor npm run test` in the app's `src`
+folder.
 
 ### Documentation
 
-We use jsDoc with markdown and [better-docs plugins](https://www.npmjs.com/package/better-docs#component-plugin-beta)
-to document React components. To build the docs run:
+We use jsDoc for api documentation of the app, as well as of the backend.
+In each projects you can simply run
 
 ```bash
-$ npm run docs
+$ meteor npm run docs
 ```
 
 The docs are generated in the output folder `docs`.

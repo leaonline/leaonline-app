@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> screens/RegistrationScreen.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#TTSengine">TTSengine</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="TTSText.html">TTSText</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>screens/RegistrationScreen.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { Alert, View, SafeAreaView, TextInput, ActivityIndicator, Text } from 'react-native'
+import Colors from '../constants/Colors'
+import { TTSengine } from '../components/Tts'
+import { Log } from '../infrastructure/Log'
+import { createUser } from '../meteor/createUser'
+import { useTranslation } from 'react-i18next'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import RouteButton from '../components/RouteButton'
+import { createSchema, RegEx } from '../schema/createSchema'
+import { ActionButton } from '../components/ActionButton'
+import { loginMeteor } from '../meteor/loginMeteor'
+
+const emailSchema = createSchema({
+  email: {
+    type: String,
+    regEx: RegEx.EmailWithTLD
+  }
+})
+
+/**
+ * @private tts
+ */
+const Tts = TTSengine.component()
+const log = Log.create('RegistrationScreen')
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 15
+  },
+  body: {
+    flex: 2,
+    flexDirection: 'row',
+    marginHorizontal: 32
+  },
+  input: {
+    flex: 0,
+    width: '100%',
+    flexDirection: 'row',
+    margin: 0,
+    padding: 0
+  },
+  text: {
+    color: Colors.primary,
+    paddingLeft: 5
+  },
+  icon: {
+    paddingBottom: 5
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  codesContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    marginTop: '5%'
+  },
+  code: {
+    flex: 2,
+    flexDirection: 'row'
+  }
+})
+
+/**
+ * Displays the registration form which is required to create a new lea.online
+ * account.
+ *
+ * On complete, it navigates the user to the {HomeScreen}.
+ * On "back" if navigates back to the {TermsAnsConditionsScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
+const RegistrationScreen = props => {
+  const [email, onChangeEmail] = useState()
+  const [user, setUser] = useState()
+  const [registering, setRegistering] = useState(false)
+  const [complete, setComplete] = useState(false)
+  const { t } = useTranslation()
+
+  const register = async () => {
+    log('validate email, if given')
+
+    if (email &amp;&amp; email.length > 0) {
+      const ctx = emailSchema.newContext()
+      ctx.validate({ email })
+
+      if (!ctx.isValid()) {
+        return Alert.alert('invalid email')
+      }
+    }
+
+    log('register account')
+    try {
+      setRegistering(true)
+      const createdUser = await createUser({ email })
+      log('new account:', createdUser &amp;&amp; createdUser.username)
+
+      if (createdUser) setUser(createdUser)
+
+      await loginMeteor()
+      setComplete(true)
+    } catch (e) {
+      // during user creation there are multiple errors that can occur:
+      // - not connected
+      // -
+
+      console.error(e)
+      log('account creation failed')
+
+      if (e.message === 'invalidResponse') {
+        // TODO handle this situation
+      }
+
+      if (e.message === 'notConnected') {
+        // TODO handle this situation
+      }
+    } finally {
+      // during user creation there are multiple errors that can occur:
+      // - not connected
+      // -
+
+      setTimeout(() => {
+        log('stop registering screen')
+        setRegistering(false)
+      }, 1000)
+    }
+  }
+
+  const renderRegistering = () => (
+    &lt;View style={styles.container}>
+      &lt;View>
+        &lt;ActivityIndicator size='large' color={Colors.secondary} />
+      &lt;/View>
+      &lt;View style={styles.body}>
+        &lt;Tts
+          id='registrationScreen.registering'
+          text={t('registrationScreen.registering')}
+        />
+      &lt;/View>
+    &lt;/View>
+  )
+
+  const renderRegistration = () => (
+    &lt;View style={styles.container}>
+
+      {/* inform about registration process */}
+
+      &lt;View style={styles.body}>
+        &lt;Tts
+          id='registrationScreen.form.text'
+          text={t('registrationScreen.form.text')}
+        />
+      &lt;/View>
+
+      {/* optional email form */}
+
+      &lt;SafeAreaView>
+        &lt;View style={styles.input}>
+          &lt;Tts
+            id='registrationScreen.form.placeholder'
+            text={t('registrationScreen.form.placeholder')}
+            dontShowText
+          />
+          &lt;TextInput
+            style={{
+              borderBottomColor: '#000000',
+              borderBottomWidth: 1
+            }}
+            placeholder={t('registrationScreen.form.placeholder')}
+            keyboardType='email-address'
+            onChangeText={onChangeEmail}
+          />
+        &lt;/View>
+      &lt;/SafeAreaView>
+
+      {/* REGISTER BUTTON */}
+
+      &lt;View style={styles.container}>
+        &lt;ActionButton
+          tts={t('registrationScreen.form.register')}
+          onPress={() => register()}
+          disabled
+        />
+      &lt;/View>
+
+      {/* optional: navigate back */}
+
+      &lt;View style={styles.navigationButtons}>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-left' handleScreen={() => {
+              TTSengine.isSpeaking
+                ? Alert.alert(t('alert.title'), t('alert.navText'))
+                : props.navigation.navigate('TandC')
+            }}
+          />
+        &lt;/View>
+      &lt;/View>
+    &lt;/View>
+  )
+
+  const renderRestoreCodes = () => {
+    const codes = user?.restore
+    if (!codes?.length) return null
+
+    return codes.map((code, index) => {
+      const splitCode = code.split('').join(' ')
+      return (
+        &lt;View style={styles.code} key={`registrationScreen.restoreCode-${index}`}>
+          &lt;Tts
+            id={`registrationScreen.restoreCode-${index}`}
+            text={splitCode}
+            color={Colors.secondary}
+            dontShowText
+          />
+          &lt;Text style={{ fontSize: 44, color: Colors.secondary, fontWeight: 'bold' }}>{splitCode}&lt;/Text>
+        &lt;/View>
+      )
+    })
+  }
+
+  /**
+   * Rendered, once the user has completed the registration process.
+   */
+  const renderComplete = () => (
+    &lt;View style={styles.container}>
+      &lt;Tts
+        id='registrationScreen.complete'
+        text={t('registrationScreen.complete')}
+      />
+
+      &lt;View style={styles.codesContainer}>
+        {renderRestoreCodes()}
+      &lt;/View>
+      &lt;View style={styles.codesContainer} />
+
+      &lt;View style={styles.navigationButtons}>
+        &lt;View style={styles.routeButtonContainer}>
+          &lt;RouteButton
+            onlyIcon
+            style={styles.routeButton}
+            icon='arrow-alt-circle-right'
+            handleScreen={() => props.navigation.navigate('Home')}
+          />
+        &lt;/View>
+      &lt;/View>
+    &lt;/View>
+  )
+
+  if (registering) {
+    return renderRegistering()
+  }
+
+  return complete
+    ? renderComplete()
+    : renderRegistration()
+}
+
+export default RegistrationScreen
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
