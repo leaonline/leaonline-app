@@ -24,19 +24,44 @@ typescript@4.4.1              # Enable TypeScript syntax in .ts and .tsx modules
 meteortesting:mocha
 lmieulet:meteor-coverage@3.2.0
 
-accounts-password
+#========================================
+# GENERAL / SYSTEM
+#========================================
 random
 logging
 
+#========================================
+# lea
+#========================================
+leaonline:corelib
+
+#========================================
+# ACCOUNTS
+#========================================
+accounts-password
+
+#========================================
+# COLLECTIONS
+#========================================
 aldeed:collection2
 dburles:mongo-collection-instances
+leaonline:collection-factory
+
+#========================================
+# METHODS
+#========================================
 leaonline:method-factory
+mdg:validated-method
+
+#========================================
+# PUBLICATIONS
+#========================================
 leaonline:publication-factory
-leaonline:ratelimit-factory
 
 #========================================
 # SECURITY
 #========================================
+leaonline:ratelimit-factory
 audit-argument-checks@1.0.7
 force-ssl@1.1.0
 

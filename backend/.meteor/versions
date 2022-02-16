@@ -40,8 +40,11 @@ http@1.4.1
 id-map@1.1.1
 inter-process-messaging@0.1.1
 lai:collection-extensions@0.3.0
+leaonline:collection-factory@1.0.4
+leaonline:corelib@1.0.0
+leaonline:ejson-regexp@1.0.0
 leaonline:method-factory@1.1.0
-leaonline:publication-factory@1.1.1
+leaonline:publication-factory@1.0.0
 leaonline:ratelimit-factory@1.0.0
 lmieulet:meteor-coverage@3.2.0
 localstorage@1.2.0

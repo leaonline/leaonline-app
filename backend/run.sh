@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-meteor --port=8080 --settings=settings.json
+METEOR_PACKAGE_DIRS="../../lib:../../liboauth" \
+    meteor --port=8080 --settings=settings.json
