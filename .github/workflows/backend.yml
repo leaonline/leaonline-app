@@ -38,6 +38,19 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
+      - name: Checkout leaonline:corelib repo
+        uses: actions/checkout@v2
+        with:
+          repository: leaonline/corelib
+          path: github/corelib
+
+
+      - name: Checkout leaonline:service-registry repo
+        uses: actions/checkout@v2
+        with:
+          repository: leaonline/service-registry
+          path: github/service-registry
+
       # CACHING
       - name: Install Meteor
         id: cache-meteor-install

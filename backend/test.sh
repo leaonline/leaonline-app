@@ -59,7 +59,7 @@ done
 # build paths:
 
 PROJECT_PATH=$(pwd)
-T_PACKAGE_DIRS="../../lib:../../liboauth"
+T_PACKAGE_DIRS="../../lib:../../liboauth:./github"
 PORT=6519
 
 if [ "$T_VERBOSE" -eq "1" ];
