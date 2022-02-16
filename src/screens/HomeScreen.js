@@ -1,12 +1,15 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import * as data from '../resources/taskData.json'
+import { loadDocs } from '../meteor/loadDocs'
+import { Log } from '../infrastructure/Log'
+
+const log = Log.create('HomeScreen')
 
 /**
  * @private TTS Ref
@@ -54,14 +57,44 @@ const styles = createStyleSheet({
  */
 const HomeScreen = props => {
   const { t } = useTranslation()
+  const { data, error, loading } = loadDocs({ name: 'field' })
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <View>
+          <ActivityIndicator size='large' color={Colors.secondary} />
+        </View>
+      )
+    }
+
+    if (error) {
+      // TODO display error
+    }
+
+    if (!data?.length) {
+      // TODO what todo here?
+    }
+
+    return (
+      <View style={styles.button}>
+        {renderButtons()}
+      </View>
+    )
+  }
+
+  const selectField = item => {
+    log('selected', item.title)
+    props.navigation.navigate('Map')
+  }
 
   /**
    * Renders the RouteButtons for the Homescreen
    */
   const renderButtons = () => {
-    return data.dimensions.map((item, key) => {
+    return (data || []).map((item, key) => {
       return (
-        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => props.navigation.navigate('Map')} />
+        <RouteButton title={item.title} icon={item.icon} key={key} handleScreen={() => selectField(item)} />
       )
     })
   }
@@ -76,10 +109,7 @@ const HomeScreen = props => {
       </View>
 
       <View style={styles.body}>
-
-        <View style={styles.button}>
-          {renderButtons()}
-        </View>
+        {renderContent()}
       </View>
     </View>
   )
