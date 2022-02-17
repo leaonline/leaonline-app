@@ -166,6 +166,7 @@ const ttsComponent = props => {
  *
  *
  * @property setSpeech {function} use to inject tts implementation
+ * @property stop {function} use to stop tts speech
  * @property isSpeaking {boolean} indicate if currently there is a
  *  speech ongoing
  * @property speakId {number} id of the target that is used for tts

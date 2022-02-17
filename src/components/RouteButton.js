@@ -64,7 +64,7 @@ const RouteButton = props => {
         <View style={styles.body}>
           <Tts text={props.title} id={`${props.title}-tts`} dontShowText />
           <View style={styles.button}>
-            <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={navigationHandler()} />
+            <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={navigationHandler} />
           </View>
         </View>
       )
