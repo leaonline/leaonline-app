@@ -99,6 +99,7 @@ const ttsComponent = props => {
       onDone: () => {
         debug('onDone')
         setIsDone(true)
+        // stopSpeak()
       }
     })
   }
@@ -128,7 +129,7 @@ const ttsComponent = props => {
    */
   const displayedText = () => {
     if (!props.dontShowText) {
-      // color always detaults to secondary and align always to left
+      // color always defaults to secondary and align always to left
       const styleProps = {
         color: getIdleColor(),
         flexShrink: props.shrink || 1,
@@ -165,6 +166,7 @@ const ttsComponent = props => {
  *
  *
  * @property setSpeech {function} use to inject tts implementation
+ * @property stop {function} use to stop tts speech
  * @property isSpeaking {boolean} indicate if currently there is a
  *  speech ongoing
  * @property speakId {number} id of the target that is used for tts
@@ -175,6 +177,9 @@ const ttsComponent = props => {
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
+  },
+  stop () {
+    Speech.stop()
   },
   isSpeaking: false,
   speakId: 0,
