@@ -108,7 +108,8 @@ ContentServer.sync = async ({ name }) => {
     name: name,
     created: 0,
     updated: 0,
-    removed: 0
+    removed: 0,
+    skipped: 0
   }
 
   const result = await ContentConnection.get({ name, log })
@@ -121,6 +122,11 @@ ContentServer.sync = async ({ name }) => {
   allIds.length = allDocs.length
 
   allDocs.forEach((doc, index) => {
+    if (doc.isLegacy) {
+      stats.skipped++
+      return
+    }
+
     const { _id: docId } = doc
     allIds[index] = docId
 
@@ -155,7 +161,7 @@ ContentServer.sync = async ({ name }) => {
  * @return {any}
  */
 ContentServer.get = ({ name, ids }) => {
-  ensureConnected()
+  // ensureConnected()
   ensureContextExists({ name })
 
   const collection = ensureCollectionExists({ name })

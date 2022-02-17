@@ -8,6 +8,7 @@ import RouteButton from '../components/RouteButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { loadDocs } from '../meteor/loadDocs'
 import { Log } from '../infrastructure/Log'
+import { AppState } from '../infrastructure/AppState'
 
 const log = Log.create('HomeScreen')
 
@@ -83,8 +84,8 @@ const HomeScreen = props => {
     )
   }
 
-  const selectField = item => {
-    log('selected', item.title)
+  const selectField = async item => {
+    await AppState.field(item)
     props.navigation.navigate('Map')
   }
 

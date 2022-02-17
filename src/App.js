@@ -10,6 +10,7 @@ import { loggedIn } from './meteor/loggedIn'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 import { createStyleSheet } from './styles/createStyleSheet'
+import './startup/initAppState'
 import './i18n'
 
 const log = Log.create('App')

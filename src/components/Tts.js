@@ -97,6 +97,7 @@ const ttsComponent = props => {
       },
       onDone: () => {
         debug('onDone')
+        // TODO call stopSpeak and update tests to fix state bug
         setIsDone(true)
       }
     })

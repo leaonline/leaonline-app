@@ -41,8 +41,9 @@ const internal = {
  *
  *
  * @throws {Error} if the log type is not supported
- * @param name {string} the prefix to log before the message
- * @param type {string} the allowed log type.
+ * @param options {object}
+ * @param options.name {string} the prefix to log before the message
+ * @param options.type {string} the allowed log type.
  * @return {Function} a logger function or empty no-op function if log-level is
  *  not supported / defined
  */

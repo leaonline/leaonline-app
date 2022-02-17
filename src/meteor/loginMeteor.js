@@ -3,6 +3,8 @@ import { MeteorLoginStorage } from './MeteorLoginStorage'
 import { ensureConnected } from './ensureConnected'
 import { MeteorError } from '../errors/MeteorError'
 import { AuthenticationError } from '../errors/AuthenticationError'
+import { asyncTimeout } from '../utils/asyncTimeout'
+import { Log } from '../infrastructure/Log'
 
 /**
  * Attempts a login to the Meteor backend.
@@ -31,7 +33,26 @@ export const loginMeteor = async () => {
     throw new AuthenticationError('noCredentials')
   }
 
-  return loginWithPassword(username, password)
+  try {
+    return await loginWithPassword(username, password)
+  } catch (e) {
+    if (e.error === 'too-many-requests') {
+      Log.warn(e.message)
+      Log.warn('reattempt login in 500ms')
+      await asyncTimeout(500)
+      return loginMeteor()
+    }
+
+    if (e.reason === 'notConnected') {
+      Log.warn(e.message)
+      Log.warn('reattempt login in 1000ms')
+      await asyncTimeout(1000)
+      return loginMeteor()
+    }
+
+    // other errors er rethrown
+    throw e
+  }
 }
 
 /**

@@ -25,7 +25,7 @@ Usage: $(basename $0) [OPTIONS]
 Options:
   -c              Activate code-coverage reports
   -g <RegExp>     Filter tests by a given RegExp (uses Mocha-grep)
-  -h              Show help
+  -h              Show help./github
   -o              Runs the tests only once (default is watch-mode)
   -v              Verbose mode with extra prints
 "
