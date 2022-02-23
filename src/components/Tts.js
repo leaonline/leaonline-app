@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TTSText from './TTSText'
 import Colors from '../constants/Colors'
@@ -91,6 +91,7 @@ const ttsComponent = props => {
       onStart: () => {
         debug('onStart')
         startSpeak()
+        Vibration.vibrate(50)
       },
       onStopped: () => {
         debug('onStopped')

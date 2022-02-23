@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { useKeepAwake } from 'expo-keep-awake'
 import Colors from '../constants/Colors'
 import RouteButton from '../components/RouteButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
@@ -53,6 +54,7 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const HomeScreen = props => {
+  useKeepAwake()
   const { t } = useTranslation()
 
   /**
