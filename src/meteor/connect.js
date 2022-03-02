@@ -1,6 +1,7 @@
 import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
 import { createSchema } from '../schema/createSchema'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // TODO move this into env config
 const maxTimeout = 10000
@@ -34,7 +35,7 @@ export const connectMeteor = ({ endpoint }) => {
 
     // break early on any errors during connect attempt
     try {
-      Meteor.connect(endpoint)
+      Meteor.connect(endpoint, { AsyncStorage })
     } catch (e) {
       return reject(e)
     }

@@ -5,9 +5,9 @@ import { DDP } from 'meteor/ddp'
 // because the "outside world" should not know much about these internals
 import { Unit } from '../../../contexts/content/Unit'
 import { UnitSet } from 'meteor/leaonline:corelib/contexts/UnitSet'
-import { Field } from 'meteor/leaonline:corelib/contexts/Field'
-import { Dimension } from 'meteor/leaonline:corelib/contexts/Dimension'
-import { Level } from 'meteor/leaonline:corelib/contexts/Level'
+import { Field } from '../../../contexts/content/Field'
+import { Dimension } from '../../../contexts/content/Dimension'
+import { Level } from '../../../contexts/content/Level'
 import { TestCycle } from 'meteor/leaonline:corelib/contexts/TestCycle'
 
 // required to get units running, since they have a complex schema
@@ -55,13 +55,17 @@ export const ContentServer = {}
 ContentServer.schema = () => ({
   name: {
     type: String,
-    allowedValues: ['field']
+    allowedValues: contextNames
   },
-  ids: {
-    type: Array,
-    optional: true
-  },
-  'ids.$': String
+  query: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+    custom: function () {
+      const value = this.value
+      console.debug('custom query validation: ', value)
+    }
+  }
 })
 
 /**
@@ -152,26 +156,12 @@ ContentServer.sync = async ({ name }) => {
   return stats
 }
 
-/**
- * Gets a document from a synced collection. This should be used by the methods
- * to obtain documents.
- *
- * @param name
- * @param ids
- * @return {any}
- */
-ContentServer.get = ({ name, ids }) => {
-  // ensureConnected()
+ContentServer.get = ({ name, query }) => {
   ensureContextExists({ name })
-
   const collection = ensureCollectionExists({ name })
-  const query = {}
-
-  if (ids?.length) {
-    query._id = { _id: { $in: ids } }
-  }
-
-  return collection.find(query).fetch()
+  const cursor = collection.find(query)
+  log(name, 'get', cursor.count(), 'docs')
+  return cursor.fetch()
 }
 
 /// /////////////////////////////////////////////////////////////////////////////

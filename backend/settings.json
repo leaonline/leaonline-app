@@ -13,6 +13,10 @@
         "dimension": true,
         "level": true,
         "testCycle": true
+      },
+      "remap": {
+        "active": true,
+        "dryRun": false
       }
     }
   },

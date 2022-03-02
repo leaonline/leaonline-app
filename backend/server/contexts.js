@@ -4,13 +4,35 @@ import { createCollection } from '../infrastructure/factories/createCollection'
 import { Users } from '../contexts/Users'
 import { Content } from '../contexts/Content'
 import { ContentServer } from '../api/remotes/content/ContentServer'
+import { MapData } from '../contexts/map/MapData'
+import { ContextRegistry } from '../contexts/ContextRegistry'
+import { SyncState } from '../contexts/sync/SyncState'
+import { Session } from '../contexts/session/Session'
+
+const register = ctx => {
+  if (!ContextRegistry.has(ctx.name)) {
+    ContextRegistry.add(ctx.name, ctx)
+  }
+}
 
 // create with collections
 ContentServer.contexts().forEach(ctx => {
   createCollection(ctx)
+  register(ctx)
 })
 
-;[Users, Content].forEach(context => {
-  const methods = Object.values(context.methods)
-  methods.forEach(method => createMethod(method))
+// create collections for backend ctx
+;[MapData, SyncState, Session].forEach(ctx => {
+  createCollection(ctx)
+  register(ctx)
 })
+
+// create methods for backend ctx
+;[Users, Content, SyncState].forEach(ctx => {
+  const methods = Object.values(ctx.methods)
+  methods.forEach(method => createMethod(method))
+  register(ctx)
+})
+
+
+

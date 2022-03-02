@@ -36,20 +36,31 @@ const styles = StyleSheet.create({
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
  * @param {string} props.iconColor The icon color. Default: Colors.gray (examples in ./constants/Colors.js)
+ * @param {string} props.color The overall color. Default: Colors.primary (examples in ./constants/Colors.js)
  * @component
  * @returns {JSX.Element}
  */
 const RouteButton = props => {
+  const color = props.color || Colors.primary
+
   /**
    * Only displays the icon if "onlyIcon" is true.
    */
   const renderRouteButton = () => {
+    const titleStyle = { ...styles.buttonTitle, ...{ color }}
+    const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color }
+
     if (!props.onlyIcon) {
       return (
         <View style={styles.body}>
-          <Tts text={props.title} id={`${props.title}-tts`} dontShowText />
+          <Tts text={props.title} id={`${props.title}-tts`} dontShowText color={color} />
           <View style={styles.button}>
-            <Button icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={Colors.primary} />} title={props.title} titleStyle={styles.buttonTitle} buttonStyle={{ borderRadius: 15, paddingTop: 10 }} type='outline' onPress={props.handleScreen} />
+            <Button
+              icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={color} />}
+              title={props.title}
+              titleStyle={titleStyle}
+              buttonStyle={buttonStyle}
+              type='outline' onPress={props.handleScreen} />
           </View>
         </View>
       )

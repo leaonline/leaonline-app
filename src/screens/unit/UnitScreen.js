@@ -1,8 +1,13 @@
 import React from 'react'
 import { Text, View } from 'react-native'
-import RouteButton from '../components/RouteButton'
-import Colors from '../constants/Colors'
-import { createStyleSheet } from '../styles/createStyleSheet'
+import RouteButton from '../../components/RouteButton'
+import Colors from '../../constants/Colors'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { loadDocs } from '../../meteor/loadDocs'
+import { loadUnitData } from './loadUnitData'
+import { Loading } from '../../components/Loading'
+import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
+import './registerComponents'
 
 /**
  * @private stylesheet
@@ -49,6 +54,39 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const UnitScreen = props => {
+  const docs = loadDocs(loadUnitData)
+
+  if (!docs || docs.loading) {
+    return (
+      <Loading/>
+    )
+  }
+
+  if (docs.data === null) {
+    props.navigation.navigate('Map')
+    return null
+  }
+
+  const { unitSetDoc, unitDoc, sessionDoc } = docs.data
+  console.debug(sessionDoc.progress, unitSetDoc.story.length)
+
+  // ---------------------------------------------------------------------------
+  // STORY DISPLAY
+  // ---------------------------------------------------------------------------
+
+  // if this is the very beginning of this unit set AND
+  // we have a story to render, let's do it right now
+  if (sessionDoc.progress === 0 && unitSetDoc.story.length > 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.body}>
+          {unitSetDoc.story.map((element, index) => (<UnitContentElementFactory.Renderer {...element} key={index} />))}
+        </View>
+      </View>
+    )
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>

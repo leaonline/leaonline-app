@@ -16,6 +16,10 @@ const settingsSchema = schema({
         "dimension": Boolean,
         "level": Boolean,
         "testCycle": Boolean
+      }),
+      remap: schema({
+        active: Boolean,
+        dryRun: Boolean
       })
     })
   }),

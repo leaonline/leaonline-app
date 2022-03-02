@@ -44,7 +44,8 @@
     "react-native-vector-icons": "^9.0.0",
     "react-native-web": "~0.17.5",
     "simpl-schema": "^1.12.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@react-native-async-storage/async-storage": "~1.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

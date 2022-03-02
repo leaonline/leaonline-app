@@ -10,14 +10,15 @@ import { loggedIn } from './meteor/loggedIn'
 import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 import { createStyleSheet } from './styles/createStyleSheet'
-import './startup/initAppState'
+import { initAppState } from './startup/initAppState'
+import './startup/initContexts'
 import './i18n'
 
 const log = Log.create('App')
 
 const startApp = async () => {
   log('init App')
-  log('fetch fonts')
+  await initAppState()
   await fetchFonts()
   await connect()
 }
@@ -63,6 +64,7 @@ const onConnected = async () => {
  * @return {Promise<void>}
  */
 const fetchFonts = async () => {
+  log('fetch fonts')
   return Font.loadAsync({
     semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
   })
@@ -114,7 +116,7 @@ export default function App () {
 
   return (
     <View style={styles.screen}>
-      <Navigator loggedIn={!!loggedIn()} />
+      <Navigator loggedIn={!!loggedIn()}/>
     </View>
   )
 }
