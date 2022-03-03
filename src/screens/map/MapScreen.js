@@ -9,6 +9,7 @@ import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
 import Colors from '../../constants/Colors'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
+import { Layout } from '../../constants/Layout'
 
 const log = Log.create('MapScreen')
 
@@ -16,18 +17,20 @@ const log = Log.create('MapScreen')
  * @private stylesheet
  */
 const styles = createStyleSheet({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
+  container: Layout.containter(),
   body: {
     flex: 2,
     flexDirection: 'row'
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
+  scrollView: {
+    marginHorizontal: 20,
+    width: '100%'
+  },
+  safeAreaView: {
+    flex: 1,
+    paddingTop: 50,
+    width: '100%',
+    alignItems: 'center',
   },
   navigationButtons: {
     flexDirection: 'row'
@@ -44,16 +47,6 @@ const styles = createStyleSheet({
   buttons: {
     alignItems: 'center',
     flex: 1
-  },
-  scrollView: {
-    marginHorizontal: 20,
-    width: '100%'
-  },
-  safeAreaView: {
-    flex: 1,
-    paddingTop: 50,
-    width: '100%',
-    alignItems: 'center',
   }
 })
 

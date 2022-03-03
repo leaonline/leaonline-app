@@ -8,6 +8,7 @@ import { loadDimensionData } from './loadDimensionData'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
+import { Layout } from '../../constants/Layout'
 
 const log = Log.create('DimensionScreen')
 
@@ -15,11 +16,7 @@ const log = Log.create('DimensionScreen')
  * @private stylesheet
  */
 const styles = createStyleSheet({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
+  container: Layout.containter(),
   body: {
     flex: 2,
     flexDirection: 'row'

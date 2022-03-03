@@ -3,6 +3,6 @@ import { TTSengine } from '../../Tts'
 
 const Tts = TTSengine.component()
 
-export const PlainText = props => {
+export const PlainTextRenderer = props => {
   return (<Tts text={props.value} />)
 }

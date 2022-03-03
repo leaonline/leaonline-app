@@ -28,7 +28,7 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create methods for backend ctx
-;[Users, Content, SyncState].forEach(ctx => {
+;[Users, Content, SyncState, Session].forEach(ctx => {
   const methods = Object.values(ctx.methods)
   methods.forEach(method => createMethod(method))
   register(ctx)
