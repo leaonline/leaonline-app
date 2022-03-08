@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, SafeAreaView, ScrollView, StatusBar } from 'react-native'
-import RouteButton from '../../components/RouteButton'
-import Colors from '../../constants/Colors'
+import React, { useState, useEffect, useRef } from 'react'
+import {
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard
+} from 'react-native'
+import { Log } from '../../infrastructure/Log'
+import { Layout } from '../../constants/Layout'
+import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadUnitData } from './loadUnitData'
 import { Loading } from '../../components/Loading'
-import { Layout } from '../../constants/Layout'
-import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
 import { ActionButton } from '../../components/ActionButton'
 import { useTranslation } from 'react-i18next'
-import './registerComponents'
 import { completeUnit } from './completeUnit'
-import { Log } from '../../infrastructure/Log'
+import { getScoring } from '../../scoring/getScoring'
+import { Navbar } from '../../components/Navbar'
+import './registerComponents'
+import Colors from '../../constants/Colors'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Confirm } from '../../components/Confirm'
 
 /**
  * @private stylesheet
@@ -47,6 +58,7 @@ const styles = createStyleSheet({
 })
 
 const log = Log.create('UnitScreen')
+
 /**
  * On this screen, the respective Unit is displayed and the users can interact
  * with it, by solving the tasks on its pages.
@@ -67,20 +79,22 @@ const log = Log.create('UnitScreen')
 const UnitScreen = props => {
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
+  const responseRef = useRef({})
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
 
+  // prevent backwards operations since we offer a cancel button
+  // to actively abort the current unitSet
   useEffect(() => {
     props.navigation.addListener('beforeRemove', (e) => {
-      // e.preventDefault(); // FIXME add cancel button to top-nav and uncomment this line to prevent going back
+      if (e.data.action.type === 'GO_BACK') {
+        e.preventDefault()
+      }
     })
   }, [props.navigation])
 
-
   if (!docs || docs.loading) {
-    return (
-      <Loading/>
-    )
+    return (<Loading/>)
   }
 
   if (docs.data === null) {
@@ -89,10 +103,32 @@ const UnitScreen = props => {
   }
 
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
+  const showCorrectResponse = scored === page
 
   // ---------------------------------------------------------------------------
   // ALL STATES
   // ---------------------------------------------------------------------------
+
+  // if users attempt to cancel we surely first show a modal
+  // and ask if cancelling was intended
+  const cancelUnit = async () => {
+    // todo send cancel information silently to server
+
+    const state = props.navigation.getState()
+    const dimensionRoute = state.routes.find(r => r.name === 'Dimension')
+
+    if (!dimensionRoute) {
+      props.navigation.navigate('Dimension')
+    }
+    else {
+      props.navigation.navigate({ key: dimensionRoute.key })
+    }
+  }
+
+  const submitResponse = async ({ responses, data }) => {
+    log('item submit', data.contentId, responses)
+    responseRef.current[page] = { responses, data }
+  }
 
   // this is the generic content rendering method, which
   // applies to all content structure across units and unitSets
@@ -100,7 +136,23 @@ const UnitScreen = props => {
   const renderContent = (list) => {
     if (!list?.length) { return null }
     return list.map((element, index) => {
-      return (<UnitContentElementFactory.Renderer key={index} {...element} />)
+      const elementData = { ...element }
+      if (element.type === 'item') {
+        elementData.submitResponse = submitResponse
+        elementData.showCorrectResponse = showCorrectResponse
+
+        return (
+          <KeyboardAvoidingView
+            key={index}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+            <UnitContentElementFactory.Renderer {...elementData} />
+          </KeyboardAvoidingView>
+        )
+      }
+
+      return (
+        <UnitContentElementFactory.Renderer key={index} {...elementData} />)
     })
   }
 
@@ -115,16 +167,12 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   // STORY DISPLAY
   // ---------------------------------------------------------------------------
-  log('display story?', {
-    unitDoc: !!unitDoc,
-    unit: sessionDoc.unit,
-    nextUnit: sessionDoc.nextUnit,
-    story: unitSetDoc.story?.length
-  })
 
   // if this is the very beginning of this unit set AND
   // we have a story to render, let's do it right now
   if (!unitDoc && !sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
+    log('render story', unitSetDoc.shortCode)
+
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
@@ -149,26 +197,35 @@ const UnitScreen = props => {
   log('render unit', unitDoc._id, unitDoc.shortCode, 'page', page, 'checked', scored)
 
   const checkScore = async () => {
-    // get response
     // get scoring method
+    const currentResponse = responseRef.current[page]
+    const { responses, data } = currentResponse
+    const { type, subtype, value } = data
+    const { scoring } = value
+
     // get score
-    // send score
+    const scoreResult = await getScoring({
+      type,
+      subtype,
+      scoring
+    }, { responses })
+    log('score', type, subtype, scoreResult.score)
+
     // update state
     setScored(page)
+
+    // submit score (background)
+    // return submitScore({ sessionDoc, unitDoc, item: data, responses, score: scoringResult })
   }
 
-  const nextPage = () => {
-    setPage(page + 1)
-  }
+  const nextPage = () => setPage(page + 1)
 
   const renderTaskPageAction = () => {
-    const hasScore = scored === page
-
     // if the page has not been checked yet we render a check-action button
-    if (!hasScore) {
+    if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.story.check')} onPress={checkScore}/>
+        <ActionButton tts={t('unitScreen.actions.check')} onPress={checkScore}/>
       )
     }
 
@@ -180,19 +237,34 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.story.next')} onPress={nextPage}/>
+        <ActionButton tts={t('unitScreen.actions.next')} onPress={nextPage}/>
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.story.complete')} onPress={finish}/>
+      <ActionButton tts={t('unitScreen.actions.complete')} onPress={finish}/>
     )
   }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
+        <Navbar>
+          <Confirm
+            question={t('unitScreen.abort.question')}
+            approveText={t('unitScreen.abort.abort')}
+            denyText={t('unitScreen.abort.continue')}
+            onApprove={() => cancelUnit()}
+            icon='times'
+            tts={false}
+            style={{
+              borderRadius: 2,
+              borderWidth: 1,
+              borderColor: Colors.dark
+            }}/>
+          <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+        </Navbar>
         <ScrollView style={styles.scrollView}>
 
           {/* 1. PART STIMULI */}
@@ -218,9 +290,9 @@ const UnitScreen = props => {
           <View style={styles.elements}>
             {renderContent(unitDoc.pages[page].content)}
           </View>
+
         </ScrollView>
       </SafeAreaView>
-
       {/* -------- continue button ---------  */}
       <View style={styles.navigationButtons}>
         {renderTaskPageAction()}

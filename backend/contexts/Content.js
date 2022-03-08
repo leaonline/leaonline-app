@@ -33,10 +33,13 @@ Content.methods.home = {
     }
   },
   run: onServerExec(function () {
-    return function ({ field, dimension, level}) {
+    return function ({ field, dimension, level }) {
       return {
         field: field && ContentServer.get({ name: 'field', query: {} }),
-        dimension: dimension && ContentServer.get({ name: 'dimension', query: {} }),
+        dimension: dimension && ContentServer.get({
+          name: 'dimension',
+          query: {}
+        }),
         level: level && ContentServer.get({ name: 'dimension', query: {} })
       }
     }
@@ -77,10 +80,7 @@ Content.methods.unit = {
 
     return function ({ unitSetId }) {
       const { userId } = this
-      return Session.get({
-        unitSet: unitSetId,
-          userId
-        })
+      return Session.get({ unitSet: unitSetId, userId })
     }
   })
 }

@@ -127,6 +127,8 @@ Session.update = ({ sessionId, userId }) => {
     throw new Meteor.Error('session.updateFailed', 'docNotFound', { sessionId, userId })
   }
 
+  log({ sessionDoc })
+
   const unitDoc = sessionDoc.unit && SessionCollection.findOne(sessionDoc.unit)
   const timestamp = new Date()
 
@@ -151,7 +153,7 @@ Session.update = ({ sessionId, userId }) => {
   // NEXT ITERATION
   // ---------------------------------------------------------------------------
   log('get next unit', sessionId)
-  const updateDoc = { updatedAt: timestamp }
+  const updateDoc = { $set: { updatedAt: timestamp } }
 
   // we can only update the progress if there is a unitDoc
   // on the contrary - if there is no unitDoc  then we are still in the story
@@ -179,6 +181,8 @@ Session.update = ({ sessionId, userId }) => {
   else {
     updateDoc.$unset = { nextUnit: 1 }
   }
+
+  log({ sessionId, updateDoc })
 
   return SessionCollection.update(sessionId, updateDoc)
 }

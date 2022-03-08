@@ -29,6 +29,7 @@ lmieulet:meteor-coverage@3.2.0
 #========================================
 random
 logging
+# leaonline:ejson-regexp
 
 #========================================
 # lea
@@ -44,7 +45,7 @@ accounts-password
 #========================================
 # COLLECTIONS
 #========================================
-aldeed:collection2
+# aldeed:collection2
 dburles:mongo-collection-instances
 leaonline:collection-factory
 

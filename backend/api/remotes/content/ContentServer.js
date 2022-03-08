@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { EJSON } from 'meteor/ejson'
 import { DDP } from 'meteor/ddp'
 
 // all contexts that are part of the content server are imported here,
@@ -100,7 +101,7 @@ ContentServer.init = async () => {
  *   not exist or if this function is invoked within a method or pub
  * @return {Promise<{name: *, created: number, updated: number, removed: number}>}
  */
-ContentServer.sync = async ({ name }) => {
+ContentServer.sync = async ({ name, debug }) => {
   log('sync', name)
   ensureNotInMethodOrPub()
   ensureConnected()
@@ -124,8 +125,8 @@ ContentServer.sync = async ({ name }) => {
 
   const allIds = []
   allIds.length = allDocs.length
-
   allDocs.forEach((doc, index) => {
+
     if (doc.isLegacy) {
       stats.skipped++
       return
@@ -134,18 +135,17 @@ ContentServer.sync = async ({ name }) => {
     const { _id: docId } = doc
     allIds[index] = docId
 
-    const upserted = collection.upsert({ _id: docId }, { $set: doc })
-
-    if (upserted?.insertedId) {
+    if (collection.find(docId).count() === 0) {
+      const insertId = collection.insert(doc)
+      if (debug) log(name, 'inserted', insertId)
       stats.created++
     }
 
-    else if (upserted?.numberAffected) {
-      stats.updated += upserted.numberAffected
-    }
-
     else {
-      log('could not update or insert', docId, upserted)
+      delete doc._id
+      const updated = collection.update(docId, { $set: doc })
+      if (debug) log(name, 'updated', docId, '=', updated)
+      stats.updated++
     }
   })
 

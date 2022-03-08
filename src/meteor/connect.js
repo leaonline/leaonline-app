@@ -2,6 +2,8 @@ import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
 import { createSchema } from '../schema/createSchema'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+// make sure connections can send/receive custom types
+import './ejson-regex'
 
 // TODO move this into env config
 const maxTimeout = 10000

@@ -7,15 +7,15 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": true,
+        "field": false,
         "unit": true,
-        "unitSet": true,
-        "dimension": true,
-        "level": true,
-        "testCycle": true
+        "unitSet": false,
+        "dimension": false,
+        "level": false,
+        "testCycle": false
       },
       "remap": {
-        "active": true,
+        "active": false,
         "dryRun": false
       }
     }
