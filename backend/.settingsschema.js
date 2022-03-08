@@ -20,7 +20,8 @@ const settingsSchema = schema({
         }
       }),
       maxRetries: SimpleSchema.Integer
-    })
+    }),
+    key: String
   }),
   log: schema({
     level: SimpleSchema.Integer

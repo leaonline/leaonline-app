@@ -1,6 +1,4 @@
 import { Meteor } from 'meteor/meteor'
-require('dotenv').config()
-console.log(process.env.ALGORITHM)
 import { ContentServer } from '../api/remotes/ContentServer'
 
 Meteor.startup(() => {
