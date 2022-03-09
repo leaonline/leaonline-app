@@ -13,7 +13,7 @@ UserEmail.schema = () => ({
 })
 
 UserEmail.encrypt = (email) => {
-  const iv = crypto.randomBytes(16)
+  const iv = crypto.randomBytes(16).toString('hex').slice(0, 16)
   const cipher = crypto.createCipheriv(algorithm, key, iv)
   let encryptedEmail = cipher.update(email, 'utf8', outputFormat)
   encryptedEmail += cipher.final(outputFormat)
