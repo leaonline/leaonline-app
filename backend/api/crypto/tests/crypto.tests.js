@@ -7,6 +7,7 @@ describe('crypto tests', () => {
     expect(UserEmail.decrypt(UserEmail.encrypt('a@a.de'))).to.equal('a@a.de')
   })
   it('check if the IV of encryption is random', () => {
-    expect(UserEmail.encrypt('a@a.de') === (UserEmail.encrypt('a@a.de'))).to.equal(false)
+    const encryptedEmailWithIV = UserEmail.encrypt('a@a.de')
+    expect(UserEmail.encrypt('a@a.de') === (encryptedEmailWithIV)).to.equal(false)
   })
 })
