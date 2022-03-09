@@ -14,8 +14,12 @@
         "flags": "gi"
       },
       "maxRetries": 50
-    },
-   "key": "12345678901234567890123456789012"
+    }
+  },
+  "crypto": {
+    "key": "12345678901234567890123456789012",
+    "algorithm": "aes-256-cbc",
+    "outputFormat": "hex"
   },
   "log": {
     "level": 2

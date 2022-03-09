@@ -20,8 +20,15 @@ const settingsSchema = schema({
         }
       }),
       maxRetries: SimpleSchema.Integer
-    }),
-    key: String
+    })
+  }),
+  crypto: schema({
+    key: {
+      type: String,
+      min: 32
+    },
+    algorithm: String,
+    outputFormat: String
   }),
   log: schema({
     level: SimpleSchema.Integer
