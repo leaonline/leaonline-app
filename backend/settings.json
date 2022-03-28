@@ -32,6 +32,11 @@
       "maxRetries": 50
     }
   },
+  "crypto": {
+    "key": "12345678901234567890123456789012",
+    "algorithm": "aes-256-cbc",
+    "outputFormat": "hex"
+  },
   "log": {
     "level": 2
   }

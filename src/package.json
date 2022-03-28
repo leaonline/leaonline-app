@@ -29,6 +29,7 @@
     "expo-crypto": "~10.0.3",
     "expo-device": "~4.0.3",
     "expo-font": "~10.0.3",
+    "expo-keep-awake": "^10.0.2",
     "expo-secure-store": "~11.0.3",
     "expo-speech": "~10.0.3",
     "expo-splash-screen": "~0.13.5",

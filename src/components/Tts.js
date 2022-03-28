@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TTSText from './TTSText'
 import Colors from '../constants/Colors'
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
+ * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
  * @param {string} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
@@ -83,10 +84,11 @@ const ttsComponent = props => {
     Speech.speak(props.text, {
       language: 'ger',
       pitch: 1,
-      rate: 1,
+      rate: props.speed || 1,
       onStart: () => {
         debug('onStart')
         startSpeak()
+        Vibration.vibrate(50)
       },
       onStopped: () => {
         debug('onStopped')
@@ -96,6 +98,7 @@ const ttsComponent = props => {
         debug('onDone')
         // TODO call stopSpeak and update tests to fix state bug
         setIsDone(true)
+        // stopSpeak()
       }
     })
   }
@@ -125,7 +128,7 @@ const ttsComponent = props => {
    */
   const displayedText = () => {
     if (!props.dontShowText) {
-      // color always detaults to secondary and align always to left
+      // color always defaults to secondary and align always to left
       const styleProps = {
         color: getIdleColor(),
         flexShrink: props.shrink || 1,
@@ -162,6 +165,7 @@ const ttsComponent = props => {
  *
  *
  * @property setSpeech {function} use to inject tts implementation
+ * @property stop {function} use to stop tts speech
  * @property isSpeaking {boolean} indicate if currently there is a
  *  speech ongoing
  * @property speakId {number} id of the target that is used for tts
@@ -172,6 +176,9 @@ const ttsComponent = props => {
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
+  },
+  stop () {
+    Speech.stop()
   },
   isSpeaking: false,
   speakId: 0,

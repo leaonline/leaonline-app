@@ -19,10 +19,14 @@ const resources = {
       text: 'Welcome to lea online'
     },
     registrationScreen: {
-      headerTitle: 'Registration',
+      headerTitle: 'Create user account',
       form: {
-        text: 'form'
-      }
+        text: 'To use the lea app, you need to create an account. However, it is completely anonymous. You can delete your account at any time.',
+        placeholder: 'Your email address',
+        register: 'Create my account now'
+      },
+      registering: 'Your account is created',
+      complete: 'Your account has been created successfully. To restore your account, you can write down the following codes. You can also retrieve the codes later in your profile.'
     },
     TandCScreen: {
       headerTitle: 'General terms and conditions',
@@ -53,7 +57,7 @@ const resources = {
     registrationScreen: {
       headerTitle: 'Nutzerkonto anlegen',
       form: {
-        text: 'Um die lea App nutzen zu können müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
+        text: 'Um die lea App nutzen zu können, müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
         placeholder: 'Ihre Email-Addresse',
         register: 'Mein Konto jetzt anlegen'
       },

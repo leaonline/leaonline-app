@@ -3,12 +3,13 @@ import { View, ActivityIndicator } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { TTSengine } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
-import Colors from '../../constants/Colors'
 import RouteButton from '../../components/RouteButton'
-import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadHomeData } from './loadHomeData'
 import { AppState } from '../../state/AppState'
+import { useKeepAwake } from 'expo-keep-awake'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import Colors from '../../constants/Colors'
 
 /**
  * @private TTS Ref
@@ -55,6 +56,7 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const HomeScreen = props => {
+  useKeepAwake()
   const { t } = useTranslation()
   const { data, error, loading } = loadDocs(loadHomeData)
 
