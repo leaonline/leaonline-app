@@ -88,5 +88,5 @@ METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
     meteor test \
         ${T_RUN_ONCE} \
         --driver-package=meteortesting:mocha \
-        --settings=settings.json \
+        --settings=testSettings.json \
         --port=${PORT}

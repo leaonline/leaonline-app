@@ -50,6 +50,15 @@ export const Confirm = props => {
   )
 }
 
+/**
+ * Allows to trigger a confirm-modal by given id from outside of a render
+ * cycle.
+ * @param id
+ */
+Confirm.triggerById = id => {
+  console.debug('trigger by id', id)
+}
+
 const styles = createStyleSheet({
   centeredView: {
     flex: 1,

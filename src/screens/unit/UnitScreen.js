@@ -77,18 +77,39 @@ const log = Log.create('UnitScreen')
  * @returns {JSX.Element}
  */
 const UnitScreen = props => {
+  useEffect(() => {
+    const didShowSub = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
+    const didHideSub = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
+
+    // cleanup function
+    return () => {
+      didShowSub.remove()
+      didHideSub.remove()
+    }
+  }, [])
+
+  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
+  const keyboardDidShow = () => setKeyboardStatus('shown')
+  const keyboardDidHide = () => setKeyboardStatus('hidden')
+
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const responseRef = useRef({})
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
 
-  // prevent backwards operations since we offer a cancel button
-  // to actively abort the current unitSet
+  // ---------------------------------------------------------------------------
+  // Prevent backwards functionality
+  // ---------------------------------------------------------------------------
+  // hitting the back-button should only be executed, when the modal has been
+  // confirmed. Otherwise we first trigger the modal.
   useEffect(() => {
     props.navigation.addListener('beforeRemove', (e) => {
+      // GO_BACK is the action type from the device's back button
+      // where we launch the modal and prevent the event from firing
       if (e.data.action.type === 'GO_BACK') {
         e.preventDefault()
+        // trigger modal
       }
     })
   }, [props.navigation])
@@ -220,6 +241,17 @@ const UnitScreen = props => {
 
   const nextPage = () => setPage(page + 1)
 
+  const renderFooter = () => {
+    if (keyboardStatus === 'shown') {
+      return null
+    }
+    return (
+      <View style={styles.navigationButtons}>
+        {renderTaskPageAction()}
+      </View>
+    )
+  }
+
   const renderTaskPageAction = () => {
     // if the page has not been checked yet we render a check-action button
     if (!showCorrectResponse) {
@@ -252,6 +284,7 @@ const UnitScreen = props => {
       <SafeAreaView style={styles.safeAreaView}>
         <Navbar>
           <Confirm
+            id='unit-screen-confirm'
             question={t('unitScreen.abort.question')}
             approveText={t('unitScreen.abort.abort')}
             denyText={t('unitScreen.abort.continue')}
@@ -265,7 +298,9 @@ const UnitScreen = props => {
             }}/>
           <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
         </Navbar>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView
+          style={styles.scrollView}
+          keyboardShouldPersistTaps='always'>
 
           {/* 1. PART STIMULI */}
           <View style={styles.elements}>
@@ -294,9 +329,7 @@ const UnitScreen = props => {
         </ScrollView>
       </SafeAreaView>
       {/* -------- continue button ---------  */}
-      <View style={styles.navigationButtons}>
-        {renderTaskPageAction()}
-      </View>
+      {renderFooter()}
     </View>
   )
 }

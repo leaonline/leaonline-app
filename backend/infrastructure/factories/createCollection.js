@@ -28,7 +28,7 @@ export const createCollection = ({ name, schema, isLocal }) => {
       collection.attachSchema(schemaInstance)
     }
 
-    LocalCollections.set(name, collection)
+    LocalCollections.add(name, collection)
 
     return collection
   }

@@ -4,9 +4,9 @@ import Colors from '../../../constants/Colors'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { ClozeTokenizer } from '../../../items/cloze/ClozeTokenizer'
 import { ClozeHelpers } from '../../../items/cloze/ClozeHelpers'
+import { UndefinedScore } from '../../../scoring/UndefinedScore'
 import { Select } from '../../Select'
 import { TTSengine } from '../../Tts'
-import { UndefinedScore } from '../../../scoring/UndefinedScore'
 
 const Tts = TTSengine.component()
 
@@ -100,11 +100,11 @@ export const ClozeRenderer = props => {
   // 2. clear all selections when the content id changes
   // which happens, for example, if we move to the next page
   useEffect(() => {
+    setEntered({})
     props.submitResponse({
       responses: tokenIndexes.map(() => UndefinedScore),
       data: props
     })
-    setEntered({})
   }, [props.contentId])
 
   // compare responses with the correct responses when
@@ -118,14 +118,16 @@ export const ClozeRenderer = props => {
     }
   }, [props.showCorrectResponse])
 
-  const renderTts = text => (<Tts text={text} dontShowText/>)
+  const renderTts = text => {
+    if (!text?.length) { return null }
+    return (<Tts text={text} dontShowText/>)
+  }
   const submitText = ({ text, index }) => {
     const update = { ...entered }
     update[index] = text
     setEntered(update)
-
     return props.submitResponse({
-      responses: tokenIndexes.map(index => update[index] || UndefinedScore),
+      responses: tokenIndexes.map(index => index in update ? update[index] : UndefinedScore),
       data: props
     })
   }
@@ -146,6 +148,7 @@ export const ClozeRenderer = props => {
             return (
               <TextInput
                 key={index}
+                value={valueToken.index in entered ? entered[valueToken.index] : null}
                 // prevent various type assistance functionalities
                 autoCorrect={false}
                 autoCapitalize='none'
@@ -176,7 +179,17 @@ export const ClozeRenderer = props => {
           }
 
           if (ClozeHelpers.isSelect(flavor)) {
-            return (<Text key={index} style={styles.token}>SELECT</Text>)
+            return (
+              <Select
+                key={index}
+                style={styles.token}
+                value={valueToken.index in entered ? entered[valueToken.index] : null}
+                options={token.value}
+                onSelect={(option, index) => submitText({
+                  text: index,
+                  index: valueToken.index
+                })} />
+            )
           }
 
           if (ClozeHelpers.isText(flavor)) {

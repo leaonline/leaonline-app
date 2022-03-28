@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Text, Pressable, Modal, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { ActionButton } from './ActionButton'
+import Colors from '../constants/Colors'
 
 /**
  * Renders a pressable element that triggers a Modal dialog with
@@ -14,61 +16,72 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  * @constructor
  */
 export const Select = props => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false)
 
+  const onSelect = (option, index) => {
+    setModalVisible(!modalVisible)
+    setTimeout(() => {
+      props.onSelect(option, index)
+    }, 250)
+  }
+
+  const label = props.value !== undefined && props.value !== null
+    ? props.options[props.value]
+    : ''
   return (
     <View>
       <Modal
         animationType="fade"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => {
-          console.debug('close modal')
-          setModalVisible(!modalVisible);
-        }}
-      >
+        transparent={true}
+        visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+            {props.options.map((option, index) => (
+              <ActionButton
+                key={index}
+                text={option}
+                onPress={() => onSelect(option, index)}/>
+            ))}
           </View>
         </View>
       </Modal>
 
-      <Pressable onPress={() => setModalVisible(true)}>
-        <Text style={props.labelStyle}>{props.label}</Text>
+      <Pressable style={styles.select} onPress={() => setModalVisible(true)}>
+        <Text style={props.labelStyle}>{label}</Text>
       </Pressable>
     </View>
   )
 }
 
-
 const styles = createStyleSheet({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
-      width: 0,
+      width: 2,
       height: 2
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOpacity: 0.5,
+    shadowRadius: 14,
     elevation: 5
+  },
+  select: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    minWidth: 50,
+    backgroundColor: Colors.gray,
+    color: Colors.light,
+    alignItems: 'center'
   },
   button: {
     borderRadius: 20,
@@ -76,18 +89,18 @@ const styles = createStyleSheet({
     elevation: 2
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: 'center'
   }
-});
+})

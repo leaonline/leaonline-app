@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor'
-import { EJSON } from 'meteor/ejson'
 import { DDP } from 'meteor/ddp'
 
 // all contexts that are part of the content server are imported here,
