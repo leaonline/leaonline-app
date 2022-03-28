@@ -1,6 +1,7 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Button } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
@@ -15,15 +16,12 @@ const Tts = TTSengine.component()
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   buttonTitle: {
     color: Colors.primary,
-    padding: 30,
-    width: '75%'
-  },
-  button: {
-    paddingTop: 5
+    width: '80%'
   },
   iconNavigation: {
     paddingBottom: 5,
@@ -44,22 +42,41 @@ const styles = StyleSheet.create({
  * @returns {JSX.Element}
  */
 export const ActionButton = props => {
+  const noTts = props.tts === false
   const ttsText = props.tts || props.text
-  return (
-    <View style={styles.body}>
+
+  const renterTts = () => {
+    if (noTts) { return null }
+    return (
       <Tts
         text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
         dontShowText
       />
-      <View style={styles.button}>
-        <Button
+    )
+  }
+
+  const renderIcon = () => {
+    if (!props.icon) { return null }
+    return (
+      <Icon
+        testID={props.iconId || 'icon-id'}
+        color={props.color || Colors.dark}
+        size={props.iconSize || 18}
+        name={props.icon}
+        type='font-awesome-5'
+      />
+    )
+  }
+  return (
+    <View style={styles.body}>
+      { renterTts() }
+      <Button
           title={props.text || props.tts}
           titleStyle={styles.buttonTitle}
-          buttonStyle={{ borderRadius: 15, paddingTop: 10 }}
+          buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
           type='outline'
           onPress={props.onPress}
-        />
-      </View>
+          icon={renderIcon()} />
     </View>
   )
 }

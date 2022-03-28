@@ -1,6 +1,8 @@
+import { Config } from '../env/Config'
+
 export const Log = {}
 
-let logLevel = 2 // default log level is 2 TODO get from config
+const logLevel = Config.debug.logLevel
 
 const allLevels = {
   debug: {

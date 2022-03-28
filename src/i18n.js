@@ -78,7 +78,21 @@ const resources = {
       title: 'Meine Erfolge'
     },
     mapScreen: {},
-    unitScreen: {},
+    unitScreen: {
+      story: {
+        continue: 'Aufgabe starten'
+      },
+      actions: {
+        check: 'Überprüfen',
+        next: 'Weiter',
+        complete: 'Zur nächsten Aufgabe'
+      },
+      abort: {
+        question: 'Willst du diese Übung wirklich abbrechen?',
+        abort:'Abbrechen',
+        continue: 'Fortsetzen'
+      }
+    },
     completeScreen: {}
   }
 }

@@ -5,6 +5,7 @@ export const Config = {}
 Config.debug = {}
 
 Config.debug.layoutBorders = () => debugLayoutBorders
+Config.debug.logLevel = 0
 
 // Default values for GlobalStyles
 

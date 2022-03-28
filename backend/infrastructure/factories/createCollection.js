@@ -1,8 +1,18 @@
 import { Mongo } from 'meteor/mongo'
 import { createSchema } from './createSchema'
+import { createCollectionFactory } from 'meteor/leaonline:collection-factory'
 import { LocalCollections } from '../../api/collections/LocalCollections'
+import { createLog } from '../log/createLog'
+
+const collectionFactory = createCollectionFactory({
+  schemaFactory: createSchema
+})
+
+const log = createLog({ name: 'createCollection' })
 
 export const createCollection = ({ name, schema, isLocal }) => {
+  log(name, { isLocal: !!isLocal })
+
   if (isLocal) {
     const existingCollection = LocalCollections.get(name)
 
@@ -18,10 +28,10 @@ export const createCollection = ({ name, schema, isLocal }) => {
       collection.attachSchema(schemaInstance)
     }
 
-    LocalCollections.set(name, collection)
+    LocalCollections.add(name, collection)
 
     return collection
   }
 
-  throw new Error('not yet implemented')
+  return collectionFactory({ name, schema })
 }

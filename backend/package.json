@@ -11,6 +11,7 @@
     "chalk": "^5.0.0",
     "dotenv": "^16.0.0",
     "meteor-node-stubs": "^1.1.0",
+    "njwt": "^1.2.0",
     "simpl-schema": "^1.12.0"
   },
   "devDependencies": {

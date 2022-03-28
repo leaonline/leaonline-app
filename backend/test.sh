@@ -25,7 +25,7 @@ Usage: $(basename $0) [OPTIONS]
 Options:
   -c              Activate code-coverage reports
   -g <RegExp>     Filter tests by a given RegExp (uses Mocha-grep)
-  -h              Show help
+  -h              Show help./github
   -o              Runs the tests only once (default is watch-mode)
   -v              Verbose mode with extra prints
 "
@@ -59,8 +59,7 @@ done
 # build paths:
 
 PROJECT_PATH=$(pwd)
-T_PACKAGE_DIRS=""
-
+T_PACKAGE_DIRS="../../lib:../../liboauth:./github"
 PORT=6519
 
 if [ "$T_VERBOSE" -eq "1" ];
@@ -89,5 +88,5 @@ METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
     meteor test \
         ${T_RUN_ONCE} \
         --driver-package=meteortesting:mocha \
-        --settings=settings.json \
+        --settings=testSettings.json \
         --port=${PORT}

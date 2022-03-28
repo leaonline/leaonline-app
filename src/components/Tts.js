@@ -12,9 +12,6 @@ let Speech = null
 const styles = StyleSheet.create({
   body: {
     flexDirection: 'row'
-  },
-  icon: {
-    paddingBottom: 120
   }
 })
 
@@ -99,6 +96,7 @@ const ttsComponent = props => {
       },
       onDone: () => {
         debug('onDone')
+        // TODO call stopSpeak and update tests to fix state bug
         setIsDone(true)
         // stopSpeak()
       }
@@ -147,7 +145,7 @@ const ttsComponent = props => {
     <View style={styles.body}>
       <Icon
         testID={props.id}
-        reverse style={styles.icon} color={iconColor}
+        reverse color={iconColor}
         size={props.smallButton ? 15 : 20} marginonPress={speak}
         name='volume-up'
         type='font-awesome-5'

@@ -105,7 +105,7 @@ const RegistrationScreen = props => {
     log('register account')
     try {
       setRegistering(true)
-      const createdUser = await createUser({ email })
+      const createdUser = await createUser({ email, override: true })
       log('new account:', createdUser && createdUser.username)
 
       if (createdUser) setUser(createdUser)

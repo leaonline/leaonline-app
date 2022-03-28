@@ -52,7 +52,7 @@ export const callMeteor = ({ name, args = undefined, prepare = undefined, receiv
  */
 const call = ({ name, args, prepare, receive }) => new Promise((resolve, reject) => {
   // inform that we are connected and about to call the server
-  if (prepare) { prepare() }
+  if (typeof prepare === 'function') { prepare() }
 
   Meteor.call(name, args, (error, result) => {
     // inform that we are have received

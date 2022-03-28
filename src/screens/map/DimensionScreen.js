@@ -1,17 +1,22 @@
 import React from 'react'
 import { Text, View } from 'react-native'
-import RouteButton from '../components/RouteButton'
-import { createStyleSheet } from '../styles/createStyleSheet'
+import RouteButton from '../../components/RouteButton'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { loadDocs } from '../../meteor/loadDocs'
+import { Loading } from '../../components/Loading'
+import { loadDimensionData } from './loadDimensionData'
+import { ColorTypeMap } from '../../constants/ColorTypeMap'
+import { Log } from '../../infrastructure/Log'
+import { AppState } from '../../state/AppState'
+import { Layout } from '../../constants/Layout'
+
+const log = Log.create('DimensionScreen')
 
 /**
  * @private stylesheet
  */
 const styles = createStyleSheet({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
+  container: Layout.containter(),
   body: {
     flex: 2,
     flexDirection: 'row'
@@ -46,15 +51,43 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const DimensionScreen = props => {
+  const docs = loadDocs(loadDimensionData)
+
+  if (!docs || docs.loading) {
+    return (
+      <Loading/>
+    )
+  }
+
+  if (docs.data === null) {
+    props.navigation.navigate('Map')
+    return null
+  }
+
+  const selectUnitSet = async unitSet => {
+    const normalized = { ...unitSet, ...{ dimension: unitSet.dimension._id } }
+    log('selected', normalized)
+    await AppState.unitSet(normalized)
+    props.navigation.navigate('Unit')
+  }
+
+  const renderDimensions = () => {
+    return docs.data.unitSets.map((unitSet, index) => {
+      const color = ColorTypeMap.get(unitSet.dimension.colorType)
+      return (
+        <RouteButton
+          key={index}
+          color={color}
+          title={unitSet.dimension.title}
+          icon={unitSet.dimension.icon}
+          handleScreen={() => selectUnitSet(unitSet)} />
+      )
+    })
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.body}>
-        <Text>DimensionScreen</Text>
-      </View>
-
-      <View style={styles.body}>
-        <Text>Dimension(/Unit) auswählen</Text>
-      </View>
+      {renderDimensions()}
 
       <View style={styles.navigationButtons}>
         <View style={styles.routeButtonContainer}>

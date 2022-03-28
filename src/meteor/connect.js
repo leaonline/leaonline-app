@@ -1,6 +1,10 @@
 import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
 import { createSchema } from '../schema/createSchema'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+// make sure connections can send/receive custom types
+import './ejson-regex'
+import { Log } from '../infrastructure/Log'
 
 // TODO move this into env config
 const maxTimeout = 10000
@@ -11,6 +15,9 @@ const argsSchema = createSchema({
     regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:-]+\/websocket$/i
   }
 })
+
+const log = Log.create('Meteor')
+
 /**
  * Connects to a Meteor server by given endpoint. Returns a Promise.
  *
@@ -25,6 +32,7 @@ const argsSchema = createSchema({
  */
 export const connectMeteor = ({ endpoint }) => {
   check({ endpoint }, argsSchema)
+  log('connect to', endpoint)
 
   return new Promise((resolve, reject) => {
     const status = Meteor.status()
@@ -34,7 +42,7 @@ export const connectMeteor = ({ endpoint }) => {
 
     // break early on any errors during connect attempt
     try {
-      Meteor.connect(endpoint)
+      Meteor.connect(endpoint, { AsyncStorage })
     } catch (e) {
       return reject(e)
     }

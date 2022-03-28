@@ -21,11 +21,14 @@ const internal = {
  * Generates the restore codes for a user in accordance to the schema definition
  *
  * @type {{
+ *  name: String,
  *  schema: function():object,
  *  generate: function():Array<string>
  * }}
  */
-export const RestoreCodes = {}
+export const RestoreCodes = {
+  name: 'restoreCodes'
+}
 
 /**
  * Returns the restore-codes schema, to be used for validation.
