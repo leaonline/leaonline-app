@@ -24,6 +24,8 @@ import './registerComponents'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
+import { Dimension } from '../../contexts/Dimension'
+import { ColorTypeMap } from '../../constants/ColorTypeMap'
 
 /**
  * @private stylesheet
@@ -97,6 +99,16 @@ const UnitScreen = props => {
   const responseRef = useRef({})
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
+  const dimensionColor = '#d95a7d'
+
+  // const dimensionId = docs.data.unitSetDoc.dimension
+  // console.log(dimensionId)
+  // const dimensionCollection = Dimension.collection().findOne(dimensionId)
+  // console.log(dimensionCollection)
+  // const dimensionColorNumber = dimensionCollection.colorType
+  // console.log(dimensionColorNumber)
+  // const dimensionColor = ColorTypeMap.get(dimensionColorNumber)
+  // console.log(dimensionColor)
 
   // ---------------------------------------------------------------------------
   // Prevent backwards functionality
@@ -173,7 +185,21 @@ const UnitScreen = props => {
       }
 
       return (
-        <UnitContentElementFactory.Renderer key={index} {...elementData} />)
+        <View style={{marginRight: 40,
+          marginLeft: 40,
+          marginTop: 10,
+          paddingTop: 20,
+          paddingBottom: 20,
+          backgroundColor: 'white',
+          borderRadius: 10,
+          borderColor: '#fff',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 2,
+          elevation: 0.5}}>
+          <UnitContentElementFactory.Renderer key={index} {...elementData} />
+        </View>)
     })
   }
 
@@ -193,7 +219,6 @@ const UnitScreen = props => {
   // we have a story to render, let's do it right now
   if (!unitDoc && !sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
     log('render story', unitSetDoc.shortCode)
-
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
@@ -206,7 +231,7 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <View style={styles.navigationButtons}>
-          <ActionButton tts={t('unitScreen.story.continue')} onPress={finish}/>
+          <ActionButton tts={t('unitScreen.story.continue')} color={dimensionColor} onPress={finish}/>
         </View>
       </View>
     )
@@ -257,7 +282,7 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.actions.check')} onPress={checkScore}/>
+        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor} onPress={checkScore}/>
       )
     }
 
@@ -269,13 +294,13 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.actions.next')} onPress={nextPage}/>
+        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor} onPress={nextPage}/>
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.actions.complete')} onPress={finish}/>
+      <ActionButton tts={t('unitScreen.actions.complete')} color={dimensionColor} onPress={finish}/>
     )
   }
 

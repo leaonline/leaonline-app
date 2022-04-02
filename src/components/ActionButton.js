@@ -19,10 +19,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
-  buttonTitle: {
-    color: Colors.primary,
-    width: '80%'
-  },
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
@@ -49,7 +45,7 @@ export const ActionButton = props => {
     if (noTts) { return null }
     return (
       <Tts
-        text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
+        text={ttsText} color={props.color || Colors.primary} id={`${ttsText}-tts`}
         dontShowText
       />
     )
@@ -72,7 +68,7 @@ export const ActionButton = props => {
       { renterTts() }
       <Button
           title={props.text || props.tts}
-          titleStyle={styles.buttonTitle}
+          titleStyle={{ color: props.color || Colors.primary, width: '80%' }}
           buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
           type='outline'
           onPress={props.onPress}

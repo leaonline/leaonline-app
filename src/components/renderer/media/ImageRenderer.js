@@ -17,7 +17,7 @@ const styles = createStyleSheet({
 
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
-  const urlReplaced = props.value.replace('https://content.lealernen.de', 'http://192.168.178.49:3030')
+  const urlReplaced = props.value.replace('https://content.lealernen.de', 'http://192.168.178.75:3030')
   const imageProps = {
     source: { uri: urlReplaced },
     onError: (event) => {
