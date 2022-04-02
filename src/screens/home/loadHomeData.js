@@ -24,7 +24,6 @@ export const loadHomeData = async () => {
     const homeData = await callMeteor({ name: 'content.methods.home', args })
     if (!homeData) { return fallback() }
 
-
     for (const { name, newHash } of toSync) {
       const docs = homeData[name]
       await Sync.updateCollection({ docs, name, newHash })

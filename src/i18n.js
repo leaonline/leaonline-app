@@ -42,7 +42,21 @@ const resources = {
       title: 'My successes'
     },
     mapScreen: {},
-    unitScreen: {},
+    unitScreen: {
+      story: {
+        continue: 'Start task'
+      },
+      actions: {
+        check: 'Check',
+        next: 'Continue',
+        complete: 'Go to next task'
+      },
+      abort: {
+        question: 'Do you really want to abort this exercise?',
+        abort: 'Cancel',
+        continue: 'Continue'
+      }
+    },
     completeScreen: {}
   },
   de: {
@@ -89,7 +103,7 @@ const resources = {
       },
       abort: {
         question: 'Willst du diese Übung wirklich abbrechen?',
-        abort:'Abbrechen',
+        abort: 'Abbrechen',
         continue: 'Fortsetzen'
       }
     },

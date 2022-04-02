@@ -7,7 +7,6 @@ import { loadDocs } from '../../meteor/loadDocs'
 import { loadMapData } from './loadMapData'
 import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
-import Colors from '../../constants/Colors'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
 
@@ -30,7 +29,7 @@ const styles = createStyleSheet({
     flex: 1,
     paddingTop: 50,
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   navigationButtons: {
     flexDirection: 'row'
@@ -68,7 +67,7 @@ const MapScreen = props => {
 
   if (!docs || docs.loading) {
     return (
-      <Loading/>
+      <Loading />
     )
   }
 
@@ -121,7 +120,7 @@ const MapScreen = props => {
    */
 
   const renderStages = () => {
-    if (!mapData) return (<Loading/>)
+    if (!mapData) return (<Loading />)
     return mapData.entries.map((entry, index) => {
       if (entry.type === 'stage') {
         return renderStage(entry, index)
@@ -144,14 +143,14 @@ const MapScreen = props => {
           <Text>Complete: 0 / {stage.progress}</Text>
         </View>
         <View style={styles.body}>{renderUnitSets(stage.unitSets)}</View>
-        <RouteButton title={index + 1} icon={'edit'} handleScreen={() => selectStage(stage)} />
+        <RouteButton title={index + 1} icon='edit' handleScreen={() => selectStage(stage)} />
       </View>
     )
   }
 
   const renderMilestone = (milestone, index) => {
     return (
-      <RouteButton title={'Milestones'} icon={'edit'} key={`entry-${index}`} handleScreen={() => {}} />
+      <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
     )
   }
 
@@ -172,9 +171,9 @@ const MapScreen = props => {
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView style={styles.scrollView}>
-        <View style={styles.buttons}>
-          {renderStages()}
-        </View>
+          <View style={styles.buttons}>
+            {renderStages()}
+          </View>
         </ScrollView>
       </SafeAreaView>
       <View style={styles.navigationButtons}>

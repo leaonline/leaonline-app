@@ -5,12 +5,12 @@ import Colors from '../constants/Colors'
 
 const Tts = TTSengine.component()
 
-export const Loading = ({ text  }) => {
+export const Loading = ({ text }) => {
   const renderText = () => {
     if (!text) return null
 
     return (
-      <Tts text={text}  />
+      <Tts text={text} />
     )
   }
   return (

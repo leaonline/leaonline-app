@@ -25,7 +25,7 @@ import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
 import { Dimension } from '../../contexts/Dimension'
-import { ColorTypeMap } from '../../constants/ColorTypeMap'
+// import { ColorTypeMap } from '../../constants/ColorTypeMap'
 
 /**
  * @private stylesheet
@@ -43,7 +43,7 @@ const styles = createStyleSheet({
   safeAreaView: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   elements: {
     alignItems: 'center',
@@ -56,7 +56,7 @@ const styles = createStyleSheet({
     width: '100%',
     flex: 1,
     alignItems: 'center'
-  },
+  }
 })
 
 const log = Log.create('UnitScreen')
@@ -127,7 +127,7 @@ const UnitScreen = props => {
   }, [props.navigation])
 
   if (!docs || docs.loading) {
-    return (<Loading/>)
+    return (<Loading />)
   }
 
   if (docs.data === null) {
@@ -152,8 +152,7 @@ const UnitScreen = props => {
 
     if (!dimensionRoute) {
       props.navigation.navigate('Dimension')
-    }
-    else {
+    } else {
       props.navigation.navigate({ key: dimensionRoute.key })
     }
   }
@@ -178,14 +177,16 @@ const UnitScreen = props => {
           <KeyboardAvoidingView
             key={index}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}>
+            style={styles.container}
+          >
             <UnitContentElementFactory.Renderer {...elementData} />
           </KeyboardAvoidingView>
         )
       }
 
       return (
-        <View style={{marginRight: 40,
+        <View style={{
+          marginRight: 40,
           marginLeft: 40,
           marginTop: 10,
           paddingTop: 20,
@@ -197,9 +198,12 @@ const UnitScreen = props => {
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.8,
           shadowRadius: 2,
-          elevation: 0.5}}>
+          elevation: 0.5
+        }}
+        >
           <UnitContentElementFactory.Renderer key={index} {...elementData} />
-        </View>)
+        </View>
+      )
     })
   }
 
@@ -231,7 +235,7 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <View style={styles.navigationButtons}>
-          <ActionButton tts={t('unitScreen.story.continue')} color={dimensionColor} onPress={finish}/>
+          <ActionButton tts={t('unitScreen.story.continue')} color={dimensionColor} onPress={finish} />
         </View>
       </View>
     )
@@ -282,7 +286,7 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor} onPress={checkScore}/>
+        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor} onPress={checkScore} />
       )
     }
 
@@ -294,13 +298,13 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor} onPress={nextPage}/>
+        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor} onPress={nextPage} />
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.actions.complete')} color={dimensionColor} onPress={finish}/>
+      <ActionButton tts={t('unitScreen.actions.complete')} color={dimensionColor} onPress={finish} />
     )
   }
 
@@ -320,12 +324,14 @@ const UnitScreen = props => {
               borderRadius: 2,
               borderWidth: 1,
               borderColor: Colors.dark
-            }}/>
-          <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+            }}
+          />
+          <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
         </Navbar>
         <ScrollView
           style={styles.scrollView}
-          keyboardShouldPersistTaps='always'>
+          keyboardShouldPersistTaps='always'
+        >
 
           {/* 1. PART STIMULI */}
           <View style={styles.elements}>

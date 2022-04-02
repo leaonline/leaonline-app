@@ -36,6 +36,6 @@ class EJSONRegExp extends RegExp {
 Meteor.EJSON.addType('RegExp', value => new RegExp(value.regex, value.options))
 console.debug(Meteor.EJSON.stringify({ r: /abcd+/g }))
 console.debug(Meteor.EJSON.parse(JSON.stringify({
-  "EJSON$flags": "i",
-  "EJSON$regexp": "er",
+  EJSON$flags: 'i',
+  EJSON$regexp: 'er'
 })))

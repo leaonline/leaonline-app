@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
@@ -55,7 +55,7 @@ const DimensionScreen = props => {
 
   if (!docs || docs.loading) {
     return (
-      <Loading/>
+      <Loading />
     )
   }
 
@@ -80,7 +80,8 @@ const DimensionScreen = props => {
           color={color}
           title={unitSet.dimension.title}
           icon={unitSet.dimension.icon}
-          handleScreen={() => selectUnitSet(unitSet)} />
+          handleScreen={() => selectUnitSet(unitSet)}
+        />
       )
     })
   }

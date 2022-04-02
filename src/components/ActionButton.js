@@ -1,7 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import { Button } from 'react-native-elements'
-import { Icon } from 'react-native-elements'
+import { StyleSheet, View } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
@@ -65,14 +64,15 @@ export const ActionButton = props => {
   }
   return (
     <View style={styles.body}>
-      { renterTts() }
+      {renterTts()}
       <Button
-          title={props.text || props.tts}
-          titleStyle={{ color: props.color || Colors.primary, width: '80%' }}
-          buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
-          type='outline'
-          onPress={props.onPress}
-          icon={renderIcon()} />
+        title={props.text || props.tts}
+        titleStyle={{ color: props.color || Colors.primary, width: '80%' }}
+        buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
+        type='outline'
+        onPress={props.onPress}
+        icon={renderIcon()}
+      />
     </View>
   )
 }

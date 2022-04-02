@@ -12,7 +12,7 @@ const Tts = TTSengine.component()
 
 const styles = createStyleSheet({
   container: {
-    width: '100%',
+    width: '100%'
   },
   ttsContainer: {
     width: '100%',
@@ -30,17 +30,17 @@ const styles = createStyleSheet({
     flexWrap: 'wrap'
   },
   tokenWrap: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   select: {
-    backgroundColor: '#f0a',
+    backgroundColor: '#f0a'
   },
   selectItem: {
     padding: 5,
     fontSize: 18,
     fontFamily: 'semicolon',
     color: Colors.dark,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   token: {
     padding: 5,
@@ -120,7 +120,7 @@ export const ClozeRenderer = props => {
 
   const renderTts = text => {
     if (!text?.length) { return null }
-    return (<Tts text={text} dontShowText/>)
+    return (<Tts text={text} dontShowText />)
   }
   const submitText = ({ text, index }) => {
     const update = { ...entered }
@@ -152,15 +152,15 @@ export const ClozeRenderer = props => {
                 // prevent various type assistance functionalities
                 autoCorrect={false}
                 autoCapitalize='none'
-                contextMenuHidden={true}
+                contextMenuHidden
                 importantForAutofill='no' // android
-                textContentType='none'    // ios
+                textContentType='none' // ios
                 spellCheck={false}
 
                 // appearance
                 maxLength={maxLength}
                 multiline={isMultiline}
-                blurOnSubmit={true}
+                blurOnSubmit
                 style={styles.input}
                 // selectionColor
 
@@ -170,7 +170,8 @@ export const ClozeRenderer = props => {
                 onEndEditing={e => {
                   const { text } = e.nativeEvent
                   submitText({ text, index: valueToken.index })
-                }}/>
+                }}
+              />
             )
           }
 
@@ -188,7 +189,8 @@ export const ClozeRenderer = props => {
                 onSelect={(option, index) => submitText({
                   text: index,
                   index: valueToken.index
-                })} />
+                })}
+              />
             )
           }
 
@@ -215,7 +217,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break}/>)
+            return (<View key={index} style={styles.break} />)
           }
 
           // token can be blanks, selects, empties and text

@@ -10,11 +10,11 @@ const groupPattern = /[{}]+/g
 const whiteSpace = /^\s+$/
 
 const Tts = TTSengine.component()
-const tokenCache = new  Map()
+const tokenCache = new Map()
 
 const styles = createStyleSheet({
   container: {
-    width: '100%',
+    width: '100%'
   },
   ttsContainer: {
     width: '100%',
@@ -23,20 +23,20 @@ const styles = createStyleSheet({
   comparecontainer: {
     width: '100%',
     flexDirection: 'row',
-    flexWrap: "wrap",
+    flexWrap: 'wrap',
     marginTop: 5
   },
   tokenContainer: {
     width: '100%',
     flexDirection: 'row',
-    flexWrap: "wrap"
+    flexWrap: 'wrap'
   },
   token: {
     padding: 5,
     fontSize: 18,
     fontFamily: 'semicolon',
     color: Colors.dark,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   selected: {
     backgroundColor: Colors.primary,
@@ -78,9 +78,8 @@ export const HighlightRenderer = props => {
 
       // part 1 - check if all correct ones were selected
       correctResponses.forEach(index => {
-
         result[index] = selected[index] === true
-          ? 1  // right
+          ? 1 // right
           : -1 // missing
       })
 
@@ -94,7 +93,6 @@ export const HighlightRenderer = props => {
       setCompared(result)
     }
   }, [props.showCorrectResponse])
-
 
   // tokenize the text to processable elements
   const { contentId, value } = props
@@ -164,7 +162,7 @@ export const HighlightRenderer = props => {
       <View style={styles.ttsContainer}>
         <Tts text={readableText} dontShowText />
       </View>
-    )
+      )
     : null
 
   // if we are in compared mode, we should add the three possible
@@ -177,7 +175,7 @@ export const HighlightRenderer = props => {
     const missing = []
 
     Object.entries(compared).forEach(([index, value]) => {
-      switch(value) {
+      switch (value) {
         case 0: wrong.push(index)
           break
         case 1: right.push(index)

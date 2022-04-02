@@ -61,7 +61,7 @@ const RouteButton = props => {
    * Only displays the icon if "onlyIcon" is true.
    */
   const renderRouteButton = () => {
-    const titleStyle = { ...styles.buttonTitle, ...{ color }}
+    const titleStyle = { ...styles.buttonTitle, ...{ color } }
     const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color }
 
     if (!props.onlyIcon) {
@@ -74,7 +74,8 @@ const RouteButton = props => {
               title={props.title}
               titleStyle={titleStyle}
               buttonStyle={buttonStyle}
-              type='outline' onPress={props.handleScreen} />
+              type='outline' onPress={props.handleScreen}
+            />
           </View>
         </View>
       )

@@ -20,12 +20,10 @@ const KEYS = {
   UNIT: createKey('uni'),
   DIMENSION: createKey('dimension'),
   LEVEL: createKey('level'),
-  STAGE: createKey('level'),
+  STAGE: createKey('level')
 }
 
-
 let storage = null
-
 
 const updateSingle = async (key, value) => {
   if (!storage) {
@@ -52,7 +50,6 @@ const updateSingle = async (key, value) => {
     return await storage.getItem(key)
   }
 }
-
 
 AppState.init = async (storageImpl) => {
   storage = storageImpl

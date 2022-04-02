@@ -31,16 +31,18 @@ export const Select = props => {
   return (
     <View>
       <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}>
+        animationType='fade'
+        transparent
+        visible={modalVisible}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {props.options.map((option, index) => (
               <ActionButton
                 key={index}
                 text={option}
-                onPress={() => onSelect(option, index)}/>
+                onPress={() => onSelect(option, index)}
+              />
             ))}
           </View>
         </View>
@@ -89,10 +91,10 @@ const styles = createStyleSheet({
     elevation: 2
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: '#F194FF'
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#2196F3'
   },
   textStyle: {
     color: 'white',

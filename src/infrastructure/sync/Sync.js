@@ -97,7 +97,7 @@ Sync.updateCollection = async ({ name, docs, newHash, remove = false }) => {
 
   if (remove) {
     const docsIds = docs.map(d => d._id)
-    updated.removed = collection.remove({ _id: { $nin: docsIds} })
+    updated.removed = collection.remove({ _id: { $nin: docsIds } })
   }
 
   // if everything went okay, we can update the hash and tag the
@@ -129,13 +129,11 @@ const update = (collection, docs) => {
       result = collection.update({ _id: doc._id }, { $set: doc })
       updated++
       debug('updated doc', result)
-    }
-    else {
+    } else {
       result = collection.insert(doc)
       inserted++
       debug('inserted doc', result)
     }
-
   })
 
   return { inserted, updated, removed: 0 }
@@ -148,7 +146,7 @@ const updateHash = (name, hash) => {
   const updatedAt = new Date()
 
   const result = collection.find({ name }).count() > 0
-    ? collection.update({ name }, { $set: { hash, updatedAt }})
+    ? collection.update({ name }, { $set: { hash, updatedAt } })
     : collection.insert({ name, hash, updatedAt })
 
   debug('update hash', name, result)

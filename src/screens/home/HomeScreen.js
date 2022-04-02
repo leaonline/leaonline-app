@@ -64,7 +64,7 @@ const HomeScreen = props => {
     if (loading) {
       return (
         <View>
-          <ActivityIndicator size='large' color={Colors.secondary}/>
+          <ActivityIndicator size='large' color={Colors.secondary} />
         </View>
       )
     }
@@ -95,8 +95,10 @@ const HomeScreen = props => {
   const renderButtons = () => {
     return (data || []).map((item, key) => {
       return (
-        <RouteButton title={item.title} icon={item.icon} key={key}
-                     handleScreen={() => selectField(item)}/>
+        <RouteButton
+          title={item.title} icon={item.icon} key={key}
+          handleScreen={() => selectField(item)}
+        />
       )
     })
   }
@@ -104,13 +106,17 @@ const HomeScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Icon name='user' type='font-awesome-5' color={Colors.gray} reverse
-              style size={17}
-              onPress={() => props.navigation.navigate('Profile')}/>
+        <Icon
+          name='user' type='font-awesome-5' color={Colors.gray} reverse
+          style size={17}
+          onPress={() => props.navigation.navigate('Profile')}
+        />
       </View>
       <View style={styles.header}>
-        <Tts text={t('homeScreen.text')} color={Colors.secondary}
-             id='homeScreen.text'/>
+        <Tts
+          text={t('homeScreen.text')} color={Colors.secondary}
+          id='homeScreen.text'
+        />
       </View>
 
       <View style={styles.body}>

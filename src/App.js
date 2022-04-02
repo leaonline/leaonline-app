@@ -116,7 +116,7 @@ export default function App () {
 
   return (
     <View style={styles.screen}>
-      <Navigator loggedIn={!!loggedIn()}/>
+      <Navigator loggedIn={!!loggedIn()} />
     </View>
   )
 }
