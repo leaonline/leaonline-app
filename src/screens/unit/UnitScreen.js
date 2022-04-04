@@ -24,8 +24,7 @@ import './registerComponents'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
-import { Dimension } from '../../contexts/Dimension'
-// import { ColorTypeMap } from '../../constants/ColorTypeMap'
+import { getDimensionColor } from './getDimensionColor'
 
 /**
  * @private stylesheet
@@ -99,16 +98,6 @@ const UnitScreen = props => {
   const responseRef = useRef({})
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
-  const dimensionColor = '#d95a7d'
-
-  // const dimensionId = docs.data.unitSetDoc.dimension
-  // console.log(dimensionId)
-  // const dimensionCollection = Dimension.collection().findOne(dimensionId)
-  // console.log(dimensionCollection)
-  // const dimensionColorNumber = dimensionCollection.colorType
-  // console.log(dimensionColorNumber)
-  // const dimensionColor = ColorTypeMap.get(dimensionColorNumber)
-  // console.log(dimensionColor)
 
   // ---------------------------------------------------------------------------
   // Prevent backwards functionality
@@ -126,6 +115,10 @@ const UnitScreen = props => {
     })
   }, [props.navigation])
 
+  // ---------------------------------------------------------------------------
+  // skip early until docs are fully loaded
+  // ---------------------------------------------------------------------------
+
   if (!docs || docs.loading) {
     return (<Loading />)
   }
@@ -137,6 +130,7 @@ const UnitScreen = props => {
 
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
   const showCorrectResponse = scored === page
+  const dimensionColor = getDimensionColor(unitSetDoc.dimension)
 
   // ---------------------------------------------------------------------------
   // ALL STATES
