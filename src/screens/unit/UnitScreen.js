@@ -161,8 +161,11 @@ const UnitScreen = props => {
 
   const renderContent = (list) => {
     if (!list?.length) { return null }
+
     return list.map((element, index) => {
       const elementData = { ...element }
+      elementData.dimensionColor = dimensionColor
+
       if (element.type === 'item') {
         elementData.submitResponse = submitResponse
         elementData.showCorrectResponse = showCorrectResponse
@@ -179,7 +182,7 @@ const UnitScreen = props => {
       }
 
       return (
-        <View style={{
+        <View key={index} style={{
           marginRight: 40,
           marginLeft: 40,
           marginTop: 10,

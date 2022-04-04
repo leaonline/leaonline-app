@@ -16,6 +16,7 @@ import Colors from '../constants/Colors'
  * @constructor
  */
 export const Select = props => {
+  const { color } = props
   const [modalVisible, setModalVisible] = useState(false)
 
   const onSelect = (option, index) => {
@@ -41,6 +42,7 @@ export const Select = props => {
               <ActionButton
                 key={index}
                 text={option}
+                color={color}
                 onPress={() => onSelect(option, index)}
               />
             ))}

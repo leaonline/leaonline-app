@@ -88,7 +88,7 @@ const styles = createStyleSheet({
 })
 
 export const ClozeRenderer = props => {
-  const { contentId, value } = props
+  const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
   const [compared, setCompared] = useState({})
   const { isTable, hasTableBorder = true, scoring } = value
@@ -120,7 +120,7 @@ export const ClozeRenderer = props => {
 
   const renderTts = text => {
     if (!text?.length) { return null }
-    return (<Tts text={text} dontShowText />)
+    return (<Tts color={dimensionColor} text={text} dontShowText />)
   }
   const submitText = ({ text, index }) => {
     const update = { ...entered }
@@ -148,6 +148,9 @@ export const ClozeRenderer = props => {
             return (
               <TextInput
                 key={index}
+                placeholderTextColor={dimensionColor}
+                selectionColor={dimensionColor}
+
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
                 // prevent various type assistance functionalities
                 autoCorrect={false}
@@ -183,6 +186,7 @@ export const ClozeRenderer = props => {
             return (
               <Select
                 key={index}
+                color={dimensionColor}
                 style={styles.token}
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
                 options={token.value}

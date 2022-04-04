@@ -61,6 +61,7 @@ const styles = createStyleSheet({
 })
 
 export const HighlightRenderer = props => {
+  const { dimensionColor } = props
   const { t } = useTranslation()
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
@@ -124,7 +125,10 @@ export const HighlightRenderer = props => {
       const tokenStyle = { ...styles.token }
 
       if (selected[index]) {
-        Object.assign(tokenStyle, styles.selected)
+        Object.assign(tokenStyle, {
+          backgroundColor: dimensionColor || Colors.primary,
+          color: Colors.light
+        })
       }
 
       if (props.showCorrectResponse) {
@@ -160,7 +164,7 @@ export const HighlightRenderer = props => {
   const renderTts = () => tts
     ? (
       <View style={styles.ttsContainer}>
-        <Tts text={readableText} dontShowText />
+        <Tts color={dimensionColor} text={readableText} dontShowText />
       </View>
       )
     : null
