@@ -55,6 +55,24 @@ const styles = createStyleSheet({
     width: '100%',
     flex: 1,
     alignItems: 'center'
+  },
+  unitCard: {
+    width: '90%',
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderColor: '#fff',
+    // dropshadow - ios only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 1,
+    // dropshadow - android only
+    elevation: 0.5
   }
 })
 
@@ -182,21 +200,7 @@ const UnitScreen = props => {
       }
 
       return (
-        <View key={index} style={{
-          marginRight: 40,
-          marginLeft: 40,
-          marginTop: 10,
-          paddingTop: 20,
-          paddingBottom: 20,
-          backgroundColor: 'white',
-          borderRadius: 10,
-          borderColor: '#fff',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.8,
-          shadowRadius: 2,
-          elevation: 0.5
-        }}
+        <View key={index} style={styles.unitCard}
         >
           <UnitContentElementFactory.Renderer key={index} {...elementData} />
         </View>
