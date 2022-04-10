@@ -12,7 +12,22 @@ const Tts = TTSengine.component()
 
 const styles = createStyleSheet({
   container: {
-    width: '100%'
+    width: '90%',
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderColor: '#fff',
+    // dropshadow - ios only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 1,
+    // dropshadow - android only
+    elevation: 0.5
   },
   ttsContainer: {
     width: '100%',
