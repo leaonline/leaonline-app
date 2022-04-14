@@ -1,5 +1,4 @@
 import { toInteger } from '../../utils/toInteger'
-import { isSafeInteger } from '../../utils/isSafeInteger'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 import { Scoring } from '../../scoring/Scoring'
 

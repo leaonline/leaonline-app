@@ -1,7 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import { Button } from 'react-native-elements'
-import { Icon } from 'react-native-elements'
+import { StyleSheet, View } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import { TTSengine } from '../components/Tts'
 import Colors from '../constants/Colors'
 
@@ -18,10 +17,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  buttonTitle: {
-    color: Colors.primary,
-    width: '80%'
   },
   iconNavigation: {
     paddingBottom: 5,
@@ -49,7 +44,7 @@ export const ActionButton = props => {
     if (noTts) { return null }
     return (
       <Tts
-        text={ttsText} color={Colors.primary} id={`${ttsText}-tts`}
+        text={ttsText} color={props.color || Colors.primary} id={`${ttsText}-tts`}
         dontShowText
       />
     )
@@ -69,14 +64,15 @@ export const ActionButton = props => {
   }
   return (
     <View style={styles.body}>
-      { renterTts() }
+      {renterTts()}
       <Button
-          title={props.text || props.tts}
-          titleStyle={styles.buttonTitle}
-          buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
-          type='outline'
-          onPress={props.onPress}
-          icon={renderIcon()} />
+        title={props.text || props.tts}
+        titleStyle={{ color: props.color || Colors.primary, width: '80%' }}
+        buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
+        type='outline'
+        onPress={props.onPress}
+        icon={renderIcon()}
+      />
     </View>
   )
 }

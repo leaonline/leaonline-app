@@ -54,7 +54,6 @@ Scoring.register({
   scoreFn: scoreCloze
 })
 
-
 // choice
 
 UnitContentElementFactory.register({

@@ -25,7 +25,7 @@ export const loadMapData = async () => {
     prepare: () => debug(methodName, 'start request'),
     receive: () => debug(methodName, 'received response'),
     success: () => debug(methodName, 'response valid'),
-    failure: error => debug(methodName, 'response invalid', error.message),
+    failure: error => debug(methodName, 'response invalid', error.message)
   })
 
   const hasData = !!mapData

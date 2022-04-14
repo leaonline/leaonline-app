@@ -2,8 +2,10 @@ import Colors from './Colors'
 
 export const ColorTypeMap = {}
 
+ColorTypeMap.has = num => num >= 0 && num <= 7
+
 ColorTypeMap.get = num => {
-  switch(num) {
+  switch (num) {
     case 0: return Colors.primary
     case 1: return Colors.secondary
     case 2: return Colors.success

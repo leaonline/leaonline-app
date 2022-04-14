@@ -12,7 +12,22 @@ const Tts = TTSengine.component()
 
 const styles = createStyleSheet({
   container: {
-    width: '100%',
+    width: '90%',
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderColor: '#fff',
+    // dropshadow - ios only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 1,
+    // dropshadow - android only
+    elevation: 0.5
   },
   ttsContainer: {
     width: '100%',
@@ -30,17 +45,17 @@ const styles = createStyleSheet({
     flexWrap: 'wrap'
   },
   tokenWrap: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   select: {
-    backgroundColor: '#f0a',
+    backgroundColor: '#f0a'
   },
   selectItem: {
     padding: 5,
     fontSize: 18,
     fontFamily: 'semicolon',
     color: Colors.dark,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   token: {
     padding: 5,
@@ -88,10 +103,10 @@ const styles = createStyleSheet({
 })
 
 export const ClozeRenderer = props => {
-  const { contentId, value } = props
+  const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
-  const [compared, setCompared] = useState({})
-  const { isTable, hasTableBorder = true, scoring } = value
+  const [, setCompared] = useState({})
+  // const { isTable, hasTableBorder = true, scoring } = value
   const { tokens, tokenIndexes } = tokenize({ contentId, value })
 
   // on contentId changed
@@ -112,7 +127,7 @@ export const ClozeRenderer = props => {
   useEffect(() => {
     if (props.showCorrectResponse) {
       // TODO get correct responses
-      const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
+      // const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
       const result = {}
       setCompared(result)
     }
@@ -120,7 +135,7 @@ export const ClozeRenderer = props => {
 
   const renderTts = text => {
     if (!text?.length) { return null }
-    return (<Tts text={text} dontShowText/>)
+    return (<Tts color={dimensionColor} text={text} dontShowText />)
   }
   const submitText = ({ text, index }) => {
     const update = { ...entered }
@@ -148,29 +163,30 @@ export const ClozeRenderer = props => {
             return (
               <TextInput
                 key={index}
+                placeholderTextColor={dimensionColor}
+                selectionColor={dimensionColor}
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
                 // prevent various type assistance functionalities
                 autoCorrect={false}
                 autoCapitalize='none'
-                contextMenuHidden={true}
+                contextMenuHidden
                 importantForAutofill='no' // android
-                textContentType='none'    // ios
+                textContentType='none' // ios
                 spellCheck={false}
-
                 // appearance
                 maxLength={maxLength}
                 multiline={isMultiline}
-                blurOnSubmit={true}
+                blurOnSubmit
                 style={styles.input}
                 // selectionColor
-
                 // keyboard
                 returnKeyType='done'
                 keyboardType='visible-password'
                 onEndEditing={e => {
                   const { text } = e.nativeEvent
                   submitText({ text, index: valueToken.index })
-                }}/>
+                }}
+              />
             )
           }
 
@@ -182,13 +198,15 @@ export const ClozeRenderer = props => {
             return (
               <Select
                 key={index}
+                color={dimensionColor}
                 style={styles.token}
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
                 options={token.value}
                 onSelect={(option, index) => submitText({
                   text: index,
                   index: valueToken.index
-                })} />
+                })}
+              />
             )
           }
 
@@ -215,7 +233,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break}/>)
+            return (<View key={index} style={styles.break} />)
           }
 
           // token can be blanks, selects, empties and text
@@ -242,7 +260,7 @@ export const ClozeRenderer = props => {
 }
 
 const cache = new Map()
-const CELL_SKIP = '<<>>'
+// const CELL_SKIP = '<<>>'
 
 const tokenize = ({ contentId, value }) => {
   if (!cache.has(contentId)) {

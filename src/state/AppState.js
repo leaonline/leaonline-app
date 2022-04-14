@@ -20,39 +20,32 @@ const KEYS = {
   UNIT: createKey('uni'),
   DIMENSION: createKey('dimension'),
   LEVEL: createKey('level'),
-  STAGE: createKey('level'),
+  STAGE: createKey('level')
 }
 
-
 let storage = null
-
 
 const updateSingle = async (key, value) => {
   if (!storage) {
     throw new Error('appState.noStorage')
   }
 
-  // by passing a null-value, we actually remove the item
   if (value === null) {
+    // by passing a null-value, we actually remove the item
     debug(key, 'remove item')
     await storage.removeItem(key)
     return undefined
-  }
-
-  // by passing an undefined value
-  else if (value !== undefined) {
+  } else if (value !== undefined) {
+    // by passing an undefined value
     debug(key, 'set new value')
     await storage.setItem(key, value)
     return value
-  }
-
-  // for undefined values we return the stored value
-  else {
+  } else {
+    // for undefined values we return the stored value
     debug(key, 'get item')
     return await storage.getItem(key)
   }
 }
-
 
 AppState.init = async (storageImpl) => {
   storage = storageImpl

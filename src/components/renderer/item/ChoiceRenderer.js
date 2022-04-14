@@ -1,8 +1,7 @@
-import Checkbox from 'expo-checkbox';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
 
 export const ChoiceRenderer = props => {
   console.debug('choice', props)
-  return null
+  const noop = () => null
+  return (<>{noop()}</>)
 }

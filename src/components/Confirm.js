@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, Modal } from 'react-native'
+import { View, Modal } from 'react-native'
 import { ActionButton } from './ActionButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { TTSengine } from './Tts'
@@ -29,23 +29,23 @@ export const Confirm = props => {
   return (
     <>
       <Modal
-        animationType="fade"
+        animationType='fade'
         transparent={false}
         visible={modalOpen}
-        onRequestClose={() => {setModalOpen(!false)}}
+        onRequestClose={() => { setModalOpen(!false) }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {renderQuestion()}
 
             <View style={styles.footer}>
-              { renderApprove() }
-              { renderDeny() }
+              {renderApprove()}
+              {renderDeny()}
             </View>
           </View>
         </View>
       </Modal>
-      <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)}/>
+      <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)} />
     </>
   )
 }

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { getCollection } from '../../api/utils/getCollection'
 import { UnitSet } from '../content/UnitSet'
 import { Unit } from '../content/Unit'
@@ -51,7 +52,7 @@ Session.schema = {
   continuedAt: {
     type: Date,
     optional: true
-  },
+  }
 }
 
 Session.create = ({ userId, unitSetDoc }) => {
@@ -93,10 +94,6 @@ const getNextUnitId = ({ unitId, units = [] }) => {
   return units[index + 1]
 }
 
-const getUnitValues = ({ unitDoc }) => {
-
-}
-
 Session.get = ({ unitSet, userId }) => {
   log('get', { unitSet, userId })
   const unitSetDoc = getCollection(UnitSet.name).findOne(unitSet)
@@ -104,7 +101,7 @@ Session.get = ({ unitSet, userId }) => {
 
   let sessionDoc = getCollection(Session.name).findOne(sessionQuery)
 
-    // if we have no sessionDoc we need to create a new session!
+  // if we have no sessionDoc we need to create a new session!
   if (!sessionDoc) {
     sessionDoc = Session.create({ userId, unitSetDoc })
   }

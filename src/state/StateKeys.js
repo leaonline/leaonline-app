@@ -11,7 +11,7 @@ StateKeys.KEYS = {
   UNIT_SET: createKey('unitSet'),
   UNIT: createKey('uni'),
   DIMENSION: createKey('dimension'),
-  LEVEL: createKey('level'),
+  LEVEL: createKey('level')
 }
 
 const keyNames = new Set(Object.values(StateKeys.KEYS))

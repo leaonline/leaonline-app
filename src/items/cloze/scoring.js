@@ -1,18 +1,4 @@
-import { Cloze } from './Cloze'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
-
-const critical = /eval\s*\(|__proto__|require\s*\(|import\s*'|new function|\.prototype|function\s*\(/i
-const isSafeTextString = s => {
-  if (typeof s !== 'string') {
-    return false
-  }
-
-  if (s.length > Cloze.MAX_LENGTH) {
-    return false
-  }
-
-  return !critical.test(s)
-}
 
 export const scoreCloze = function scoreCloze (itemDoc = {}, responseDoc = {}) {
   // check(itemDoc.scoring, [{

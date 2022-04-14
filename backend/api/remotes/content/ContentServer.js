@@ -125,7 +125,6 @@ ContentServer.sync = async ({ name, debug }) => {
   const allIds = []
   allIds.length = allDocs.length
   allDocs.forEach((doc, index) => {
-
     if (doc.isLegacy) {
       stats.skipped++
       return

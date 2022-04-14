@@ -1,5 +1,6 @@
 import Meteor from '@meteorrn/core'
 
+/*
 function getOptions (self) {
   const opts = []
   if (self.global) opts.push('g')
@@ -7,7 +8,6 @@ function getOptions (self) {
   if (self.multiline) opts.push('m')
   return opts.join('')
 }
-
 class EJSONRegExp extends RegExp {
   clone () {
     const self = this
@@ -32,10 +32,11 @@ class EJSONRegExp extends RegExp {
     }
   }
 }
+*/
 
 Meteor.EJSON.addType('RegExp', value => new RegExp(value.regex, value.options))
 console.debug(Meteor.EJSON.stringify({ r: /abcd+/g }))
 console.debug(Meteor.EJSON.parse(JSON.stringify({
-  "EJSON$flags": "i",
-  "EJSON$regexp": "er",
+  EJSON$flags: 'i',
+  EJSON$regexp: 'er'
 })))

@@ -24,6 +24,7 @@ import './registerComponents'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
+import { getDimensionColor } from './getDimensionColor'
 
 /**
  * @private stylesheet
@@ -41,7 +42,7 @@ const styles = createStyleSheet({
   safeAreaView: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   elements: {
     alignItems: 'center',
@@ -55,6 +56,24 @@ const styles = createStyleSheet({
     flex: 1,
     alignItems: 'center'
   },
+  unitCard: {
+    width: '90%',
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderColor: '#fff',
+    // dropshadow - ios only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 1,
+    // dropshadow - android only
+    elevation: 0.5
+  }
 })
 
 const log = Log.create('UnitScreen')
@@ -114,8 +133,12 @@ const UnitScreen = props => {
     })
   }, [props.navigation])
 
+  // ---------------------------------------------------------------------------
+  // skip early until docs are fully loaded
+  // ---------------------------------------------------------------------------
+
   if (!docs || docs.loading) {
-    return (<Loading/>)
+    return (<Loading />)
   }
 
   if (docs.data === null) {
@@ -125,6 +148,7 @@ const UnitScreen = props => {
 
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
   const showCorrectResponse = scored === page
+  const dimensionColor = getDimensionColor(unitSetDoc.dimension)
 
   // ---------------------------------------------------------------------------
   // ALL STATES
@@ -140,8 +164,7 @@ const UnitScreen = props => {
 
     if (!dimensionRoute) {
       props.navigation.navigate('Dimension')
-    }
-    else {
+    } else {
       props.navigation.navigate({ key: dimensionRoute.key })
     }
   }
@@ -156,8 +179,11 @@ const UnitScreen = props => {
 
   const renderContent = (list) => {
     if (!list?.length) { return null }
+
     return list.map((element, index) => {
       const elementData = { ...element }
+      elementData.dimensionColor = dimensionColor
+
       if (element.type === 'item') {
         elementData.submitResponse = submitResponse
         elementData.showCorrectResponse = showCorrectResponse
@@ -166,14 +192,20 @@ const UnitScreen = props => {
           <KeyboardAvoidingView
             key={index}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}>
+            style={styles.container}
+          >
             <UnitContentElementFactory.Renderer {...elementData} />
           </KeyboardAvoidingView>
         )
       }
 
       return (
-        <UnitContentElementFactory.Renderer key={index} {...elementData} />)
+        <View
+          key={index} style={styles.unitCard}
+        >
+          <UnitContentElementFactory.Renderer key={index} {...elementData} />
+        </View>
+      )
     })
   }
 
@@ -193,7 +225,6 @@ const UnitScreen = props => {
   // we have a story to render, let's do it right now
   if (!unitDoc && !sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
     log('render story', unitSetDoc.shortCode)
-
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
@@ -206,7 +237,7 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <View style={styles.navigationButtons}>
-          <ActionButton tts={t('unitScreen.story.continue')} onPress={finish}/>
+          <ActionButton tts={t('unitScreen.story.continue')} color={dimensionColor} onPress={finish} />
         </View>
       </View>
     )
@@ -257,7 +288,7 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.actions.check')} onPress={checkScore}/>
+        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor} onPress={checkScore} />
       )
     }
 
@@ -269,13 +300,13 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.actions.next')} onPress={nextPage}/>
+        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor} onPress={nextPage} />
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.actions.complete')} onPress={finish}/>
+      <ActionButton tts={t('unitScreen.actions.complete')} color={dimensionColor} onPress={finish} />
     )
   }
 
@@ -295,12 +326,14 @@ const UnitScreen = props => {
               borderRadius: 2,
               borderWidth: 1,
               borderColor: Colors.dark
-            }}/>
-          <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+            }}
+          />
+          <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
         </Navbar>
         <ScrollView
           style={styles.scrollView}
-          keyboardShouldPersistTaps='always'>
+          keyboardShouldPersistTaps='always'
+        >
 
           {/* 1. PART STIMULI */}
           <View style={styles.elements}>

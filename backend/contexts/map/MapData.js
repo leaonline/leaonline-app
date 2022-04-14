@@ -6,7 +6,6 @@ export const MapData = {
   methods: {}
 }
 
-
 MapData.schema = {
   field: {
     type: String
@@ -30,11 +29,10 @@ MapData.schema = {
     type: String
   },
 
-
   // entries
 
   entries: {
-    type: Array,
+    type: Array
   },
   'entries.$': {
     type: Object
@@ -50,38 +48,37 @@ MapData.schema = {
     type: Number
   },
 
-
   // stage entries
 
   'entries.$.progress': { // summary of the progress of all unitsets
     type: Number,
-    optional: true, // TODO validate against type
+    optional: true // TODO validate against type
   },
   'entries.$.unitSets': {
     type: Array,
-    optional: true, // TODO validate against type
+    optional: true // TODO validate against type
   },
   'entries.$.unitSets.$': {
-    type: Object,
+    type: Object
   },
   'entries.$.unitSets.$._id': {
-    type: String,
+    type: String
   },
   'entries.$.unitSets.$.dimension': {
-    type: Number,
+    type: Number
   },
   'entries.$.unitSets.$.progress': {
-    type: Number,
+    type: Number
   },
   'entries.$.unitSets.$.competencies': {
-    type: Number,
+    type: Number
   },
 
   // milestone entries
 
   'entries.$.competencies': {
     type: Array,
-    optional: true, // TODO validate against type
+    optional: true // TODO validate against type
   },
   'entries.$.competencies.$': {
     type: Object
@@ -94,9 +91,7 @@ MapData.schema = {
   }
 }
 
-
 const log = createLog({ name: MapData.name })
-
 
 /**
  * Creates read-optimized map data for every field. This is a very resource-
@@ -122,7 +117,6 @@ MapData.create = ({ field, dryRun }) => {
     levels: levels.map(l => l._id),
     entries: []
   }
-
 
   // for each level
   levels.forEach((levelDoc, levelIndex) => {
@@ -175,10 +169,10 @@ MapData.create = ({ field, dryRun }) => {
       // which
       let maxCompetencies = 0
 
-      UnitSetCollection.find({ _id: { $in: testCycleDoc.unitSets }})
+      UnitSetCollection.find({ _id: { $in: testCycleDoc.unitSets } })
         .fetch()
         .forEach(unitSetDoc => {
-          let competencies = countCompetencies(unitSetDoc, log)
+          const competencies = countCompetencies(unitSetDoc, log)
           // push new stage to the stage data
           stages[dimensionId].push({
             dimension: dimensionIndex,
@@ -231,7 +225,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // now we collect in each iteration one entry from every list
     for (let i = 0; i < maxLength; i++) {
-      const stage = { type: 'stage', level: levelIndex, unitSets: [], progress: 0  }
+      const stage = { type: 'stage', level: levelIndex, unitSets: [], progress: 0 }
 
       stageEntries.forEach(list => {
         // skip, if the list already does not have any entry
@@ -258,7 +252,6 @@ MapData.create = ({ field, dryRun }) => {
 
   if (dryRun) { return }
 
-
   // update collections
   return getCollection(MapData.name).upsert({ field }, { $set: mapData })
 }
@@ -267,7 +260,7 @@ const countCompetencies = (unitSet, log) => {
   const UnitCollection = getCollection('unit')
   let count = 0
 
-  UnitCollection.find({ _id: { $in: unitSet.units }}).forEach(unitDoc => {
+  UnitCollection.find({ _id: { $in: unitSet.units } }).forEach(unitDoc => {
     if (!unitDoc.pages?.length) {
       return log('Skip unit', unitDoc.shortCode, ': no pages')
     }
@@ -302,6 +295,5 @@ const countCompetencies = (unitSet, log) => {
   if (!count) log(unitSet.shortCode, 'has no competencies linked')
   return count
 }
-
 
 MapData.get = ({ field }) => getCollection(MapData.name).findOne({ field })

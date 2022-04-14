@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Image, Dimensions } from 'react-native'
+import { Image, Dimensions } from 'react-native'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
 import { Log } from '../../../infrastructure/Log'
@@ -11,13 +11,13 @@ const styles = createStyleSheet({
     width: win.width,
     height: win.width / 2,
     resizeMode: 'contain',
-    alignSelf: 'center',
+    alignSelf: 'center'
   }
 })
 
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
-  const urlReplaced = props.value.replace('https://content.lealernen.de', 'http://192.168.178.49:3030')
+  const urlReplaced = props.value.replace('https://content.lealernen.de', 'http://192.168.178.75:3030')
   const imageProps = {
     source: { uri: urlReplaced },
     onError: (event) => {
@@ -39,7 +39,7 @@ export const ImageRenderer = props => {
     resizeMethod: 'auto'
   }
 
-  const loader = () => loadComplete ? null : (<Loading/>)
+  const loader = () => loadComplete ? null : (<Loading />)
 
   return (
     <>
