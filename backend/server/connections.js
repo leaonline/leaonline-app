@@ -8,7 +8,6 @@ import { SyncState } from '../contexts/sync/SyncState'
 Meteor.startup(() => {
   const { sync, remap } = Meteor.settings.remotes.content
 
-
   Meteor.defer(async () => {
     await ContentServer.init()
 

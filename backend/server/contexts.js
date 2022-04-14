@@ -33,6 +33,3 @@ ContentServer.contexts().forEach(ctx => {
   methods.forEach(method => createMethod(method))
   register(ctx)
 })
-
-
-

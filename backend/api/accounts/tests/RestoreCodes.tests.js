@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-import { expect } from 'chai'
+// import { expect } from 'chai'
 import { RestoreCodes } from '../RestoreCodes'
 
 describe(RestoreCodes.name, function () {

@@ -4,7 +4,6 @@ import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { ContextRegistry } from '../ContextRegistry'
 import { createLog } from '../../infrastructure/log/createLog'
 
-
 /**
  * This context represents the current state of sync. If should be updated
  * after every sync for each synced context in order to provide the app with
@@ -36,9 +35,8 @@ SyncState.update = name => {
 }
 
 SyncState.get = ({ names }) => getCollection(SyncState.name)
-    .find({ name: { $in: names } })
-    .fetch()
-
+  .find({ name: { $in: names } })
+  .fetch()
 
 SyncState.validate = names => {
   names.forEach(name => {
