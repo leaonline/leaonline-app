@@ -200,7 +200,8 @@ const UnitScreen = props => {
       }
 
       return (
-        <View key={index} style={styles.unitCard}
+        <View
+          key={index} style={styles.unitCard}
         >
           <UnitContentElementFactory.Renderer key={index} {...elementData} />
         </View>

@@ -118,7 +118,7 @@ Sync.updateCollection = async ({ name, docs, newHash, remove = false }) => {
  */
 const update = (collection, docs) => {
   if (!docs.length) {
-    throw new Error(`Expected to receive docs for ${name}, got 0 docs`)
+    throw new Error(`Expected to receive docs for ${collection._name}, got 0 docs`)
   }
 
   let inserted = 0

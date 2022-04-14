@@ -2,11 +2,7 @@ import React from 'react'
 import { SafeAreaView, ScrollView, StatusBar } from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
-const renderer = {
-  heading (text, levle) {
-
-  }
-}
+// const renderer = { heading (text, levle) {} }
 
 export const MarkdownRenderer = props => {
   return (

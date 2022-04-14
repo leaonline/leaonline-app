@@ -2,7 +2,7 @@ import { Config } from '../env/Config'
 
 export const Log = {}
 
-const logLevel = Config.debug.logLevel
+let logLevel = Config.debug.logLevel
 
 const allLevels = {
   debug: {

@@ -105,8 +105,8 @@ const styles = createStyleSheet({
 export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
-  const [compared, setCompared] = useState({})
-  const { isTable, hasTableBorder = true, scoring } = value
+  const [, setCompared] = useState({})
+  // const { isTable, hasTableBorder = true, scoring } = value
   const { tokens, tokenIndexes } = tokenize({ contentId, value })
 
   // on contentId changed
@@ -127,7 +127,7 @@ export const ClozeRenderer = props => {
   useEffect(() => {
     if (props.showCorrectResponse) {
       // TODO get correct responses
-      const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
+      // const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
       const result = {}
       setCompared(result)
     }
@@ -165,7 +165,6 @@ export const ClozeRenderer = props => {
                 key={index}
                 placeholderTextColor={dimensionColor}
                 selectionColor={dimensionColor}
-
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
                 // prevent various type assistance functionalities
                 autoCorrect={false}
@@ -174,14 +173,12 @@ export const ClozeRenderer = props => {
                 importantForAutofill='no' // android
                 textContentType='none' // ios
                 spellCheck={false}
-
                 // appearance
                 maxLength={maxLength}
                 multiline={isMultiline}
                 blurOnSubmit
                 style={styles.input}
                 // selectionColor
-
                 // keyboard
                 returnKeyType='done'
                 keyboardType='visible-password'
@@ -263,7 +260,7 @@ export const ClozeRenderer = props => {
 }
 
 const cache = new Map()
-const CELL_SKIP = '<<>>'
+// const CELL_SKIP = '<<>>'
 
 const tokenize = ({ contentId, value }) => {
   if (!cache.has(contentId)) {
