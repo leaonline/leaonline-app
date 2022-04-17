@@ -11,6 +11,7 @@ import { TTSengine } from './components/Tts'
 import Navigator from './navigation/navigator'
 import { createStyleSheet } from './styles/createStyleSheet'
 import { initAppState } from './startup/initAppState'
+// import NetInfo from '@react-native-community/netinfo'
 import './startup/initContexts'
 import './i18n'
 
@@ -25,6 +26,13 @@ const startApp = async () => {
 
 const connect = async () => {
   log('connect to meteor')
+  /* NetInfo.fetch().then(state => {
+    console.log('Connection type ', state.type)
+    console.log('Is connected? ', state.isConnected)
+    console.log('Details ', state.details.ipAddress)
+    const ipAddress = 'ws://' + state.details.ipAddress + ':8080/websocket'
+  }) */
+  // const SERVER_URL = 'ws://' + (await NetInfo.fetch().then()).details.ipAddress + ':8080/websocket'
   try {
     await connectMeteor({ endpoint: 'ws://192.168.178.75:8080/websocket' })
   } catch (connectError) {
