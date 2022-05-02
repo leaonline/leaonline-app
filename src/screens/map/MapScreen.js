@@ -9,6 +9,11 @@ import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
+import { Confirm } from '../../components/Confirm'
+import Colors from '../../constants/Colors'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Navbar } from '../../components/Navbar'
+import { useTranslation } from 'react-i18next'
 
 const log = Log.create('MapScreen')
 
@@ -30,9 +35,6 @@ const styles = createStyleSheet({
     paddingTop: 50,
     width: '100%',
     alignItems: 'center'
-  },
-  navigationButtons: {
-    flexDirection: 'row'
   },
   routeButtonContainer: {
     width: '100%',
@@ -63,6 +65,8 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const MapScreen = props => {
+  const { t } = useTranslation()
+
   const docs = loadDocs(loadMapData)
 
   if (!docs || docs.loading) {
@@ -170,31 +174,29 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
+        <Navbar>
+          <Confirm
+            id='unit-screen-confirm'
+            question={t('unitScreen.abort.question')}
+            approveText={t('unitScreen.abort.abort')}
+            denyText={t('unitScreen.abort.continue')}
+            onApprove={() => props.navigation.navigate('Home')}
+            icon='home'
+            tts={false}
+            style={{
+              borderRadius: 2,
+              borderWidth: 1,
+              borderColor: Colors.dark
+            }}
+          />
+          <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+        </Navbar>
         <ScrollView style={styles.scrollView}>
           <View style={styles.buttons}>
             {renderStages()}
           </View>
         </ScrollView>
       </SafeAreaView>
-      <View style={styles.navigationButtons}>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-left' handleScreen={() => {
-              props.navigation.navigate('Home')
-            }}
-          />
-        </View>
-
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              props.navigation.navigate('Dimension')
-            }}
-          />
-        </View>
-      </View>
     </View>
   )
 }

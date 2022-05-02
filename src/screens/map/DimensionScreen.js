@@ -9,6 +9,11 @@ import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
 import { Layout } from '../../constants/Layout'
+import { Confirm } from '../../components/Confirm'
+import Colors from '../../constants/Colors'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Navbar } from '../../components/Navbar'
+import { useTranslation } from 'react-i18next'
 
 const log = Log.create('DimensionScreen')
 
@@ -24,9 +29,6 @@ const styles = createStyleSheet({
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
-  },
-  navigationButtons: {
-    flexDirection: 'row'
   },
   routeButtonContainer: {
     width: '100%',
@@ -52,6 +54,8 @@ const styles = createStyleSheet({
  */
 const DimensionScreen = props => {
   const docs = loadDocs(loadDimensionData)
+
+  const { t } = useTranslation()
 
   if (!docs || docs.loading) {
     return (
@@ -88,27 +92,24 @@ const DimensionScreen = props => {
 
   return (
     <View style={styles.container}>
-      {renderDimensions()}
-
-      <View style={styles.navigationButtons}>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-left' handleScreen={() => {
-              props.navigation.navigate('Map')
-            }}
-          />
-        </View>
-
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              props.navigation.navigate('Unit')
-            }}
-          />
-        </View>
-      </View>
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          question={t('unitScreen.abort.question')}
+          approveText={t('unitScreen.abort.abort')}
+          denyText={t('unitScreen.abort.continue')}
+          onApprove={() => props.navigation.navigate('Home')}
+          icon='arrow-left'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
+        {renderDimensions()}
     </View>
   )
 }
