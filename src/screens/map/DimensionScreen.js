@@ -109,7 +109,7 @@ const DimensionScreen = props => {
         />
         <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
-        {renderDimensions()}
+      {renderDimensions()}
     </View>
   )
 }
