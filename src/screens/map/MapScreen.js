@@ -32,7 +32,7 @@ const styles = createStyleSheet({
   },
   safeAreaView: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 10,
     width: '100%',
     alignItems: 'center'
   },
