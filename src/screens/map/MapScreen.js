@@ -13,7 +13,6 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { useTranslation } from 'react-i18next'
 
 const log = Log.create('MapScreen')
 
@@ -32,7 +31,6 @@ const styles = createStyleSheet({
   },
   safeAreaView: {
     flex: 1,
-    paddingTop: 10,
     width: '100%',
     alignItems: 'center'
   },
@@ -65,8 +63,6 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const MapScreen = props => {
-  const { t } = useTranslation()
-
   const docs = loadDocs(loadMapData)
 
   if (!docs || docs.loading) {
@@ -173,24 +169,22 @@ const MapScreen = props => {
 
   return (
     <View style={styles.container}>
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          noConfirm
+          onApprove={() => props.navigation.navigate('Home')}
+          icon='home'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
       <SafeAreaView style={styles.safeAreaView}>
-        <Navbar>
-          <Confirm
-            id='unit-screen-confirm'
-            question={t('unitScreen.abort.question')}
-            approveText={t('unitScreen.abort.abort')}
-            denyText={t('unitScreen.abort.continue')}
-            onApprove={() => props.navigation.navigate('Home')}
-            icon='home'
-            tts={false}
-            style={{
-              borderRadius: 2,
-              borderWidth: 1,
-              borderColor: Colors.dark
-            }}
-          />
-          <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-        </Navbar>
         <ScrollView style={styles.scrollView}>
           <View style={styles.buttons}>
             {renderStages()}

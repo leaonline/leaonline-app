@@ -13,7 +13,6 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { useTranslation } from 'react-i18next'
 
 const log = Log.create('DimensionScreen')
 
@@ -55,8 +54,6 @@ const styles = createStyleSheet({
 const DimensionScreen = props => {
   const docs = loadDocs(loadDimensionData)
 
-  const { t } = useTranslation()
-
   if (!docs || docs.loading) {
     return (
       <Loading />
@@ -95,10 +92,8 @@ const DimensionScreen = props => {
       <Navbar>
         <Confirm
           id='unit-screen-confirm'
-          question={t('unitScreen.abort.question')}
-          approveText={t('unitScreen.abort.abort')}
-          denyText={t('unitScreen.abort.continue')}
-          onApprove={() => props.navigation.navigate('Home')}
+          noConfirm
+          onApprove={() => props.navigation.navigate('Map')}
           icon='arrow-left'
           tts={false}
           style={{
