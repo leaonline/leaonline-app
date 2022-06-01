@@ -9,6 +9,10 @@ import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
+import { Confirm } from '../../components/Confirm'
+import Colors from '../../constants/Colors'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Navbar } from '../../components/Navbar'
 
 const log = Log.create('MapScreen')
 
@@ -27,12 +31,8 @@ const styles = createStyleSheet({
   },
   safeAreaView: {
     flex: 1,
-    paddingTop: 50,
     width: '100%',
     alignItems: 'center'
-  },
-  navigationButtons: {
-    flexDirection: 'row'
   },
   routeButtonContainer: {
     width: '100%',
@@ -169,6 +169,21 @@ const MapScreen = props => {
 
   return (
     <View style={styles.container}>
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          noConfirm
+          onApprove={() => props.navigation.navigate('Home')}
+          icon='home'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.buttons}>
@@ -176,25 +191,6 @@ const MapScreen = props => {
           </View>
         </ScrollView>
       </SafeAreaView>
-      <View style={styles.navigationButtons}>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-left' handleScreen={() => {
-              props.navigation.navigate('Home')
-            }}
-          />
-        </View>
-
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              props.navigation.navigate('Dimension')
-            }}
-          />
-        </View>
-      </View>
     </View>
   )
 }

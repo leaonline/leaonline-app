@@ -23,6 +23,14 @@ export const Confirm = props => {
     }, 250)
   }
 
+  const renderIcon = () => {
+    if (props.noConfirm) {
+      return <ActionButton {...fordwardedProps} onPress={() => onResponse(onApprove)} />
+    } else {
+      return <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)} />
+    }
+  }
+
   const renderApprove = () => (<ActionButton text={props.approveText} onPress={() => onResponse(onApprove)} />)
   const renderDeny = () => (<ActionButton text={props.denyText} onPress={() => onResponse(onDeny)} />)
 
@@ -45,7 +53,7 @@ export const Confirm = props => {
           </View>
         </View>
       </Modal>
-      <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)} />
+      {renderIcon()}
     </>
   )
 }

@@ -9,6 +9,10 @@ import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Log } from '../../infrastructure/Log'
 import { AppState } from '../../state/AppState'
 import { Layout } from '../../constants/Layout'
+import { Confirm } from '../../components/Confirm'
+import Colors from '../../constants/Colors'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Navbar } from '../../components/Navbar'
 
 const log = Log.create('DimensionScreen')
 
@@ -24,9 +28,6 @@ const styles = createStyleSheet({
   iconNavigation: {
     paddingBottom: 5,
     padding: 100
-  },
-  navigationButtons: {
-    flexDirection: 'row'
   },
   routeButtonContainer: {
     width: '100%',
@@ -88,27 +89,22 @@ const DimensionScreen = props => {
 
   return (
     <View style={styles.container}>
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          noConfirm
+          onApprove={() => props.navigation.navigate('Map')}
+          icon='arrow-left'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
       {renderDimensions()}
-
-      <View style={styles.navigationButtons}>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-left' handleScreen={() => {
-              props.navigation.navigate('Map')
-            }}
-          />
-        </View>
-
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              props.navigation.navigate('Unit')
-            }}
-          />
-        </View>
-      </View>
     </View>
   )
 }

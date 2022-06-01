@@ -63,6 +63,18 @@ const RouteButton = props => {
   const renderRouteButton = () => {
     const titleStyle = { ...styles.buttonTitle, ...{ color } }
     const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color }
+    const containerStyle = {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      borderColor: '#fff',
+      // dropshadow - ios only
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.8,
+      shadowRadius: 1,
+      // dropshadow - android only
+      elevation: 0.5
+    }
 
     if (!props.onlyIcon) {
       return (
@@ -74,7 +86,8 @@ const RouteButton = props => {
               title={props.title}
               titleStyle={titleStyle}
               buttonStyle={buttonStyle}
-              type='outline' onPress={props.handleScreen}
+              containerStyle={containerStyle}
+              type='clear' onPress={props.handleScreen}
             />
           </View>
         </View>
