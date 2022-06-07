@@ -12,6 +12,10 @@ Config.debug = {}
 Config.debug.layoutBorders = () => debugLayoutBorders
 Config.debug.logLevel = 0
 
+// data structure
+Config.debug.map = true
+Config.debug.unit = true
+
 // Default values for GlobalStyles
 
 Config.styles = {}

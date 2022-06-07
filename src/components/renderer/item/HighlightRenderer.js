@@ -115,6 +115,11 @@ export const HighlightRenderer = props => {
   const { text, tts } = value
   const { tokens, readableText } = tokenize({ contentId, text })
 
+  if (!tokens) {
+    console.warn('no tokens available')
+    return null
+  }
+
   // if a token is selected we toggle it's active state (Boolean)
   // and submit the overall responses immediately to the parent
   const selectToken = async index => {
@@ -216,8 +221,9 @@ export const HighlightRenderer = props => {
             {text}
           </Text>
           {target.map((tokenIndex, keyIndex) => {
+            const value = tokens[tokenIndex]?.value
             return (
-              <Text key={keyIndex}>{tokens[tokenIndex].value}</Text>
+              <Text key={keyIndex}>{value}</Text>
             )
           })}
         </View>

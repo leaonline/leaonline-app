@@ -139,11 +139,11 @@ const MapScreen = props => {
   const renderStage = (stage, index) => {
     return (
       <View key={`entry-${index}`} style={styles.buttons}>
+        <RouteButton title={index + 1} icon='edit' handleScreen={() => selectStage(stage)} />
         <View style={styles.body}>
           <Text>Complete: 0 / {stage.progress}</Text>
         </View>
         <View style={styles.body}>{renderUnitSets(stage.unitSets)}</View>
-        <RouteButton title={index + 1} icon='edit' handleScreen={() => selectStage(stage)} />
       </View>
     )
   }
@@ -163,6 +163,7 @@ const MapScreen = props => {
 
       const color = ColorTypeMap.get(dimensionDoc.colorType)
       const userCompetencies = 0
+
       return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies}/{competencies})</Text>)
     })
   }

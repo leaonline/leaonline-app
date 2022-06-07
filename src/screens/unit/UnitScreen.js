@@ -25,6 +25,7 @@ import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
 import { getDimensionColor } from './getDimensionColor'
+import { Config } from '../../env/Config'
 
 /**
  * @private stylesheet
@@ -223,7 +224,8 @@ const UnitScreen = props => {
 
   // if this is the very beginning of this unit set AND
   // we have a story to render, let's do it right now
-  if (!unitDoc && !sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
+
+  if (!sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
     log('render story', unitSetDoc.shortCode)
     return (
       <View style={styles.container}>
@@ -251,17 +253,14 @@ const UnitScreen = props => {
   const checkScore = async () => {
     // get scoring method
     const currentResponse = responseRef.current[page]
-    const { responses, data } = currentResponse
-    const { type, subtype, value } = data
-    const { scoring } = value
 
-    // get score
-    const scoreResult = await getScoring({
-      type,
-      subtype,
-      scoring
-    }, { responses })
-    log('score', type, subtype, scoreResult.score)
+    if (currentResponse) {
+      const { responses, data } = currentResponse
+      const { type, subtype, value } = data
+      const { scoring } = value
+      const scoreResult = await getScoring({ type, subtype, scoring }, { responses })
+      log('score', type, subtype, scoreResult.score)
+    }
 
     // update state
     setScored(page)
@@ -310,6 +309,11 @@ const UnitScreen = props => {
     )
   }
 
+  const renderDebugTitle = () => {
+    if (!Config.debug.unit) return null
+    return (<Text>{unitSetDoc.shortCode + ' / ' + unitDoc.shortCode}</Text>)
+  }
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -328,6 +332,7 @@ const UnitScreen = props => {
               borderColor: Colors.dark
             }}
           />
+          {renderDebugTitle()}
           <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
         </Navbar>
         <ScrollView
