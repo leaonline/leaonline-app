@@ -29,6 +29,17 @@
     },
     "web": {
       "favicon": "./assets/icons/favicon-192.png"
+    },
+    "extra": {
+      "backend": {
+        "url": "ws://192.168.178.74:8080/websocket",
+        "maxTimeout": 10000,
+        "interval": 250
+      },
+      "content": {
+        "url": "http://192.168.178.74:3030",
+        "replaceUrl": "https://content.lealernen.de"
+      }
     }
   }
 }

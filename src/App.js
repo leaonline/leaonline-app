@@ -26,7 +26,7 @@ const startApp = async () => {
 const connect = async () => {
   log('connect to meteor')
   try {
-    await connectMeteor({ endpoint: 'ws://192.168.178.75:8080/websocket' })
+    await connectMeteor()
   } catch (connectError) {
     // if we have not a connection, we wait for
     // a longer timeout and try to reconnect

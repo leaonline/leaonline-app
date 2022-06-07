@@ -49,7 +49,8 @@
     "react-native-web": "~0.17.5",
     "simpl-schema": "^1.12.0",
     "string.prototype.matchall": "^4.0.6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "expo-constants": "~12.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

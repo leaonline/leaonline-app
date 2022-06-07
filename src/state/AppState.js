@@ -48,6 +48,7 @@ const updateSingle = async (key, value) => {
 }
 
 AppState.init = async (storageImpl) => {
+  debug('init with storage')
   storage = storageImpl
 }
 

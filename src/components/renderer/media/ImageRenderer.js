@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Image, Dimensions } from 'react-native'
+import { Log } from '../../../infrastructure/Log'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
-import { Log } from '../../../infrastructure/Log'
+import { ContentServer } from '../../../remotes/ContentServer'
 
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug')
@@ -15,9 +16,10 @@ const styles = createStyleSheet({
   }
 })
 
+
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
-  const urlReplaced = props.value.replace('https://content.lealernen.de', 'http://192.168.178.75:3030')
+  const urlReplaced = ContentServer.cleanUrl(props.value)
   const imageProps = {
     source: { uri: urlReplaced },
     onError: (event) => {
