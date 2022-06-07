@@ -16,7 +16,6 @@ const styles = createStyleSheet({
   }
 })
 
-
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
   const urlReplaced = ContentServer.cleanUrl(props.value)

@@ -17,7 +17,6 @@ const endpointSchema = createSchema({
   }
 })
 
-
 /**
  * Connects to a Meteor server by given endpoint. Returns a Promise.
  *

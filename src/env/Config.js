@@ -1,6 +1,5 @@
 import Constants from 'expo-constants'
 
-
 const debugLayoutBorders = true
 
 export const Config = {}
@@ -26,7 +25,6 @@ Config.methods = {}
 
 Config.methods.createUser = 'users.methods.create'
 Config.methods.deleteUser = 'users.methods.delete'
-
 
 Config.backend = {}
 Config.backend.url = Constants.manifest.extra.backend.url
