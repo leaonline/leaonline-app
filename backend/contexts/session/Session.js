@@ -136,14 +136,15 @@ Session.update = ({ sessionId, userId }) => {
 
   if (!sessionDoc.nextUnit) {
     log('complete', sessionId)
-    return SessionCollection.update(sessionId, {
+    SessionCollection.update(sessionId, {
       $inc: {
-        progress: unitDoc.progress || 0,
-        competencies: unitDoc.competencies || 0
+        progress: unitDoc?.progress || 0,
+        competencies: unitDoc?.competencies || 0
       },
       $unset: { unit: 1, nextUnit: 1 },
       $set: { completedAt: timestamp }
     })
+    return null
   }
 
   // ---------------------------------------------------------------------------
@@ -181,7 +182,8 @@ Session.update = ({ sessionId, userId }) => {
 
   log({ sessionId, updateDoc })
 
-  return SessionCollection.update(sessionId, updateDoc)
+  SessionCollection.update(sessionId, updateDoc)
+  return nextUnitId
 }
 
 Session.methods = {}
