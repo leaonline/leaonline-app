@@ -4,6 +4,8 @@ import { TTSengine } from '../../Tts'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import Colors from '../../../constants/Colors'
 import { useTranslation } from 'react-i18next'
+import { Log } from '../../../infrastructure/Log'
+
 const pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
 const separatorChars = /[.,;:?!]+/g
 const groupPattern = /[{}]+/g
@@ -11,6 +13,7 @@ const whiteSpace = /^\s+$/
 
 const Tts = TTSengine.component()
 const tokenCache = new Map()
+const log = Log.create('HighlightRenderer')
 
 const styles = createStyleSheet({
   container: {
@@ -81,9 +84,20 @@ export const HighlightRenderer = props => {
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
 
-  // clear all selections when the content id changes
+  // When contentId changes we have a new element to be rendered:
+  // 1. clear all selections when the content id changes
   // which happens, for example, if we move to the next page
-  useEffect(() => setSelected({}), [props.contentId])
+  // 2. clear all compared
+  // 3. submit a fresh "empty" response
+  useEffect(() => {
+    log('content id changed', props.contentId)
+    setSelected({})
+    setCompared({})
+    return props.submitResponse({
+      responses: getResponses({}),
+      data: props
+    })
+  }, [props.contentId])
 
   // compare responses with the correct responses when
   // the parent decided to activate {showCorrectResponse}

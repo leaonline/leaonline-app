@@ -1,4 +1,7 @@
 import { callMeteor } from '../../meteor/call'
+import { Log } from '../../infrastructure/Log'
+
+const log = Log.create('completeUnit')
 
 /**
  * Completes a current unit and returns the next route.
@@ -8,14 +11,12 @@ import { callMeteor } from '../../meteor/call'
  * @return {Promise<String>} resolves to a route name
  */
 export const completeUnit = async ({ sessionDoc }) => {
-  const hasNext = await callMeteor({
+  const nextUnitId = await callMeteor({
     name: 'session.methods.update',
     args: {
       sessionId: sessionDoc._id
     }
   })
-
-  return hasNext
-    ? 'Unit'
-    : 'Complete'
+  log({ nextUnitId })
+  return nextUnitId
 }

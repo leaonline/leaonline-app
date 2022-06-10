@@ -26,6 +26,8 @@ import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
 import { getDimensionColor } from './getDimensionColor'
 import { Config } from '../../env/Config'
+import { shouldRenderStory } from './shouldRenderStory'
+import { sendResponse } from './sebdResponse'
 
 /**
  * @private stylesheet
@@ -139,7 +141,7 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
 
   if (!docs || docs.loading) {
-    return (<Loading />)
+    return (<Loading/>)
   }
 
   if (docs.data === null) {
@@ -152,11 +154,15 @@ const UnitScreen = props => {
   const dimensionColor = getDimensionColor(unitSetDoc.dimension)
 
   // ---------------------------------------------------------------------------
-  // ALL STATES
+  // NAVIGATION
   // ---------------------------------------------------------------------------
 
-  // if users attempt to cancel we surely first show a modal
-  // and ask if cancelling was intended
+  /**
+   * If users attempt to cancel we surely first show a modal
+   * and ask if cancelling was intended.
+   * This method is called, when users have approved to cancel
+   * @return {Promise<void>}
+   */
   const cancelUnit = async () => {
     // todo send cancel information silently to server
 
@@ -170,14 +176,30 @@ const UnitScreen = props => {
     }
   }
 
-  const submitResponse = async ({ responses, data }) => {
-    log('item submit', data.contentId, responses)
-    responseRef.current[page] = { responses, data }
+  /**
+   * Completes the unit and awaits the server response.
+   * Based on the returned route it either cycles into the next unit
+   * or navigates to the resulting route (usually complete screen).
+   */
+  const finish = async () => {
+    const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
+
+    return nextUnitId
+      ? props.navigation.push('Unit')
+      : props.navigation.navigate('Complete')
   }
 
-  // this is the generic content rendering method, which
-  // applies to all content structure across units and unitSets
+  // ---------------------------------------------------------------------------
+  // RENDERING
+  // ---------------------------------------------------------------------------
 
+  /**
+   *  This is the generic content rendering method, which
+   *  applies to all content structure across units and unitSets
+   *  with their story pages.
+   *  Rendering of the elements is delegated to their respective
+   *  registered renderer using the {UnitContentElementFactory}
+   **/
   const renderContent = (list) => {
     if (!list?.length) { return null }
 
@@ -185,6 +207,8 @@ const UnitScreen = props => {
       const elementData = { ...element }
       elementData.dimensionColor = dimensionColor
 
+      // item elements are "interactive" beyond tts
+      // and require their own view and handlers
       if (element.type === 'item') {
         elementData.submitResponse = submitResponse
         elementData.showCorrectResponse = showCorrectResponse
@@ -193,29 +217,59 @@ const UnitScreen = props => {
           <KeyboardAvoidingView
             key={index}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
-          >
+            style={styles.container}>
             <UnitContentElementFactory.Renderer {...elementData} />
           </KeyboardAvoidingView>
         )
       }
 
+      // all other elements are simply "display" elements
       return (
-        <View
-          key={index} style={styles.unitCard}
-        >
+        <View key={index} style={styles.unitCard}>
           <UnitContentElementFactory.Renderer key={index} {...elementData} />
         </View>
       )
     })
   }
 
-  const finish = async () => {
-    const route = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
+  /**
+   * Renders the shortCode of the current unit or unitSet if
+   * Config.debug.unit is true.
+   */
+  const renderDebugTitle = () => {
+    if (!Config.debug.unit) {
+      return null
+    }
+    const title = unitDoc
+      ? unitDoc.shortCode
+      : unitSetDoc.shortCode
+    return (<Text>{title}</Text>)
+  }
 
-    return route === 'Unit'
-      ? props.navigation.push(route)
-      : props.navigation.navigate(route)
+  /**
+   * Renders the navbar.
+   */
+  const renderNavBar = () => {
+    return (
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          question={t('unitScreen.abort.question')}
+          approveText={t('unitScreen.abort.abort')}
+          denyText={t('unitScreen.abort.continue')}
+          onApprove={() => cancelUnit()}
+          icon='times'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        {renderDebugTitle()}
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+      </Navbar>
+    )
   }
 
   // ---------------------------------------------------------------------------
@@ -225,12 +279,13 @@ const UnitScreen = props => {
   // if this is the very beginning of this unit set AND
   // we have a story to render, let's do it right now
 
-  if (!sessionDoc.unit && sessionDoc.nextUnit && unitSetDoc.story?.length > 0) {
+  if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
     log('render story', unitSetDoc.shortCode)
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
           <ScrollView style={styles.scrollView}>
+            {renderNavBar()}
             <View style={styles.elements}>
               {renderContent(unitSetDoc.story)}
             </View>
@@ -239,7 +294,8 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <View style={styles.navigationButtons}>
-          <ActionButton tts={t('unitScreen.story.continue')} color={dimensionColor} onPress={finish} />
+          <ActionButton tts={t('unitScreen.story.continue')}
+                        color={dimensionColor} onPress={finish}/>
         </View>
       </View>
     )
@@ -250,23 +306,47 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   log('render unit', unitDoc._id, unitDoc.shortCode, 'page', page, 'checked', scored)
 
+  const submitResponse = async ({ responses, data }) => {
+    log('item submit', data.contentId, responses)
+    responseRef.current[page] = { responses, data }
+  }
+
   const checkScore = async () => {
     // get scoring method
     const currentResponse = responseRef.current[page]
+    log({ currentResponse })
 
-    if (currentResponse) {
+    if (!currentResponse || !currentResponse.data  || !currentResponse.responses) {
+      throw new Error('Response always needs to exist')
+    }
+
+
       const { responses, data } = currentResponse
       const { type, subtype, value } = data
       const { scoring } = value
-      const scoreResult = await getScoring({ type, subtype, scoring }, { responses })
+      const scoreResult = await getScoring({
+        type,
+        subtype,
+        scoring
+      }, { responses })
       log('score', type, subtype, scoreResult.score)
-    }
+
+      // submit everything (in the background)
+      const responseDoc = {}
+      responseDoc.sessionId = sessionDoc._id
+      responseDoc.unitSetId = unitSetDoc._id
+      responseDoc.unitId = unitDoc._id
+      responseDoc.dimensionId = unitSetDoc.dimension
+      responseDoc.page = page
+      responseDoc.itemId = data.contentId
+      responseDoc.itemType = data.subtype
+      responseDoc.scores = scoreResult
+
+      log('submit response to server', responseDoc)
+      await sendResponse({ responseDoc })
 
     // update state
     setScored(page)
-
-    // submit score (background)
-    // return submitScore({ sessionDoc, unitDoc, item: data, responses, score: scoringResult })
   }
 
   const nextPage = () => setPage(page + 1)
@@ -287,7 +367,8 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor} onPress={checkScore} />
+        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor}
+                      onPress={checkScore}/>
       )
     }
 
@@ -299,42 +380,22 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor} onPress={nextPage} />
+        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor}
+                      onPress={nextPage}/>
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.actions.complete')} color={dimensionColor} onPress={finish} />
+      <ActionButton tts={t('unitScreen.actions.complete')}
+                    color={dimensionColor} onPress={finish}/>
     )
-  }
-
-  const renderDebugTitle = () => {
-    if (!Config.debug.unit) return null
-    return (<Text>{unitSetDoc.shortCode + ' / ' + unitDoc.shortCode}</Text>)
   }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
-        <Navbar>
-          <Confirm
-            id='unit-screen-confirm'
-            question={t('unitScreen.abort.question')}
-            approveText={t('unitScreen.abort.abort')}
-            denyText={t('unitScreen.abort.continue')}
-            onApprove={() => cancelUnit()}
-            icon='times'
-            tts={false}
-            style={{
-              borderRadius: 2,
-              borderWidth: 1,
-              borderColor: Colors.dark
-            }}
-          />
-          {renderDebugTitle()}
-          <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-        </Navbar>
+        {renderNavBar()}
         <ScrollView
           style={styles.scrollView}
           keyboardShouldPersistTaps='always'
