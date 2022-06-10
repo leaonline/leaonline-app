@@ -14,8 +14,14 @@ import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
 import { Config } from '../../env/Config'
+import { TTSengine } from '../../components/Tts'
 
 const log = Log.create('DimensionScreen')
+
+/**
+ * @private TTS Ref
+ */
+const Tts = TTSengine.component()
 
 /**
  * @private stylesheet
@@ -106,6 +112,9 @@ const DimensionScreen = props => {
             borderColor: Colors.dark
           }}
         />
+        <View style={{ width: '55%' }}>
+          <Tts text='Dimension' color={Colors.secondary} id='dimensionScreen.headerTitle' paddingTop={10} smallButton />
+        </View>
         <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
       {renderDimensions()}
