@@ -1,5 +1,6 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
+import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 
 export const MapData = {
   name: 'mapData',
@@ -261,38 +262,12 @@ const countCompetencies = (unitSet, log) => {
   let count = 0
 
   UnitCollection.find({ _id: { $in: unitSet.units } }).forEach(unitDoc => {
-    if (!unitDoc.pages?.length) {
-      return log('Skip unit', unitDoc.shortCode, ': no pages')
-    }
-    unitDoc.pages.forEach((page, pageIndex) => {
-      if (!page.content?.length) {
-        return log('Skip unit', unitDoc.shortCode, 'page', pageIndex, ': no content')
-      }
-
-      page.content.forEach(entry => {
-        if (entry.type !== 'item') return
-        const scoring = entry.value?.scoring
-
-        if (!scoring?.length) {
-          return log('Skip unit', unitDoc.shortCode, 'page', pageIndex, ': item is no scoring')
-        }
-
-        scoring.forEach(score => {
-          if (!score.competency) {
-            return log('Skip unit', unitDoc.shortCode, 'page', pageIndex, ': item scoring has no competencies')
-          }
-
-          // competency can either be a string (single) or an array of strings
-          // (multiple) so we need to count them correctly here:
-          count += Array.isArray(score.competency)
-            ? score.competency.length
-            : 1
-        })
-      })
-    })
+    count += countUnitCompetencies({ unitDoc, log })
   })
 
-  if (!count) log(unitSet.shortCode, 'has no competencies linked')
+  if (!count) {
+    log(unitSet.shortCode, 'has no competencies linked')
+  }
   return count
 }
 
