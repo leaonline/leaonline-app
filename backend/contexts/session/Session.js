@@ -64,7 +64,7 @@ Session.create = ({ userId, unitSetDoc }) => {
     userId: userId,
     startedAt: new Date(),
     unitSet: unitSetDoc._id,
-    fieldId: unitSetDoc.field,
+    fieldId: unitSetDoc.field
   }
   const hasStory = unitSetDoc.story.length > 0
   const unitId = unitSetDoc.units[0]
@@ -164,7 +164,7 @@ Session.update = ({ sessionId, userId }) => {
     SessionCollection.update(sessionId, {
       $inc: {
         progress: unitDoc.pages.length,
-        competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId})
+        competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
       },
       $unset: { unit: 1, nextUnit: 1 },
       $set: { completedAt: timestamp }
@@ -188,10 +188,9 @@ Session.update = ({ sessionId, userId }) => {
   if (unitDoc) {
     updateDoc.$inc = {
       progress: unitDoc.pages.length,
-      competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId})
+      competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
     }
   }
-
 
   const nextUnitId = getNextUnitId({
     unitId: sessionDoc.nextUnit,
@@ -220,8 +219,6 @@ Session.methods.update = {
     sessionId: String
   },
   run: onServerExec(function () {
-    import { Progress } from '../progress/Progress'
-
     return function ({ sessionId }) {
       const { userId } = this
       const nextUnitId = Session.update({ sessionId, userId })
@@ -237,7 +234,6 @@ Session.methods.update = {
           competencies: sessionDoc.competencies,
           complete: !!sessionDoc.completedAt
         })
-
       })
 
       return nextUnitId

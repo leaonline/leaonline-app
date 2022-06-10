@@ -46,7 +46,7 @@ Progress.schema = {
   'unitSets.$.complete': {
     type: Boolean,
     defaultValue: false
-  },
+  }
 }
 
 Progress.create = ({ userId, fieldId, unitSetId, progress, competencies, complete }) => {
@@ -64,7 +64,7 @@ Progress.update = ({ userId, fieldId, unitSetId, progress, competencies, complet
     return Progress.create({ userId, fieldId, unitSetId, progress, competencies, complete })
   }
 
-  const unitSetDoc = {_id: unitSetId, progress, competencies, complete }
+  const unitSetDoc = { _id: unitSetId, progress, competencies, complete }
   const index = progressDoc.unitSets.findIndex(entry => entry._id === unitSetId)
   const updateDoc = index > -1
     ? {
@@ -88,7 +88,6 @@ Progress.methods.get = {
     fieldId: String
   },
   run: onServerExec(function () {
-
     return function ({ fieldId }) {
       const { userId } = this
       return getCollection(Progress.name).findOne({ userId, fieldId })

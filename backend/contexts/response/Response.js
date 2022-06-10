@@ -38,7 +38,7 @@ Response.schema = {
   'scores.$.value': Array,
   'scores.$.value.$': {
     type: oneOf(String, Integer)
-  },
+  }
 }
 
 /**
@@ -51,9 +51,9 @@ Response.schema = {
  * @return {number} the overall count of accomplished answers
  */
 Response.countAccomplishedAnswers = ({ userId, sessionId, unitId }) => {
+  log('count accomplished answers', { userId, sessionId, unitId })
   const allDocsByUnit = getCollection(Response.name).find({ userId, sessionId, unitId })
   let count = 0
-
 
   allDocsByUnit.forEach(responseDoc => {
     responseDoc.scores.forEach(entry => {
