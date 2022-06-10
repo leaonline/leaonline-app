@@ -13,6 +13,7 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
+import { loadProgressData } from './loadProgressData'
 
 const log = Log.create('MapScreen')
 
@@ -141,7 +142,7 @@ const MapScreen = props => {
       <View key={`entry-${index}`} style={styles.buttons}>
         <RouteButton title={index + 1} icon='edit' handleScreen={() => selectStage(stage)} />
         <View style={styles.body}>
-          <Text>Complete: 0 / {stage.progress}</Text>
+          <Text>Complete: {stage.userProgress || 0} / {stage.progress}</Text>
         </View>
         <View style={styles.body}>{renderUnitSets(stage.unitSets)}</View>
       </View>
@@ -157,14 +158,13 @@ const MapScreen = props => {
   const renderUnitSets = (unitSets) => {
     if (!unitSets?.length) { return null }
 
-    return unitSets.map(({ _id, dimension, competencies }) => {
+    return unitSets.map(({ _id, dimension, userCompetencies, competencies }) => {
       const dimensionDoc = mapData.dimensions[dimension]
       if (!dimensionDoc) { return null }
 
       const color = ColorTypeMap.get(dimensionDoc.colorType)
-      const userCompetencies = 0
 
-      return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies}/{competencies})</Text>)
+      return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies||0}/{competencies})</Text>)
     })
   }
 
