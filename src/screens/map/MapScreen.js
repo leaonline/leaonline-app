@@ -13,7 +13,6 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { loadProgressData } from './loadProgressData'
 
 const log = Log.create('MapScreen')
 
@@ -164,7 +163,7 @@ const MapScreen = props => {
 
       const color = ColorTypeMap.get(dimensionDoc.colorType)
 
-      return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies||0}/{competencies})</Text>)
+      return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies || 0}/{competencies})</Text>)
     })
   }
 

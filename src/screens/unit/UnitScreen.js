@@ -141,7 +141,7 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
 
   if (!docs || docs.loading) {
-    return (<Loading/>)
+    return (<Loading />)
   }
 
   if (docs.data === null) {
@@ -217,7 +217,8 @@ const UnitScreen = props => {
           <KeyboardAvoidingView
             key={index}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}>
+            style={styles.container}
+          >
             <UnitContentElementFactory.Renderer {...elementData} />
           </KeyboardAvoidingView>
         )
@@ -267,7 +268,7 @@ const UnitScreen = props => {
           }}
         />
         {renderDebugTitle()}
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
     )
   }
@@ -294,8 +295,10 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <View style={styles.navigationButtons}>
-          <ActionButton tts={t('unitScreen.story.continue')}
-                        color={dimensionColor} onPress={finish}/>
+          <ActionButton
+            tts={t('unitScreen.story.continue')}
+            color={dimensionColor} onPress={finish}
+          />
         </View>
       </View>
     )
@@ -316,34 +319,33 @@ const UnitScreen = props => {
     const currentResponse = responseRef.current[page]
     log({ currentResponse })
 
-    if (!currentResponse || !currentResponse.data  || !currentResponse.responses) {
+    if (!currentResponse || !currentResponse.data || !currentResponse.responses) {
       throw new Error('Response always needs to exist')
     }
 
+    const { responses, data } = currentResponse
+    const { type, subtype, value } = data
+    const { scoring } = value
+    const scoreResult = await getScoring({
+      type,
+      subtype,
+      scoring
+    }, { responses })
+    log('score', type, subtype, scoreResult.score)
 
-      const { responses, data } = currentResponse
-      const { type, subtype, value } = data
-      const { scoring } = value
-      const scoreResult = await getScoring({
-        type,
-        subtype,
-        scoring
-      }, { responses })
-      log('score', type, subtype, scoreResult.score)
+    // submit everything (in the background)
+    const responseDoc = {}
+    responseDoc.sessionId = sessionDoc._id
+    responseDoc.unitSetId = unitSetDoc._id
+    responseDoc.unitId = unitDoc._id
+    responseDoc.dimensionId = unitSetDoc.dimension
+    responseDoc.page = page
+    responseDoc.itemId = data.contentId
+    responseDoc.itemType = data.subtype
+    responseDoc.scores = scoreResult
 
-      // submit everything (in the background)
-      const responseDoc = {}
-      responseDoc.sessionId = sessionDoc._id
-      responseDoc.unitSetId = unitSetDoc._id
-      responseDoc.unitId = unitDoc._id
-      responseDoc.dimensionId = unitSetDoc.dimension
-      responseDoc.page = page
-      responseDoc.itemId = data.contentId
-      responseDoc.itemType = data.subtype
-      responseDoc.scores = scoreResult
-
-      log('submit response to server', responseDoc)
-      await sendResponse({ responseDoc })
+    log('submit response to server', responseDoc)
+    await sendResponse({ responseDoc })
 
     // update state
     setScored(page)
@@ -367,8 +369,10 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       log('render check button')
       return (
-        <ActionButton tts={t('unitScreen.actions.check')} color={dimensionColor}
-                      onPress={checkScore}/>
+        <ActionButton
+          tts={t('unitScreen.actions.check')} color={dimensionColor}
+          onPress={checkScore}
+        />
       )
     }
 
@@ -380,15 +384,19 @@ const UnitScreen = props => {
     if (hasNextPage) {
       log('render next page button')
       return (
-        <ActionButton tts={t('unitScreen.actions.next')} color={dimensionColor}
-                      onPress={nextPage}/>
+        <ActionButton
+          tts={t('unitScreen.actions.next')} color={dimensionColor}
+          onPress={nextPage}
+        />
       )
     }
 
     log('render complete unit button')
     return (
-      <ActionButton tts={t('unitScreen.actions.complete')}
-                    color={dimensionColor} onPress={finish}/>
+      <ActionButton
+        tts={t('unitScreen.actions.complete')}
+        color={dimensionColor} onPress={finish}
+      />
     )
   }
 
