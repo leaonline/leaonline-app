@@ -67,6 +67,9 @@ const styles = createStyleSheet({
   code: {
     flex: 2,
     flexDirection: 'row'
+  },
+  email: {
+    alignItems: 'flex-start',
   }
 })
 
@@ -185,6 +188,17 @@ const RegistrationScreen = props => {
           />
         </View>
       </SafeAreaView>
+
+      <View style={styles.email}>
+        <Tts
+          id='registrationScreen.form.email'
+          text={t('registrationScreen.form.email')}
+          color={Colors.gray}
+          smallButton
+          fontSize={14}
+          fontStyle='italic'
+        />
+      </View>
 
       {/* REGISTER BUTTON */}
 

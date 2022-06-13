@@ -177,7 +177,7 @@ const MapScreen = props => {
     <View style={styles.container}>
       <Navbar>
         <Confirm
-          id='unit-screen-confirm'
+          id='map-screen-confirm'
           noConfirm
           onApprove={() => props.navigation.navigate('Home')}
           icon='home'
