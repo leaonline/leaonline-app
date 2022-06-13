@@ -69,7 +69,7 @@ const styles = createStyleSheet({
     flexDirection: 'row'
   },
   email: {
-    alignItems: 'flex-start',
+    alignItems: 'flex-start'
   }
 })
 
