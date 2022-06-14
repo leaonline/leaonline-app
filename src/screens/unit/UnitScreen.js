@@ -320,6 +320,7 @@ const UnitScreen = props => {
             approveText={t('unitScreen.abort.abort')}
             denyText={t('unitScreen.abort.continue')}
             onApprove={() => cancelUnit()}
+            onDeny={() => {}}
             icon='times'
             tts={false}
             style={{
