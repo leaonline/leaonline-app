@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import RouteButton from '../components/RouteButton'
+import { Confirm } from '../components/Confirm'
 
 /**
  * @private tts ref
@@ -58,6 +59,7 @@ const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
 
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
 
   const checkboxHandler = () => {
@@ -65,8 +67,8 @@ const TermsAndConditionsScreen = props => {
     setTermsAndConditionsColor(Colors.gray)
   }
 
-  const checkBoxIsNotChecked = () => {
-    Alert.alert(t('alert.title'), t('alert.checkBox'))
+  const showWarning = () => {
+    setShowModal(true)
     setTermsAndConditionsColor(Colors.danger)
   }
 
@@ -75,6 +77,22 @@ const TermsAndConditionsScreen = props => {
       <View style={styles.body}>
         <Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
       </View>
+
+      <Confirm
+        id='tac-screen-confirm'
+        noButton
+        question={t('alert.checkBox')}
+        approveText={t('alert.approve')}
+        onApprove={() => setShowModal(false)}
+        icon='times'
+        open={showModal}
+        tts
+        style={{
+          borderRadius: 2,
+          borderWidth: 1,
+          borderColor: Colors.dark
+        }}
+      />
 
       <View style={styles.checkBox}>
         <Tts
@@ -106,7 +124,7 @@ const TermsAndConditionsScreen = props => {
             handleScreen={() => {
               termsAndConditionsIsChecked
                 ? props.navigation.navigate('Registration')
-                : checkBoxIsNotChecked()
+                : showWarning()
             }}
           />
         </View>

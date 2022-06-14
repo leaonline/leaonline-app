@@ -13,7 +13,8 @@ const resources = {
     alert: {
       title: 'Stop',
       navText: 'Please wait until the end of the recording or end it prematurely',
-      checkBox: 'You must accept the terms and conditions to continue'
+      checkBox: 'You must accept the terms and conditions to continue',
+      approve: 'Ok'
     },
     welcomeScreen: {
       text: 'Welcome to lea online'
@@ -64,7 +65,8 @@ const resources = {
     alert: {
       title: 'Stop',
       navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
-      checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren'
+      checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren',
+      approve: 'Ok'
     },
     welcomeScreen: {
       text: 'Herzlich Willkommen zu lea online'
