@@ -8,7 +8,14 @@ const Tts = TTSengine.component()
 
 export const Confirm = props => {
   const [modalOpen, setModalOpen] = useState(false)
-  const { onApprove, onDeny, ...fordwardedProps } = props
+  const { onApprove, onDeny, open, ...fordwardedProps } = props
+
+  const getModalOpen = () => {
+    if (typeof open === 'boolean') {
+      return open
+    }
+    return modalOpen
+  }
 
   const renderQuestion = () => {
     if (!props.question) { return null }
@@ -24,6 +31,9 @@ export const Confirm = props => {
   }
 
   const renderIcon = () => {
+    if (props.noButton) {
+      return null
+    }
     if (props.noConfirm) {
       return <ActionButton {...fordwardedProps} onPress={() => onResponse(onApprove)} />
     } else {
@@ -31,15 +41,25 @@ export const Confirm = props => {
     }
   }
 
-  const renderApprove = () => (<ActionButton text={props.approveText} onPress={() => onResponse(onApprove)} />)
-  const renderDeny = () => (<ActionButton text={props.denyText} onPress={() => onResponse(onDeny)} />)
+  const renderApprove = () => {
+    if (!onApprove) {
+      return null
+    }
+    return (<ActionButton text={props.approveText} onPress={() => onResponse(onApprove)} />)
+  }
+  const renderDeny = () => {
+    if (!onDeny) {
+      return null
+    }
+    return (<ActionButton text={props.denyText} onPress={() => onResponse(onDeny)} />)
+  }
 
   return (
     <>
       <Modal
         animationType='fade'
         transparent={false}
-        visible={modalOpen}
+        visible={getModalOpen()}
         onRequestClose={() => { setModalOpen(!false) }}
       >
         <View style={styles.centeredView}>

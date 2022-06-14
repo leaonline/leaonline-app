@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
+ * @param {string} props.fontStyle: The parameter to change the font style of the text. Default: 'normal' ('italic')
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
  * @param {string} props.id: The parameter to identify the buttons
@@ -134,7 +135,8 @@ const ttsComponent = props => {
         flexShrink: props.shrink || 1,
         fontSize: props.fontSize || 18,
         textAlign: props.align,
-        paddingTop: props.paddingTop || 8
+        paddingTop: props.paddingTop || 8,
+        fontStyle: props.fontStyle || 'normal'
       }
 
       return (<TTSText style={styleProps} text={props.text} />)

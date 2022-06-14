@@ -13,7 +13,8 @@ const resources = {
     alert: {
       title: 'Stop',
       navText: 'Please wait until the end of the recording or end it prematurely',
-      checkBox: 'You must accept the terms and conditions to continue'
+      checkBox: 'You must accept the terms and conditions to continue',
+      approve: 'Ok'
     },
     welcomeScreen: {
       text: 'Welcome to lea online'
@@ -23,6 +24,7 @@ const resources = {
       form: {
         text: 'To use the lea app, you need to create an account. However, it is completely anonymous. You can delete your account at any time.',
         placeholder: 'Your email address',
+        email: 'The email address is optional and will only be used to restore the account',
         register: 'Create my account now'
       },
       registering: 'Your account is created',
@@ -63,7 +65,8 @@ const resources = {
     alert: {
       title: 'Stop',
       navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
-      checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren'
+      checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren',
+      approve: 'Ok'
     },
     welcomeScreen: {
       text: 'Herzlich Willkommen zu lea online'
@@ -73,6 +76,7 @@ const resources = {
       form: {
         text: 'Um die lea App nutzen zu können, müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
         placeholder: 'Ihre Email-Addresse',
+        email: 'Die Angabe der Email-Adresse ist optional und wird nur zur Wiederherstellung des Kontos verwendet',
         register: 'Mein Konto jetzt anlegen'
       },
       registering: 'Ihr Konto wird angelegt',
