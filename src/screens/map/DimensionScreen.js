@@ -97,7 +97,7 @@ const DimensionScreen = props => {
     <View style={styles.container}>
       <Navbar>
         <Confirm
-          id='unit-screen-confirm'
+          id='dimension-screen-confirm'
           noConfirm
           onApprove={() => props.navigation.navigate('Map')}
           icon='arrow-left'

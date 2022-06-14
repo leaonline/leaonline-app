@@ -39,7 +39,8 @@ const styles = createStyleSheet({
   routeButtonContainer: {
     width: '100%',
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 10
   }
 })
 
@@ -101,7 +102,8 @@ const TermsAndConditionsScreen = props => {
           <RouteButton
             onlyIcon
             waitForSpeech
-            icon='arrow-alt-circle-right' handleScreen={() => {
+            icon='arrow-alt-circle-right'
+            handleScreen={() => {
               termsAndConditionsIsChecked
                 ? props.navigation.navigate('Registration')
                 : checkBoxIsNotChecked()

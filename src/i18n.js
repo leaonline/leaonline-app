@@ -23,6 +23,7 @@ const resources = {
       form: {
         text: 'To use the lea app, you need to create an account. However, it is completely anonymous. You can delete your account at any time.',
         placeholder: 'Your email address',
+        email: 'The email address is optional and will only be used to restore the account',
         register: 'Create my account now'
       },
       registering: 'Your account is created',
@@ -73,6 +74,7 @@ const resources = {
       form: {
         text: 'Um die lea App nutzen zu können, müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
         placeholder: 'Ihre Email-Addresse',
+        email: 'Die Angabe der Email-Adresse ist optional und wird nur zur Wiederherstellung des Kontos verwendet',
         register: 'Mein Konto jetzt anlegen'
       },
       registering: 'Ihr Konto wird angelegt',
