@@ -32,6 +32,7 @@ Progress.schema = {
   'unitSets.$': {
     type: Object
   },
+
   'unitSets.$._id': {
     type: String
   },
@@ -66,6 +67,9 @@ Progress.update = ({ userId, fieldId, unitSetId, progress, competencies, complet
 
   const unitSetDoc = { _id: unitSetId, progress, competencies, complete }
   const index = progressDoc.unitSets.findIndex(entry => entry._id === unitSetId)
+
+  // if we found a unit set, then we only update the data at the given index
+  // otherwise push a completely new entry to the unitSets list
   const updateDoc = index > -1
     ? {
         $set: {
@@ -74,9 +78,11 @@ Progress.update = ({ userId, fieldId, unitSetId, progress, competencies, complet
       }
     : {
         $push: {
-          unitSets: [unitSetDoc]
+          unitSets: unitSetDoc
         }
       }
+
+  log('unit set', { unitSetDoc, index, updateDoc })
   return ProgressCollection.update(progressDoc._id, updateDoc)
 }
 

@@ -54,6 +54,7 @@ export const loadMapData = async (withDebug) => {
   // we load the progress doc here and immediately resolve
   // the values
   const progressDoc = await loadProgressDoc(fieldId)
+  debug({ progressDoc })
 
   if (progressDoc) {
     // TODO count competencies for milestone, too!

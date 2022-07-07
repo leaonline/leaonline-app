@@ -15,7 +15,8 @@ export const completeUnit = async ({ sessionDoc }) => {
     name: 'session.methods.update',
     args: {
       sessionId: sessionDoc._id
-    }
+    },
+    failure: error => console.error(error)
   })
   log({ nextUnitId })
   return nextUnitId
