@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Text, View, TextInput } from 'react-native'
-import Colors from '../../../constants/Colors'
-import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { ClozeTokenizer } from '../../../items/cloze/ClozeTokenizer'
-import { ClozeHelpers } from '../../../items/cloze/ClozeHelpers'
-import { UndefinedScore } from '../../../scoring/UndefinedScore'
-import { Select } from '../../Select'
-import { TTSengine } from '../../Tts'
+import Colors from '../../constants/Colors'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { ClozeTokenizer } from './ClozeTokenizer'
+import { ClozeHelpers } from './ClozeHelpers'
+import { UndefinedScore } from '../../scoring/UndefinedScore'
+import { Select } from '../../components/Select'
+import { TTSengine } from '../../components/Tts'
+import { CompareState } from '../utils/CompareState'
 
 const Tts = TTSengine.component()
 
@@ -105,7 +106,7 @@ const styles = createStyleSheet({
 export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
-  const [, setCompared] = useState({})
+  const [compared, setCompared] = useState({})
   // const { isTable, hasTableBorder = true, scoring } = value
   const { tokens, tokenIndexes } = tokenize({ contentId, value })
 
@@ -116,6 +117,7 @@ export const ClozeRenderer = props => {
   // which happens, for example, if we move to the next page
   useEffect(() => {
     setEntered({})
+    setCompared({})
     props.submitResponse({
       responses: tokenIndexes.map(() => UndefinedScore),
       data: props
@@ -126,9 +128,27 @@ export const ClozeRenderer = props => {
   // the parent decided to activate {showCorrectResponse}
   useEffect(() => {
     if (props.showCorrectResponse) {
-      // TODO get correct responses
-      // const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
+      console.debug('score result', props.scoreResult)
+      console.debug('score defins', props.value.scoring)
       const result = {}
+      const targets = {}
+
+      // get all target indexes
+      props.value.scoring.forEach(entry => {
+        targets[entry.correctResponse] = entry.target
+      })
+
+      props.scoreResult.forEach(entry => {
+        const index = targets[entry.correctResponse]
+
+        if (result[index] !== 1) {
+          const answerValue = Array.isArray(entry.value)
+            ? entry.value[0]
+            : entry.value
+          result[index] = CompareState.getValue(entry.score, answerValue)
+        }
+      })
+console.debug(result)
       setCompared(result)
     }
   }, [props.showCorrectResponse])
@@ -150,19 +170,36 @@ export const ClozeRenderer = props => {
   const renderTokenList = (valueToken) => {
     // TODO check if we need multiline in some units
     const isMultiline = false // !valueToken.tts && valueToken.value.length === 1
+
     return (
       <View style={styles.tokenWrap}>
         {renderTts(valueToken.tts)}
         {valueToken.value.map((token, index) => {
           const { flavor } = token
+          const isBlank = ClozeHelpers.isBlank(flavor)
 
-          if (ClozeHelpers.isBlank(flavor)) {
+          if (isBlank) {
+            const compareValue = compared[valueToken.itemIndex]
+            const compareColor = CompareState.getColor(compareValue)
+            const inputStyle = { ...styles.input }
+
+            if (compareColor) {
+              inputStyle.backgroundColor = compareColor
+              inputStyle.borderColor = compareColor
+            }
+
+            else {
+              inputStyle.borderColor = dimensionColor
+            }
+
+            const editable = !props.showCorrectResponse
             const maxLength = Math.floor(token.length * 1.5)
             // TODO integrate custom keyboard for pattern-based input filter
             // https://github.com/wix/react-native-ui-lib/blob/master/demo/src/screens/nativeComponentScreens/keyboardInput/demoKeyboards.js
             return (
               <TextInput
                 key={index}
+                editable={editable}
                 placeholderTextColor={dimensionColor}
                 selectionColor={dimensionColor}
                 value={valueToken.index in entered ? entered[valueToken.index] : null}
@@ -177,7 +214,7 @@ export const ClozeRenderer = props => {
                 maxLength={maxLength}
                 multiline={isMultiline}
                 blurOnSubmit
-                style={styles.input}
+                style={inputStyle}
                 // selectionColor
                 // keyboard
                 returnKeyType='done'
@@ -259,6 +296,7 @@ export const ClozeRenderer = props => {
   )
 }
 
+// TODO add cache-busting when contentId changes
 const cache = new Map()
 // const CELL_SKIP = '<<>>'
 

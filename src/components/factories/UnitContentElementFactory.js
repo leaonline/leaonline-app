@@ -1,23 +1,38 @@
 import React from 'react'
 import { Text, View } from 'react-native'
+import { Log } from '../../infrastructure/Log'
 
 export const UnitContentElementFactory = {}
 
 const components = new Map()
-
+const toKey = ({ type, subtype }) => `${type}-${subtype}`
+/**
+ * Registers a content element renderer to be invoked by the factory
+ * @param type
+ * @param subtype
+ * @param component
+ */
 UnitContentElementFactory.register = ({ type, subtype, component }) => {
-  const key = `${type}-${subtype}`
+  const key = toKey({ type, subtype })
   components.set(key, component)
 }
 
+/**
+ * Invokes a renderer by given type/subtype
+ * @param props
+ * @return {*}
+ * @constructor
+ */
 UnitContentElementFactory.Renderer = props => {
-  const { type, subtype } = props
-  const key = `${type}-${subtype}`
+  const key = toKey(props)
   const component = components.get(key)
+  Log.debug('[UnitContentElementFactory]: render', key, !!component)
 
-  return component
-    ? component(props)
-    : fallback(props)
+  if (component) {
+    return component(props)
+  }
+
+  return fallback(props)
 }
 
 const fallback = props => (

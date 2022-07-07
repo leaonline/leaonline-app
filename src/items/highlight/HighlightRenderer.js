@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, TouchableHighlight } from 'react-native'
-import { TTSengine } from '../../Tts'
-import { createStyleSheet } from '../../../styles/createStyleSheet'
-import Colors from '../../../constants/Colors'
+import { TTSengine } from '../../components/Tts'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import { Log } from '../../../infrastructure/Log'
+import { Log } from '../../infrastructure/Log'
 
 const pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
 const separatorChars = /[.,;:?!]+/g

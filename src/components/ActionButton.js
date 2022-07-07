@@ -62,13 +62,22 @@ export const ActionButton = props => {
       />
     )
   }
+
+  const buttonStyle = props.style || { borderRadius: 15, paddingTop: 10 }
+  const titleStyle = { color: props.color || Colors.primary, width: '80%' }
+
+  if (props.active) {
+    buttonStyle.backgroundColor = props.color
+    titleStyle.color = Colors.light
+  }
+
   return (
     <View style={styles.body}>
       {renterTts()}
       <Button
         title={props.text || props.tts}
-        titleStyle={{ color: props.color || Colors.primary, width: '80%' }}
-        buttonStyle={props.style || { borderRadius: 15, paddingTop: 10 }}
+        titleStyle={titleStyle}
+        buttonStyle={buttonStyle}
         type='outline'
         onPress={props.onPress}
         icon={renderIcon()}

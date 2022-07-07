@@ -28,6 +28,7 @@ import { getDimensionColor } from './getDimensionColor'
 import { Config } from '../../env/Config'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sebdResponse'
+import { toArrayIfNot } from '../../utils/toArrayIfNot'
 
 /**
  * @private stylesheet
@@ -117,6 +118,7 @@ const UnitScreen = props => {
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const responseRef = useRef({})
+  const scoreRef = useRef({})
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
 
@@ -212,7 +214,7 @@ const UnitScreen = props => {
       if (element.type === 'item') {
         elementData.submitResponse = submitResponse
         elementData.showCorrectResponse = showCorrectResponse
-
+        elementData.scoreResult = showCorrectResponse && scoreRef.current[page]
         return (
           <KeyboardAvoidingView
             key={index}
@@ -317,7 +319,7 @@ const UnitScreen = props => {
   const checkScore = async () => {
     // get scoring method
     const currentResponse = responseRef.current[page]
-    log({ currentResponse })
+    log('check score', { currentResponse })
 
     if (!currentResponse || !currentResponse.data || !currentResponse.responses) {
       throw new Error('Response always needs to exist')
@@ -325,16 +327,40 @@ const UnitScreen = props => {
 
     const { responses, data } = currentResponse
     const { type, subtype, value } = data
-    const { scoring } = value
-    const scoreResult = await getScoring({
-      type,
-      subtype,
-      scoring
-    }, { responses })
+    const itemDoc = { type, subtype, ...value }
+    const scoreResult = await getScoring(itemDoc, { responses })
+    scoreRef.current[page] = scoreResult
+
     log('score', type, subtype, scoreResult.score)
 
     // submit everything (in the background)
     const responseDoc = {}
+
+    /*
+      userId: String,
+      sessionId: String,
+      unitSetId: String,
+      unitId: String,
+      dimensionId: String,
+      timeStamp: Date,
+      page: Number,
+      itemId: String,
+      itemType: String,
+      scores: Array,
+      'scores.$': Object,
+      'scores.$.competency': Array,
+      'scores.$.competency.$': String,
+      'scores.$.correctResponse': Array,
+      'scores.$.correctResponse.$': {
+        type: oneOf(String, Integer, RegExp)
+      },
+      'scores.$.isUndefined': Boolean,
+      'scores.$.score': Boolean,
+      'scores.$.value': Array,
+      'scores.$.value.$': {
+        type: oneOf(String, Integer)
+      }
+  */
     responseDoc.sessionId = sessionDoc._id
     responseDoc.unitSetId = unitSetDoc._id
     responseDoc.unitId = unitDoc._id
@@ -342,12 +368,23 @@ const UnitScreen = props => {
     responseDoc.page = page
     responseDoc.itemId = data.contentId
     responseDoc.itemType = data.subtype
-    responseDoc.scores = scoreResult
+    responseDoc.scores = scoreResult.map(entry => {
+      // some items score single values, others multiple
+      // some items have single competencies, others multiple
+      // we therefore make all these properties to arrays
+      // to comply with the server's defined schema
+      const copy = { ...entry }
+      copy.competency = toArrayIfNot(copy.competency)
+      copy.correctResponse = toArrayIfNot(copy.correctResponse)
+      copy.value = toArrayIfNot(copy.value)
+      return copy
+    })
 
     log('submit response to server', responseDoc)
     await sendResponse({ responseDoc })
 
     // update state
+
     setScored(page)
   }
 

@@ -28,10 +28,11 @@ Response.schema = {
   itemType: String,
   scores: Array,
   'scores.$': Object,
-  'scores.$.competency': String,
+  'scores.$.competency': Array,
+  'scores.$.competency.$': String,
   'scores.$.correctResponse': Array,
   'scores.$.correctResponse.$': {
-    type: oneOf(String, Integer)
+    type: oneOf(String, Integer, RegExp)
   },
   'scores.$.isUndefined': Boolean,
   'scores.$.score': Boolean,
