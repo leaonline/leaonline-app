@@ -1,5 +1,10 @@
 import React from 'react'
 import { Text } from 'react-native'
+import { createStyleSheet } from '../styles/createStyleSheet'
+
+const styles = createStyleSheet({
+  default: {}
+})
 
 /**
  * TTSText is a component of Tts. It displays the spoken text.
@@ -10,6 +15,6 @@ import { Text } from 'react-native'
  * @returns {JSX.Element}
  * @constructor
  */
-const TTSText = props => <Text style={props.style}>{props.text}</Text>
+const TTSText = props => <Text style={{ ...styles.default, ...(props.style) }}>{props.text}</Text>
 
 export default TTSText
