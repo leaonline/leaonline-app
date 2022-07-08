@@ -41,7 +41,9 @@ const resources = {
       progress: 'Overall progress',
       title: 'My successes'
     },
-    mapScreen: {},
+    mapScreen: {
+      stage: 'Stage'
+    },
     unitScreen: {
       story: {
         continue: 'Start task'
@@ -91,7 +93,9 @@ const resources = {
       progress: 'Gesamter Fortschritt',
       title: 'Meine Erfolge'
     },
-    mapScreen: {},
+    mapScreen: {
+      stage: 'Level'
+    },
     unitScreen: {
       story: {
         continue: 'Aufgabe starten'

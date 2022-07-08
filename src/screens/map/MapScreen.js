@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, View, Text } from 'react-native'
+import { SafeAreaView, ScrollView, View, Text, FlatList } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Loading } from '../../components/Loading'
@@ -13,6 +13,9 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
+import { LinearProgress } from 'react-native-elements';
+import { CircularProgress } from '../../components/CircularProgress'
+import { useTranslation } from 'react-i18next'
 
 const log = Log.create('MapScreen')
 
@@ -24,6 +27,11 @@ const styles = createStyleSheet({
   body: {
     flex: 2,
     flexDirection: 'row'
+  },
+  stage: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flex: 2
   },
   scrollView: {
     marginHorizontal: 20,
@@ -46,7 +54,17 @@ const styles = createStyleSheet({
   buttons: {
     alignItems: 'center',
     flex: 1
-  }
+  },
+  // examples
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
 })
 
 /**
@@ -63,17 +81,20 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const MapScreen = props => {
-  const docs = loadDocs(loadMapData)
+  const { t } = useTranslation()
+  const mapDocs = loadDocs(loadMapData)
 
-  if (!docs || docs.loading) {
+  if (!mapDocs || mapDocs.loading) {
     return (
       <Loading />
     )
   }
 
+  // TODO if (docs.error) ...
+
   // if we have loaded but there was no field to be retrieved we
   // go back to the home screen and let users select the field
-  if (!docs.loading && docs.data === null) {
+  if (!mapDocs.loading && mapDocs.data === null) {
     log('no data available, return to HomeScreen')
     props.navigation.navigate('Home')
     return null
@@ -89,7 +110,7 @@ const MapScreen = props => {
     props.navigation.navigate('Dimension')
   }
 
-  const mapData = docs.data
+  const mapData = mapDocs.data
 
   /* MAP DATA STRUCTURE:
    *
@@ -119,38 +140,72 @@ const MapScreen = props => {
    * }
    */
 
-  const renderStages = () => {
+  const renderListItem = ({ index, item:entry }) => {
+    if (entry.type === 'stage') {
+      return renderStage(entry, index)
+    }
+
+    if (entry.type === 'milestone') {
+      return renderMilestone(entry, index)
+    }
+
+    // at this point we need to be fail-resistant
+    log('unexpected entry type', entry.type)
+    return null
+  }
+
+  const renderList = () => {
     if (!mapData) return (<Loading />)
-    return mapData.entries.map((entry, index) => {
-      if (entry.type === 'stage') {
-        return renderStage(entry, index)
-      }
-
-      if (entry.type === 'milestone') {
-        return renderMilestone(entry, index)
-      }
-
-      // at this point we need to be fail-resistant
-      log('unexpected entry type', entry.type)
-      return null
-    })
+    return (
+      <View style={styles.scrollView}>
+        <FlatList
+          data={mapData.entries}
+          initialNumToRender={10}
+          removeClippedSubviews={false}
+          renderItem={renderListItem}
+        />
+      </View>
+    )
   }
 
   const renderStage = (stage, index) => {
+    const stageIsComplete = stage.userProgress >= stage.progress
+    const icon = stageIsComplete ? 'flag' : 'edit'
+    const iconColor = stageIsComplete ? Colors.success : Colors.primary
+    const progress = (stage.userProgress || 0) / stage.progress
+    const title = `${t('mapScreen.stage')} ${index + 1}`
+
     return (
-      <View key={`entry-${index}`} style={styles.buttons}>
-        <RouteButton title={index + 1} icon='edit' handleScreen={() => selectStage(stage)} />
-        <View style={styles.body}>
-          <Text>Complete: {stage.userProgress || 0} / {stage.progress}</Text>
-        </View>
-        <View style={styles.body}>{renderUnitSets(stage.unitSets)}</View>
+      <View key={`entry-${index}`} style={styles.stage}>
+        <RouteButton title={title} icon={icon} iconColor={iconColor} handleScreen={() => selectStage(stage)} noTts />
+        <CircularProgress
+          value={progress * 100}
+          radius={23}
+          textColor={Colors.secondary}
+          activeStrokeColor={Colors.secondary}
+          inActiveStrokeColor={"#fff"}
+          inActiveStrokeOpacity={0.5}
+          inActiveStrokeWidth={5}
+          activeStrokeWidth={5}
+          showProgressValue={true}
+          maxValue={100}
+          valueSuffix={'%'}
+        />
+        {renderUnitSets(stage.unitSets)}
       </View>
     )
   }
 
   const renderMilestone = (milestone, index) => {
+    // <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
+    const progress = milestone.userProgress / milestone.maxProgress
     return (
-      <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
+      <View key={`entry-${index}`}>
+        <View style={styles.stage}>
+          <Text>Milestone {milestone.level + 1}</Text>
+        </View>
+        <LinearProgress color={Colors.secondary} value={progress} variant="determinate" />
+      </View>
     )
   }
 
@@ -161,9 +216,23 @@ const MapScreen = props => {
       const dimensionDoc = mapData.dimensions[dimension]
       if (!dimensionDoc) { return null }
 
-      const color = ColorTypeMap.get(dimensionDoc.colorType)
-
-      return (<Text key={_id} style={{ color }}>{dimensionDoc.shortCode} ({userCompetencies || 0}/{competencies})</Text>)
+      const color = ColorTypeMap.get(dimensionDoc.colorType) || Colors.info
+      const progress = Math.round(((userCompetencies || 0) / competencies) * 100)
+          // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
+      return (
+        <CircularProgress
+          value={progress}
+          radius={23}
+          textColor={color}
+          activeStrokeColor={color}
+          inActiveStrokeColor={"#fff"}
+          inActiveStrokeOpacity={0.5}
+          inActiveStrokeWidth={5}
+          activeStrokeWidth={5}
+          showProgressValue={true}
+          maxValue={100}
+          valueSuffix={'%'} />
+      )
     })
   }
 
@@ -184,13 +253,7 @@ const MapScreen = props => {
         />
         <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
-      <SafeAreaView style={styles.safeAreaView}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.buttons}>
-            {renderStages()}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <SafeAreaView style={styles.safeAreaView}>{renderList()}</SafeAreaView>
     </View>
   )
 }

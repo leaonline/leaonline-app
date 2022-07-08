@@ -28,6 +28,8 @@ const Stack = createStackNavigator()
 export default function navigator (props) {
   const { t } = useTranslation()
 
+  // TODO use https://reactnavigation.org/docs/auth-flow
+
   if (props.loggedIn) {
     return (
       <NavigationContainer>

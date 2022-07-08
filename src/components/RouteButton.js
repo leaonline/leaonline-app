@@ -76,13 +76,19 @@ const RouteButton = props => {
       elevation: 0.5
     }
 
+    const renderTtsButton = () => {
+      return props.noTts
+        ? null
+        : (<Tts text={props.title} id={`${props.title}-tts`} dontShowText color={color} />)
+    }
+
     if (!props.onlyIcon) {
       return (
         <View style={styles.body}>
-          <Tts text={props.title} id={`${props.title}-tts`} dontShowText color={color} />
+          {renderTtsButton()}
           <View style={styles.button}>
             <Button
-              icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={color} />}
+              icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={props.iconColor || color} />}
               title={props.title}
               titleStyle={titleStyle}
               buttonStyle={buttonStyle}

@@ -57,9 +57,14 @@ export const loadMapData = async (withDebug) => {
   debug({ progressDoc })
 
   if (progressDoc) {
-    // TODO count competencies for milestone, too!
+    const levelsProgress = {}
+
     mapData.entries.forEach(entry => {
-      if (entry.type === 'milestone') { return }
+      if (entry.type === 'milestone') {
+        entry.maxProgress = levelsProgress[entry.level].max
+        entry.userProgress = levelsProgress[entry.level].user
+        return
+      }
 
       let userStageProgress = 0
 
@@ -71,8 +76,13 @@ export const loadMapData = async (withDebug) => {
         unitSet.userProgress = userUnitSet.progress
         unitSet.userCompetencies = userUnitSet.competencies
       })
-
       entry.userProgress = userStageProgress
+
+      if (!levelsProgress[entry.level]) {
+        levelsProgress[entry.level] = { max: 0, user: 0}
+      }
+      levelsProgress[entry.level].max += entry.progress
+      levelsProgress[entry.level].user += userStageProgress
     })
   }
 
