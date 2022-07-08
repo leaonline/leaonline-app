@@ -16,8 +16,14 @@ import { Navbar } from '../../components/Navbar'
 import { LinearProgress } from 'react-native-elements';
 import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
+import { TTSengine } from '../../components/Tts'
 
 const log = Log.create('MapScreen')
+
+/**
+ * @private TTS Ref
+ */
+const Tts = TTSengine.component()
 
 /**
  * @private stylesheet
@@ -242,7 +248,7 @@ const MapScreen = props => {
     <View style={styles.container}>
       <Navbar>
         <Confirm
-          id='unit-screen-confirm'
+          id='map-screen-confirm'
           noConfirm
           onApprove={() => props.navigation.navigate('Home')}
           icon='home'
@@ -253,6 +259,9 @@ const MapScreen = props => {
             borderColor: Colors.dark
           }}
         />
+        <View style={{ width: '50%' }}>
+          <Tts text='Map' color={Colors.secondary} id='mapScreen.headerTitle' paddingTop={10} smallButton />
+        </View>
         <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
       <SafeAreaView style={styles.safeAreaView}>{renderList()}</SafeAreaView>
