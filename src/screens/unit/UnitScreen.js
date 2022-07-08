@@ -11,6 +11,9 @@ import {
 import { Log } from '../../infrastructure/Log'
 import { Layout } from '../../constants/Layout'
 import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
+import { Config } from '../../env/Config'
+import { LinearProgress, Icon } from 'react-native-elements'
+import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadUnitData } from './loadUnitData'
@@ -20,15 +23,13 @@ import { useTranslation } from 'react-i18next'
 import { completeUnit } from './completeUnit'
 import { getScoring } from '../../scoring/getScoring'
 import { Navbar } from '../../components/Navbar'
-import './registerComponents'
-import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
 import { getDimensionColor } from './getDimensionColor'
-import { Config } from '../../env/Config'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sebdResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
+import './registerComponents'
 
 /**
  * @private stylesheet
@@ -52,6 +53,11 @@ const styles = createStyleSheet({
     alignItems: 'center',
     flex: 1
   },
+  element: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
   navigationButtons: {
     flexDirection: 'row'
   },
@@ -61,23 +67,43 @@ const styles = createStyleSheet({
     alignItems: 'center'
   },
   unitCard: {
-    width: '90%',
-    marginRight: 40,
-    marginLeft: 40,
-    marginTop: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#fff',
     borderRadius: 10,
     borderColor: '#fff',
     // dropshadow - ios only
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
-    shadowRadius: 1,
+    shadowRadius: 5,
     // dropshadow - android only
-    elevation: 0.5
-  }
+    elevation: 5
+  },
+  pageText: {
+    backgroundColor: Colors.dark,
+    color: Colors.light,
+    padding: 3,
+    borderColor: Colors.dark
+  },
+  //navbar
+  confirm: {
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: Colors.dark
+  },
+  progressContainer: {
+    flex: 1,
+    flexGrow: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  progressBar: { height: 16, borderRadius: 16, borderWidth: 1 }
 })
 
 const log = Log.create('UnitScreen')
@@ -113,12 +139,16 @@ const UnitScreen = props => {
 
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
   const keyboardDidShow = () => setKeyboardStatus('shown')
-  const keyboardDidHide = () => setKeyboardStatus('hidden')
+  const keyboardDidHide = () => {
+    setKeyboardStatus('hidden')
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+  }
 
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
   const responseRef = useRef({})
   const scoreRef = useRef({})
+  const scrollViewRef = useRef()
   const [scored, setScored] = useState()
   const docs = loadDocs(loadUnitData)
 
@@ -143,7 +173,7 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
 
   if (!docs || docs.loading) {
-    return (<Loading />)
+    return (<Loading/>)
   }
 
   if (docs.data === null) {
@@ -228,7 +258,7 @@ const UnitScreen = props => {
 
       // all other elements are simply "display" elements
       return (
-        <View key={index} style={styles.unitCard}>
+        <View key={index} style={styles.element}>
           <UnitContentElementFactory.Renderer key={index} {...elementData} />
         </View>
       )
@@ -263,14 +293,16 @@ const UnitScreen = props => {
           onApprove={() => cancelUnit()}
           icon='times'
           tts={false}
-          style={{
-            borderRadius: 2,
-            borderWidth: 1,
-            borderColor: Colors.dark
-          }}
+          style={styles.confirm}
         />
-        {renderDebugTitle()}
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+        <View style={styles.progressContainer}>
+          <LinearProgress
+            style={{ borderColor: dimensionColor, ...styles.progressBar }}
+            trackColor={'transparent'}
+            color={dimensionColor} value={0.5} variant="determinate"/>
+          {renderDebugTitle()}
+        </View>
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
       </Navbar>
     )
   }
@@ -287,7 +319,8 @@ const UnitScreen = props => {
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView ref={scrollViewRef} style={styles.scrollView}
+                      keyboardShouldPersistTaps='always'>
             {renderNavBar()}
             <View style={styles.elements}>
               {renderContent(unitSetDoc.story)}
@@ -442,31 +475,35 @@ const UnitScreen = props => {
       <SafeAreaView style={styles.safeAreaView}>
         {renderNavBar()}
         <ScrollView
+          ref={scrollViewRef}
           style={styles.scrollView}
-          keyboardShouldPersistTaps='always'
-        >
+          keyboardShouldPersistTaps='always'>
 
           {/* 1. PART STIMULI */}
-          <View style={styles.elements}>
+          <View style={styles.unitCard}>
             {renderContent(unitDoc.stimuli)}
           </View>
 
           {/* 2. PART INSTRUCTIONS */}
-          <View style={styles.elements}>
+          <View style={{ ...styles.unitCard, paddingTop: 0 }}>
+            <Text style={styles.pageText}>
+            <Icon
+              testID={'info-icon'}
+              reverse
+              color={Colors.dark}
+              size={8}
+              name='info'
+              type='font-awesome-5' />
+            </Text>
             {renderContent(unitDoc.instructions)}
           </View>
 
-          {/* 3. PART TASK */}
-          <View style={styles.elements}>
+          {/* 3. PART TASK PAGE CONTENT*/}
+          <View style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
+            <Text style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</Text>
+
             {renderContent(unitDoc.pages[page].instructions)}
-          </View>
 
-          <View style={styles.elements}>
-            <Text>{page + 1} / {unitDoc.pages.length}</Text>
-          </View>
-
-          {/* 3. PART TASK */}
-          <View style={styles.elements}>
             {renderContent(unitDoc.pages[page].content)}
           </View>
 

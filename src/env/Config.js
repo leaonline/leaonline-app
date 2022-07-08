@@ -1,6 +1,6 @@
 import Constants from 'expo-constants'
 
-const debugLayoutBorders = true
+const debugLayoutBorders = false
 
 export const Config = {}
 
