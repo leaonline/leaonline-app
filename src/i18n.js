@@ -55,9 +55,10 @@ const resources = {
       },
       abort: {
         question: 'Do you really want to abort this exercise?',
-        abort: 'Cancel',
-        continue: 'Continue'
-      }
+        abort: 'Abort exercise',
+        continue: 'Continue exercise'
+      },
+      allTrue: 'Great!'
     },
     completeScreen: {}
   },
@@ -107,9 +108,10 @@ const resources = {
       },
       abort: {
         question: 'Willst du diese Übung wirklich abbrechen?',
-        abort: 'Abbrechen',
-        continue: 'Fortsetzen'
-      }
+        abort: 'Übung abbrechen',
+        continue: 'Übung fortsetzen'
+      },
+      allTrue: 'Super!'
     },
     completeScreen: {}
   }
