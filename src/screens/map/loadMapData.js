@@ -59,7 +59,8 @@ export const loadMapData = async (withDebug) => {
   if (progressDoc) {
     const levelsProgress = {}
 
-    mapData.entries.forEach(entry => {
+    mapData.entries.forEach((entry, index) => {
+      entry.key = `map-entry-${index}`
       if (entry.type === 'milestone') {
         entry.maxProgress = levelsProgress[entry.level].max
         entry.userProgress = levelsProgress[entry.level].user

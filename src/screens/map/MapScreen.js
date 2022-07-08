@@ -163,6 +163,7 @@ const MapScreen = props => {
           initialNumToRender={10}
           removeClippedSubviews={false}
           renderItem={renderListItem}
+          keyExtractor={item => item.key}
         />
       </View>
     )
@@ -176,7 +177,7 @@ const MapScreen = props => {
     const title = `${t('mapScreen.stage')} ${index + 1}`
 
     return (
-      <View key={`entry-${index}`} style={styles.stage}>
+      <View style={styles.stage}>
         <RouteButton title={title} icon={icon} iconColor={iconColor} handleScreen={() => selectStage(stage)} noTts />
         <CircularProgress
           value={progress * 100}
@@ -196,11 +197,11 @@ const MapScreen = props => {
     )
   }
 
-  const renderMilestone = (milestone, index) => {
+  const renderMilestone = (milestone) => {
     // <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
     const progress = milestone.userProgress / milestone.maxProgress
     return (
-      <View key={`entry-${index}`}>
+      <View>
         <View style={styles.stage}>
           <Text>Milestone {milestone.level + 1}</Text>
         </View>
@@ -212,7 +213,7 @@ const MapScreen = props => {
   const renderUnitSets = (unitSets) => {
     if (!unitSets?.length) { return null }
 
-    return unitSets.map(({ _id, dimension, userCompetencies, competencies }) => {
+    return unitSets.map(({ _id, dimension, userCompetencies, competencies }, index) => {
       const dimensionDoc = mapData.dimensions[dimension]
       if (!dimensionDoc) { return null }
 
@@ -221,6 +222,7 @@ const MapScreen = props => {
           // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
       return (
         <CircularProgress
+          key={`dimension-progress-${index}`}
           value={progress}
           radius={23}
           textColor={color}
