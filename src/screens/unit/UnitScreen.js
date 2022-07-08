@@ -6,7 +6,8 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  Vibration
 } from 'react-native'
 import { Log } from '../../infrastructure/Log'
 import { Layout } from '../../constants/Layout'
@@ -30,7 +31,9 @@ import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sebdResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
 import './registerComponents'
+import { TTSengine } from '../../components/Tts'
 
+const Tts = TTSengine.component()
 /**
  * @private stylesheet
  */
@@ -90,6 +93,16 @@ const styles = createStyleSheet({
     padding: 3,
     borderColor: Colors.dark
   },
+  allTrue: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    alignContent: 'flex-start',
+    justifyContent: 'space-between',
+    flexShrink: 1,
+    borderColor: Colors.success,
+    backgroundColor: '#eaffee',
+    borderWidth: 4
+  },
   //navbar
   confirm: {
     borderRadius: 2,
@@ -141,7 +154,7 @@ const UnitScreen = props => {
   const keyboardDidShow = () => setKeyboardStatus('shown')
   const keyboardDidHide = () => {
     setKeyboardStatus('hidden')
-      scrollViewRef.current?.scrollToEnd({ animated: true })
+    scrollViewRef.current?.scrollToEnd({ animated: true })
   }
 
   const { t } = useTranslation()
@@ -150,6 +163,7 @@ const UnitScreen = props => {
   const scoreRef = useRef({})
   const scrollViewRef = useRef()
   const [scored, setScored] = useState()
+  const [allTrue, setAllTrue] = useState()
   const docs = loadDocs(loadUnitData)
 
   // ---------------------------------------------------------------------------
@@ -402,6 +416,7 @@ const UnitScreen = props => {
     responseDoc.itemId = data.contentId
     responseDoc.itemType = data.subtype
     responseDoc.scores = scoreResult.map(entry => {
+      console.debug(entry)
       // some items score single values, others multiple
       // some items have single competencies, others multiple
       // we therefore make all these properties to arrays
@@ -416,9 +431,20 @@ const UnitScreen = props => {
     log('submit response to server', responseDoc)
     await sendResponse({ responseDoc })
 
-    // update state
-
     setScored(page)
+
+    // if all scores are true then we add another box
+    // with positive reinforcement
+    if (scoreResult.every(entry => entry.score)) {
+      setAllTrue(page)
+      Vibration.vibrate(500)
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+    }
+
+    // otherwise we just the results
+    else {
+      Vibration.vibrate(100)
+    }
   }
 
   const nextPage = () => setPage(page + 1)
@@ -470,6 +496,25 @@ const UnitScreen = props => {
     )
   }
 
+  const renderAllTrue = () => {
+    if (allTrue !== page) {
+      return null
+    }
+
+    return (
+      <View style={{ ...styles.unitCard, ...styles.allTrue}}>
+        <Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')} />
+        <Icon
+          testID={'alltrue-icon'}
+          reverse
+          color={Colors.success}
+          size={20}
+          name='thumbs-up'
+          type='font-awesome-5' />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -506,6 +551,8 @@ const UnitScreen = props => {
 
             {renderContent(unitDoc.pages[page].content)}
           </View>
+
+          {renderAllTrue()}
 
         </ScrollView>
       </SafeAreaView>
