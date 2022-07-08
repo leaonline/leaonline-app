@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Vibration } from 'react-native'
+import { StyleSheet, View, Vibration, Pressable } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TTSText from './TTSText'
 import Colors from '../constants/Colors'
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
  */
 
 const ttsComponent = props => {
+  // TODO use useReducer to implement complex state logic?
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
@@ -72,8 +73,9 @@ const ttsComponent = props => {
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
    */
   const speak = async () => {
+    Vibration.vibrate(150)
     const isSpeaking = await Speech.isSpeakingAsync()
-    debug('speak', isSpeaking)
+    debug('speak', { isSpeaking })
 
     if (isSpeaking) {
       stopSpeak()
@@ -88,7 +90,6 @@ const ttsComponent = props => {
       onStart: () => {
         debug('onStart')
         startSpeak()
-        Vibration.vibrate(50)
       },
       onStopped: () => {
         debug('onStopped')
@@ -97,8 +98,8 @@ const ttsComponent = props => {
       onDone: () => {
         debug('onDone')
         // TODO call stopSpeak and update tests to fix state bug
+        stopSpeak()
         setIsDone(true)
-        // stopSpeak()
       }
     })
   }
@@ -143,14 +144,15 @@ const ttsComponent = props => {
 
   return (
     <View style={styles.body}>
+      <Pressable
+        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}>
       <Icon
         testID={props.id}
         reverse color={iconColor}
-        size={props.smallButton ? 15 : 20} marginonPress={speak}
+        size={props.smallButton ? 15 : 20}
         name='volume-up'
-        type='font-awesome-5'
-        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
-      />
+        type='font-awesome-5' />
+      </Pressable>
       {displayedText()}
     </View>
 
@@ -176,6 +178,12 @@ const ttsComponent = props => {
 export const TTSengine = {
   setSpeech (s) {
     Speech = s
+    Speech.speak('', {
+      language: 'ger',
+      pitch: 1,
+      rate: 1,
+      volume: 0.0
+    })
   },
   stop () {
     Speech.stop()
@@ -183,6 +191,6 @@ export const TTSengine = {
   isSpeaking: false,
   speakId: 0,
   iconColor: null,
-  debug: false,
+  debug: true,
   component: () => ttsComponent
 }
