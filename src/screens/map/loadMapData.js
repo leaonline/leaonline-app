@@ -80,7 +80,7 @@ export const loadMapData = async (withDebug) => {
       entry.userProgress = userStageProgress
 
       if (!levelsProgress[entry.level]) {
-        levelsProgress[entry.level] = { max: 0, user: 0}
+        levelsProgress[entry.level] = { max: 0, user: 0 }
       }
       levelsProgress[entry.level].max += entry.progress
       levelsProgress[entry.level].user += userStageProgress

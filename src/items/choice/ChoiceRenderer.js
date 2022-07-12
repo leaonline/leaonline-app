@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { ActionButton } from '../../components/ActionButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Choice } from './Choice'
@@ -83,7 +83,6 @@ export const ChoiceRenderer = props => {
     })
   }, [props.contentId])
 
-
   // compare responses with the correct responses when
   // the parent decided to activate {showCorrectResponse}
   useEffect(() => {
@@ -109,7 +108,6 @@ export const ChoiceRenderer = props => {
     }
   }, [props.showCorrectResponse])
 
-
   const { dimensionColor } = props
   const { flavor, choices } = props.value
 
@@ -123,7 +121,6 @@ export const ChoiceRenderer = props => {
     })
   }
   const toChoiceButton = (choice, index) => {
-
     if (props.showCorrectResponse) {
       const compareState = compared[index]
       const color = CompareState.getColor(compareState)
@@ -134,7 +131,8 @@ export const ChoiceRenderer = props => {
           active={isActive}
           color={color || dimensionColor}
           text={choice.text}
-          onPress={() => {}} />
+          onPress={() => {}}
+        />
       )
     }
 
@@ -146,7 +144,8 @@ export const ChoiceRenderer = props => {
         active={isActive}
         color={dimensionColor}
         text={choice.text}
-        onPress={onPress} />
+        onPress={onPress}
+      />
     )
   }
   return (

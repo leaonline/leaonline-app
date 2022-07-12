@@ -149,13 +149,15 @@ const ttsComponent = props => {
   return (
     <View style={styles.body}>
       <Pressable
-        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}>
-      <Icon
-        testID={props.id}
-        reverse color={iconColor}
-        size={props.smallButton ? 15 : 20}
-        name='volume-up'
-        type='font-awesome-5' />
+        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
+      >
+        <Icon
+          testID={props.id}
+          reverse color={iconColor}
+          size={props.smallButton ? 15 : 20}
+          name='volume-up'
+          type='font-awesome-5'
+        />
       </Pressable>
       {displayedText()}
     </View>

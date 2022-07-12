@@ -133,7 +133,7 @@ export const ClozeRenderer = props => {
           result[index] = CompareState.getValue(entry.score, answerValue)
         }
       })
-console.debug(result)
+      console.debug(result)
       setCompared(result)
     }
   }, [props.showCorrectResponse])
@@ -171,9 +171,7 @@ console.debug(result)
             if (compareColor) {
               inputStyle.backgroundColor = compareColor
               inputStyle.borderColor = compareColor
-            }
-
-            else {
+            } else {
               inputStyle.borderColor = dimensionColor
             }
 

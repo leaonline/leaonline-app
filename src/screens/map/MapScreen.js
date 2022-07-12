@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, View, Text, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, FlatList } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Loading } from '../../components/Loading'
@@ -13,7 +13,7 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { LinearProgress } from 'react-native-elements';
+import { LinearProgress } from 'react-native-elements'
 import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
@@ -66,11 +66,11 @@ const styles = createStyleSheet({
     backgroundColor: '#f9c2ff',
     padding: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 16
   },
   title: {
-    fontSize: 32,
-  },
+    fontSize: 32
+  }
 })
 
 /**
@@ -146,7 +146,7 @@ const MapScreen = props => {
    * }
    */
 
-  const renderListItem = ({ index, item:entry }) => {
+  const renderListItem = ({ index, item: entry }) => {
     if (entry.type === 'stage') {
       return renderStage(entry, index)
     }
@@ -190,13 +190,13 @@ const MapScreen = props => {
           radius={23}
           textColor={Colors.secondary}
           activeStrokeColor={Colors.secondary}
-          inActiveStrokeColor={"#fff"}
+          inActiveStrokeColor='#fff'
           inActiveStrokeOpacity={0.5}
           inActiveStrokeWidth={5}
           activeStrokeWidth={5}
-          showProgressValue={true}
+          showProgressValue
           maxValue={100}
-          valueSuffix={'%'}
+          valueSuffix='%'
         />
         {renderUnitSets(stage.unitSets)}
       </View>
@@ -211,7 +211,7 @@ const MapScreen = props => {
         <View style={styles.stage}>
           <Text>Milestone {milestone.level + 1}</Text>
         </View>
-        <LinearProgress color={Colors.secondary} value={progress} variant="determinate" />
+        <LinearProgress color={Colors.secondary} value={progress} variant='determinate' />
       </View>
     )
   }
@@ -225,7 +225,7 @@ const MapScreen = props => {
 
       const color = ColorTypeMap.get(dimensionDoc.colorType) || Colors.info
       const progress = Math.round(((userCompetencies || 0) / competencies) * 100)
-          // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
+      // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
       return (
         <CircularProgress
           key={`dimension-progress-${index}`}
@@ -233,13 +233,14 @@ const MapScreen = props => {
           radius={23}
           textColor={color}
           activeStrokeColor={color}
-          inActiveStrokeColor={"#fff"}
+          inActiveStrokeColor='#fff'
           inActiveStrokeOpacity={0.5}
           inActiveStrokeWidth={5}
           activeStrokeWidth={5}
-          showProgressValue={true}
+          showProgressValue
           maxValue={100}
-          valueSuffix={'%'} />
+          valueSuffix='%'
+        />
       )
     })
   }

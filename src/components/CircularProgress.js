@@ -50,7 +50,7 @@ const CircularProgress = (props) => {
       toValue,
       duration,
       delay,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start()
   }
 
@@ -63,12 +63,12 @@ const CircularProgress = (props) => {
         const strokeDashoffset =
           circleCircumference - (circleCircumference * maxPerc) / 100
         circleRef?.current?.setNativeProps({
-          strokeDashoffset,
+          strokeDashoffset
         })
       }
       if (inputRef?.current) {
         inputRef?.current?.setNativeProps({
-          text: `${valuePrefix}${Math.round(v?.value)}${valueSuffix}`,
+          text: `${valuePrefix}${Math.round(v?.value)}${valueSuffix}`
         })
       }
       if (value === v?.value) {
@@ -78,39 +78,46 @@ const CircularProgress = (props) => {
     return () => animatedValue.removeAllListeners()
   }, [value])
 
+  const renderSecondaryStroke = () => {
+    if (!activeStrokeSecondaryColor) {
+      return null
+    }
+    return (
+      <Defs>
+        <LinearGradient id='grad' x1='0%' y1='0%' x2='0%' y2='100%'>
+          <Stop offset='0%' stopColor={activeStrokeSecondaryColor} />
+          <Stop offset='100%' stopColor={activeStrokeColor} />
+        </LinearGradient>
+      </Defs>
+    )
+  }
+
   return (
     <View>
       <Svg
         width={radius * 2}
         height={radius * 2}
-        viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
-        {activeStrokeSecondaryColor ?
-          <Defs>
-            <LinearGradient id={'grad'} x1="0%" y1="0%" x2="0%" y2="100%">
-              <Stop offset="0%" stopColor={activeStrokeSecondaryColor}/>
-              <Stop offset="100%" stopColor={activeStrokeColor}/>
-            </LinearGradient>
-          </Defs>
-          : null}
-
-        <G rotation={'-90'} origin={`${halfCircle}, ${halfCircle}`}>
+        viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}
+      >
+        {renderSecondaryStroke()}
+        <G rotation='-90' origin={`${halfCircle}, ${halfCircle}`}>
           <Circle
-            cx="50%"
-            cy="50%"
+            cx='50%'
+            cy='50%'
             stroke={inActiveStrokeColor}
             strokeWidth={inActiveStrokeWidth}
             r={radius}
-            fill={'transparent'}
+            fill='transparent'
             strokeOpacity={inActiveStrokeOpacity}
           />
           <AnimatedCircle
             ref={circleRef}
-            cx="50%"
-            cy="50%"
-            stroke={activeStrokeSecondaryColor ? `url(#grad)` : activeStrokeColor}
+            cx='50%'
+            cy='50%'
+            stroke={activeStrokeSecondaryColor ? 'url(#grad)' : activeStrokeColor}
             strokeWidth={activeStrokeWidth}
             r={radius}
-            fill={'transparent'}
+            fill='transparent'
             strokeDasharray={circleCircumference}
             strokeDashoffset={circleCircumference}
             strokeLinecap={strokeLinecap}
@@ -120,7 +127,7 @@ const CircularProgress = (props) => {
       {showProgressValue && (
         <AnimatedInput
           ref={inputRef}
-          underlineColorAndroid={'transparent'}
+          underlineColorAndroid='transparent'
           editable={false}
           defaultValue={`${valuePrefix}0${valueSuffix}`}
           style={[StyleSheet.absoluteFillObject, dynamicStyles(styleProps).input, textStyle, dynamicStyles(styleProps).fromProps]}
@@ -134,12 +141,12 @@ export const dynamicStyles = (props) => {
   return createStyleSheet({
     fromProps: {
       fontSize: props.fontSize ?? props.radius / 2,
-      color: props.textColor ? props.textColor : (props.textStyle && props.textStyle?.color) ? props.textStyle?.color : props.activeStrokeColor,
+      color: props.textColor ? props.textColor : (props.textStyle && props.textStyle?.color) ? props.textStyle?.color : props.activeStrokeColor
     },
     input: {
       fontWeight: '900',
-      textAlign: 'center',
-    },
+      textAlign: 'center'
+    }
   })
 }
 

@@ -103,7 +103,7 @@ const styles = createStyleSheet({
     backgroundColor: '#eaffee',
     borderWidth: 4
   },
-  //navbar
+  // navbar
   confirm: {
     borderRadius: 2,
     borderWidth: 1,
@@ -187,7 +187,7 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
 
   if (!docs || docs.loading) {
-    return (<Loading/>)
+    return (<Loading />)
   }
 
   if (docs.data === null) {
@@ -313,11 +313,12 @@ const UnitScreen = props => {
         <View style={styles.progressContainer}>
           <LinearProgress
             style={{ borderColor: dimensionColor, ...styles.progressBar }}
-            trackColor={'transparent'}
-            color={dimensionColor} value={0.5} variant="determinate"/>
+            trackColor='transparent'
+            color={dimensionColor} value={0.5} variant='determinate'
+          />
           {renderDebugTitle()}
         </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')}/>
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
       </Navbar>
     )
   }
@@ -334,8 +335,10 @@ const UnitScreen = props => {
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
-          <ScrollView ref={scrollViewRef} style={styles.scrollView}
-                      keyboardShouldPersistTaps='always'>
+          <ScrollView
+            ref={scrollViewRef} style={styles.scrollView}
+            keyboardShouldPersistTaps='always'
+          >
             {renderNavBar()}
             <View style={styles.elements}>
               {renderContent(unitSetDoc.story)}
@@ -440,10 +443,7 @@ const UnitScreen = props => {
       setAllTrue(page)
       Vibration.vibrate(500)
       scrollViewRef.current?.scrollToEnd({ animated: true })
-    }
-
-    // otherwise we just the results
-    else {
+    } else {
       Vibration.vibrate(100)
     }
   }
@@ -503,15 +503,16 @@ const UnitScreen = props => {
     }
 
     return (
-      <View style={{ ...styles.unitCard, ...styles.allTrue}}>
+      <View style={{ ...styles.unitCard, ...styles.allTrue }}>
         <Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')} />
         <Icon
-          testID={'alltrue-icon'}
+          testID='alltrue-icon'
           reverse
           color={Colors.success}
           size={20}
           name='thumbs-up'
-          type='font-awesome-5' />
+          type='font-awesome-5'
+        />
       </View>
     )
   }
@@ -523,7 +524,8 @@ const UnitScreen = props => {
         <ScrollView
           ref={scrollViewRef}
           style={styles.scrollView}
-          keyboardShouldPersistTaps='always'>
+          keyboardShouldPersistTaps='always'
+        >
 
           {/* 1. PART STIMULI */}
           <View style={styles.unitCard}>
@@ -533,18 +535,19 @@ const UnitScreen = props => {
           {/* 2. PART INSTRUCTIONS */}
           <View style={{ ...styles.unitCard, paddingTop: 0 }}>
             <Text style={styles.pageText}>
-            <Icon
-              testID={'info-icon'}
-              reverse
-              color={Colors.dark}
-              size={8}
-              name='info'
-              type='font-awesome-5' />
+              <Icon
+                testID='info-icon'
+                reverse
+                color={Colors.dark}
+                size={8}
+                name='info'
+                type='font-awesome-5'
+              />
             </Text>
             {renderContent(unitDoc.instructions)}
           </View>
 
-          {/* 3. PART TASK PAGE CONTENT*/}
+          {/* 3. PART TASK PAGE CONTENT */}
           <View style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
             <Text style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</Text>
 
