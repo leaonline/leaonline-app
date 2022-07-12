@@ -42,9 +42,9 @@ Meteor.startup(() => {
   })
 })
 
-const debug = createLog({ name: 'connection', type: 'debug' })
+const log = createLog({ name: 'connection' })
 
 Meteor.onConnection(function (connection) {
-  debug('client connected', JSON.stringify(connection))
+  log('client connected', JSON.stringify(connection))
   // TODO: save/log client connection but keep sensitive data encrypted
 })
