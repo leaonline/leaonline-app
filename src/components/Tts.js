@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Vibration, Pressable } from 'react-native'
+import { View, Pressable } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TTSText from './TTSText'
 import Colors from '../constants/Colors'
@@ -15,6 +15,12 @@ const styles = createStyleSheet({
     flexDirection: 'row'
   }
 })
+
+const handlers = {}
+const runHandlers = name => {
+  if (!handlers[name]) { return }
+  handlers[name].forEach(fn => fn())
+}
 
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
@@ -76,7 +82,8 @@ const ttsComponent = props => {
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
    */
   const speak = async () => {
-    Vibration.vibrate(150)
+    runHandlers('beforeSpeak')
+
     const isSpeaking = await Speech.isSpeakingAsync()
     debug('speak', { isSpeaking })
 
@@ -182,14 +189,21 @@ const ttsComponent = props => {
  * @property debug {boolean} debugs all internal tts events if true
  */
 export const TTSengine = {
-  setSpeech (s) {
+  setSpeech (s, { speakImmediately = false } = {}) {
     Speech = s
-    Speech.speak('', {
-      language: 'ger',
-      pitch: 1,
-      rate: 1,
-      volume: 0.0
-    })
+
+    if (speakImmediately) {
+      Speech.speak('', {
+        language: 'ger',
+        pitch: 1,
+        rate: 1,
+        volume: 0.0
+      })
+    }
+  },
+  on: (name, fn) => {
+    handlers[name] = handlers[name] || []
+    handlers[name].push(fn)
   },
   stop () {
     Speech.stop()
@@ -197,6 +211,6 @@ export const TTSengine = {
   isSpeaking: false,
   speakId: 0,
   iconColor: null,
-  debug: true,
+  debug: false,
   component: () => ttsComponent
 }

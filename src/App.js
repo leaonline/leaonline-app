@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { View, Vibration } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import * as Speech from 'expo-speech'
@@ -81,7 +81,8 @@ const styles = createStyleSheet({
 
 // inject expo-speech as our current
 // speech-synthesis implementation
-TTSengine.setSpeech(Speech)
+TTSengine.setSpeech(Speech, { speakImmediately: true })
+TTSengine.on('beforeSpeak', () => Vibration.vibrate(150))
 
 /**
  * Main Application entry point

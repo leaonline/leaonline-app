@@ -56,36 +56,38 @@ export const loadMapData = async (withDebug) => {
   const progressDoc = await loadProgressDoc(fieldId)
   debug({ progressDoc })
 
-  if (progressDoc) {
-    const levelsProgress = {}
+  const levelsProgress = {}
 
-    mapData.entries.forEach((entry, index) => {
-      entry.key = `map-entry-${index}`
-      if (entry.type === 'milestone') {
-        entry.maxProgress = levelsProgress[entry.level].max
-        entry.userProgress = levelsProgress[entry.level].user
-        return
-      }
+  mapData.entries.forEach((entry, index) => {
+    entry.key = `map-entry-${index}`
 
-      let userStageProgress = 0
+    if (entry.type === 'milestone') {
+      entry.maxProgress = levelsProgress[entry.level].max
+      entry.userProgress = levelsProgress[entry.level].user
+      return
+    }
 
-      entry.unitSets.forEach(unitSet => {
-        const userUnitSet = progressDoc.unitSets[unitSet._id]
-        if (!userUnitSet) { return }
+    let userStageProgress = 0
 
-        userStageProgress += userUnitSet.progress
-        unitSet.userProgress = userUnitSet.progress
-        unitSet.userCompetencies = userUnitSet.competencies
-      })
-      entry.userProgress = userStageProgress
+    entry.unitSets.forEach(unitSet => {
+      const userUnitSet = progressDoc
+        ? progressDoc.unitSets[unitSet._id]
+        : { progress: 0, competencies: 0 }
 
-      if (!levelsProgress[entry.level]) {
-        levelsProgress[entry.level] = { max: 0, user: 0 }
-      }
-      levelsProgress[entry.level].max += entry.progress
-      levelsProgress[entry.level].user += userStageProgress
+      userStageProgress += userUnitSet.progress
+      unitSet.userProgress = userUnitSet.progress
+      unitSet.userCompetencies = userUnitSet.competencies
     })
-  }
+
+    entry.userProgress = userStageProgress
+
+    if (!levelsProgress[entry.level]) {
+      levelsProgress[entry.level] = { max: 0, user: 0 }
+    }
+
+    levelsProgress[entry.level].max += entry.progress
+    levelsProgress[entry.level].user += userStageProgress
+  })
 
   return mapData
 }
