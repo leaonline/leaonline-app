@@ -1,6 +1,13 @@
 const cache = new Map()
 
-export const countUnitCompetencies = ({ unitDoc, log }) => {
+/**
+ * Counts all occurrences of competencies in a given unit document.
+ *
+ * @param unitDoc {object} the unit document
+ * @param log {function=} an
+ * @return {*}
+ */
+export const countUnitCompetencies = ({ unitDoc, log = () => {} }) => {
   if (cache.has(unitDoc._id)) {
     return cache.get(unitDoc._id)
   }
@@ -13,7 +20,7 @@ export const countUnitCompetencies = ({ unitDoc, log }) => {
   let count = 0
   unitDoc.pages.forEach((page, pageIndex) => {
     if (!page.content?.length) {
-      log('Skip', unitDoc.shortCode, 'page', pageIndex, ': has no content')
+      return log('Skip', unitDoc.shortCode, 'page', pageIndex, ': has no content')
     }
 
     page.content.forEach(entry => {

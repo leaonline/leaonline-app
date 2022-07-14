@@ -93,6 +93,7 @@ MapData.schema = {
 }
 
 const log = createLog({ name: MapData.name })
+const byLevel = (a, b) => a.level - b.level
 
 /**
  * Creates read-optimized map data for every field. This is a very resource-
@@ -102,16 +103,21 @@ const log = createLog({ name: MapData.name })
  */
 MapData.create = ({ field, dryRun }) => {
   const fieldDoc = getCollection('field').findOne(field)
+
+  if (!fieldDoc) {
+    throw new Error(`Field doc not found by _id "${field}"`)
+  }
+
   log('create for field', fieldDoc.title)
 
   const dimensions = getCollection('dimension').find().fetch()
-  const levels = getCollection('level').find().fetch().sort((a, b) => a.level - b.level)
+  const levels = getCollection('level').find().fetch().sort(byLevel)
+
+  if (!dimensions.length) throw new Error('No Dimensions found')
+  if (!levels.length) throw new Error('No Levels found')
+
   const TestCycleCollection = getCollection('testCycle')
   const UnitSetCollection = getCollection('unitSet')
-
-  if (!dimensions.length) throw new Error()
-  if (!levels.length) throw new Error()
-
   const mapData = {
     field,
     dimensions: dimensions.map(d => d._id),
@@ -121,10 +127,13 @@ MapData.create = ({ field, dryRun }) => {
 
   // for each level
   levels.forEach((levelDoc, levelIndex) => {
+    log('collect level (milestone)', levelDoc._id)
+
     // each level ends with a milestone
     const milestone = {
       type: 'milestone',
       level: levelIndex,
+      progress: 0,
       competencies: []
     }
 
@@ -145,6 +154,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // for each dimension
     dimensions.forEach((dimensionDoc, dimensionIndex) => {
+      log('collect dimension', dimensionDoc._id)
       const dimensionId = dimensionDoc._id
       const testCycleDoc = TestCycleCollection.findOne({
         field: field,
@@ -174,6 +184,7 @@ MapData.create = ({ field, dryRun }) => {
         .fetch()
         .forEach(unitSetDoc => {
           const competencies = countCompetencies(unitSetDoc, log)
+          log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
           // push new stage to the stage data
           stages[dimensionId].push({
             dimension: dimensionIndex,
@@ -241,6 +252,9 @@ MapData.create = ({ field, dryRun }) => {
 
         stage.unitSets.push(unitSet)
       })
+
+      // sum up progress
+      milestone.progress += stage.progress
 
       // then we add our stage to the entries list
       mapData.entries.push(stage)

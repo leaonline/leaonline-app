@@ -1,0 +1,1776 @@
+{
+  "field": [
+    {
+      "_id": "W2zjTv7icffNaKMhR",
+      "jobs": [
+        "Maschinen- und Anlagenführer*in",
+        "Packmitteltechnologe*in"
+      ],
+      "shortCode": "TB",
+      "status": 3,
+      "title": "Technische Berufe",
+      "icon": "tv",
+      "isLegacy": false
+    }
+
+  ],
+  "dimension": [
+    {
+      "_id": "REGFavxYPo2CzeM6p",
+      "colorType": 5,
+      "description": "(Recht)Schreiben",
+      "icon": "pen-alt",
+      "shortCode": "W",
+      "shortNum": 1,
+      "status": 3,
+      "title": "Schreiben"
+    }
+  ],
+  "level": [
+    {
+      "_id": "haPT6fbacjmegsBxq",
+      "description": "lea.app Level 1",
+      "status": 0,
+      "title": "Level 1",
+      "isLegacy": false,
+      "level": 1
+    }
+
+  ],
+  "testCycle": [
+    {
+      "_id": "vf7xTLRqbgeuuE6kS",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 30,
+      "shortCode": "Test_TB_WLevel 1",
+      "unitSets": [
+        "pAkQLcMhTHGDp2PL3",
+        "QMLtD5bTHCbJE9EW3",
+        "BGBtBe5z45bfte3XJ",
+        "cEFvL2Dgzu2D4XW3F",
+        "4PJndsnz5uZXZffWq"
+      ]
+    }
+  ],
+  "unitSet": [
+    {
+      "_id": "4PJndsnz5uZXZffWq",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "dimensionShort": "W",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 7,
+      "shortCode": "TB_1005",
+      "status": 0,
+      "story": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "In der Abteilung von Leila finden diesen Monat Fortbildungen zu Sicherheit und Gesundheitsschutz statt. Die Teilnahme daran ist sehr wichtig, um Unfälle bei der Arbeit zu vermeiden.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "C7F8aTbTuzhXmS2fD"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/m3sgdLmim4RpYXv7K/original/m3sgdLmim4RpYXv7K.png",
+          "width": "12",
+          "contentId": "vLxFLdkiJowJgNbLN"
+        }
+      ],
+      "units": [
+        "Y8mvywZuNDek2NJbt",
+        "KmpW9TgT3BExSiyof"
+      ]
+    },
+    {
+      "_id": "BGBtBe5z45bfte3XJ",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "dimensionShort": "W",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 4,
+      "shortCode": "TB_1003",
+      "status": 0,
+      "story": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Heute Morgen ist Leila an der Verpackungsmaschine eingesetzt. Sie stellt den Materialfluss am Band sicher.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "kAE5gktcHj4CMtFZy"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/m3sgdLmim4RpYXv7K/original/m3sgdLmim4RpYXv7K.png",
+          "width": "12",
+          "contentId": "28ptgshFQxCRGYCW4"
+        }
+      ],
+      "units": [
+        "BzM8LFsx7F8ERx3mq"
+      ]
+    },
+    {
+      "_id": "QMLtD5bTHCbJE9EW3",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "dimensionShort": "W",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 8,
+      "shortCode": "TB_1002",
+      "status": 0,
+      "story": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Die Arbeit an den Maschinen ist anspruchsvoll. Anil muss viele Dinge bei der Arbeit beachten.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "kAE5gktcHj4CMtFZy"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/nByymAyaaNXQiwDzz/original/nByymAyaaNXQiwDzz.png",
+          "width": "12",
+          "contentId": "SEmnszwYhyq2Jmy8K"
+        }
+      ],
+      "units": [
+        "ewiJBH4QB6YF3LiBq",
+        "shsdoEojRmqg8o7mD"
+      ]
+    },
+    {
+      "_id": "cEFvL2Dgzu2D4XW3F",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "dimensionShort": "W",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 2,
+      "shortCode": "TB_1004",
+      "status": 0,
+      "story": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "In der Produktionshalle der Firma \"Klude\" stehen verschiedene Maschinen. Die Maschinen müssen auch von den Auszubildenden überwacht und gewartet werden.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "kAE5gktcHj4CMtFZy"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/JEJzeGKgF5oRZJggy/original/JEJzeGKgF5oRZJggy.png",
+          "width": "12",
+          "contentId": "Qi3E99iqsGe5XMJFz"
+        }
+      ],
+      "units": [
+        "8W5KqaJ8qz59rFZmC"
+      ]
+    },
+    {
+      "_id": "pAkQLcMhTHGDp2PL3",
+      "dimension": "REGFavxYPo2CzeM6p",
+      "dimensionShort": "W",
+      "field": "W2zjTv7icffNaKMhR",
+      "isLegacy": false,
+      "level": "haPT6fbacjmegsBxq",
+      "progress": 9,
+      "shortCode": "TB_1001",
+      "status": 0,
+      "story": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Nächste Woche darf Anil an einer neuen Maschine, einer Fräsmaschine, arbeiten. Bevor er eingesetzt wird, muss er jedoch noch mal ein bisschen was über diese Maschine lernen.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "kAE5gktcHj4CMtFZy"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/oRmNERmQXr6fsbcGQ/original/oRmNERmQXr6fsbcGQ.png",
+          "width": "12",
+          "contentId": "E6FCPLuNvgjpxES8E"
+        }
+      ],
+      "units": [
+        "SvqRmPBqs76oi26i7"
+      ]
+    }
+  ],
+  "unit": [
+    {
+      "_id": "8W5KqaJ8qz59rFZmC",
+      "status": 0,
+      "unitSet": "cEFvL2Dgzu2D4XW3F",
+      "shortCode": "TB_1004_W0005",
+      "title": "Öl fehlt",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Anil arbeitet heute an der Fräsmaschine. Plötzlich piepst es und eine Fehlermeldung erscheint.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "bJYwfhS28yZJ5qNgv"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/nByymAyaaNXQiwDzz/original/nByymAyaaNXQiwDzz.png",
+          "width": "12",
+          "contentId": "sveuMASNxnT4C5EFu"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, öffnet sich die Tastatur und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "tKEK9PXNp4npKnqPK"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Höre dir die Fehlermeldung an und schreibe sie in das freie Feld.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "NtZzRQY3ocpj76u4a"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$Ö[l]$Öl}} {{blanks$[HLP46]$HLP46}} {{blanks$[f]ehlt$fehlt}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zrPkrxCidGqeRkS5s"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "XbrKJiu3WFLczQmcf"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Der Kanister mit dem Öl HLP46 ist leer. Um einen neuen Kanister zu bestellen, muss ein Bestellzettel ausgefüllt werden.\nFülle die Lücken aus.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "FigGeMwuXTKkzxYbE"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Menge: {{blanks$[ein Kanister]$ein Kanister}}\nProduktname: {{blanks$[HLP46]$HLP46}}\nMaschinenname: Fräsmaschine",
+                "scoring": [
+                  {
+                    "competency": [
+                      "zrPkrxCidGqeRkS5s"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "RC5BZ8s7tKK8rR7Dr"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "JcmfCM9fpmJev66sG"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "gZ9xsaNZeeyvtecFB"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zbFkLaQ4t5SakbMc2"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "fFY68j9ZPDwnTu4e5"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "qKC69LHcvaTr4RawY"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "BzM8LFsx7F8ERx3mq",
+      "status": 0,
+      "unitSet": "BGBtBe5z45bfte3XJ",
+      "shortCode": "TB_1003_W0004",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Leila schreibt einen Bestellzettel für das Lager und einen an eine Firma. Sie möchte spezielles Papier bestellen.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "Evsi6yFdQtf7A6rHx"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, öffnet sich die Tastatur und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "JJ5jZKrhNNgKraaKa"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Silben in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "2nm5cXyaMTXw2j6Sw"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[Nie]ten$Nieten}}\n{{blanks$[Schrau]ben$Schrauben von der Firma Walder}} von der Firma Walder",
+                "scoring": [
+                  {
+                    "competency": [
+                      "ywzxcv5A6atrPmDDt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "ywzxcv5A6atrPmDDt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "cyYekX9ixKqtufdH6"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Silben in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "KYumGxnXnkZYHhBAW"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[Pa]pier$Papier}}\n{{blanks$[be]schichtet$beschichtet}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "ywzxcv5A6atrPmDDt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "ywzxcv5A6atrPmDDt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zrPkrxCidGqeRkS5s"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "3dsqZmcNxNa9tJ8u7"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlende Silbe in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "pMRgRAvohwHnmy8Lb"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[Du]plexkarton$Duplexkarton}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "ywzxcv5A6atrPmDDt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "aYvvHSqW9myFEaikC"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "B6s8gZdYoXoZgGYta"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Buchstaben in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "3NZoP3ecr6oNqEnNf"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$Lieferadresse: [B]adstraße 7, 34513 Waldstein $Lieferadresse Badstraße 7, 34513 Waldstein}}\n\n{{blanks$Die Firma [I]ndustriepack befindet sich in der Stadt Waldstein. $Die Firma Industriepack befindet sich in der Stadt Waldstein.}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "by8ikQFQWxHTDgs7n"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "JcmfCM9fpmJev66sG"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "by8ikQFQWxHTDgs7n"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "aYvvHSqW9myFEaikC"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "muBbtwrcwNbnJT926"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "KmpW9TgT3BExSiyof",
+      "status": 0,
+      "unitSet": "4PJndsnz5uZXZffWq",
+      "shortCode": "TB_1005_W0007",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Für die Sicherheit am Arbeitsplatz ist es wichtig Daten über die Maschinen zu sammeln. Leila macht eine Kontrolle an der Schleifmaschine und an der Drehmaschine. Sie schreibt die Ergebnisse auf.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "5geMXnCp7kPJCKkXM"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/m3sgdLmim4RpYXv7K/original/m3sgdLmim4RpYXv7K.png",
+          "width": "12",
+          "contentId": "oYTCyT3Ekh6pju64z"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, öffnet sich die Tastatur und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "SZs2abh2eTyBhTuxc"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die Zahlen als Zahlen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "S6oD2h3jqy3seYwXw"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schleifmaschine:\nProbelauf: 6 Minuten \nBemessungsdifferenzstrom: kleiner als 15 Milliampere",
+              "hidden": true,
+              "width": "12",
+              "contentId": "eRMWDYnZKuQbb7Ge5"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Schleifmaschine:\nProbelauf: {{blanks$[6]$sechs}} Minuten \nBemessungsdifferenzstrom: kleiner als {{blanks$[15]$fünfzehn}} Milliampere",
+                "scoring": [
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "5P2TDQwr7u468agBs"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die Zahlen als Zahlen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "DLG4dFNopsmmrZwZQ"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Drehmaschine:\nreduzierte Geschwindigkeit: 2 Meter pro Minute \nsenkrechte lineare Bewegung: 10 Millimeter pro Sekunde",
+              "hidden": true,
+              "width": "12",
+              "contentId": "NG6nNQA7rWczEwo2C"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Drehmaschine:\nreduzierte Geschwindigkeit: {{blanks$[zwei]$zwei}} Meter pro Minute \nsenkrechte lineare Bewegung: {{blanks$[zehn]$zehn}} Millimeter pro Sekunde",
+                "scoring": [
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "Np48L5vscArRJkK7W"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die Zahlen als Zahlen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "wizBhqvZ5QoyqDQe6"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Leila kontrolliert ob der Abstand zwischen der Schleifmaschine und der Drehmaschine stimmt. Dieser muss mindestens 3 Meter betragen. \nDie Drehmaschine läuft 16 Stunden am Tag.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "XN5P5BD8z97ES6ZjK"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Leila kontrolliert ob der Abstand zwischen der Schleifmaschine und der Drehmaschine stimmt. \nDieser muss mindestens {{blanks$[3]$drei}} Meter betragen. \nDie Drehmaschine läuft {{blanks$[16]$sechzehn}} Stunden am Tag.",
+                "scoring": [
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eQoN5BmJ4A46kJiqj"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "3n95iseTyb3SaA6g6"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "SvqRmPBqs76oi26i7",
+      "status": 0,
+      "unitSet": "pAkQLcMhTHGDp2PL3",
+      "shortCode": "TB_1001_W0001",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "In der Produktionshalle ist es laut. Die Worte seiner Kollegen versteht Anil nicht immer.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "ccCaKJRiDyGnu8iAz"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/nByymAyaaNXQiwDzz/original/nByymAyaaNXQiwDzz.png",
+          "width": "12",
+          "contentId": "69fmWB54rZfyKfp7c"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, erscheint eine Auswahl an Buchstaben und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "7dwZ4ztKkaQnjS8ND"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Welchen Laut hörst du am Anfang des Wortes Bohrer? Schreibe diesen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "FHiAhhzFyod4Z94pQ"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[B]$$pattern=BPO}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "t88z9T5ncPTaxSXKw"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "cu77p4m4PTXmpE2Tx"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Welchen Laut hörst du am Anfang des Wortes Seil? Schreibe diesen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "L46waa7dsCqH2kRT9"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[S]$$pattern=PFS}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "t88z9T5ncPTaxSXKw"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "NPxuqzAFDCHCr93Ax"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Welchen Laut hörst du am Anfang des Wortes Feder? Schreibe diesen in die Lücke.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "qXLkNJtDSRrDjZtWK"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[F]$$pattern=PFS}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "t88z9T5ncPTaxSXKw"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "8yrvPcLm6NhQJ7qk9"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Welche Laute hörst du am Anfang der Wörter Licht und Getriebe? \nSchreibe diese in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "eZBvBurPXnurm7ejm"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[L]$$pattern=LIA}}icht\n{{blanks$[G]$$pattern=KHG}}etriebe",
+                "scoring": [
+                  {
+                    "competency": [
+                      "t88z9T5ncPTaxSXKw"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "t88z9T5ncPTaxSXKw"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "3ZxXP7RtNndpTZ3rp"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe das große \"L\" in die Lücke.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "K5fCE7XhFi5WNdEaC"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[L]$$pattern=Ll}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "oMi5oMYNcBbBMKKw9"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "qmLnuEBoK9dmhAhzX"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe das kleine \"g\" in die Lücke.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "A64ZiL3mieSgam4ft"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[g]$$pattern=Gg}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "oMi5oMYNcBbBMKKw9"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "mC9prFhF32bBBY9cN"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe das große \"H\" in die Lücke.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "eCKfJjZFrQWyotvWT"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[H]$$pattern=Hh}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "oMi5oMYNcBbBMKKw9"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "Hc6RQxww82EfP9rfy"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe das große \"M\" in die Lücke.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "DYGTBvHHSjBohSsbE"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[M]$$pattern=Mm}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "oMi5oMYNcBbBMKKw9"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "bNeCFsbpA2wEZWrE3"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe das kleine \"o\" in die Lücke.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "aYoHFzqb6KdgfYmJC"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[o]$$pattern=Oo}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "oMi5oMYNcBbBMKKw9"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "3Ty6H8Meu4KzmiBX6"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "Y8mvywZuNDek2NJbt",
+      "status": 0,
+      "unitSet": "4PJndsnz5uZXZffWq",
+      "shortCode": "TB_1005_W0006",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Anil möchte sich für eine der Fortbildungen zum Sicherheits- und Gesundheitsschutz anmelden und schreibt dafür eine E-Mail. Im Anschluss daran muss er noch seine neuen dienstlichen E- Mails beantworten.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "bJYwfhS28yZJ5qNgv"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/dXuzLF8qRQEWP2L5b/original/dXuzLF8qRQEWP2L5b.png",
+          "width": "12",
+          "contentId": "Rhhm2qLJRQnH3QbNG"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, öffnet sich die Tastatur und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "tKEK9PXNp4npKnqPK"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Wörter der Anrede dieser E-Mail in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "NtZzRQY3ocpj76u4a"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Sehr  geehrte Frau Gruber.\nich möchte mich zur Fortbildung \"Sicherheits- und Gesundheitsschutz\" anmelden. \nMit freundlichen Grüßen\nAnil Patel",
+              "hidden": true,
+              "width": "12",
+              "contentId": "uAy7DWfkgSfCYj4TP"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[Sehr]$Sehr}}  geehrte {{blanks$[Frau Gruber]$Frau Gruber}}\nich möchte mich zur Fortbildung \"Sicherheits- und Gesundheitsschutz\" anmelden. \nMit freundlichen Grüßen\nAnil Patel",
+                "scoring": [
+                  {
+                    "competency": [
+                      "nAibP8KDLHCscFMRL"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eJGQsdubgK4TKBh2A"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "7eijKyiAAar2FRwEj"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "sN3J9s6deexsbHT6d"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "SwFduQYgBvozBiJF7"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "gZ9xsaNZeeyvtecFB"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zbFkLaQ4t5SakbMc2"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "XbrKJiu3WFLczQmcf"
+            }
+          ]
+        },
+        {
+          "instructions": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Es erscheinen mehrere Antwortmöglichkeiten, wenn du mit dem Finger auf eine Lücke tippst.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "BrfASZ4LgzrDjteya"
+            }
+          ],
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Wähle jeweils die passende Schreibweise für die Lücken aus.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "q4vGnHB4BeQFuYY4Z"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Guten Tag Herr Sommer, \nvielen Dank für Ihre Anfrage. Wir besprechen uns im Team, ob wir die Sonderbestellung anfertigen können. \nMit freundlichen Grüßen\nAnil Patel",
+              "hidden": true,
+              "width": "12",
+              "contentId": "yZSui5jnmptqMgSGx"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{select$[guten|Guten]$}} {{select$[tag|Tag]$}} Herr Sommer, \nvielen Dank für {{select$[ihre|Ihre]$}} Anfrage. Wir besprechen uns im Team, ob wir die Sonderbestellung anfertigen können. \n{{select$[mit|Mit]$}} freundlichen Grüßen\nAnil Patel",
+                "scoring": [
+                  {
+                    "competency": [
+                      "nAibP8KDLHCscFMRL"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zbFkLaQ4t5SakbMc2"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "hckyCnRfXbyFTznx4"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "mjfCArbSK42ck6neg"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "niLR4DimF2vPxMN3W"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Wörter und Buchstaben dieser E-Mail in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "3YmfcG9j3iqq69vqc"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Wörter und Buchstaben dieser E-Mail in die Lücken.\n\nLiebe Frau Müller, \n\nfür die Schulung \"Sicherheit am Arbeitsplatz\" möchte ich über Ihre Organisation \"Berufliches Lernen\" ein Zertifikat als Sicherheitsbeauftragter erwerben. Wie sind die Bedingungen dazu? \n\nMit freundlichen Grüßen \nAnil Patel",
+              "hidden": true,
+              "width": "12",
+              "contentId": "idTrSi9qJWoZ4xwAp"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[L]iebe$Liebe}} Frau Müller, \n\nfür die Schulung \"Sicherheit am Arbeitsplatz\" möchte ich über Ihre Organisation \" {{blanks$[Berufliches Lernen]$Berufliches Lernen}}\" ein Zertifikat als Sicherheitsbeauftragter erwerben. Wie sind die Bedingungen dazu? \n\n{{blanks$[Mit]$Mit}} freundlichen Grüßen \nAnil Patel",
+                "scoring": [
+                  {
+                    "competency": [
+                      "nAibP8KDLHCscFMRL"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zbFkLaQ4t5SakbMc2"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "by8ikQFQWxHTDgs7n"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "JcmfCM9fpmJev66sG"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "7eijKyiAAar2FRwEj"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eJGQsdubgK4TKBh2A"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "by8ikQFQWxHTDgs7n"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zbFkLaQ4t5SakbMc2"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "mjfCArbSK42ck6neg"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "RC5BZ8s7tKK8rR7Dr"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "AByPTjoXMMTPH6zdn"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Buchstaben dieser E-Mail in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "TcTNdosFf2GAGkioY"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Hallo Mehmet, \n\nkannst Du mir nochmal die Kontaktdaten von Frau Müller geben. Ich möchte das Sicherheitszertifikat machen und Sie gerne anrufen. Danke! \n\nLiebe Grüße, \nAnil",
+              "hidden": true,
+              "width": "12",
+              "contentId": "sKZhq6eNPxaGmcJsj"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[H]allo$Hallo}} Mehmet, \n\nkannst Du mir nochmal die Kontaktdaten von Frau Müller geben. Ich möchte das Sicherheitszertifikat machen und Sie gerne anrufen. Danke! \n\n{{blanks$[L]iebe$Liebe}} Grüße, \nAnil",
+                "scoring": [
+                  {
+                    "competency": [
+                      "nAibP8KDLHCscFMRL"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "eJGQsdubgK4TKBh2A"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "nAibP8KDLHCscFMRL"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "9GeJvTn5sJGBDsyAt"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "6qJuNGzz4MYYowNe8"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "ewiJBH4QB6YF3LiBq",
+      "status": 0,
+      "unitSet": "QMLtD5bTHCbJE9EW3",
+      "shortCode": "TB_1002_W0002",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Anil muss viele Dinge bei der Arbeit beachten. Der Arbeitsschutz ist zum Besipiel besonders wichtig.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "tPG4H7FDKeEWyZMod"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/JEJzeGKgF5oRZJggy/original/JEJzeGKgF5oRZJggy.png",
+          "width": "12",
+          "contentId": "xAWT7NYjJvdxE923W"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, öffnet sich die Tastatur und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "k5GpQKQc8fR3KSDs3"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Ergänze die fehlenden Buchstaben.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "c9DZJZWMu9uG2k9JS"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schutzbrille tragen, damit nichts ins Auge fliegt.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "ZEtn9efW6RcwC3L2Z"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Schutzbrille tragen, damit nichts ins {{blanks$[Au]ge$Auge.}} fliegt.",
+                "scoring": [
+                  {
+                    "competency": [
+                      "uTZNQrbbk8BB7MJCJ"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "fmdvc7ZcRqANRucnd"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Ergänze die fehlenden Buchstaben.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "WyRZtxcGNPutevd7i"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Der beste Schutz ist tatsächlich konzentriertes Arbeiten und nichts in Eile machen.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "GRjd9NwkFMzk6ftCG"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Der beste Schutz ist tatsächlich konzentriertes Arbeiten und nichts in {{blanks$ [Ei]le $Eile}} machen.",
+                "scoring": [
+                  {
+                    "competency": [
+                      "uTZNQrbbk8BB7MJCJ"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "KzvacZ7tiQLhMDi28"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "hME5HHwtonphohgxL"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Ergänze die fehlenden Buchstaben.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "dj7v53SXNSmLQbAMx"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Zur Arbeit sollte man stets die passende Kleidung tragen. Man darf nicht Eitel sein, die Kleidung muss funktionell sein.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "8XEcX8wMnAX7ivHC8"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Zur Arbeit sollte man stets die passende Kleidung tragen. Man darf nicht {{blanks$[Ei]tel $Eitel }} sein, die Kleidung muss funktionell sein.",
+                "scoring": [
+                  {
+                    "competency": [
+                      "uTZNQrbbk8BB7MJCJ"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "zrPkrxCidGqeRkS5s"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "69hPRcZ9quvoPotG7"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Ergänze die fehlenden Buchstaben.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "HaSP5EqdARxyAecvP"
+            },
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Die Schutzmaßnahmen verinnerlicht man irgendwann wie Auto fahren. Sich und seinen Körper zu schützen ist sicherlich eine gute Idee.",
+              "hidden": true,
+              "width": "12",
+              "contentId": "iqpsNCZ3kF7Td74a7"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "Die Schutzmaßnahmen verinnerlicht man irgendwann wie {{blanks$[Au]to$Auto}} fahren. Sich und seinen Körper zu schützen ist sicherlich eine gute {{blanks$[I]dee$Idee}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "uTZNQrbbk8BB7MJCJ"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "8GygdGLigceuJ3HkH"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "uTZNQrbbk8BB7MJCJ"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "KzvacZ7tiQLhMDi28"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "8RC8JRy9RnRo8Baoj"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    },
+    {
+      "_id": "shsdoEojRmqg8o7mD",
+      "status": 0,
+      "unitSet": "QMLtD5bTHCbJE9EW3",
+      "shortCode": "TB_1002_W0003",
+      "stimuli": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Zum Lernen sieht sich Anil die Dokumentationen der letzten Zeit an. Er sortiert die Dokumentation der Arbeitsergebnisse nach Datum.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "yWa9sQTYeeoDrsGJX"
+        },
+        {
+          "type": "media",
+          "subtype": "image",
+          "value": "https://content.lealernen.de/cdn/storage/mediaLib/oRmNERmQXr6fsbcGQ/original/oRmNERmQXr6fsbcGQ.png",
+          "width": "12",
+          "contentId": "frZbQaPWr7ubvxTH6"
+        }
+      ],
+      "instructions": [
+        {
+          "type": "text",
+          "subtype": "text",
+          "value": "Wenn du mit dem Finger auf eine Lücke tippst, erscheint eine Ziffernleiste und du kannst deine Antwort eingeben.",
+          "hidden": false,
+          "width": "12",
+          "contentId": "Ed6sRsvihfsxAtrK9"
+        }
+      ],
+      "pages": [
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Zahlen in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "LWoG4GKNWLbp3ayh5"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[15]$15.05.2020}}.{{blanks$[05]$}}.2020",
+                "scoring": [
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ]
+                  },
+                  {
+                    "competency": [
+                      "J3FsyGLwbCFvDJk4v"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "4JkwPWwaQBxY3wFA4"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Zahlen in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "JbDjhawKey8i4Tvdk"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$28.05.[2020]$28.05.2020}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ]
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "oCgJB2PGFrXMaDuMJ"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Zahlen in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "dWKP4abnxtqeRyeBH"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$02.[06]$02.06.2020}}.{{blanks$[2020]$}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ],
+                    "target": 0
+                  },
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ],
+                    "target": 1
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "rmgHbpnoDgXpsPpb4"
+            }
+          ]
+        },
+        {
+          "content": [
+            {
+              "type": "text",
+              "subtype": "text",
+              "value": "Schreibe die fehlenden Zahlen in die Lücken.",
+              "hidden": false,
+              "width": "12",
+              "contentId": "Nux4YGfeyCBm7AKWm"
+            },
+            {
+              "type": "item",
+              "subtype": "cloze",
+              "value": {
+                "text": "{{blanks$[16]$16.06.2020}}.{{blanks$[06]$}}.{{blanks$[2020]$}}",
+                "scoring": [
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ],
+                    "target": 0
+                  },
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ],
+                    "target": 1
+                  },
+                  {
+                    "competency": [
+                      "k4aP56kBwqttafTdd"
+                    ],
+                    "target": 2
+                  }
+                ]
+              },
+              "width": "12",
+              "contentId": "kbmYQfee7sGAhmyKL"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "createdBy": "p6kSPxYXgnNEryye3",
+        "history": [],
+        "updatedBy": "kBdFvdDYmPnsA6GbC"
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
-import { onServerExec } from '../infrastructure/arch/onServerExec'
-import { RestoreCodes } from '../api/accounts/RestoreCodes'
-import { UserEmail } from '../api/accounts/UserEmail'
+import { onServerExec } from '../../infrastructure/arch/onServerExec'
+import { RestoreCodes } from '../../api/accounts/RestoreCodes'
+import { UserEmail } from '../../api/accounts/UserEmail'
 
 export const Users = {
   name: 'users',

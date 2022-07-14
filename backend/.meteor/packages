@@ -23,6 +23,7 @@ typescript@4.4.1              # Enable TypeScript syntax in .ts and .tsx modules
 #========================================
 meteortesting:mocha
 lmieulet:meteor-coverage@3.2.0
+hwillson:stub-collections
 
 #========================================
 # GENERAL / SYSTEM
