@@ -1,8 +1,8 @@
 import { createMethod } from '../infrastructure/factories/createMethod'
 import { createCollection } from '../infrastructure/factories/createCollection'
 
-import { Users } from '../contexts/Users'
-import { Content } from '../contexts/Content'
+import { Users } from '../contexts/users/Users'
+import { Content } from '../contexts/content/Content'
 import { ContentServer } from '../api/remotes/content/ContentServer'
 import { MapData } from '../contexts/map/MapData'
 import { ContextRegistry } from '../contexts/ContextRegistry'

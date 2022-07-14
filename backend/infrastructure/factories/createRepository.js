@@ -8,7 +8,7 @@ export const createRepository = (storage = new Map()) => {
   return {
     add: (name, target) => {
       if (storage.has(name)) {
-        throw Error(`Collection ${name} already exists`)
+        throw Error(`Item "${name}" already exists`)
       }
 
       storage.set(name, target)

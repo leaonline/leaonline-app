@@ -1,5 +1,4 @@
-import { ContentServer } from '../api/remotes/content/ContentServer'
-import { onServerExec } from '../infrastructure/arch/onServerExec'
+import { onServerExec } from '../../infrastructure/arch/onServerExec'
 
 /**
  * This is a context, providing methods that simply delegate code to the
@@ -33,14 +32,22 @@ Content.methods.home = {
     }
   },
   run: onServerExec(function () {
+    import { Field } from './Field'
+    import { Dimension } from './Dimension'
+    import { Level } from './Level'
+    import { getCollection } from '../../api/utils/getCollection'
+
     return function ({ field, dimension, level }) {
       return {
-        field: field && ContentServer.get({ name: 'field', query: {} }),
-        dimension: dimension && ContentServer.get({
-          name: 'dimension',
-          query: {}
-        }),
-        level: level && ContentServer.get({ name: 'dimension', query: {} })
+        field: field
+          ? getCollection(Field.name).find().fetch()
+          : [],
+        dimension: dimension
+          ? getCollection(Dimension.name).find().fetch()
+          : [],
+        level: level
+          ? getCollection(Level.name).find().fetch()
+          : []
       }
     }
   })
@@ -52,14 +59,10 @@ Content.methods.home = {
 Content.methods.map = {
   name: 'content.methods.map',
   schema: {
-    fieldId: String,
-    level: {
-      type: Number,
-      optional: true
-    }
+    fieldId: String
   },
   run: onServerExec(function () {
-    import { MapData } from './map/MapData'
+    import { MapData } from '../map/MapData'
 
     return function ({ fieldId }) {
       return MapData.get({ field: fieldId })
@@ -76,7 +79,7 @@ Content.methods.unit = {
     unitSetId: String
   },
   run: onServerExec(function () {
-    import { Session } from './session/Session'
+    import { Session } from '../session/Session'
 
     return function ({ unitSetId }) {
       const { userId } = this

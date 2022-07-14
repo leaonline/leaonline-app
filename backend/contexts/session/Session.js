@@ -66,7 +66,7 @@ Session.create = ({ userId, unitSetDoc }) => {
     unitSet: unitSetDoc._id,
     fieldId: unitSetDoc.field
   }
-  const hasStory = unitSetDoc.story.length > 0
+  const hasStory = unitSetDoc.story?.length
   const unitId = unitSetDoc.units[0]
 
   if (hasStory) {

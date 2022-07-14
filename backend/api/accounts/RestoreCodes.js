@@ -44,8 +44,7 @@ RestoreCodes.schema = () => ({
   },
   'restore.$': {
     type: String,
-    min: internal.length,
-    regEx: internal.forbidden
+    min: internal.length
   }
 })
 
@@ -56,9 +55,10 @@ RestoreCodes.schema = () => ({
  */
 RestoreCodes.generate = () => {
   const codes = []
-  codes.length = internal.numberOfCOdes
+  const { numberOfCOdes } = internal
+  codes.length = numberOfCOdes
 
-  for (let i = 0; i < internal.numberOfCOdes; i++) {
+  for (let i = 0; i < numberOfCOdes; i++) {
     codes[i] = generateCode()
   }
 
@@ -72,13 +72,14 @@ const generateCode = () => {
   let count = 0
   let isValid = false
   let code
+  const { maxRetries, length, forbidden, uppercase } = internal
 
-  while (!isValid && count++ < internal.maxRetries) {
-    code = Random.id(internal.length)
-    isValid = internal.forbidden.test(code) === false
+  while (!isValid && count++ < maxRetries) {
+    code = Random.id(length)
+    isValid = forbidden.test(code) === false
   }
 
-  return internal.uppercase
+  return uppercase
     ? code.toUpperCase()
     : code
 }

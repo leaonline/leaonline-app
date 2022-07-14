@@ -10,8 +10,7 @@ import { createLog } from '../../infrastructure/log/createLog'
  * information, whether to fetch new data or used the locally cached data.
  */
 export const SyncState = {
-  name: 'syncState',
-  methods: {}
+  name: 'syncState'
 }
 
 const log = createLog({ name: SyncState.name })
@@ -23,6 +22,13 @@ SyncState.schema = {
   version: Number
 }
 
+/**
+ * Updates the current hash, version and updatedAt field for a given
+ * ctx and saves it to the collection. Creates a new entry if none is
+ * defined by {name}
+ * @param name {string}
+ * @return {*} upsert result, depending on insert or update
+ */
 SyncState.update = name => {
   log('update', name)
   const hash = Random.id(8)
@@ -34,19 +40,32 @@ SyncState.update = name => {
   })
 }
 
+/**
+ * Gets all sync states by given names
+ * @param names {Array<string>}
+ * @return {Array<object>} a list of documents
+ */
 SyncState.get = ({ names }) => getCollection(SyncState.name)
   .find({ name: { $in: names } })
   .fetch()
 
+/**
+ * Throws an error if any of the given names is not registered for sync.
+ * To register for a sync a ctx must be registered to the {ContextRegistry}
+ * and have the {sync} flag being set to a truthy value.
+ * @param names {Array<string>}
+ */
 SyncState.validate = names => {
   names.forEach(name => {
     const ctx = ContextRegistry.get(name)
 
     if (!ctx || !ctx.sync) {
-      throw new Error(`Attempt to sync ${name} but it's not defined for sync!`)
+      throw new Error(`Attempt to sync "${name}" but it's not defined for sync!`)
     }
   })
 }
+
+SyncState.methods = {}
 
 SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',

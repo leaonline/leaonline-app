@@ -154,14 +154,6 @@ ContentServer.sync = async ({ name, debug }) => {
   return stats
 }
 
-ContentServer.get = ({ name, query }) => {
-  ensureContextExists({ name })
-  const collection = ensureCollectionExists({ name })
-  const cursor = collection.find(query)
-  log(name, 'get', cursor.count(), 'docs')
-  return cursor.fetch()
-}
-
 /// /////////////////////////////////////////////////////////////////////////////
 //
 //  INTERNAL
