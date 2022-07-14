@@ -1,12 +1,12 @@
 /* eslint-env mocha */
 // import { expect } from 'chai'
 import { RestoreCodes } from '../RestoreCodes'
+import { createSchema } from '../../../infrastructure/factories/createSchema'
 
 describe(RestoreCodes.name, function () {
-  describe('schema', function () {
-    it('is not implemented')
-  })
-  describe('generate', function () {
-    it('is not implemented')
+  it('generates valid restore codes', function () {
+    const restoreSchema = createSchema(RestoreCodes.schema())
+    const restore = RestoreCodes.generate()
+    restoreSchema.validate({ restore })
   })
 })
