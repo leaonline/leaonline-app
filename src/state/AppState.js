@@ -20,7 +20,8 @@ const KEYS = {
   UNIT: createKey('uni'),
   DIMENSION: createKey('dimension'),
   LEVEL: createKey('level'),
-  STAGE: createKey('level')
+  STAGE: createKey('level'),
+  COMPLETE: createKey('complete')
 }
 
 let storage = null
@@ -48,6 +49,7 @@ const updateSingle = async (key, value) => {
 }
 
 AppState.init = async (storageImpl) => {
+  debug('init with storage')
   storage = storageImpl
 }
 

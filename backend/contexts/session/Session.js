@@ -4,6 +4,8 @@ import { UnitSet } from '../content/UnitSet'
 import { Unit } from '../content/Unit'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
+import { Response } from '../response/Response'
+import { Progress } from '../progress/Progress'
 
 /**
  * A session represents a user's current state of work on a specific {UnitSet}.
@@ -17,6 +19,7 @@ const log = createLog({ name: Session.name })
 Session.schema = {
   userId: String,
   unitSet: String,
+  fieldId: String,
   progress: {
     type: Number,
     defaultValue: 0
@@ -57,7 +60,12 @@ Session.schema = {
 
 Session.create = ({ userId, unitSetDoc }) => {
   log('create', { userId, unitSetId: unitSetDoc._id })
-  const insertDoc = { userId, startedAt: new Date(), unitSet: unitSetDoc._id }
+  const insertDoc = {
+    userId: userId,
+    startedAt: new Date(),
+    unitSet: unitSetDoc._id,
+    fieldId: unitSetDoc.field
+  }
   const hasStory = unitSetDoc.story.length > 0
   const unitId = unitSetDoc.units[0]
 
@@ -115,19 +123,36 @@ Session.get = ({ unitSet, userId }) => {
   return { sessionDoc, unitSetDoc, unitDoc }
 }
 
+/**
+ * Updates the current session according to the following algorithm:
+ *
+ * 1 get sessionDoc by sessionId+userId
+ * 2 get the current unitDoc by sessionDoc.unit
+ *
+ * 3 if session has no next unit
+ *    - update progress from current unit and complete session
+ *    - return null (= no next unit)
+ *
+ * 4
+ *
+ * @param sessionId
+ * @param userId
+ * @return {*}
+ */
 Session.update = ({ sessionId, userId }) => {
   log('update', { sessionId, userId })
   const SessionCollection = getCollection(Session.name)
+  const UnitCollection = getCollection(Unit.name)
   const sessionDoc = SessionCollection.findOne({ _id: sessionId, userId })
 
   if (!sessionDoc) {
     throw new Meteor.Error('session.updateFailed', 'docNotFound', { sessionId, userId })
   }
 
-  log({ sessionDoc })
-
-  const unitDoc = sessionDoc.unit && SessionCollection.findOne(sessionDoc.unit)
+  const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
+  const unitDoc = sessionDoc.unit && UnitCollection.findOne(sessionDoc.unit)
   const timestamp = new Date()
+  log({ timestamp, sessionDoc, unitDoc })
 
   // ---------------------------------------------------------------------------
   // IF COMPLETE
@@ -136,36 +161,37 @@ Session.update = ({ sessionId, userId }) => {
 
   if (!sessionDoc.nextUnit) {
     log('complete', sessionId)
-    return SessionCollection.update(sessionId, {
+    SessionCollection.update(sessionId, {
       $inc: {
-        progress: unitDoc.progress || 0,
-        competencies: unitDoc.competencies || 0
+        progress: unitDoc.pages.length,
+        competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
       },
       $unset: { unit: 1, nextUnit: 1 },
       $set: { completedAt: timestamp }
     })
+    return null
   }
 
   // ---------------------------------------------------------------------------
   // NEXT ITERATION
   // ---------------------------------------------------------------------------
   log('get next unit', sessionId)
-  const updateDoc = { $set: { updatedAt: timestamp } }
+  const updateDoc = {
+    $set: {
+      updatedAt: timestamp,
+      unit: sessionDoc.nextUnit // must exist at this point
+    }
+  }
 
   // we can only update the progress if there is a unitDoc
   // on the contrary - if there is no unitDoc  then we are still in the story
   if (unitDoc) {
     updateDoc.$inc = {
-      progress: unitDoc.progress || 0,
-      competencies: unitDoc.competencies || 0
+      progress: unitDoc.pages.length,
+      competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
     }
   }
 
-  updateDoc.$set = {
-    unit: sessionDoc.nextUnit // must exist at this point
-  }
-
-  const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
   const nextUnitId = getNextUnitId({
     unitId: sessionDoc.nextUnit,
     units: unitSetDoc.units
@@ -179,9 +205,10 @@ Session.update = ({ sessionId, userId }) => {
     updateDoc.$unset = { nextUnit: 1 }
   }
 
-  log({ sessionId, updateDoc })
+  log('update doc:', { sessionId, updateDoc })
 
-  return SessionCollection.update(sessionId, updateDoc)
+  SessionCollection.update(sessionId, updateDoc)
+  return sessionDoc.nextUnit
 }
 
 Session.methods = {}
@@ -194,7 +221,22 @@ Session.methods.update = {
   run: onServerExec(function () {
     return function ({ sessionId }) {
       const { userId } = this
-      return Session.update({ sessionId, userId })
+      const nextUnitId = Session.update({ sessionId, userId })
+
+      Meteor.defer(() => {
+        // get the updated session doc and update the user progress
+        const sessionDoc = getCollection(Session.name).findOne({ _id: sessionId })
+        Progress.update({
+          userId: userId,
+          unitSetId: sessionDoc.unitSet,
+          fieldId: sessionDoc.fieldId,
+          progress: sessionDoc.progress,
+          competencies: sessionDoc.competencies,
+          complete: !!sessionDoc.completedAt
+        })
+      })
+
+      return nextUnitId
     }
   })
 }

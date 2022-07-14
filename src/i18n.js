@@ -43,7 +43,9 @@ const resources = {
       progress: 'Overall progress',
       title: 'My successes'
     },
-    mapScreen: {},
+    mapScreen: {
+      stage: 'Stage'
+    },
     unitScreen: {
       story: {
         continue: 'Start task'
@@ -55,9 +57,10 @@ const resources = {
       },
       abort: {
         question: 'Do you really want to abort this exercise?',
-        abort: 'Cancel',
-        continue: 'Continue'
-      }
+        abort: 'Abort exercise',
+        continue: 'Continue exercise'
+      },
+      allTrue: 'Great!'
     },
     completeScreen: {}
   },
@@ -95,7 +98,9 @@ const resources = {
       progress: 'Gesamter Fortschritt',
       title: 'Meine Erfolge'
     },
-    mapScreen: {},
+    mapScreen: {
+      stage: 'Level'
+    },
     unitScreen: {
       story: {
         continue: 'Aufgabe starten'
@@ -107,9 +112,10 @@ const resources = {
       },
       abort: {
         question: 'Willst du diese Übung wirklich abbrechen?',
-        abort: 'Abbrechen',
-        continue: 'Fortsetzen'
-      }
+        abort: 'Übung abbrechen',
+        continue: 'Übung fortsetzen'
+      },
+      allTrue: 'Super!'
     },
     completeScreen: {}
   }

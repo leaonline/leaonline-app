@@ -42,7 +42,6 @@ inter-process-messaging@0.1.1
 lai:collection-extensions@0.3.0
 leaonline:collection-factory@1.0.4
 leaonline:corelib@1.0.0
-leaonline:ejson-regexp@1.0.0
 leaonline:method-factory@1.1.0
 leaonline:publication-factory@1.0.0
 leaonline:ratelimit-factory@1.0.0

@@ -53,9 +53,8 @@ const CompleteScreen = props => {
         <View style={styles.routeButtonContainer}>
           <RouteButton
             onlyIcon
-            icon='arrow-alt-circle-right' handleScreen={() => {
-              props.navigation.navigate('Map')
-            }}
+            icon='arrow-alt-circle-right'
+            handleScreen={() => props.navigation.navigate('Map')}
           />
         </View>
       </View>

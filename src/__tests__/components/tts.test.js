@@ -138,8 +138,8 @@ it('resolve to a complete state via options.onDone', async () => {
   expect(TTSengine.speakId).toBe('ttsMock.text')
   expect(TTSengine.iconColor).toBe(Colors.success)
 
-  await asyncTimeout(100)
-  expect(stopCalled).toBe(false)
+  await asyncTimeout(300)
+  expect(stopCalled).toBe(true)
   expect(TTSengine.isSpeaking).toBe(false)
   expect(TTSengine.speakId).toBe(0)
   expect(TTSengine.iconColor).toBe(Colors.primary)

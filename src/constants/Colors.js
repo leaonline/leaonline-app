@@ -12,5 +12,8 @@ export default {
   warning: '#FFC800',
   danger: '#d95a7d',
   success: '#00ddb6',
-  info: '#86c4f1'
+  info: '#86c4f1',
+  right: '#00FF00',
+  missing: '#FFFF00',
+  wrong: '#FF0000'
 }

@@ -18,4 +18,8 @@ const createSchema = (schema, options) => {
 
 export const RegEx = SimpleSchema.RegEx
 
+export const Integer = SimpleSchema.Integer
+
+export const oneOf = SimpleSchema.oneOf
+
 export { createSchema }

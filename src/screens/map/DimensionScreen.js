@@ -13,6 +13,7 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
+import { Config } from '../../env/Config'
 import { TTSengine } from '../../components/Tts'
 
 const log = Log.create('DimensionScreen')
@@ -81,11 +82,14 @@ const DimensionScreen = props => {
   const renderDimensions = () => {
     return docs.data.unitSets.map((unitSet, index) => {
       const color = ColorTypeMap.get(unitSet.dimension.colorType)
+      const title = Config.debug.map
+        ? unitSet._id + ' ' + unitSet.dimension.title
+        : unitSet.dimension.title
       return (
         <RouteButton
           key={index}
           color={color}
-          title={unitSet.dimension.title}
+          title={title}
           icon={unitSet.dimension.icon}
           handleScreen={() => selectUnitSet(unitSet)}
         />

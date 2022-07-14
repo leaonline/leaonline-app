@@ -2,13 +2,14 @@ import { UnitContentElementFactory } from '../../components/factories/UnitConten
 import { PlainTextRenderer } from '../../components/renderer/text/PlainTextRenderer'
 import { MarkdownRenderer } from '../../components/renderer/text/Markdown'
 import { ImageRenderer } from '../../components/renderer/media/ImageRenderer'
-import { ChoiceRenderer } from '../../components/renderer/item/ChoiceRenderer'
-import { HighlightRenderer } from '../../components/renderer/item/HighlightRenderer'
+import { ChoiceRenderer } from '../../items/choice/ChoiceRenderer'
+import { HighlightRenderer } from '../../items/highlight/HighlightRenderer'
 
 import { Scoring } from '../../scoring/Scoring'
 import { scoreHighlight } from '../../items/highlight/scoring'
-import { ClozeRenderer } from '../../components/renderer/item/ClozeRenderer'
+import { ClozeRenderer } from '../../items/cloze/ClozeRenderer'
 import { scoreCloze } from '../../items/cloze/scoring'
+import { scoreChoice } from '../../items/choice/scoring'
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -60,6 +61,12 @@ UnitContentElementFactory.register({
   type: 'item',
   subtype: 'choice',
   component: ChoiceRenderer
+})
+
+Scoring.register({
+  type: 'item',
+  subtype: 'choice',
+  scoreFn: scoreChoice
 })
 
 // highlight

@@ -9,7 +9,6 @@
     "lint": "standard --env jest --env mocha | snazzy",
     "lint:fix": "standard --fix --env jest --env mocha | snazzy",
     "test": "node_modules/.bin/jest --coverage",
-    "test:unit": "BABEL_ENV=test NODE_ENV=test ./node_modules/.bin/mocha '__tests_unit__/**/*.tests.js'",
     "docs": "jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {
@@ -49,7 +48,9 @@
     "react-native-web": "~0.17.5",
     "simpl-schema": "^1.12.0",
     "string.prototype.matchall": "^4.0.6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "expo-constants": "~12.1.3",
+    "react-native-svg": "12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -61,7 +62,7 @@
     "jest-expo": "^43.0.1",
     "jsdoc": "^3.6.7",
     "react-test-renderer": "^17.0.2",
-    "sinon": "^13.0.1",
+    "sinon": "^14.0.0",
     "snazzy": "^9.0.0",
     "standard": "^16.0.4"
   },

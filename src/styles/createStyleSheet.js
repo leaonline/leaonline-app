@@ -12,7 +12,7 @@ export const createStyleSheet = options => {
   if (showBorders) {
     Object.values(options).forEach(style => {
       style.borderColor = 'red'
-      style.borderWidth = 0
+      style.borderWidth = 1
     })
   }
 

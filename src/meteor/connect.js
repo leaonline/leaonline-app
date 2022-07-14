@@ -5,18 +5,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 // make sure connections can send/receive custom types
 import './ejson-regex'
 import { Log } from '../infrastructure/Log'
+import { Config } from '../env/Config'
 
-// TODO move this into env config
-const maxTimeout = 10000
-const interval = 250
-const argsSchema = createSchema({
+const log = Log.create('Meteor')
+const maxTimeout = Config.backend.maxTimeout
+const interval = Config.backend.interval
+const endpointSchema = createSchema({
   endpoint: {
     type: String,
     regEx: /^ws{1,2}:\/\/[0-9a-zA-z.:-]+\/websocket$/i
   }
 })
-
-const log = Log.create('Meteor')
 
 /**
  * Connects to a Meteor server by given endpoint. Returns a Promise.
@@ -25,14 +24,12 @@ const log = Log.create('Meteor')
  * - error during connect
  * - timeout exceeds maxTimeout
  *
- * @param endpoint {string} a valid websocket endpoint. Requires local ip on
- *  development mode (192.188.x.y)
  * @return {Promise<Object>} a promise, resolving to the latest connection
  *  status on success
  */
-export const connectMeteor = ({ endpoint }) => {
-  check({ endpoint }, argsSchema)
-  log('connect to', endpoint)
+export const connectMeteor = () => {
+  log('connect to', Config.backend.url)
+  check({ endpoint: Config.backend.url }, endpointSchema)
 
   return new Promise((resolve, reject) => {
     const status = Meteor.status()
@@ -42,7 +39,7 @@ export const connectMeteor = ({ endpoint }) => {
 
     // break early on any errors during connect attempt
     try {
-      Meteor.connect(endpoint, { AsyncStorage })
+      Meteor.connect(Config.backend.url, { AsyncStorage })
     } catch (e) {
       return reject(e)
     }

@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Vibration } from 'react-native'
+import { View, Pressable } from 'react-native'
 import { Icon } from 'react-native-elements'
 import TTSText from './TTSText'
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 /** @private **/
 let Speech = null
 
 /** @private stylesheet **/
-const styles = StyleSheet.create({
+const styles = createStyleSheet({
   body: {
     flexDirection: 'row'
   }
 })
+
+const handlers = {}
+const runHandlers = name => {
+  if (!handlers[name]) { return }
+  handlers[name].forEach(fn => fn())
+}
 
 /**
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
@@ -23,6 +30,7 @@ const styles = StyleSheet.create({
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {string} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.primary  (examples in ./constants/Colors.js)
+ * @param {string} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.primary  (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
@@ -35,10 +43,11 @@ const styles = StyleSheet.create({
  */
 
 const ttsComponent = props => {
+  // TODO use useReducer to implement complex state logic?
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
-  const [iconColor, setIconColor] = useState(props.color || Colors.primary)
+  const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.primary)
 
   const getIdleColor = () => props.color || Colors.primary
   const debug = props.debug || TTSengine.debug
@@ -73,8 +82,10 @@ const ttsComponent = props => {
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
    */
   const speak = async () => {
+    runHandlers('beforeSpeak')
+
     const isSpeaking = await Speech.isSpeakingAsync()
-    debug('speak', isSpeaking)
+    debug('speak', { isSpeaking })
 
     if (isSpeaking) {
       stopSpeak()
@@ -89,7 +100,6 @@ const ttsComponent = props => {
       onStart: () => {
         debug('onStart')
         startSpeak()
-        Vibration.vibrate(50)
       },
       onStopped: () => {
         debug('onStopped')
@@ -98,8 +108,8 @@ const ttsComponent = props => {
       onDone: () => {
         debug('onDone')
         // TODO call stopSpeak and update tests to fix state bug
+        stopSpeak()
         setIsDone(true)
-        // stopSpeak()
       }
     })
   }
@@ -145,14 +155,17 @@ const ttsComponent = props => {
 
   return (
     <View style={styles.body}>
-      <Icon
-        testID={props.id}
-        reverse color={iconColor}
-        size={props.smallButton ? 15 : 20} marginonPress={speak}
-        name='volume-up'
-        type='font-awesome-5'
+      <Pressable
         onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
-      />
+      >
+        <Icon
+          testID={props.id}
+          reverse color={iconColor}
+          size={props.smallButton ? 15 : 20}
+          name='volume-up'
+          type='font-awesome-5'
+        />
+      </Pressable>
       {displayedText()}
     </View>
 
@@ -176,8 +189,21 @@ const ttsComponent = props => {
  * @property debug {boolean} debugs all internal tts events if true
  */
 export const TTSengine = {
-  setSpeech (s) {
+  setSpeech (s, { speakImmediately = false } = {}) {
     Speech = s
+
+    if (speakImmediately) {
+      Speech.speak('', {
+        language: 'ger',
+        pitch: 1,
+        rate: 1,
+        volume: 0.0
+      })
+    }
+  },
+  on: (name, fn) => {
+    handlers[name] = handlers[name] || []
+    handlers[name].push(fn)
   },
   stop () {
     Speech.stop()

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { Log } from '../infrastructure/Log'
+
+const debug = Log.create('loadDocs', 'debug')
 
 export const loadDocs = (fn, { runArgs = [] } = {}) => {
   const [data, setData] = useState()
@@ -6,6 +9,7 @@ export const loadDocs = (fn, { runArgs = [] } = {}) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(async () => {
+    debug('run fn() to load data')
     try {
       const data = await fn()
       setData(data)

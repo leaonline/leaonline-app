@@ -3,6 +3,7 @@ import { View, Modal } from 'react-native'
 import { ActionButton } from './ActionButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { TTSengine } from './Tts'
+import Colors from '../constants/Colors'
 
 const Tts = TTSengine.component()
 
@@ -19,7 +20,7 @@ export const Confirm = props => {
 
   const renderQuestion = () => {
     if (!props.question) { return null }
-    return (<Tts style={styles.modalText} text={props.question} />)
+    return (<Tts style={styles.modalText} text={props.question} color={Colors.secondary} iconColor={Colors.secondary} />)
   }
 
   const onResponse = (targetFn) => {
