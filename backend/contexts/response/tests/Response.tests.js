@@ -33,13 +33,13 @@ describe('Response', function () {
         userId,
         sessionId,
         unitId,
-        scores: [ { score: true }, { score: false }]
+        scores: [{ score: true }, { score: false }]
       }
       const insertDoc2 = {
         userId,
         sessionId,
         unitId,
-        scores: [ {}, { score: true }]
+        scores: [{}, { score: true }]
       }
       ResponseCollection.insert(insertDoc1)
       ResponseCollection.insert(insertDoc2)
@@ -60,7 +60,7 @@ describe('Response', function () {
         itemId: Random.id(),
         itemType: Random.id(),
         page: 1,
-        scores: [ {
+        scores: [{
           competency: [Random.id()],
           correctResponse: ['foo', 1, /foo/g],
           isUndefined: false,

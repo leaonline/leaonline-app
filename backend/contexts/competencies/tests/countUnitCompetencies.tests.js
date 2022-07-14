@@ -11,7 +11,7 @@ describe(countUnitCompetencies.name, function () {
   it('skips pages if it has no content', function () {
     const unitDocs = [
       { _id: Random.id(), pages: [] },
-      { _id: Random.id(), pages: [{ content: []}] }
+      { _id: Random.id(), pages: [{ content: [] }] }
     ]
     unitDocs.forEach(unitDoc => expect(countUnitCompetencies({ unitDoc })).to.equal(0))
   })
@@ -25,11 +25,11 @@ describe(countUnitCompetencies.name, function () {
         // ('skips content if it has no scoring')
         { content: [{ type: 'item' }] },
         // ('skips scoring if it has no competency')
-        { content: [{ type: 'item', value: { scoring: [{}] }}] },
+        { content: [{ type: 'item', value: { scoring: [{}] } }] },
         // count
-        { content: [{ type: 'item', value: { scoring: [{ competency: 'foo' }] }}] },
+        { content: [{ type: 'item', value: { scoring: [{ competency: 'foo' }] } }] },
         // count array
-        { content: [{ type: 'item', value: { scoring: [{ competency: ['foo', 'bar'] }] }}] },
+        { content: [{ type: 'item', value: { scoring: [{ competency: ['foo', 'bar'] }] } }] }
       ]
     }
     expect(countUnitCompetencies({ unitDoc })).to.equal(3)

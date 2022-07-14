@@ -1,5 +1,4 @@
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
-import { getCollection } from '../../api/utils/getCollection'
 
 /**
  * This is a context, providing methods that simply delegate code to the

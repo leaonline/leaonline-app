@@ -9,7 +9,7 @@ describe('UserEmail', function () {
       const emailSchema = createSchema({
         email: UserEmail.schema()
       })
-      emailSchema.validate({ email: 'me@example.com'})
+      emailSchema.validate({ email: 'me@example.com' })
     })
   })
   describe('encrypt', function () {

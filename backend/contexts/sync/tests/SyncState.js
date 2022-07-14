@@ -24,7 +24,7 @@ describe('SyncState', function () {
 
   describe(SyncState.update.name, function () {
     it('updates a sync state of a given name', async function () {
-      const name =  Random.id()
+      const name = Random.id()
       const names = [name]
       expect(SyncState.get({ names })).to.deep.equal([])
 
@@ -48,18 +48,18 @@ describe('SyncState', function () {
   })
   describe(SyncState.validate.name, function () {
     it('throws if a ctx is not defined', function () {
-      const name =  Random.id()
+      const name = Random.id()
       expect(() => SyncState.validate([name]))
         .to.throw(`Attempt to sync "${name}" but it's not defined for sync!`)
     })
     it('throws if a ctx is not registered for sync', function () {
-      const name =  Random.id()
+      const name = Random.id()
       ContextRegistry.add(name, { name })
       expect(() => SyncState.validate([name]))
         .to.throw(`Attempt to sync "${name}" but it's not defined for sync!`)
     })
     it('validates a given ctx by name', function () {
-      const name =  Random.id()
+      const name = Random.id()
       ContextRegistry.add(name, { name, sync: true })
     })
   })

@@ -96,7 +96,7 @@ describe('Session', function () {
         competencies: 0,
         progress: 0
       })
-      const {sessionDoc, unitSetDoc, unitDoc} = Session.get({ userId, unitSet })
+      const { sessionDoc, unitSetDoc, unitDoc } = Session.get({ userId, unitSet })
       expect(sessionDoc).to.deep.equal(SessionCollection.findOne())
       expect(unitDoc).to.deep.equal(UnitCollection.findOne())
       expect(unitSetDoc).to.deep.equal(UnitSetCollection.findOne())
@@ -112,7 +112,7 @@ describe('Session', function () {
         field: Random.id(),
         units: [unitId, Random.id()]
       })
-      const {sessionDoc, unitSetDoc, unitDoc} = Session.get({ userId, unitSet })
+      const { sessionDoc, unitSetDoc, unitDoc } = Session.get({ userId, unitSet })
       expect(sessionDoc).to.deep.equal(SessionCollection.findOne())
       expect(unitDoc).to.deep.equal(UnitCollection.findOne())
       expect(unitSetDoc).to.deep.equal(UnitSetCollection.findOne())
@@ -243,7 +243,7 @@ describe('Session', function () {
           {
             _id: unitSet,
             competencies: 1,
-            complete:false,
+            complete: false,
             progress: 4
           }
         ]

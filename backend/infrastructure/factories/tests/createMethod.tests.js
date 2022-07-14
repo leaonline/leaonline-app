@@ -11,6 +11,6 @@ describe(createMethod.name, function () {
         return `${foo}-bar`
       }
     })
-    expect(method._execute({}, {foo: 'foo'})).to.equal('foo-bar')
+    expect(method._execute({}, { foo: 'foo' })).to.equal('foo-bar')
   })
 })

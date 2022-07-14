@@ -13,8 +13,8 @@ describe(createSchema.name, function () {
     expect(() => exampleSchema.validate({})).to.throw('Num is required')
 
     ;[
-      { num: 1, two: '1', pattern: 'me@example.com'},
-      { num: 1, two: 1, pattern: 'me@example.com'},
+      { num: 1, two: '1', pattern: 'me@example.com' },
+      { num: 1, two: 1, pattern: 'me@example.com' }
     ].forEach(doc => exampleSchema.validate(doc))
   })
 })
