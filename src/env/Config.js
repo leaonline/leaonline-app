@@ -1,5 +1,7 @@
 import Constants from 'expo-constants'
+import settings from '../settings.json'
 
+const { backend, content } = settings
 const debugLayoutBorders = false
 
 export const Config = {}
@@ -27,10 +29,10 @@ Config.methods.createUser = 'users.methods.create'
 Config.methods.deleteUser = 'users.methods.delete'
 
 Config.backend = {}
-Config.backend.url = Constants.manifest.extra.backend.url
-Config.backend.maxTimeout = Constants.manifest.extra.backend.maxTimeout
-Config.backend.interval = Constants.manifest.extra.backend.interval
+Config.backend.url = backend.url
+Config.backend.maxTimeout = backend.maxTimeout
+Config.backend.interval = backend.interval
 
 Config.content = {}
-Config.content.url = Constants.manifest.extra.content.url
-Config.content.replaceUrl = Constants.manifest.extra.content.replaceUrl
+Config.content.url = content.url
+Config.content.replaceUrl = content.replaceUrl
