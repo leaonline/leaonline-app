@@ -23,6 +23,8 @@ contribution guidelines.
 
 ## Install for development
 
+### Notes
+
 This project heavily utilizes Meteor and it's tech-stack so the installation
 will install `Meteor` for you. Note, that Meteor already ships with NodeJs
 and NPM, so you don't need them to install yourself.
@@ -30,17 +32,36 @@ and NPM, so you don't need them to install yourself.
 However, if you have them already installed, Meteor won't mess up your
 environment, so it's safe to install it.
 
+### Prerequisites
+
+If you don't have set up any lea.online projects you need to create
+a top-level folder that will contain projects and libraries:
+
+```bash
+$ mkdir leaonline
+$ cd leaonline
+$ git clone git@github.com:leaonline/leaonline-app.git
+```
+
+### Use the installation script
+
 We provide you an installation script, which you should run from your terminal:
 
 ```bash
+$ cd leaonline-app
 $ ./scripts/install.sh
 ```
 
-Do not run the script with `sudo` and do not cd into the `scripts` directory. 
+> **Do not run the script with `sudo` and do not `cd` into the `scripts` directory.**
 
 The script will ask you several questions to optimize your installation, if you
 however wish to do a full manual installation, please visit the 
 [manual installation](./docs/manual_install.md) guide.
+
+### Install content server (optional)
+
+If you want to execute units, you need to get the [leaonline-content](https://github.com/leaonline/leaonline-content)
+server and make it available to the backend.
 
 ### Run the apps
 
@@ -60,7 +81,6 @@ To run the mobile app, you need to do the following:
 $ cd src
 $ meteor npm run start
 ```
-
 
 ### Run the tests
 
