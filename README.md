@@ -48,7 +48,7 @@ $ git clone git@github.com:leaonline/leaonline-app.git
 We provide you an installation script, which you should run from your terminal:
 
 ```bash
-$ cd leaonline-appg
+$ cd leaonline-app
 $ ./scripts/install.sh
 ```
 

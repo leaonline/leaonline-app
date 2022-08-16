@@ -25,7 +25,7 @@ METEOR_PATH=$(command -v meteor)
 if [ ! -f "$METEOR_PATH" ]
 then
   INSTALL_METEOR="y"
-  print "Found no Meteor installation, do you with to install it?"
+  print "Found no Meteor installation, do you wish to install it?"
   print "(y=yes/n=no/default=yes)"
 
   read -r INSTALL_METEOR_INPUT
@@ -48,7 +48,7 @@ INSTALL_ANDROID="n"
 
 if [ -f "/usr/lib/android-sdk/emulator/emulator" ];
 then
-  print "OPTIONAL: Found no Android SDK+Emulator, do you with to install it?"
+  print "OPTIONAL: Found no Android SDK+Emulator, do you wish to install it?"
   print "If you want to use your physical devices you can skip this option."
   print "(y=yes/n=no/default=no)"
 
