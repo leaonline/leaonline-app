@@ -58,6 +58,11 @@ The script will ask you several questions to optimize your installation, if you
 however wish to do a full manual installation, please visit the 
 [manual installation](./docs/manual_install.md) guide.
 
+### Install content server (optional)
+
+If you want to execute units, you need to get the [leaonline-content](https://github.com/leaonline/leaonline-content)
+server and make it available to the backend.
+
 ### Run the apps
 
 To run the apps, make sure you have installed everything first. See the prior
