@@ -1,5 +1,6 @@
 import { callMeteor } from '../../meteor/call'
 import { Log } from '../../infrastructure/Log'
+import { Config } from '../../env/Config'
 
 const log = Log.create('completeUnit')
 
@@ -12,7 +13,7 @@ const log = Log.create('completeUnit')
  */
 export const completeUnit = async ({ sessionDoc }) => {
   const nextUnitId = await callMeteor({
-    name: 'session.methods.update',
+    name: Config.methods.updateSession,
     args: {
       sessionId: sessionDoc._id
     },

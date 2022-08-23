@@ -2,10 +2,36 @@
   "backend": {
     "url": "ws://192.168.178.49:8080/websocket",
     "maxTimeout": 10000,
-    "interval": 250
+    "interval": 250,
+    "methods": {
+      "users": {
+        "create": "users.methods.create",
+        "delete": "users.methods.delete"
+      },
+      "content": {
+        "home": "content.methods.home",
+        "map": "content.methods.map",
+        "unit": "content.methods.unit"
+      },
+      "progress": {
+        "get": "progress.methods.get"
+      },
+      "session": {
+        "update": "session.methods.update"
+      },
+      "response": {
+        "submit": "response.methods.submit"
+      }
+    }
   },
   "content": {
     "url": "http://192.168.178.49:3030",
     "replaceUrl": "https://content.lealernen.de"
+  },
+  "log": {
+    "level": 2
+  },
+  "debug": {
+    "layoutBorders": false
   }
 }

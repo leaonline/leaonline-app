@@ -1,14 +1,14 @@
 import { Log } from '../../infrastructure/Log'
 import { callMeteor } from '../../meteor/call'
+import { Config } from '../../env/Config'
 
-const methodName = 'progress.methods.get'
 const debug = Log.create('loadProgressData', 'debug')
 
 export const loadProgressDoc = async (fieldId) => {
   debug('for', { fieldId })
 
   const progressDoc = await callMeteor({
-    name: methodName,
+    name: Config.methods.getProgress,
     args: { fieldId },
     failure: error => console.error(error)
   })

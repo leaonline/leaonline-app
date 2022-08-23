@@ -3,8 +3,8 @@ import { AppState } from '../../state/AppState'
 import { Dimension } from '../../contexts/Dimension'
 import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
+import { Config } from '../../env/Config'
 
-const methodName = 'content.methods.map'
 const debug = Log.create('loadMapData', 'debug')
 
 /**
@@ -21,12 +21,8 @@ export const loadMapData = async (withDebug) => {
   }
 
   const mapData = await callMeteor({
-    name: methodName,
-    args: { fieldId },
-    prepare: () => { if (withDebug) debug(methodName, 'start request') },
-    receive: () => { if (withDebug) debug(methodName, 'received response') },
-    success: () => { if (withDebug) debug(methodName, 'response valid') },
-    failure: error => debug(methodName, 'response invalid', error.message)
+    name: Config.methods.getMapData,
+    args: { fieldId }
   })
 
   const hasData = !!mapData
