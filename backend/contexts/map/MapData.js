@@ -8,11 +8,19 @@ export const MapData = {
 }
 
 MapData.schema = {
+
+  /**
+   * Each map is unique for a given field.
+   */
   field: {
     type: String
   },
 
-  // lookup list for the ids to save space and bandwidth
+  /**
+   * To save bandwidth we save the _id values of dimension documents in this array and only assign
+   * the index at the respective places.
+   * At rendering time the client app should use this list to resolve the _id value.
+   */
 
   dimensions: {
     type: Array
@@ -21,7 +29,11 @@ MapData.schema = {
     type: String
   },
 
-  // lookup list for the ids to save space and bandwidth
+  /**
+   * To save bandwidth we save the _id values of level documents in this array and only assign
+   * the index at the respective places.
+   * At rendering time the client app should use this list to resolve the _id value.
+   */
 
   levels: {
     type: Array
@@ -30,7 +42,21 @@ MapData.schema = {
     type: String
   },
 
-  // entries
+  /**
+   * This is the list of entries. An entry is either a "stage" or a "milestone".
+   *
+   * A "stage" is a certain step in the list of actionable tasks (represented by UnitSets).
+   * It contains the following structure:
+   *
+   * ```js
+   * {
+   *   type: 'stage',
+   *   level: 0,
+   *   progress: 1,
+   *
+   * }
+   * ```
+   */
 
   entries: {
     type: Array
@@ -38,23 +64,29 @@ MapData.schema = {
   'entries.$': {
     type: Object
   },
-
-  // entry-object
-
   'entries.$.type': {
     type: String,
     allowedValues: ['stage', 'milestone']
   },
+
+  /**
+   * The level represents the level of the stage, which is an incremental counter.
+   */
   'entries.$.level': {
     type: Number
   },
 
-  // stage entries
-
-  'entries.$.progress': { // summary of the progress of all unitsets
+  /**
+   * Summary of the progress of all unitsets that are related to this "stage" or "milestone"
+   */
+  'entries.$.progress': {
     type: Number,
     optional: true // TODO validate against type
   },
+
+  /**
+   * Each "stage" contains a list of actionable UnitSets but there is always only one UnitSet per dimension.
+   */
   'entries.$.unitSets': {
     type: Array,
     optional: true // TODO validate against type
@@ -62,21 +94,41 @@ MapData.schema = {
   'entries.$.unitSets.$': {
     type: Object
   },
+
+  /**
+   * The UnitSet _id is unique for each, so we store it as is
+   */
   'entries.$.unitSets.$._id': {
     type: String
   },
+
+  /**
+   * The dimension _id however occurs so often, that we only store the index value
+   * of the aforementioned dimensions array here.
+   */
   'entries.$.unitSets.$.dimension': {
     type: Number
   },
+
+  /**
+   * The progress of the UnitSet is already computed on the content service side.
+   */
   'entries.$.unitSets.$.progress': {
     type: Number
   },
+
+  /**
+   * We only store the number of achievable competencies here.
+   */
   'entries.$.unitSets.$.competencies': {
     type: Number
   },
 
   // milestone entries
 
+  /**
+   * All competencies for a given milestone.
+   */
   'entries.$.competencies': {
     type: Array,
     optional: true // TODO validate against type
