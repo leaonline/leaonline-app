@@ -56,7 +56,7 @@ $ ./scripts/install.sh
 
 The script will ask you several questions to optimize your installation, if you
 however wish to do a full manual installation, please visit the 
-[manual installation](./docs/manual_install.md) guide.
+[manual installation](docs/guide/manual_install.md) guide.
 
 ### Install content server (optional)
 
