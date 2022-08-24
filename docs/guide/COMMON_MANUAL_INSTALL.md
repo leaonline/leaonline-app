@@ -69,24 +69,25 @@ First of all you'll need to prepare your development environment to start the ja
 For that we prepared a shell script that install all necessary files.  
 To run the shell script just type:
 
-```
-sudo ./install_android_environment.sh
+```bash
+$ sudo ./install_android_environment.sh
 ```
 After installing all necessary android files to run the emulator with lea.online, we need to create a virtual android device with:
 
-```
-sudo ./install_emulator.sh
+```bash
+$ sudo ./install_emulator.sh
 ```
 
 Before we run our project we need to start our emulator first with:
-```
-/usr/lib/android-sdk/emulator/emulator -avd pixel
+
+```bash
+$ /usr/lib/android-sdk/emulator/emulator -avd pixel
 ```
 
 Now you can start the lea.online app on an android emulator:
 
-```
-meteor expo start 
+```bash
+$ meteor expo start 
 ```
 
 After expo started just press **_a_** on your keyboard and expo will run lea.online on your previous created Android Emulator
@@ -94,11 +95,12 @@ After expo started just press **_a_** on your keyboard and expo will run lea.onl
 
 ## Installation for _iOS_
 
-To start lea.online on an iOS Emulator you will need an macOS operation system and the latest xcode version.  
-Just run the following:
+To start lea.online on an iOS Emulator you will need a MacOS operation system and the latest xcode version.
 
-```
-meteor  expo start
+To install the emulator, just run in the `src` folder on your Mac:
+
+```bash
+$ meteor expo start
 ```
 
 After expo started just press **_i_** on your keyboard and expo will run lea.online on your iOS Emulator

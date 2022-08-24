@@ -1,9 +1,13 @@
 # Backend Startup
 
+This guide resolves around all processes that are involved when the backend is starting up.
+
+## Run the backend
+
 The backend contains a script `run.sh` that starts it with the correct environment settings.
 
 
-## `settings.json`
+## The `settings.json` file
 
 The backend uses `settings.json` as startup configuration.
 They are set via [environment variable](https://docs.meteor.com/environment-variables.html#METEOR-SETTINGS) in `run.sh`.
@@ -29,6 +33,15 @@ Read more about it in [the backend sync guide](./BACKEND_SYNC.md).
 
 ### Restore
 
+Users will receive restore codes during their registration.
+These codes can be used to restore their account on another device.
+
+This config defines a detailed behaviour on how these codes are generated.
+
 ### Crypto
 
+Keys and settings for the encryption of certain data.
+
 ### Log
+
+Settings for the logging behaviour.
