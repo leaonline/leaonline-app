@@ -1,11 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 import { ContentServer } from '../api/remotes/content/ContentServer'
-import { MapData } from '../contexts/map/MapData'
-import { getCollection } from '../api/utils/getCollection'
-import { Field } from '../contexts/content/Field'
 import { SyncState } from '../contexts/sync/SyncState'
 import { createLog } from '../infrastructure/log/createLog'
-import { runRemap } from './reamp'
+import { runRemap } from './remap'
 
 Meteor.startup(() => {
   const { sync, remap } = Meteor.settings.remotes.content

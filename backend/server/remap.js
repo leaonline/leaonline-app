@@ -15,9 +15,11 @@ export const runRemap = ({ active, dryRun }) => {
     // after sync we need to recompute the map data
     const fields = getCollection(Field.name).find()
 
-    // create map data for each field
-    for (const field of fields) {
-      MapData.create({ field: field._id, dryRun })
+    if (fields.count() > 0) {
+      // create map data for each field
+      for (const field of fields) {
+        MapData.create({ field: field._id, dryRun })
+      }
     }
 
     // let the clients know, that we have updated the data
