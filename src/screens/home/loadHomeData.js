@@ -25,7 +25,7 @@ export const loadHomeData = async () => {
     })
 
     const homeData = await callMeteor({ name: Config.methods.getHomeData, args })
-    
+
     if (!homeData) { return fallback() }
 
     for (const { name, newHash } of toSync) {
