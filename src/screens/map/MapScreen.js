@@ -17,6 +17,7 @@ import { LinearProgress } from 'react-native-elements'
 import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
+import { ErrorMessage } from '../../components/ErrorMessage'
 
 const log = Log.create('MapScreen')
 
@@ -90,20 +91,53 @@ const MapScreen = props => {
   const { t } = useTranslation()
   const mapDocs = loadDocs(loadMapData)
 
-  if (!mapDocs || mapDocs.loading) {
+  const renderNavbar = () => {
     return (
-      <Loading />
+      <Navbar>
+        <Confirm
+          id='map-screen-confirm'
+          noConfirm
+          onApprove={() => props.navigation.navigate('Home')}
+          icon='home'
+          tts={false}
+          style={{
+            borderRadius: 2,
+            borderWidth: 1,
+            borderColor: Colors.dark
+          }}
+        />
+        <View style={{ width: '50%' }}>
+          <Tts text='Map' color={Colors.secondary} id='mapScreen.headerTitle' paddingTop={10} smallButton />
+        </View>
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
     )
   }
 
-  // TODO if (docs.error) ...
+  if (!mapDocs || mapDocs.loading) {
+    return (
+      <View style={styles.container}>
+        {renderNavbar()}
+        <Loading />
+      </View>
+    )
+  }
 
-  // if we have loaded but there was no field to be retrieved we
-  // go back to the home screen and let users select the field
-  if (!mapDocs.loading && mapDocs.data === null) {
-    log('no data available, return to HomeScreen')
-    props.navigation.navigate('Home')
-    return null
+  // if we have loaded but there was no MapData available,
+  // we display an error message with a button to go back to the home screen
+  if (!mapDocs.loading && (mapDocs.error || mapDocs.data === null || mapDocs.data === undefined)) {
+    log('no data available, display fallback')
+    return (
+      <View style={styles.container}>
+        {renderNavbar()}
+        <ErrorMessage
+          error={mapDocs.error}
+          message={t('mapScreen.notAvailable')}
+          label={t('actions.back')}
+          onConfirm={() => props.navigation.navigate('Home')}
+        />
+      </View>
+    )
   }
 
   const selectStage = async stage => {
@@ -247,24 +281,7 @@ const MapScreen = props => {
 
   return (
     <View style={styles.container}>
-      <Navbar>
-        <Confirm
-          id='map-screen-confirm'
-          noConfirm
-          onApprove={() => props.navigation.navigate('Home')}
-          icon='home'
-          tts={false}
-          style={{
-            borderRadius: 2,
-            borderWidth: 1,
-            borderColor: Colors.dark
-          }}
-        />
-        <View style={{ width: '50%' }}>
-          <Tts text='Map' color={Colors.secondary} id='mapScreen.headerTitle' paddingTop={10} smallButton />
-        </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-      </Navbar>
+      {renderNavbar()}
       <SafeAreaView style={styles.safeAreaView}>{renderList()}</SafeAreaView>
     </View>
   )

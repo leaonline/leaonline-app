@@ -9,7 +9,7 @@ export const loadHomeData = async () => {
   // TODO if not connected return what's available locally
   // and re-run once connected again
   try {
-    console.debug('field',fallback())
+    console.debug('field', fallback())
     const toSync = await Sync.compare([Field, Dimension, Level])
     console.debug({ toSync })
 
