@@ -1,4 +1,5 @@
 {
+  "useFixtures": true,
   "remotes": {
     "content": {
       "url": "localhost:3030",
@@ -7,15 +8,15 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": false,
+        "field": true,
         "unit": true,
-        "unitSet": false,
-        "dimension": false,
-        "level": false,
-        "testCycle": false
+        "unitSet": true,
+        "dimension": true,
+        "level": true,
+        "testCycle": true
       },
       "remap": {
-        "active": false,
+        "active": true,
         "dryRun": false
       }
     }
@@ -38,6 +39,6 @@
     "outputFormat": "hex"
   },
   "log": {
-    "level": 2
+    "level": 4
   }
 }

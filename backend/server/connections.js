@@ -5,6 +5,7 @@ import { getCollection } from '../api/utils/getCollection'
 import { Field } from '../contexts/content/Field'
 import { SyncState } from '../contexts/sync/SyncState'
 import { createLog } from '../infrastructure/log/createLog'
+import { runRemap } from './reamp'
 
 Meteor.startup(() => {
   const { sync, remap } = Meteor.settings.remotes.content
@@ -14,31 +15,18 @@ Meteor.startup(() => {
 
     const contexts = ContentServer.contexts().filter(ctx => !!sync[ctx.name])
 
-    // skip here if we don't need to sync
-    if (contexts.length === 0) { return }
+    if (contexts.length > 0) {
+      // array.forEach can't be used, because we want
+      // read them in sequence and forEach does not do that
+      for (const ctx of contexts) {
+        await ContentServer.sync(ctx)
 
-    // array.forEach can't be used, because we want
-    // read them in sequence and forEach does not do that
-    for (const ctx of contexts) {
-      await ContentServer.sync(ctx)
-
-      // let the clients know, that we have updated the data
-      SyncState.update(ctx.name)
+        // let the clients know, that we have updated the data
+        SyncState.update(ctx.name)
+      }
     }
 
-    if (!remap.active) { return }
-
-    // after sync we need to recompute the map data
-    const fields = getCollection(Field.name).find()
-    const { dryRun } = remap
-
-    // create map data for each field
-    for (const field of fields) {
-      MapData.create({ field: field._id, dryRun })
-    }
-
-    // let the clients know, that we have updated the data
-    SyncState.update(MapData.name)
+    runRemap(remap)
   })
 })
 
