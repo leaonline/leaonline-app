@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
-import { TTSengine } from '../components/Tts'
+import { TTSengine } from './Tts'
 import Colors from '../constants/Colors'
 
 /**

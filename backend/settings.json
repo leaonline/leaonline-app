@@ -1,4 +1,5 @@
 {
+  "useFixtures": true,
   "remotes": {
     "content": {
       "url": "localhost:3030",
@@ -38,6 +39,6 @@
     "outputFormat": "hex"
   },
   "log": {
-    "level": 2
+    "level": 4
   }
 }

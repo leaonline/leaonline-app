@@ -10,7 +10,9 @@ export const loadHomeData = async () => {
   // TODO if not connected return what's available locally
   // and re-run once connected again
   try {
+    console.debug('field', fallback())
     const toSync = await Sync.compare([Field, Dimension, Level])
+    console.debug({ toSync })
 
     // if nothing to sync we return what's currently in
     // the Field collection
@@ -22,10 +24,8 @@ export const loadHomeData = async () => {
       args[name] = true
     })
 
-    const homeData = await callMeteor({
-      name: Config.methods.getHomeData,
-      args
-    })
+    const homeData = await callMeteor({ name: Config.methods.getHomeData, args })
+    
     if (!homeData) { return fallback() }
 
     for (const { name, newHash } of toSync) {
@@ -34,7 +34,7 @@ export const loadHomeData = async () => {
     }
     return fallback()
   } catch (e) {
-    Log.error('loadHomeData failed', e.message)
+    Log.warn('loadHomeData failed', e.message)
     return fallback()
   }
 }

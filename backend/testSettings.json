@@ -1,4 +1,5 @@
 {
+  "useFixtures": true,
   "remotes": {
     "content": {
       "url": "localhost:3030",

@@ -10,6 +10,9 @@ import { initReactI18next } from 'react-i18next'
  */
 const resources = {
   en: {
+    actions: {
+      back: 'Back'
+    },
     alert: {
       title: 'Stop',
       navText: 'Please wait until the end of the recording or end it prematurely',
@@ -44,7 +47,8 @@ const resources = {
       title: 'My successes'
     },
     mapScreen: {
-      stage: 'Stage'
+      stage: 'Stage',
+      notAvailable: 'The overview cannot be downloaded currently.'
     },
     unitScreen: {
       story: {
@@ -65,6 +69,9 @@ const resources = {
     completeScreen: {}
   },
   de: {
+    actions: {
+      back: 'Zurück'
+    },
     alert: {
       title: 'Stop',
       navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
@@ -99,7 +106,8 @@ const resources = {
       title: 'Meine Erfolge'
     },
     mapScreen: {
-      stage: 'Level'
+      stage: 'Level',
+      notAvailable: 'Die Übersicht kann derzeit nicht geladen werden.'
     },
     unitScreen: {
       story: {
