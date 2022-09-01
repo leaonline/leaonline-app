@@ -30,9 +30,9 @@ export const loadMapData = async (withDebug) => {
   })
 
   const hasData = !!mapData
-  const hasDimensions = !!mapData.dimensions?.length
-  const hasEntries = !!mapData.entries?.length
-  const hasLevels = !!mapData.levels?.length
+  const hasDimensions = hasData && !!mapData.dimensions?.length
+  const hasEntries = hasData && !!mapData.entries?.length
+  const hasLevels = hasData && !!mapData.levels?.length
 
   debug(JSON.stringify({ hasData, hasDimensions, hasEntries, hasLevels }))
 
