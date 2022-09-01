@@ -18,8 +18,10 @@ ContentConnection.connect = ({ log }) => {
   return new Promise((resolve, reject) => {
     log('establish connection to', contentUrl)
     contentConnection = DDP.connect(contentUrl, {
+      retry: false,
       onConnected: err => {
         if (err) {
+          console.error(err)
           return reject(err)
         }
 

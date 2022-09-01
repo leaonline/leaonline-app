@@ -3,6 +3,7 @@ import { hasProp } from '../../api/utils/hasProp'
 import chalk from 'chalk'
 
 const logLevel = Meteor.settings.log.level
+console.debug(logLevel)
 const internal = {
   error: {
     level: 0,
