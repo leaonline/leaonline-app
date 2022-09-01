@@ -19,87 +19,23 @@ TBD, we will link the app store / play store links here, once we have a release
 ## Development
 
 If you wish to participate in development, please make sure you have read our
-contribution guidelines.
+[contribution guidelines](./docs/guide/CONTRIBUTIONS.md).
 
-## Install for development
+There is an extensive [installation guide](./docs/guide/INSTALLATION.md), which you should use to start with 
+development.
 
-### Notes
+## Guides and Documentation
 
-This project heavily utilizes Meteor and it's tech-stack so the installation
-will install `Meteor` for you. Note, that Meteor already ships with NodeJs
-and NPM, so you don't need them to install yourself.
+- [common used terms](./docs/guide/COMMON_TERMS.md)
+- backend api docs (TBD)
+- [backend startup](./docs/guide/BACKEND_STARTUP.md)
+- [backend sync](./docs/guide/BACKEND_SYNC.md)
+- [backend remap](./docs/guide/BACKEND_REMAP.md)
+- [app screens overview](./arch/screens)
+- [app startup](./docs/guide/APP_STARTUP.md)
+- [app flow](./docs/guide/APP_FLOW.md)
+- [app api docs](./docs/api/app)
 
-However, if you have them already installed, Meteor won't mess up your
-environment, so it's safe to install it.
+## License
 
-### Prerequisites
-
-If you don't have set up any lea.online projects you need to create
-a top-level folder that will contain projects and libraries:
-
-```bash
-$ mkdir leaonline
-$ cd leaonline
-$ git clone git@github.com:leaonline/leaonline-app.git
-```
-
-### Use the installation script
-
-We provide you an installation script, which you should run from your terminal:
-
-```bash
-$ cd leaonline-app
-$ ./scripts/install.sh
-```
-
-> **Do not run the script with `sudo` and do not `cd` into the `scripts` directory.**
-
-The script will ask you several questions to optimize your installation, if you
-however wish to do a full manual installation, please visit the 
-[manual installation](./docs/manual_install.md) guide.
-
-### Install content server (optional)
-
-If you want to execute units, you need to get the [leaonline-content](https://github.com/leaonline/leaonline-content)
-server and make it available to the backend.
-
-### Run the apps
-
-To run the apps, make sure you have installed everything first. See the prior
-section on how to install.
-
-To run the backend app, you need to do the following:
-
-```bash
-$ cd backend
-$ ./run.sh
-```
-
-To run the mobile app, you need to do the following:
-
-```bash
-$ cd src
-$ meteor npm run start
-```
-
-### Run the tests
-
-We use jest (as default, defined by expo) to run the app tests and mocha to run
-the backend tests.
-
-To tun the tests on the backend, please execute the `./test.sh` script in the 
-`backend` project folder.
-
-To run the tests for the app, please execute `meteor npm run test` in the app's `src`
-folder.
-
-### Documentation
-
-We use jsDoc for api documentation of the app, as well as of the backend.
-In each projects you can simply run
-
-```bash
-$ meteor npm run docs
-```
-
-The docs are generated in the output folder `docs`.
+This work is published unter AGPL-3.0 as stated in the [license file](./LICENSE).

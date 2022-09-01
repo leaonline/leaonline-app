@@ -1,6 +1,7 @@
 import { AppState } from '../../state/AppState'
 import { callMeteor } from '../../meteor/call'
 import { Log } from '../../infrastructure/Log'
+import { Config } from '../../env/Config'
 
 const log = Log.create('loadUnitData')
 
@@ -10,7 +11,7 @@ export const loadUnitData = async (debug) => {
   if (!unitSet) { return null }
 
   const result = await callMeteor({
-    name: 'content.methods.unit',
+    name: Config.methods.getUnit,
     args: { unitSetId: unitSet._id }
   })
   if (debug) log({ result })

@@ -4,6 +4,7 @@ import { Level } from '../../contexts/Level'
 import { Sync } from '../../infrastructure/sync/Sync'
 import { Log } from '../../infrastructure/Log'
 import { callMeteor } from '../../meteor/call'
+import { Config } from '../../env/Config'
 
 export const loadHomeData = async () => {
   // TODO if not connected return what's available locally
@@ -23,8 +24,8 @@ export const loadHomeData = async () => {
       args[name] = true
     })
 
-    const homeData = await callMeteor({ name: 'content.methods.home', args })
-    console.debug({ homeData })
+    const homeData = await callMeteor({ name: Config.methods.getHomeData, args })
+
     if (!homeData) { return fallback() }
 
     for (const { name, newHash } of toSync) {
