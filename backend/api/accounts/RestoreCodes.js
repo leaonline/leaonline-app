@@ -25,6 +25,8 @@ const internal = {
  *  schema: function():object,
  *  generate: function():Array<string>
  * }}
+ *
+ * @module
  */
 export const RestoreCodes = {
   name: 'restoreCodes'

@@ -2,6 +2,12 @@ import { RegEx } from '../../infrastructure/factories/createSchema'
 import crypto from 'crypto'
 import { Meteor } from 'meteor/meteor'
 
+/**
+ * Represents User Email encrypt/decrypt functionality
+ * @deprecated should be removed and replaced by generic implemenration for enc/dec
+ * @module
+ * @type {{}}
+ */
 export const UserEmail = {}
 
 const { algorithm, key, outputFormat } = Meteor.settings.crypto

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>api/schema/isSchemaInstance - Documentation</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/leaonline/leaonline-app" target="_blank" class="menu-item" id="website_link" >Project Website</a></h2><h3>Modules</h3><ul><li><a href="module-api_accounts_RestoreCodes.html">api/accounts/RestoreCodes</a></li><li><a href="module-api_accounts_UserEmail.html">api/accounts/UserEmail</a></li><li><a href="module-api_collections_LocalCollections.html">api/collections/LocalCollections</a></li><li><a href="module-api_remotes_content_ContentServer.html">api/remotes/content/ContentServer</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureCollectionExists">ensureCollectionExists</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureConnected">ensureConnected</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureContextExists">ensureContextExists</a></li></ul></li><li><a href="module-api_remotes_ServiceRegistry.html">api/remotes/ServiceRegistry</a></li><li><a href="module-api_schema_isSchemaInstance.html">api/schema/isSchemaInstance</a></li><li><a href="module-api_utils_asyncTimeout.html">api/utils/asyncTimeout</a></li><li><a href="module-api_utils_getCollection.html">api/utils/getCollection</a></li><li><a href="module-api_utils_getLocalCollection.html">api/utils/getLocalCollection</a></li><li><a href="module-infrastructure_arch_onServerExec.html">infrastructure/arch/onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ContentConnection.html#.connect">connect</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.get">get</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.isConnected">isConnected</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#codeSettings">codeSettings</a></li><li><a href="global.html#Content">Content</a></li><li><a href="global.html#countUnitCompetencies">countUnitCompetencies</a></li><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#hasProp">hasProp</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#internal">internal</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#Progress">Progress</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#Response">Response</a></li><li><a href="global.html#runRemap">runRemap</a></li><li><a href="global.html#Session">Session</a></li><li><a href="global.html#SyncState">SyncState</a></li><li><a href="global.html#useFixtures">useFixtures</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">api/schema/isSchemaInstance</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description usertext"><p>Checks, whether a schema is instance of SimpleSchema</p></div>
+            
+
+            
+                
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="api_schema_isSchemaInstance.js.html">api/schema/isSchemaInstance.js</a>, <a href="api_schema_isSchemaInstance.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>schema</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 02 2022 14:58:07 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

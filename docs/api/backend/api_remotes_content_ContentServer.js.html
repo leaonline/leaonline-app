@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>api/remotes/content/ContentServer.js - Documentation</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/leaonline/leaonline-app" target="_blank" class="menu-item" id="website_link" >Project Website</a></h2><h3>Modules</h3><ul><li><a href="module-api_accounts_RestoreCodes.html">api/accounts/RestoreCodes</a></li><li><a href="module-api_accounts_UserEmail.html">api/accounts/UserEmail</a></li><li><a href="module-api_collections_LocalCollections.html">api/collections/LocalCollections</a></li><li><a href="module-api_remotes_content_ContentServer.html">api/remotes/content/ContentServer</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureCollectionExists">ensureCollectionExists</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureConnected">ensureConnected</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureContextExists">ensureContextExists</a></li></ul></li><li><a href="module-api_remotes_ServiceRegistry.html">api/remotes/ServiceRegistry</a></li><li><a href="module-api_schema_isSchemaInstance.html">api/schema/isSchemaInstance</a></li><li><a href="module-api_utils_asyncTimeout.html">api/utils/asyncTimeout</a></li><li><a href="module-api_utils_getCollection.html">api/utils/getCollection</a></li><li><a href="module-api_utils_getLocalCollection.html">api/utils/getLocalCollection</a></li><li><a href="module-infrastructure_arch_onServerExec.html">infrastructure/arch/onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ContentConnection.html#.connect">connect</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.get">get</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.isConnected">isConnected</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#codeSettings">codeSettings</a></li><li><a href="global.html#Content">Content</a></li><li><a href="global.html#countUnitCompetencies">countUnitCompetencies</a></li><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#hasProp">hasProp</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#internal">internal</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#Progress">Progress</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#Response">Response</a></li><li><a href="global.html#runRemap">runRemap</a></li><li><a href="global.html#Session">Session</a></li><li><a href="global.html#SyncState">SyncState</a></li><li><a href="global.html#useFixtures">useFixtures</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">api/remotes/content/ContentServer.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Meteor } from 'meteor/meteor'
+import { DDP } from 'meteor/ddp'
+
+// all contexts that are part of the content server are imported here,
+// because the "outside world" should not know much about these internals
+import { Unit } from '../../../contexts/content/Unit'
+import { UnitSet } from 'meteor/leaonline:corelib/contexts/UnitSet'
+import { Field } from '../../../contexts/content/Field'
+import { Dimension } from '../../../contexts/content/Dimension'
+import { Level } from '../../../contexts/content/Level'
+import { TestCycle } from 'meteor/leaonline:corelib/contexts/TestCycle'
+
+// required to get units running, since they have a complex schema
+// this is to be validated but the lib requires a schema from the host app
+import { SchemaValidator } from 'meteor/leaonline:corelib/validation/SchemaValidator'
+import { createSchema } from '../../../infrastructure/factories/createSchema'
+import { getCollection } from '../../utils/getCollection'
+import { createLog } from '../../../infrastructure/log/createLog'
+
+// for better reasoning between connection and logic we have
+// all connection functionality in a separate file
+import { ContentConnection } from './ContentConnection'
+
+// set the lib's validator to allow validation of received unit docs
+SchemaValidator.set(function (schema) {
+  const instance = createSchema(schema)
+  return doc => instance.validate(doc)
+})
+
+const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle]
+const contextNames = contexts.map(ctx => ctx.name)
+const log = createLog({ name: 'ContentServer' })
+
+/**
+ * API to communicate with the content server that stores all the
+ * relevant data for running the app.
+ * @module
+ */
+export const ContentServer = {}
+
+/// /////////////////////////////////////////////////////////////////////////////
+//
+//  PUBLIC
+//
+/// /////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Returns a schema definition for a call to the content server.
+ *
+ * @return {{
+ *   name: {type: String, allowedValues: string[]},
+ *   ids: {type: Array, optional: boolean},
+ *   'ids.$': String
+ * }}
+ */
+ContentServer.schema = () => ({
+  name: {
+    type: String,
+    allowedValues: contextNames
+  },
+  query: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+    custom: function () {
+      const value = this.value
+      console.debug('custom query validation: ', value)
+    }
+  }
+})
+
+/**
+ * Get all available contexts as Array
+ * @return {Array&lt;Object>}
+ */
+ContentServer.contexts = () => [].concat(contexts)
+
+/**
+ * Initialized the Contentserver API
+ * @return {Promise&lt;ContentServer>}
+ */
+ContentServer.init = async () => {
+  await ContentConnection.connect({ log })
+  return ContentServer
+}
+
+/**
+ * Synchronizes a collection with the one from the content server:
+ *
+ * - fetches all docs from content server
+ * - inserts docs, that are not in collection
+ * - updates docs, that are in collection
+ * - removes docs, that are in collection but not in fetched docs
+ *
+ * Returns an object of stats (counts) of created, updated and removed docs.
+ * This function should never be called from a Method or Publication, which
+ * is why it will throw an Error if such circumstance is present.
+ *
+ * @param name {string} the name of the context
+ * @throws {ContentServerError} when not connected or context or collection do
+ *   not exist or if this function is invoked within a method or pub
+ * @return {Promise&lt;{name: *, created: number, updated: number, removed: number}>}
+ */
+ContentServer.sync = async ({ name, debug }) => {
+  log('sync', name)
+  ensureNotInMethodOrPub()
+  ensureConnected()
+  ensureContextExists({ name })
+
+  const collection = ensureCollectionExists({ name })
+
+  const stats = {
+    name: name,
+    created: 0,
+    updated: 0,
+    removed: 0,
+    skipped: 0
+  }
+
+  const result = await ContentConnection.get({ name, log })
+  const allDocs = result &amp;&amp; result[name]
+
+  // if there is nothing to get, skip here
+  if (!allDocs?.length) { return stats }
+
+  const allIds = []
+  allIds.length = allDocs.length
+  allDocs.forEach((doc, index) => {
+    if (doc.isLegacy) {
+      stats.skipped++
+      return
+    }
+
+    const { _id: docId } = doc
+    allIds[index] = docId
+
+    if (collection.find(docId).count() === 0) {
+      const insertId = collection.insert(doc)
+      if (debug) log(name, 'inserted', insertId)
+      stats.created++
+    }
+
+    else {
+      delete doc._id
+      const updated = collection.update(docId, { $set: doc })
+      if (debug) log(name, 'updated', docId, '=', updated)
+      stats.updated++
+    }
+  })
+
+  // remove all docs, that are not in ids anymore
+  stats.removed = collection.remove({ _id: { $nin: allIds } })
+  log(JSON.stringify(stats))
+
+  return stats
+}
+
+/// /////////////////////////////////////////////////////////////////////////////
+//
+//  INTERNAL
+//
+/// /////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Throws if not connected to content server
+ * @throws {ContentServerError} if collection does not exist
+ */
+const ensureConnected = () => {
+  if (!ContentConnection.isConnected()) {
+    throw new ContentServerError('notConnected')
+  }
+}
+
+/**
+ * Throws if context name is not supported
+ * @param name {string} name of the collection
+ * @throws {ContentServerError} if collection does not exist
+ */
+const ensureContextExists = ({ name }) => {
+  if (!contextNames.includes(name)) {
+    throw new ContentServerError('contextNotDefined', { name })
+  }
+}
+
+/**
+ * Throws if collection does not exist, otherwise returns collection
+ * @param name {string} name of the collection
+ * @throws {ContentServerError} if collection does not exist
+ * @return {Mongo.Collection}
+ */
+const ensureCollectionExists = ({ name }) => {
+  const collection = getCollection(name)
+
+  if (!collection) {
+    throw new ContentServerError('collectionNotFound', { name })
+  }
+
+  return collection
+}
+
+const ensureNotInMethodOrPub = () => {
+  const methodInvocation = (
+    DDP._CurrentMethodInvocation.get() ||
+    DDP._CurrentPublicationInvocation.get()
+  )
+  if (methodInvocation) {
+    throw new ContentServerError('methodOrPubInvocation')
+  }
+}
+
+/**
+ * Extends Meteor.Error, always has error-field as 'contentServer.error'
+ * @private
+ */
+class ContentServerError extends Meteor.Error {
+  constructor (reason, details) {
+    super('contentServer.error', reason, details)
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 02 2022 14:58:07 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
