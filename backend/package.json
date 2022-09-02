@@ -4,7 +4,8 @@
   "scripts": {
     "start": "meteor run",
     "lint:code": "standardx -v | snazzy",
-    "lint:code-fix": "standardx --fix -v | snazzy"
+    "lint:code-fix": "standardx --fix -v | snazzy",
+    "build:docs": "jsdoc -c ./jsdoc.conf.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
@@ -19,6 +20,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "babel-plugin-istanbul": "^6.1.1",
     "chai": "^4.3.6",
+    "jsdoc": "^3.6.11",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
   },
