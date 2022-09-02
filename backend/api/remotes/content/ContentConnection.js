@@ -79,8 +79,8 @@ ContentConnection.get = ({ name, ids = [], log }) => {
 /// /////////////////////////////////////////////////////////////////////////////
 
 /**
- * @private
  * generates a function to create jwt
+ * @private
  */
 const getToken = (function () {
   const { content } = Meteor.settings.remotes
