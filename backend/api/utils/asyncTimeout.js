@@ -1,7 +1,8 @@
 /**
  * setTimeout in async mode
+ * @category api
+ * @module asyncTimeout
  * @async
- * @module
  * @param ms {Number}
  * @return {Promise<void>}
  */

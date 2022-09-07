@@ -9,6 +9,9 @@ import { Progress } from '../progress/Progress'
 
 /**
  * A session represents a user's current state of work on a specific {UnitSet}.
+ *
+ * @category contexts
+ * @namespace
  */
 export const Session = {
   name: 'session'

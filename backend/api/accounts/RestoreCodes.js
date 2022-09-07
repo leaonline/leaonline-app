@@ -2,40 +2,26 @@ import { Random } from 'meteor/random'
 import { Meteor } from 'meteor/meteor'
 
 /**
- * The environment variables, used to define the internals
+ * Generates the restore codes for a user in accordance to the schema definition.
+ * The restore codes can be used to restore the account on another device without the need for an email address.
+ * @category api
+ * @namespace
  */
-const codeSettings = Meteor.settings.restore.codes
-
-/**
- * Internal settings that are fixed and cannot be altered at runtime.
- */
-const internal = {
-  numberOfCOdes: codeSettings.numberOfCodes,
-  length: codeSettings.length,
-  uppercase: codeSettings.uppercase,
-  forbidden: new RegExp(codeSettings.forbidden.source, codeSettings.forbidden.flags),
-  maxRetries: codeSettings.maxRetries
-}
-
-/**
- * Generates the restore codes for a user in accordance to the schema definition
- *
- * @type {{
- *  name: String,
- *  schema: function():object,
- *  generate: function():Array<string>
- * }}
- *
- * @module
- */
-export const RestoreCodes = {
+const RestoreCodes = {
+  /**
+   * @type {string}
+   * @default: 'restoreCodes'
+   */
   name: 'restoreCodes'
 }
 
 /**
  * Returns the restore-codes schema, to be used for validation.
+ *
+ * @method
+ * @memberof RestoreCodes
  * @return {{
- *  restore: {type: ArrayConstructor, min: number},
+ *  restore: {type: Array, min: number},
  *  'restore.$': {type: *, min: number, regEx: RegExp}
  *  }}
  */
@@ -54,6 +40,7 @@ RestoreCodes.schema = () => ({
  * Generates an Array of n restore codes with length m where n and m are
  * defined by the application's settings.
  * @return {Array}
+ * @method
  */
 RestoreCodes.generate = () => {
   const codes = []
@@ -65,6 +52,24 @@ RestoreCodes.generate = () => {
   }
 
   return codes
+}
+
+/**
+ * The environment variables, used to define the internals
+ * @private
+ */
+const codeSettings = Meteor.settings.restore.codes
+
+/**
+ * Internal settings that are fixed and cannot be altered at runtime.
+ * @private
+ */
+const internal = {
+  numberOfCOdes: codeSettings.numberOfCodes,
+  length: codeSettings.length,
+  uppercase: codeSettings.uppercase,
+  forbidden: new RegExp(codeSettings.forbidden.source, codeSettings.forbidden.flags),
+  maxRetries: codeSettings.maxRetries
 }
 
 /**
@@ -85,3 +90,5 @@ const generateCode = () => {
     ? code.toUpperCase()
     : code
 }
+
+export { RestoreCodes }

@@ -4,9 +4,10 @@ const map = new Map()
  * Repository to manage and access local (unnamed; non-persistent) Mongo Collections
  * by name.
  *
- * @module
+ * @category api
+ * @namespace
  */
-export const LocalCollections = {}
+const LocalCollections = {}
 
 /**
  * Adds a collection by given name to the repository
@@ -26,3 +27,5 @@ LocalCollections.add = (name, collection) => {
  * @return {Mongo.Collection|undefined}
  */
 LocalCollections.get = name => map.get(name)
+
+export { LocalCollections }

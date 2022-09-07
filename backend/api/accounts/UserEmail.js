@@ -5,10 +5,10 @@ import { Meteor } from 'meteor/meteor'
 /**
  * Represents User Email encrypt/decrypt functionality
  * @deprecated should be removed and replaced by generic implemenration for enc/dec
- * @module
- * @type {{}}
+ * @category api
+ * @namespace
  */
-export const UserEmail = {}
+const UserEmail = {}
 
 const { algorithm, key, outputFormat } = Meteor.settings.crypto
 
@@ -37,3 +37,5 @@ UserEmail.decrypt = (encryptedEmailWithIV) => {
   decryptedEmail += decipher.final('utf8')
   return decryptedEmail
 }
+
+export { UserEmail }

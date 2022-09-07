@@ -1,52 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    
-    <meta charset="utf-8">
-    <title>Global - Documentation</title>
-    
-    
-    
-    
-    
-    <meta property="og:title" content=""/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:image" content=""/>
-    
-    <meta property="og:url" content=""/>
-    
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-    <script src="scripts/nav.js" defer></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>lea.online App-Backend Documentation Global</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
 </head>
-<body>
 
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
 
-<label for="nav-trigger" class="overlay"></label>
 
-<nav class="wrap">
-    
-    <input type="text" id="nav-search" placeholder="Search" />
-    
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/leaonline/leaonline-app" target="_blank" class="menu-item" id="website_link" >Project Website</a></h2><h3>Modules</h3><ul><li><a href="module-api_accounts_RestoreCodes.html">api/accounts/RestoreCodes</a></li><li><a href="module-api_accounts_UserEmail.html">api/accounts/UserEmail</a></li><li><a href="module-api_collections_LocalCollections.html">api/collections/LocalCollections</a></li><li><a href="module-api_remotes_content_ContentServer.html">api/remotes/content/ContentServer</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureCollectionExists">ensureCollectionExists</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureConnected">ensureConnected</a></li><li data-type='method' style='display: none;'><a href="module-api_remotes_content_ContentServer.html#~ensureContextExists">ensureContextExists</a></li></ul></li><li><a href="module-api_remotes_ServiceRegistry.html">api/remotes/ServiceRegistry</a></li><li><a href="module-api_schema_isSchemaInstance.html">api/schema/isSchemaInstance</a></li><li><a href="module-api_utils_asyncTimeout.html">api/utils/asyncTimeout</a></li><li><a href="module-api_utils_getCollection.html">api/utils/getCollection</a></li><li><a href="module-api_utils_getLocalCollection.html">api/utils/getLocalCollection</a></li><li><a href="module-infrastructure_arch_onServerExec.html">infrastructure/arch/onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ContentConnection.html#.connect">connect</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.get">get</a></li><li data-type='method' style='display: none;'><a href="ContentConnection.html#.isConnected">isConnected</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#codeSettings">codeSettings</a></li><li><a href="global.html#Content">Content</a></li><li><a href="global.html#countUnitCompetencies">countUnitCompetencies</a></li><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#hasProp">hasProp</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#internal">internal</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#Progress">Progress</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#Response">Response</a></li><li><a href="global.html#runRemap">runRemap</a></li><li><a href="global.html#Session">Session</a></li><li><a href="global.html#SyncState">SyncState</a></li><li><a href="global.html#useFixtures">useFixtures</a></li></ul>
-</nav>
-
-<div id="main">
-    
-    <h1 class="page-title">Global</h1>
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
     
 
-    
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">lea.online App-Backend Documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/leaonline/leaonline-app"
+                        >
+                            Github
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#runRemap">runRemap</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p></p>
+                    <h1>Global</h1>
+                </header>
+                
 
 
 
@@ -55,18 +102,18 @@
 
 <header>
     
-        <h2>
-        
-        </h2>
+        <h2></h2>
         
     
 </header>
 
 <article>
+    <div class="container-overview">
     
-        <div class="container-overview">
         
-            
+
+        
+
 
 <dl class="details">
 
@@ -93,7 +140,6 @@
     
 
     
-
     
 
     
@@ -104,13 +150,12 @@
 </dl>
 
 
-
-
-            
-
-            
         
-        </div>
+    
+    </div>
+    
+    
+
     
 
     
@@ -118,261 +163,33 @@
     
 
     
-    
-    
-
-     
 
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
             
-<h4 class="name" id="codeSettings"><span class="type-signature">(constant) </span>codeSettings<span class="type-signature"></span></h4>
+                <div class="member">
 
-
-
-
-
-<dl class="details">
-
+<h4 class="name" id="createLog">
+    <a class="href-link" href="#createLog">#</a>
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api_accounts_RestoreCodes.js.html">api/accounts/RestoreCodes.js</a>, <a href="api_accounts_RestoreCodes.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>The environment variables, used to define the internals</p>
-</div>
-
-
-
-
-
-
-
-
         
-            
-<h4 class="name" id="Content"><span class="type-signature">(constant) </span>Content<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_content_Content.js.html">contexts/content/Content.js</a>, <a href="contexts_content_Content.js.html#line10">line 10</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>This is a context, providing methods that simply delegate code to the
-ContentServer API.</p>
-<p>It acts as a bridge between the clients and the internal API and intends
-to prevent direct access to such internals.</p>
-</div>
-
-
-
-
-
-
-
-
+            <span class='tag'>constant</span>
         
-            
-<h4 class="name" id="countUnitCompetencies"><span class="type-signature">(constant) </span>countUnitCompetencies<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_competencies_countUnitCompetencies.js.html">contexts/competencies/countUnitCompetencies.js</a>, <a href="contexts_competencies_countUnitCompetencies.js.html#line10">line 10</a>
-    </li></ul></dd>
+    <span class="code-name">
+        createLog
+    </span>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
+</h4>
 
 
 
 
-
-<div class="description usertext">
-    <p>Counts all occurrences of competencies in a given unit document.</p>
-</div>
-
-
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="createLog"><span class="type-signature">(constant) </span>createLog<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_log_createLog.js.html">infrastructure/log/createLog.js</a>, <a href="infrastructure_log_createLog.js.html#line51">line 51</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
+<div class="description">
     <p>Creates a log-function for a given log type and with a given name, that is
 used as prefix. For example name=&quot;foo&quot; and type=&quot;log&quot; creates a log
 like:</p>
@@ -383,25 +200,9 @@ like:</p>
 
 
 
-
-
-
-        
-            
-<h4 class="name" id="createRepository"><span class="type-signature">(constant) </span>createRepository<span class="type-signature"></span></h4>
-
-
-
-
-
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_factories_createRepository.js.html">infrastructure/factories/createRepository.js</a>, <a href="infrastructure_factories_createRepository.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
 
     
 
@@ -424,13 +225,19 @@ like:</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_log_createLog.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_log_createLog.js.html">infrastructure/log/createLog.js</a>, <a href="infrastructure_log_createLog.js.html#line51">line 51</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -438,33 +245,37 @@ like:</p>
 
 
 
-<div class="description usertext">
-    <p>Creates a simple grow-only repository.</p>
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="createRepository">
+    <a class="href-link" href="#createRepository">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        createRepository
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Creates a simple grow-only in-memory repository.</p>
 </div>
 
 
 
 
 
-
-
-
-        
-            
-<h4 class="name" id="environmentExtensionMixin"><span class="type-signature">(constant) </span>environmentExtensionMixin<span class="type-signature"></span></h4>
-
-
-
-
-
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_mixins_environmentExtensionMixin.js.html">infrastructure/mixins/environmentExtensionMixin.js</a>, <a href="infrastructure_mixins_environmentExtensionMixin.js.html#line10">line 10</a>
-    </li></ul></dd>
-    
 
     
 
@@ -487,13 +298,19 @@ like:</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_factories_createRepository.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_factories_createRepository.js.html">infrastructure/factories/createRepository.js</a>, <a href="infrastructure_factories_createRepository.js.html#line7">line 7</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -501,7 +318,27 @@ like:</p>
 
 
 
-<div class="description usertext">
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="environmentExtensionMixin">
+    <a class="href-link" href="#environmentExtensionMixin">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        environmentExtensionMixin
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
     <p>This mixin injects useful generic functions into the method or publication
 environment (the funciton's this-context).</p>
 </div>
@@ -510,25 +347,9 @@ environment (the funciton's this-context).</p>
 
 
 
-
-
-
-        
-            
-<h4 class="name" id="Integer"><span class="type-signature">(constant) </span>Integer<span class="type-signature"> :string</span></h4>
-
-
-
-
-
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line31">line 31</a>
-    </li></ul></dd>
-    
 
     
 
@@ -551,13 +372,19 @@ environment (the funciton's this-context).</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_mixins_environmentExtensionMixin.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_mixins_environmentExtensionMixin.js.html">infrastructure/mixins/environmentExtensionMixin.js</a>, <a href="infrastructure_mixins_environmentExtensionMixin.js.html#line10">line 10</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -565,43 +392,45 @@ environment (the funciton's this-context).</p>
 
 
 
-<div class="description usertext">
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">string</code>
+
+
+    </span>
+
+<h4 class="name" id="Integer">
+    <a class="href-link" href="#Integer">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        Integer
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
     <p>The schema implementation's current definition for <code>type: Integer</code></p>
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="internal"><span class="type-signature">(constant) </span>internal<span class="type-signature"></span></h4>
-
-
-
 
 
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api_accounts_RestoreCodes.js.html">api/accounts/RestoreCodes.js</a>, <a href="api_accounts_RestoreCodes.js.html#line12">line 12</a>
-    </li></ul></dd>
-    
 
     
 
@@ -624,13 +453,19 @@ environment (the funciton's this-context).</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_factories_createSchema.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line31">line 31</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -638,106 +473,45 @@ environment (the funciton's this-context).</p>
 
 
 
-<div class="description usertext">
-    <p>Internal settings that are fixed and cannot be altered at runtime.</p>
 </div>
-
-
-
-
-
-
-
-
-        
             
-<h4 class="name" id="oneOf"><span class="type-signature">(constant) </span>oneOf<span class="type-signature"> :function</span></h4>
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">function</code>
 
 
+    </span>
 
-
-
-<dl class="details">
-
+<h4 class="name" id="oneOf">
+    <a class="href-link" href="#oneOf">#</a>
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line37">line 37</a>
-    </li></ul></dd>
+        
+            <span class='tag'>constant</span>
+        
     
-
+    <span class="code-name">
+        oneOf
+    </span>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
+</h4>
 
 
 
 
-
-<div class="description usertext">
+<div class="description">
     <p>The schema implementation's way to allow multiple types.</p>
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">function</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="Progress"><span class="type-signature">(constant) </span>Progress<span class="type-signature"></span></h4>
-
-
-
 
 
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_progress_Progress.js.html">contexts/progress/Progress.js</a>, <a href="contexts_progress_Progress.js.html#line9">line 9</a>
-    </li></ul></dd>
-    
 
     
 
@@ -760,13 +534,19 @@ environment (the funciton's this-context).</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_factories_createSchema.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line37">line 37</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -774,106 +554,45 @@ environment (the funciton's this-context).</p>
 
 
 
-<div class="description usertext">
-    <p>Progress represents a user's progress for a given field.</p>
 </div>
-
-
-
-
-
-
-
-
-        
             
-<h4 class="name" id="RegEx"><span class="type-signature">(constant) </span>RegEx<span class="type-signature"> :object</span></h4>
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">object</code>
 
 
+    </span>
 
-
-
-<dl class="details">
-
+<h4 class="name" id="RegEx">
+    <a class="href-link" href="#RegEx">#</a>
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line25">line 25</a>
-    </li></ul></dd>
+        
+            <span class='tag'>constant</span>
+        
     
-
+    <span class="code-name">
+        RegEx
+    </span>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
+</h4>
 
 
 
 
-
-<div class="description usertext">
+<div class="description">
     <p>The schema implementation's collection of default RegExp values</p>
 </div>
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="Response"><span class="type-signature">(constant) </span>Response<span class="type-signature"></span></h4>
-
-
-
 
 
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_response_Response.js.html">contexts/response/Response.js</a>, <a href="contexts_response_Response.js.html#line13">line 13</a>
-    </li></ul></dd>
-    
 
     
 
@@ -896,13 +615,19 @@ environment (the funciton's this-context).</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_factories_createSchema.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line25">line 25</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -910,73 +635,27 @@ environment (the funciton's this-context).</p>
 
 
 
-<div class="description usertext">
-    <p>Represents a db collection that stores a (scored) response to an item on a
-page of a given unit.</p>
-<p>It is design to allow the complete association between a user's response
-(<code>scores.$.value</code>), a given unit and the related competencies.</p>
 </div>
-
-
-
-
-
-
-
-
-        
             
-<h4 class="name" id="runRemap"><span class="type-signature">(constant) </span>runRemap<span class="type-signature"></span></h4>
+                <div class="member">
 
-
-
-
-
-<dl class="details">
-
+<h4 class="name" id="runRemap">
+    <a class="href-link" href="#runRemap">#</a>
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="server_remap.js.html">server/remap.js</a>, <a href="server_remap.js.html#line13">line 13</a>
-    </li></ul></dd>
+        
+            <span class='tag'>constant</span>
+        
     
-
+    <span class="code-name">
+        runRemap
+    </span>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
+</h4>
 
 
 
 
-
-<div class="description usertext">
+<div class="description">
     <p>This invokes the MapData to recreate itself from given DB documents.
 Also updates the sync state that is used in the app to fetch new updated data.</p>
 </div>
@@ -985,25 +664,9 @@ Also updates the sync state that is used in the app to fetch new updated data.</
 
 
 
-
-
-
-        
-            
-<h4 class="name" id="Session"><span class="type-signature">(constant) </span>Session<span class="type-signature"></span></h4>
-
-
-
-
-
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_session_Session.js.html">contexts/session/Session.js</a>, <a href="contexts_session_Session.js.html#line13">line 13</a>
-    </li></ul></dd>
-    
 
     
 
@@ -1026,13 +689,19 @@ Also updates the sync state that is used in the app to fetch new updated data.</
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="server_remap.js.html" class="button">View Source</a>
+            <span>
+                <a href="server_remap.js.html">server/remap.js</a>, <a href="server_remap.js.html#line13">line 13</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -1040,214 +709,38 @@ Also updates the sync state that is used in the app to fetch new updated data.</
 
 
 
-<div class="description usertext">
-    <p>A session represents a user's current state of work on a specific {UnitSet}.</p>
 </div>
-
-
-
-
-
-
-
-
-        
             
-<h4 class="name" id="SyncState"><span class="type-signature">(constant) </span>SyncState<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contexts_sync_SyncState.js.html">contexts/sync/SyncState.js</a>, <a href="contexts_sync_SyncState.js.html#line12">line 12</a>
-    </li></ul></dd>
+            </div>
+        </div>
     
 
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>This context represents the current state of sync. If should be updated
-after every sync for each synced context in order to provide the app with
-information, whether to fetch new data or used the locally cached data.</p>
-</div>
-
-
-
-
-
-
-
-
-        
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
             
-<h4 class="name" id="useFixtures"><span class="type-signature">(constant) </span>useFixtures<span class="type-signature"></span></h4>
+                <div class="member">
 
-
-
-
-
-<dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fixtures_useFixtures.js.html">fixtures/useFixtures.js</a>, <a href="fixtures_useFixtures.js.html#line19">line 19</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>Inserts fixture docs for every relevant context into db, if &quot;useFixtures&quot; is set to true in the settings.
-Otherwise, removes all fixture docs from DB.</p>
-<p>This is useful, in case you want to start the app without using a production data dump.</p>
-</div>
-
-
-
-
-
-
-
-
+    <h4 class="name" id="createSchema">
+        <a class="href-link" href="#createSchema">#</a>
         
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
+        <span class="code-name">
             
-
-    
-
-    <h4 class="name" id="createSchema"><span class="type-signature"></span>createSchema<span class="signature">(schema, options)</span><span class="type-signature"> &rarr; {SimpleSchema}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line17">line 17</a>
-    </li></ul></dd>
+                createSchema<span class="signature">(schema, options)</span><span class="type-signature"> &rarr; {SimpleSchema}</span>
+            
+        </span>
+    </h4>
     
 
     
-
     
-
+    <div class="description">
+        <p>Creates an instance of our current schema implementation.</p>
+    </div>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    <p>Creates an instance of our current schema implementation.</p>
-</div>
-
-
 
 
 
@@ -1259,109 +752,70 @@ Otherwise, removes all fixture docs from DB.</p>
 
     <h5>Parameters:</h5>
     
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
+<div class="table-container">
+    <table class="params table">
+        <thead>
         <tr>
             
-                <td class="name"><code>schema</code></td>
+            <th>Name</th>
             
 
-            <td class="type">
-            
-            </td>
+            <th>Type</th>
 
             
 
             
 
-            <td class="description last"></td>
+            <th class="last">Description</th>
         </tr>
+        </thead>
 
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-            </td>
+        <tbody>
+        
 
             
+<tr class="deep-level-0">
+  
+      <td class="name"><code>schema</code></td>
+  
 
-            
+  <td class="type">
+  
+  </td>
 
-            <td class="description last"></td>
-        </tr>
+  
 
-    
-    </tbody>
-</table>
+  
 
+  <td class="description last"></td>
+</tr>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
 
         
 
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">SimpleSchema</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
             
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
 
-    
+  <td class="type">
+  
+  </td>
 
-    <h4 class="name" id="hasProp"><span class="type-signature"></span>hasProp<span class="signature">(obj, prop)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+  
 
-    
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
 
 
 
@@ -1369,11 +823,6 @@ Otherwise, removes all fixture docs from DB.</p>
 <dl class="details">
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api_utils_hasProp.js.html">api/utils/hasProp.js</a>, <a href="api_utils_hasProp.js.html#line10">line 10</a>
-    </li></ul></dd>
-    
 
     
 
@@ -1396,13 +845,19 @@ Otherwise, removes all fixture docs from DB.</p>
     
 
     
-
     
 
     
 
     
 
+    
+        <p class="tag-source">
+            <a href="infrastructure_factories_createSchema.js.html" class="button">View Source</a>
+            <span>
+                <a href="infrastructure_factories_createSchema.js.html">infrastructure/factories/createSchema.js</a>, <a href="infrastructure_factories_createSchema.js.html#line17">line 17</a>
+            </span>
+        </p>
     
 </dl>
 
@@ -1410,12 +865,68 @@ Otherwise, removes all fixture docs from DB.</p>
 
 
 
-<div class="description usertext">
-    <p>Safely checks, whether an object has a certain property.
-Use this in favour of obj.hasOwnProperty.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">SimpleSchema</code>
+
+
+    </div>
+    
 </div>
 
+                
+        </div>
+    </div>
 
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="ensureCollectionExists">
+        <a class="href-link" href="#ensureCollectionExists">#</a>
+        
+        <span class="code-name">
+            
+                ensureCollectionExists<span class="signature">(name)</span><span class="type-signature"> &rarr; {Mongo.Collection}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Throws if collection does not exist, otherwise returns collection</p>
+    </div>
+    
 
 
 
@@ -1427,112 +938,455 @@ Use this in favour of obj.hasOwnProperty.</p>
 
     <h5>Parameters:</h5>
     
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
+<div class="table-container">
+    <table class="params table">
+        <thead>
         <tr>
             
-                <td class="name"><code>obj</code></td>
+            <th>Name</th>
             
 
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
+            <th>Type</th>
 
             
 
             
 
-            <td class="description last"><p>the object to check it has an own property</p></td>
+            <th class="last">Description</th>
         </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>name of the collection</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
 
     
 
-        <tr>
-            
-                <td class="name"><code>prop</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the name of the property</p></td>
-        </tr>
+    
 
     
-    </tbody>
-</table>
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
 
+    
+    
 
+    
 
+    
 
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
+    
+        <p class="tag-source">
+            <a href="api_remotes_content_ContentServer.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_remotes_content_ContentServer.js.html">api/remotes/content/ContentServer.js</a>, <a href="api_remotes_content_ContentServer.js.html#line192">line 192</a>
+            </span>
+        </p>
+    
 </dl>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>if collection does not exist</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<code class="param-type">ContentServerError</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Mongo.Collection</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="ensureConnected">
+        <a class="href-link" href="#ensureConnected">#</a>
+        
+        <span class="code-name">
+            
+                ensureConnected<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Throws if not connected to content server</p>
+    </div>
     
 
 
 
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="api_remotes_content_ContentServer.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_remotes_content_ContentServer.js.html">api/remotes/content/ContentServer.js</a>, <a href="api_remotes_content_ContentServer.js.html#line169">line 169</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>if collection does not exist</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<code class="param-type">ContentServerError</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="ensureContextExists">
+        <a class="href-link" href="#ensureContextExists">#</a>
         
+        <span class="code-name">
+            
+                ensureContextExists<span class="signature">(name)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Throws if context name is not supported</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>name</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>name of the collection</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="api_remotes_content_ContentServer.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_remotes_content_ContentServer.js.html">api/remotes/content/ContentServer.js</a>, <a href="api_remotes_content_ContentServer.js.html#line180">line 180</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>if collection does not exist</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<code class="param-type">ContentServerError</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
     
 
     
@@ -1545,24 +1399,27 @@ Use this in favour of obj.hasOwnProperty.</p>
 
 
 
-    
-    
-</div>
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
 
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 02 2022 14:58:07 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
-</footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/polyfill.js"></script>
-<script src="scripts/linenumber.js"></script>
-
-<script src="scripts/search.js" defer></script>
-
-
-<script src="scripts/collapse.js" defer></script>
+<script src="scripts/search.js"> </script>
 
 
 </body>

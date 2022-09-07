@@ -3,6 +3,7 @@ import { DDP } from 'meteor/ddp-client'
 
 /**
  * Manages connection and calls to the content server.
+ * @category api
  * @namespace
  */
 const ContentConnection = {}
@@ -14,7 +15,6 @@ const contentUrl = Meteor.settings.remotes.content.url
  * Establishes a basic, unauthenticated connection.
  * @param log {function} log function
  * @return {Promise<void>}
- * @memberof ContentConnection
  */
 ContentConnection.connect = ({ log }) => {
   return new Promise((resolve, reject) => {
@@ -37,7 +37,6 @@ ContentConnection.connect = ({ log }) => {
 /**
  * Returns, whether the connection is fully established
  * @return {boolean}
- * @memberof ContentConnection
  */
 ContentConnection.isConnected = () => contentConnection
   ? contentConnection.status().status === 'connected'
@@ -49,7 +48,6 @@ ContentConnection.isConnected = () => contentConnection
  * @param ids {Array?} optional array of ids to get
  * @param log
  * @return {Promise}
- * @memberof ContentConnection
  */
 ContentConnection.get = ({ name, ids = [], log }) => {
   return new Promise((resolve) => {

@@ -1,14 +1,11 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": [
-      "jsdoc",
-      "closure"
-    ]
+    "dictionaries": ["jsdoc","closure"]
   },
   "source": {
     "include": [
-      "."
+      "./"
     ],
     "exclude": [
       ".meteor",
@@ -18,89 +15,33 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "plugins": [
-    "plugins/markdown"
+    "plugins/markdown",
+    "node_modules/better-docs/category",
+    "node_modules/better-docs/typescript"
   ],
+  "sourceType": "module",
   "opts": {
-    "destination": "../docs/api/backend",
+    "encoding": "utf8",
+    "destination": "../docs/api/backend/",
     "recurse": true,
+    "verbose": true,
     "readme": "./README.md",
-    "template": "node_modules/docdash"
+    "template": "node_modules/better-docs"
   },
   "templates": {
     "cleverLinks": false,
-    "monospaceLinks": false
-  },
-  "docdash": {
-    "static": [
-      false
-    ],
-    "sort": [
-      true
-    ],
-    "sectionOrder": [
-      "Classes",
-      "Modules",
-      "Externals",
-      "Events",
-      "Namespaces",
-      "Mixins",
-      "Tutorials",
-      "Interfaces"
-    ],
-    "disqus": "",
-    "openGraph": {
-      "title": "",
-      "type": "website",
-      "image": "",
-      "site_name": "",
-      "url": ""
-    },
-    "meta": {
-      "title": "",
-      "description": "",
-      "keyword": ""
-    },
-    "search": [
-      true
-    ],
-    "commonNav": [
-      true
-    ],
-    "collapse": [
-      true
-    ],
-    "wrap": [
-      true
-    ],
-    "typedefs": [
-      false
-    ],
-    "navLevel": [
-      0
-    ],
-    "private": [
-      false
-    ],
-    "removeQuotes": [
-      "trim"
-    ],
-    "scripts": [],
-    "menu": {
-      "Project Website": {
-        "href": "https://github.com/leaonline/leaonline-app",
-        "target": "_blank",
-        "class": "menu-item",
-        "id": "website_link"
-      }
-    },
-    "scopeInOutputPath": [
-      true
-    ],
-    "nameInOutputPath": [
-      true
-    ],
-    "versionInOutputPath": [
-      true
-    ]
+    "monospaceLinks": false,
+    "search": true,
+    "better-docs": {
+      "name": "lea.online App-Backend Documentation",
+      "title": "lea.online App-Backend Documentation",
+      "hideGenerator": false,
+      "navLinks": [
+        {
+          "label": "Github",
+          "href": "https://github.com/leaonline/leaonline-app"
+        }
+      ]
+    }
   }
 }

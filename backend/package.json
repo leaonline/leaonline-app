@@ -5,7 +5,7 @@
     "start": "meteor run",
     "lint:code": "standardx -v | snazzy",
     "lint:code-fix": "standardx --fix -v | snazzy",
-    "build:docs": "jsdoc -c ./jsdoc.conf.json"
+    "build:docs": "npx jsdoc -c ./jsdoc.conf.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
@@ -19,8 +19,8 @@
     "@babel/core": "^7.17.2",
     "@babel/eslint-parser": "^7.17.0",
     "babel-plugin-istanbul": "^6.1.1",
+    "better-docs": "^2.7.2",
     "chai": "^4.3.6",
-    "docdash": "^1.2.0",
     "jsdoc": "^3.6.11",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
