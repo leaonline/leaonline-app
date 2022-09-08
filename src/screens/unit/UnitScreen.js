@@ -32,6 +32,7 @@ import { sendResponse } from './sendResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
 import './registerComponents'
 import { TTSengine } from '../../components/Tts'
+import { ErrorMessage } from '../../components/ErrorMessage'
 
 const Tts = TTSengine.component()
 /**
@@ -182,17 +183,77 @@ const UnitScreen = props => {
     })
   }, [props.navigation])
 
+  /**
+   * Renders the shortCode of the current unit or unitSet if
+   * Config.debug.unit is true.
+   */
+  const renderDebugTitle = () => {
+    if (!Config.debug.unit) {
+      return null
+    }
+    const title = unitDoc
+      ? unitDoc.shortCode
+      : unitSetDoc.shortCode
+    return (<Text>{title}</Text>)
+  }
+
+  /**
+   * Renders the navbar. Navbar needs to be available early on, because
+   * we also render it when we show <Loading> or <ErrorMessage>
+   */
+  const renderNavBar = () => {
+    return (
+      <Navbar>
+        <Confirm
+          id='unit-screen-confirm'
+          question={t('unitScreen.abort.question')}
+          approveText={t('unitScreen.abort.abort')}
+          denyText={t('unitScreen.abort.continue')}
+          onApprove={() => cancelUnit()}
+          onDeny={() => {}}
+          icon='times'
+          tts={false}
+          style={styles.confirm}
+        />
+        <View style={styles.progressContainer}>
+          <LinearProgress
+            style={{ borderColor: dimensionColor, ...styles.progressBar }}
+            trackColor='transparent'
+            color={dimensionColor} value={0.5} variant='determinate'
+          />
+          {renderDebugTitle()}
+        </View>
+        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      </Navbar>
+    )
+  }
+
   // ---------------------------------------------------------------------------
   // skip early until docs are fully loaded
   // ---------------------------------------------------------------------------
 
   if (!docs || docs.loading) {
-    return (<Loading />)
+    return (
+      <View style={styles.container}>
+        {renderNavBar()}
+        <Loading />
+      </View>
+    )
   }
 
-  if (docs.data === null) {
-    props.navigation.navigate('Map')
-    return null
+  if (!docs.loading && (docs.error || docs.data === null || docs.data === undefined)) {
+    log('no data available, display fallback', { docs })
+    return (
+      <View style={styles.container}>
+        {renderNavBar()}
+        <ErrorMessage
+          error={docs.error}
+          message={t('unitScreen.notAvailable')}
+          label={t('actions.back')}
+          onConfirm={() => props.navigation.navigate('Map')}
+        />
+      </View>
+    )
   }
 
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
@@ -277,50 +338,6 @@ const UnitScreen = props => {
         </View>
       )
     })
-  }
-
-  /**
-   * Renders the shortCode of the current unit or unitSet if
-   * Config.debug.unit is true.
-   */
-  const renderDebugTitle = () => {
-    if (!Config.debug.unit) {
-      return null
-    }
-    const title = unitDoc
-      ? unitDoc.shortCode
-      : unitSetDoc.shortCode
-    return (<Text>{title}</Text>)
-  }
-
-  /**
-   * Renders the navbar.
-   */
-  const renderNavBar = () => {
-    return (
-      <Navbar>
-        <Confirm
-          id='unit-screen-confirm'
-          question={t('unitScreen.abort.question')}
-          approveText={t('unitScreen.abort.abort')}
-          denyText={t('unitScreen.abort.continue')}
-          onApprove={() => cancelUnit()}
-          onDeny={() => {}}
-          icon='times'
-          tts={false}
-          style={styles.confirm}
-        />
-        <View style={styles.progressContainer}>
-          <LinearProgress
-            style={{ borderColor: dimensionColor, ...styles.progressBar }}
-            trackColor='transparent'
-            color={dimensionColor} value={0.5} variant='determinate'
-          />
-          {renderDebugTitle()}
-        </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-      </Navbar>
-    )
   }
 
   // ---------------------------------------------------------------------------
