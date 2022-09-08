@@ -5,10 +5,10 @@ import { View } from 'react-native'
 
 const Tts = TTSengine.component()
 
-export const ErrorMessage = ({ message, label, onConfirm }) => {
+export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   return (
     <View>
-      <Tts text={message} />
+      <Tts text={message || error.message} />
       <ActionButton text={label} onPress={onConfirm} />
     </View>
   )

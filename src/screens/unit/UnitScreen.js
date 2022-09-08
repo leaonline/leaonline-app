@@ -241,7 +241,10 @@ const UnitScreen = props => {
     )
   }
 
-  if (!docs.loading && (docs.error || docs.data === null || docs.data === undefined)) {
+  const nodata = docs.data === null || docs.data === undefined
+  const loadFailed = !docs.loading && nodata
+
+  if (docs.error || loadFailed) {
     log('no data available, display fallback', { docs })
     return (
       <View style={styles.container}>
