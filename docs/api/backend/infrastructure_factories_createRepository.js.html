@@ -85,7 +85,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#runRemap">runRemap</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Session.methods.html">methods</a></li><li><a href="Session.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#runRemap">runRemap</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
                 
             </nav>
         </div>
@@ -119,7 +119,6 @@ export const createRepository = (storage = new Map()) => new Repository(storage)
  * @class
  */
 class Repository {
-
   /**
    * Creates a new Repository
    * @constructor
@@ -151,7 +150,7 @@ class Repository {
    * @param name {string} name / storage key
    * @return {boolean} true/false
    */
-  has(name) {
+  has (name) {
     return this.storage.has(name)
   }
 
@@ -160,7 +159,7 @@ class Repository {
    * @param name {string} name / storage key
    * @return {object|undefined} the target or undefined, if not in storage
    */
-  get(name) {
+  get (name) {
     return this.storage.get(name)
   }
 

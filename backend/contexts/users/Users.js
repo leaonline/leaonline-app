@@ -18,7 +18,9 @@ const Users = {
 
 /**
  * The db schema definitions.
+ * @type {object}
  * @namespace
+ * @category contexts
  */
 Users.schema = {
   /**
@@ -76,7 +78,10 @@ Users.schema = {
 
 /**
  * Meteor method endpoints.
- * @namespace
+ * @category contexts
+ * @memberof Users
+ * @type {object}
+ * @namespace Users.methods
  */
 Users.methods = {}
 
@@ -93,6 +98,8 @@ Users.methods = {}
  * The created user is returned, separated from the password, which
  * should only be used once to store it in a mobile's secure storage.
  *
+ * @method
+ * @param {string=} email optional user email to send restore codes
  */
 Users.methods.create = {
   name: 'users.methods.create',
@@ -134,9 +141,9 @@ Users.methods.create = {
  *
  * Otherwise, it throws a permissionDenied error.
  *
- *
- * @alias Users.methods.delete
- * @memberOf Users.methods
+ * @method
+ * @param {string} _id
+ * @param {string} username
  */
 Users.methods.delete = {
   name: 'users.methods.delete',

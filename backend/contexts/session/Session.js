@@ -8,7 +8,7 @@ import { Response } from '../response/Response'
 import { Progress } from '../progress/Progress'
 
 /**
- * A session represents a user's current state of work on a specific {UnitSet}.
+ * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
  *
  * @category contexts
  * @namespace
@@ -19,6 +19,11 @@ export const Session = {
 
 const log = createLog({ name: Session.name })
 
+/**
+ * Database schema definitions
+ * @namespace
+ * @memberOf Session
+ */
 Session.schema = {
   userId: String,
   unitSet: String,
@@ -61,6 +66,12 @@ Session.schema = {
   }
 }
 
+/**
+ * Creates a new Session.
+ * @param userId {string} associated user's _id
+ * @param unitSetDoc {string} associated unitSet _id
+ * @return {object} the new created session document
+ */
 Session.create = ({ userId, unitSetDoc }) => {
   log('create', { userId, unitSetId: unitSetDoc._id })
   const insertDoc = {
@@ -86,6 +97,13 @@ Session.create = ({ userId, unitSetDoc }) => {
   return SessionCollection.findOne(sessionId)
 }
 
+/**
+ * Get the next unit of a given list of units
+ * @private
+ * @param unitId {string} the current unit id
+ * @param units {Array<String>} list of unit ids
+ * @return {undefined|string} next unit id or undefined if not found
+ */
 const getNextUnitId = ({ unitId, units = [] }) => {
   if (!unitId) return units[0]
 
@@ -105,6 +123,12 @@ const getNextUnitId = ({ unitId, units = [] }) => {
   return units[index + 1]
 }
 
+/**
+ * Gets the current session doc and unitset doc for a given unit set id and user id
+ * @param unitSet {string} the _id of the associated unitset
+ * @param userId {string} the _id of the associated user
+ * @return {{unitSetDoc: any, sessionDoc: any, unitDoc}}
+ */
 Session.get = ({ unitSet, userId }) => {
   log('get', { unitSet, userId })
   const unitSetDoc = getCollection(UnitSet.name).findOne(unitSet)
@@ -133,25 +157,31 @@ Session.get = ({ unitSet, userId }) => {
  * 2 get the current unitDoc by sessionDoc.unit
  *
  * 3 if session has no next unit
- *    - update progress from current unit and complete session
+ *    - update progress / competencies from current unit and complete session
  *    - return null (= no next unit)
  *
- * 4
+ * 4 if session has a next unit
+ *    - update progress / competencies
+ *    - set next unit as new "current" unit
+ *    - prefetch successor of next unit id and set this as new "next" unit
+ *    - return next unit id
  *
- * @param sessionId
- * @param userId
- * @return {*}
+ * @param sessionId {string} _id of the session
+ * @param userId {string} _id of the user
+ * @return {null|string} null if no next unit is found por a unitId if next unit is found
  */
 Session.update = ({ sessionId, userId }) => {
   log('update', { sessionId, userId })
   const SessionCollection = getCollection(Session.name)
   const UnitCollection = getCollection(Unit.name)
-  const sessionDoc = SessionCollection.findOne({ _id: sessionId, userId })
 
+  // 1 get sessionDoc by sessionId+userId
+  const sessionDoc = SessionCollection.findOne({ _id: sessionId, userId })
   if (!sessionDoc) {
     throw new Meteor.Error('session.updateFailed', 'docNotFound', { sessionId, userId })
   }
 
+  // 2 get the current unitDoc by sessionDoc.unit
   const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
   const unitDoc = sessionDoc.unit && UnitCollection.findOne(sessionDoc.unit)
   const timestamp = new Date()
@@ -214,8 +244,25 @@ Session.update = ({ sessionId, userId }) => {
   return sessionDoc.nextUnit
 }
 
+/**
+ * Meteor method definitions
+ * @namespace
+ * @memberOf Session
+ * @type {object}
+ */
 Session.methods = {}
 
+
+/**
+ * Updates the session. Automatically increments to the next unit
+ * or completes if no next unit exists.
+ *
+ * Also updates progress but as deferred (background) task.
+ *
+ * @memberOf Session.methods
+ * @method
+ * @param {string} sessionId the _id of the assiciated session
+ */
 Session.methods.update = {
   name: 'session.methods.update',
   schema: {
