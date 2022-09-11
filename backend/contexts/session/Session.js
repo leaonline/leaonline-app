@@ -252,7 +252,6 @@ Session.update = ({ sessionId, userId }) => {
  */
 Session.methods = {}
 
-
 /**
  * Updates the session. Automatically increments to the next unit
  * or completes if no next unit exists.
