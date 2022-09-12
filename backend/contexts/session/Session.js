@@ -154,6 +154,7 @@ Session.get = ({ unitSet, userId }) => {
  * Updates the current session according to the following algorithm:
  *
  * 1 get sessionDoc by sessionId+userId
+ *
  * 2 get the current unitDoc by sessionDoc.unit
  *
  * 3 if session has no next unit
