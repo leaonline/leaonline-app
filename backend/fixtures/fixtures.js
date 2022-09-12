@@ -1,4 +1,4 @@
-{
+module.exports = {
   "field": [
     {
       "_id": "W2zjTv7icffNaKMhR",
@@ -12,9 +12,7 @@
       "isLegacy": false,
       "icon": "tv",
       "meta": {
-        "updatedAt": {
-          "$date": 1647330316526
-        },
+        "updatedAt": new Date(1647330316526),
         "updatedBy": "dMAb3sr3vo2a7t3hc"
       }
     }
@@ -74,10 +72,7 @@
                       "t88z9T5ncPTaxSXKw"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "B",
-                      "$flags": "i"
-                    }
+                    "correctResponse": /B/i
                   }
                 ]
               },
@@ -107,10 +102,7 @@
                       "t88z9T5ncPTaxSXKw"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "S",
-                      "$flags": "i"
-                    }
+                    "correctResponse": /S/i
                   }
                 ]
               },
@@ -140,10 +132,7 @@
                       "t88z9T5ncPTaxSXKw"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "F",
-                      "$flags": "i"
-                    }
+                    "correctResponse": /F/i
                   }
                 ]
               },
@@ -173,20 +162,14 @@
                       "t88z9T5ncPTaxSXKw"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "L",
-                      "$flags": "i"
-                    }
+                    "correctResponse": /L/i
                   },
                   {
                     "competency": [
                       "t88z9T5ncPTaxSXKw"
                     ],
                     "target": 1,
-                    "correctResponse": {
-                      "$regexp": "G",
-                      "$flags": "i"
-                    }
+                    "correctResponse": /G/i
                   }
                 ]
               },
@@ -216,10 +199,7 @@
                       "oMi5oMYNcBbBMKKw9"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "L",
-                      "$flags": ""
-                    }
+                    "correctResponse": /L/i
                   }
                 ]
               },
@@ -249,10 +229,7 @@
                       "oMi5oMYNcBbBMKKw9"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "g",
-                      "$flags": ""
-                    }
+                    "correctResponse": /g/
                   }
                 ]
               },
@@ -282,10 +259,7 @@
                       "oMi5oMYNcBbBMKKw9"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "H",
-                      "$flags": ""
-                    }
+                    "correctResponse": /H/
                   }
                 ]
               },
@@ -315,10 +289,7 @@
                       "oMi5oMYNcBbBMKKw9"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "M",
-                      "$flags": ""
-                    }
+                    "correctResponse": /M/
                   }
                 ]
               },
@@ -348,10 +319,7 @@
                       "oMi5oMYNcBbBMKKw9"
                     ],
                     "target": 0,
-                    "correctResponse": {
-                      "$regexp": "o",
-                      "$flags": ""
-                    }
+                    "correctResponse": /o/
                   }
                 ]
               },
@@ -363,13 +331,9 @@
       ],
       "meta": {
         "createdBy": "p6kSPxYXgnNEryye3",
-        "createdAt": {
-          "$date": 1632349148673
-        },
+        "createdAt": new Date(1632349148673),
         "history": [],
-        "updatedAt": {
-          "$date": 1638959613777
-        },
+        "updatedAt":  new Date(1638959613777),
         "updatedBy": "kBdFvdDYmPnsA6GbC"
       }
     }
@@ -403,13 +367,9 @@
       ],
       "meta": {
         "createdBy": "p6kSPxYXgnNEryye3",
-        "createdAt": {
-          "$date": 1632323516802
-        },
+        "createdAt": new Date(1632323516802),
         "history": [],
-        "updatedAt": {
-          "$date": 1638958430798
-        },
+        "updatedAt": new Date(1638958430798),
         "updatedBy": "kBdFvdDYmPnsA6GbC"
       },
       "units": [
@@ -438,13 +398,9 @@
       "description": "lea.app Level 1",
       "meta": {
         "createdBy": "dMAb3sr3vo2a7t3hc",
-        "createdAt": {
-          "$date": 1626083614763
-        },
+        "createdAt": new Date(1626083614763),
         "history": [],
-        "updatedAt": {
-          "$date": 1647330186516
-        },
+        "updatedAt": new Date(1647330186516),
         "updatedBy": "dMAb3sr3vo2a7t3hc"
       },
       "isLegacy": false,
@@ -464,13 +420,9 @@
       ],
       "meta": {
         "createdBy": "kBdFvdDYmPnsA6GbC",
-        "createdAt": {
-          "$date": 1635330473005
-        },
+        "createdAt": new Date(1635330473005),
         "history": [],
-        "updatedAt": {
-          "$date": 1635958247725
-        },
+        "updatedAt": new Date(1635958247725),
         "updatedBy": "kBdFvdDYmPnsA6GbC"
       },
       "progress": 30
