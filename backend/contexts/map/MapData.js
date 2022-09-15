@@ -2,11 +2,22 @@ import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 
+/**
+ * Represents the "map" overview for a given field, where users are able to select
+ * "stages" and view "milestones".
+ * Corresponds to a Mongo.Collection that stores the map as read-optimized data structure.
+ *
+ * @category contexts
+ * @namespace
+ */
 export const MapData = {
   name: 'mapData',
   methods: {}
 }
 
+/**
+ * The database schema.
+ */
 MapData.schema = {
 
   /**
@@ -151,6 +162,7 @@ const byLevel = (a, b) => a.level - b.level
  * intensive method and should only be called when a new sync has been executed.
  *
  * Do not call from a regular method that could be invoked by clients.
+ * @method
  */
 MapData.create = ({ field, dryRun }) => {
   const fieldDoc = getCollection('field').findOne(field)
@@ -330,6 +342,13 @@ MapData.create = ({ field, dryRun }) => {
   return getCollection(MapData.name).upsert({ field }, { $set: mapData })
 }
 
+/**
+ * Counts competencies of a given unitSet.
+ * @private
+ * @param unitSet
+ * @param log
+ * @return {number}
+ */
 const countCompetencies = (unitSet, log) => {
   const UnitCollection = getCollection('unit')
   let count = 0
