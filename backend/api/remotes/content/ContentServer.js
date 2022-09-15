@@ -34,6 +34,8 @@ const log = createLog({ name: 'ContentServer' })
 /**
  * API to communicate with the content server that stores all the
  * relevant data for running the app.
+ * @category api
+ * @namespace
  */
 export const ContentServer = {}
 
@@ -70,7 +72,7 @@ ContentServer.schema = () => ({
 
 /**
  * Get all available contexts as Array
- * @return {*[]}
+ * @return {Array<Object>}
  */
 ContentServer.contexts = () => [].concat(contexts)
 

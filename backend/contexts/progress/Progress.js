@@ -5,6 +5,8 @@ import { createLog } from '../../infrastructure/log/createLog'
 /**
  * Progress represents a user's progress for a given field.
  *
+ * @category contexts
+ * @namespace
  */
 export const Progress = {
   name: 'progress'

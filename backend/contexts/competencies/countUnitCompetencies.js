@@ -3,9 +3,11 @@ const cache = new Map()
 /**
  * Counts all occurrences of competencies in a given unit document.
  *
+ * @category contexts
+ * @module countUnitCompetencies
  * @param unitDoc {object} the unit document
  * @param log {function=} an
- * @return {*}
+ * @return {number} the amount of counted competencies or 0
  */
 export const countUnitCompetencies = ({ unitDoc, log = () => {} }) => {
   if (cache.has(unitDoc._id)) {

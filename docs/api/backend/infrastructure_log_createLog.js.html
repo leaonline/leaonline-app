@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>lea.online App-Backend Documentation infrastructure/log/createLog.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">lea.online App-Backend Documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/leaonline/leaonline-app"
+                        >
+                            Github
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Session.methods.html">methods</a></li><li><a href="Session.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#runRemap">runRemap</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>infrastructure/log/createLog.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Meteor } from 'meteor/meteor'
+import { hasProp } from '../../api/utils/hasProp'
+import chalk from 'chalk'
+
+const logLevel = Meteor.settings.log.level
+console.debug(logLevel)
+const internal = {
+  error: {
+    level: 0,
+    color: s => chalk.red(s),
+    run: (...args) => console.error(...args)
+  },
+  warn: {
+    level: 1,
+    color: s => chalk.yellow(s),
+    run: (...args) => console.warn(...args)
+  },
+  log: {
+    level: 2,
+    color: s => chalk.blue(s),
+    run: (...args) => console.log(...args)
+
+  },
+  info: {
+    level: 3,
+    color: s => chalk.gray(s),
+    run: (...args) => console.info(...args)
+  },
+  debug: {
+    level: 4,
+    color: s => chalk.magenta(s),
+    run: (...args) => console.debug(...args)
+  }
+}
+
+/**
+ * Creates a log-function for a given log type and with a given name, that is
+ * used as prefix. For example name="foo" and type="log" creates a log
+ * like:
+ *
+ * log (path/to/file.js:123:1) [foo]: message
+ *
+ *
+ * @throws {Error} if the log type is not supported
+ * @param options {object}
+ * @param options.name {string} the prefix to log before the message
+ * @param options.type {string} the allowed log type.
+ * @return {Function} a logger function or empty no-op function if log-level is
+ *  not supported / defined
+ */
+export const createLog = function ({ name = 'system', type = 'log' } = {}) {
+  if (!hasProp(internal, type)) {
+    throw new Error(`Unexpected log type ${type}`)
+  }
+
+  const logName = `[${name}]:`
+  const logType = internal[type]
+  const typeName = `${type}`
+
+  // if the log level is not supported, wo return a no-op fn
+  if (logType.level > logLevel) {
+    return () => {}
+  }
+
+  return (...args) => {
+    const line = getLine()
+    const info = logType.color(`${typeName} ${line}`)
+    logType.run(info, logName, ...args)
+  }
+}
+
+const getLine = () => {
+  const stack = new Error().stack
+  const lines = stack.split('\n').slice(1)
+
+  for (const line of lines) {
+    if (line.match(/^\s*(at eval \(eval)|(eval:)/)) {
+      return 'file: "eval"'
+    }
+
+    if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
+      return line.replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '').replace(/[()]+/g, '')
+    }
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+
+</body>
+</html>

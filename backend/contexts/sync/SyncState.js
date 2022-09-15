@@ -8,6 +8,9 @@ import { createLog } from '../../infrastructure/log/createLog'
  * This context represents the current state of sync. If should be updated
  * after every sync for each synced context in order to provide the app with
  * information, whether to fetch new data or used the locally cached data.
+ *
+ * @category contexts
+ * @namespace
  */
 export const SyncState = {
   name: 'syncState'
@@ -15,6 +18,11 @@ export const SyncState = {
 
 const log = createLog({ name: SyncState.name })
 
+/**
+ * DB Schema
+ * @type {{name: (function(String, String)), version: NumberConstructor, hash: (function(String, String)), updatedAt:
+ *   DateConstructor}}
+ */
 SyncState.schema = {
   updatedAt: Date,
   name: String,
@@ -26,6 +34,7 @@ SyncState.schema = {
  * Updates the current hash, version and updatedAt field for a given
  * ctx and saves it to the collection. Creates a new entry if none is
  * defined by {name}
+ *
  * @param name {string}
  * @return {*} upsert result, depending on insert or update
  */
@@ -65,8 +74,19 @@ SyncState.validate = names => {
   })
 }
 
+/**
+ * Meteor Methods endpoint definitions.
+ */
 SyncState.methods = {}
 
+/**
+ * Returns hashes for a given context by name.
+ * The hash allows the client to decide,
+ * whether to update the respective contexts or
+ * continue to use the exiting data.
+ *
+ * @type {{schema: {names: ArrayConstructor, 'names.$': (function(String, String))}, name: string, run: *}}
+ */
 SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',
   schema: {

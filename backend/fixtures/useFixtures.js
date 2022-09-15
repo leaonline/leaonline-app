@@ -14,6 +14,10 @@ const { remap } = Meteor.settings.remotes.content
  * Otherwise, removes all fixture docs from DB.
  *
  * This is useful, in case you want to start the app without using a production data dump.
+ *
+ * @category startup
+ * @module useFixtures
+ * @return {undefined} nothing to return
  */
 export const useFixtures = () => {
   Object.entries(fixtures).forEach(([name, documents]) => {

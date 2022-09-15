@@ -2,11 +2,22 @@ import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 
+/**
+ * Represents the "map" overview for a given field, where users are able to select
+ * "stages" and view "milestones".
+ * Corresponds to a Mongo.Collection that stores the map as read-optimized data structure.
+ *
+ * @category contexts
+ * @namespace
+ */
 export const MapData = {
   name: 'mapData',
   methods: {}
 }
 
+/**
+ * The database schema.
+ */
 MapData.schema = {
 
   /**
@@ -80,8 +91,7 @@ MapData.schema = {
    * Summary of the progress of all unitsets that are related to this "stage" or "milestone"
    */
   'entries.$.progress': {
-    type: Number,
-    optional: true // TODO validate against type
+    type: Number
   },
 
   /**
@@ -152,6 +162,7 @@ const byLevel = (a, b) => a.level - b.level
  * intensive method and should only be called when a new sync has been executed.
  *
  * Do not call from a regular method that could be invoked by clients.
+ * @method
  */
 MapData.create = ({ field, dryRun }) => {
   const fieldDoc = getCollection('field').findOne(field)
@@ -238,10 +249,15 @@ MapData.create = ({ field, dryRun }) => {
           const competencies = countCompetencies(unitSetDoc, log)
           log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
           // push new stage to the stage data
+
+          if (!('progress' in unitSetDoc)) {
+            console.warn('no progress in unitset', unitSetDoc.shortCode)
+          }
+
           stages[dimensionId].push({
             dimension: dimensionIndex,
             _id: unitSetDoc._id,
-            progress: unitSetDoc.progress,
+            progress: unitSetDoc.progress || 0,
             competencies: competencies
           })
 
@@ -297,6 +313,9 @@ MapData.create = ({ field, dryRun }) => {
         if (i > list.length - 1) { return }
 
         const unitSet = list[i]
+        if (!('progress' in unitSet)) {
+          console.warn('no progress found on', unitSet.shortCode)
+        }
 
         // we need to sum the progress of all unitSets
         // to be able to display progress for the full stage
@@ -323,6 +342,13 @@ MapData.create = ({ field, dryRun }) => {
   return getCollection(MapData.name).upsert({ field }, { $set: mapData })
 }
 
+/**
+ * Counts competencies of a given unitSet.
+ * @private
+ * @param unitSet
+ * @param log
+ * @return {number}
+ */
 const countCompetencies = (unitSet, log) => {
   const UnitCollection = getCollection('unit')
   let count = 0

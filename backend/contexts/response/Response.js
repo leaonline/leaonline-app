@@ -9,6 +9,9 @@ import { Integer, oneOf } from '../../infrastructure/factories/createSchema'
  *
  * It is design to allow the complete association between a user's response
  * (`scores.$.value`), a given unit and the related competencies.
+ *
+ * @category contexts
+ * @namespace
  */
 export const Response = {
   name: 'response'
@@ -16,6 +19,9 @@ export const Response = {
 
 const log = createLog({ name: Response.name })
 
+/**
+ * The database schema
+ */
 Response.schema = {
   userId: String,
   sessionId: String,
@@ -46,9 +52,9 @@ Response.schema = {
  * Counts all answer scores of a given unit that were scored as true
  * (accomplished).
  *
- * @param userId {string}
- * @param sessionId {string}
- * @param unitId {string}
+ * @param userId {string} the _id of the associated user
+ * @param sessionId {string} the _id of the associated session
+ * @param unitId {string} the _id of the associated unit
  * @return {number} the overall count of accomplished answers
  */
 Response.countAccomplishedAnswers = ({ userId, sessionId, unitId }) => {
@@ -67,10 +73,16 @@ Response.countAccomplishedAnswers = ({ userId, sessionId, unitId }) => {
   return count
 }
 
+/**
+ * Meteor Method endpoints.
+ */
 Response.methods = {}
 
 const { timeStamp, userId, ...submitSchema } = Response.schema
 
+/**
+ * Inserts or updates a given user response in relation to the current session, unit and page.
+ */
 Response.methods.submit = {
   name: 'response.methods.submit',
   schema: submitSchema,
@@ -79,14 +91,14 @@ Response.methods.submit = {
       responseDoc.timeStamp = new Date()
       responseDoc.userId = this.userId
 
-      getCollection(Response.name).upsert({
+      const modifier = { $set: responseDoc }
+      const selector = {
         userId: this.userId,
         sessionId: responseDoc.sessionId,
         unitId: responseDoc.unit,
         page: responseDoc.page
-      }, {
-        $set: responseDoc
-      })
+      }
+      return getCollection(Response.name).upsert(selector, modifier)
     }
   })
 }
