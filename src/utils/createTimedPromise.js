@@ -27,8 +27,7 @@ export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = 
           return reject(
             new Error(message || defaultMessage)
           )
-        }
-        else {
+        } else {
           return resolve(message || defaultMessage)
         }
       }, timeout)

@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     width: '75%'
   },
   button: {
-    paddingTop: 5,
+    paddingTop: 5
   },
   iconNavigation: {
   }

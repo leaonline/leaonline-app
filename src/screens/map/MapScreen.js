@@ -13,7 +13,6 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { LinearProgress } from 'react-native-elements'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
@@ -242,7 +241,7 @@ const MapScreen = props => {
   }
 
   const renderMilestone = (milestone) => {
-    const progress = 100* milestone.userProgress / milestone.maxProgress
+    const progress = 100 * milestone.userProgress / milestone.maxProgress
     return (
       <View>
         <View style={styles.body}>
@@ -250,7 +249,7 @@ const MapScreen = props => {
           <StaticCircularProgress
             value={progress}
             radius={23}
-            valueSuffix={'%'}
+            valueSuffix='%'
             textColor={Colors.primary}
             activeStrokeColor={Colors.primary}
           />

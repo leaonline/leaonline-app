@@ -1,10 +1,7 @@
-import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View, TextInput } from 'react-native'
-import PropTypes from 'prop-types'
-import Svg, {Path,G, Rect, Circle, Defs, LinearGradient, Stop, Text } from 'react-native-svg'
-import { createStyleSheet } from '../styles/createStyleSheet'
+import React from 'react'
+import { View } from 'react-native'
+import Svg, { G, Circle, Defs, LinearGradient, Stop, Text } from 'react-native-svg'
 import Colors from '../constants/Colors'
-
 
 const StaticCircularProgress = (props) => {
   const {
@@ -12,8 +9,8 @@ const StaticCircularProgress = (props) => {
     maxValue = 100,
     radius = 60,
     textColor = Colors.secondary,
-    textStyle = {},
-    fontSize = 12,
+    fontSize = 14,
+    fontWeight = 'normal',
     strokeLinecap = 'round',
     valuePrefix = '',
     valueSuffix = '',
@@ -26,17 +23,8 @@ const StaticCircularProgress = (props) => {
     showProgressValue = true
   } = props
 
-  const styleProps = {
-    radius,
-    textColor,
-    fontSize,
-    textStyle,
-    activeStrokeColor
-  }
-
   const half = radius + Math.max(activeStrokeWidth, inActiveStrokeWidth)
   const circumference = 2 * Math.PI * radius
-  const textValue = `${valuePrefix}${Math.round(value)}${valueSuffix}`
   const maxPercent = (100 * value) / maxValue
   const strokeDashoffset = circumference - (circumference * maxPercent) / 100
 
@@ -48,6 +36,17 @@ const StaticCircularProgress = (props) => {
           <Stop offset='100%' stopColor={activeStrokeColor} />
         </LinearGradient>
       </Defs>
+    )
+  }
+
+  const renderTextValue = () => {
+    if (!showProgressValue) { return null }
+    const textValue = `${valuePrefix}${Math.round(value)}${valueSuffix}`
+
+    return (
+      <Text x='50%' y='50%' text-anchor='middle' fontSize={fontSize} fontWeight={fontWeight} fill={textColor || 'black'} alignment-baseline='middle'>
+        {textValue}
+      </Text>
     )
   }
 
@@ -81,25 +80,10 @@ const StaticCircularProgress = (props) => {
             strokeLinecap={strokeLinecap}
           />
         </G>
-        <Text x="50%" y="50%" text-anchor="middle" fontWeight="bold" fill="black" alignment-baseline="middle">
-          {textValue}
-        </Text>
+        {renderTextValue()}
       </Svg>
     </View>
   )
-}
-
-export const dynamicStyles = (props) => {
-  return createStyleSheet({
-    fromProps: {
-      fontSize: props.fontSize ?? props.radius / 2,
-      color: props.textColor ? props.textColor : (props.textStyle && props.textStyle?.color) ? props.textStyle?.color : props.activeStrokeColor
-    },
-    input: {
-      fontWeight: '900',
-      textAlign: 'center'
-    }
-  })
 }
 
 export { StaticCircularProgress }

@@ -59,8 +59,6 @@ export const loadMapData = async () => {
     }
   }
 
-
-
   const levelsProgress = {}
 
   mapData.entries.forEach((entry, index) => {
