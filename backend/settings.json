@@ -1,5 +1,5 @@
 {
-  "useFixtures": true,
+  "useFixtures": false,
   "remotes": {
     "content": {
       "url": "localhost:3030",
@@ -8,15 +8,15 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": true,
-        "unit": true,
-        "unitSet": true,
-        "dimension": true,
-        "level": true,
-        "testCycle": true
+        "field": false,
+        "unit": false,
+        "unitSet": false,
+        "dimension": false,
+        "level": false,
+        "testCycle": false
       },
       "remap": {
-        "active": true,
+        "active": false,
         "dryRun": false
       }
     }

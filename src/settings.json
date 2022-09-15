@@ -4,6 +4,7 @@
     "maxTimeout": 10000,
     "interval": 250,
     "methods": {
+      "defaultTimeout": 5000,
       "users": {
         "create": "users.methods.create",
         "delete": "users.methods.delete"

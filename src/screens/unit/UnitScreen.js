@@ -140,6 +140,15 @@ const log = Log.create('UnitScreen')
  * @returns {JSX.Element}
  */
 const UnitScreen = props => {
+  // We need to know the Keyboard state in order to show or hide elements.
+  // For example: In "editing" mode of a writing item we want to hide the "check" button.
+  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
+  const keyboardDidShow = () => setKeyboardStatus('shown')
+  const keyboardDidHide = () => {
+    setKeyboardStatus('hidden')
+    scrollViewRef.current?.scrollToEnd({ animated: true })
+  }
+
   useEffect(() => {
     const didShowSub = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
     const didHideSub = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
@@ -150,13 +159,6 @@ const UnitScreen = props => {
       didHideSub.remove()
     }
   }, [])
-
-  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
-  const keyboardDidShow = () => setKeyboardStatus('shown')
-  const keyboardDidHide = () => {
-    setKeyboardStatus('hidden')
-    scrollViewRef.current?.scrollToEnd({ animated: true })
-  }
 
   const { t } = useTranslation()
   const [page, setPage] = useState(0)
