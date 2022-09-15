@@ -36,7 +36,7 @@ Config.debug.logLevel = log.level
 Config.debug.state = true
 Config.debug.sync = false
 Config.debug.home = false
-Config.debug.map = false
+Config.debug.map = true
 Config.debug.unit = false
 
 /**
