@@ -80,8 +80,7 @@ MapData.schema = {
    * Summary of the progress of all unitsets that are related to this "stage" or "milestone"
    */
   'entries.$.progress': {
-    type: Number,
-    optional: true // TODO validate against type
+    type: Number
   },
 
   /**
@@ -238,10 +237,15 @@ MapData.create = ({ field, dryRun }) => {
           const competencies = countCompetencies(unitSetDoc, log)
           log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
           // push new stage to the stage data
+
+          if (!('progress' in unitSetDoc)) {
+            console.warn('no progress in unitset', unitSetDoc.shortCode)
+          }
+
           stages[dimensionId].push({
             dimension: dimensionIndex,
             _id: unitSetDoc._id,
-            progress: unitSetDoc.progress,
+            progress: unitSetDoc.progress || 0,
             competencies: competencies
           })
 
@@ -297,6 +301,9 @@ MapData.create = ({ field, dryRun }) => {
         if (i > list.length - 1) { return }
 
         const unitSet = list[i]
+        if (!('progress' in unitSet)) {
+          console.warn('no progress found on', unitSet.shortCode)
+        }
 
         // we need to sum the progress of all unitSets
         // to be able to display progress for the full stage
