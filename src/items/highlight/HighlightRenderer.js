@@ -90,10 +90,9 @@ export const HighlightRenderer = props => {
   // 2. clear all compared
   // 3. submit a fresh "empty" response
   useEffect(() => {
-    log('content id changed', props.contentId)
     setSelected({})
     setCompared({})
-    return props.submitResponse({
+    props.submitResponse({
       responses: getResponses({}),
       data: props
     })
