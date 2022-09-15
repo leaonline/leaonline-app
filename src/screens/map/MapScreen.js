@@ -14,7 +14,6 @@ import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
 import { LinearProgress } from 'react-native-elements'
-import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
@@ -216,7 +215,7 @@ const MapScreen = props => {
     const stageIsComplete = stage.userProgress >= stage.progress
     const icon = stageIsComplete ? 'flag' : 'edit'
     const iconColor = stageIsComplete ? Colors.success : Colors.primary
-    const progress = (stage.userProgress || 0) / stage.progress
+    const progress = 100 * (stage.userProgress || 0) / stage.progress
     const title = `${t('mapScreen.stage')} ${index + 1}`
 
     return (
@@ -226,7 +225,7 @@ const MapScreen = props => {
         <StaticCircularProgress
           duration={0}
           value={progress}
-          radius={23}
+          radius={60}
           maxValue={100}
           textColor={Colors.secondary}
           activeStrokeColor={Colors.secondary}
@@ -243,14 +242,19 @@ const MapScreen = props => {
   }
 
   const renderMilestone = (milestone) => {
-    // <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
-    const progress = milestone.userProgress / milestone.maxProgress
+    const progress = 100* milestone.userProgress / milestone.maxProgress
     return (
       <View>
-        <View style={styles.stage}>
+        <View style={styles.body}>
           <Text>Milestone {milestone.level + 1}</Text>
+          <StaticCircularProgress
+            value={progress}
+            radius={23}
+            valueSuffix={'%'}
+            textColor={Colors.primary}
+            activeStrokeColor={Colors.primary}
+          />
         </View>
-        <LinearProgress color={Colors.secondary} value={progress} variant='determinate' />
       </View>
     )
   }

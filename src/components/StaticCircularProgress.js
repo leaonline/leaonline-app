@@ -41,12 +41,10 @@ const StaticCircularProgress = (props) => {
   const strokeDashoffset = circumference - (circumference * maxPercent) / 100
 
   const renderSecondaryStroke = () => {
-    if (!activeStrokeSecondaryColor) { return null }
-
     return (
       <Defs>
         <LinearGradient id='grad' x1='0%' y1='0%' x2='0%' y2='100%'>
-          <Stop offset='0%' stopColor={activeStrokeSecondaryColor} />
+          <Stop offset='0%' stopColor={activeStrokeColor} />
           <Stop offset='100%' stopColor={activeStrokeColor} />
         </LinearGradient>
       </Defs>

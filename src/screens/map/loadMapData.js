@@ -51,9 +51,15 @@ export const loadMapData = async () => {
 
   // we load the progress doc here and immediately resolve
   // the values
-  const progressDoc = await loadProgressDoc(fieldId)
-  debug('progress loaded', { progressDoc })
-  debug('progress unitSets', Object.keys(progressDoc.unitSets || []))
+  let progressDoc = await loadProgressDoc(fieldId)
+
+  if (!progressDoc) {
+    progressDoc = {
+      unitSets: []
+    }
+  }
+
+
 
   const levelsProgress = {}
 
@@ -76,16 +82,7 @@ export const loadMapData = async () => {
     let userStageProgress = 0
 
     entry.unitSets.forEach(unitSet => {
-      let userUnitSet
-
-      if ('length' in (progressDoc?.unitSets)) {
-        userUnitSet = progressDoc.unitSets[unitSet._id]
-      }
-
-      if (!userUnitSet) {
-        userUnitSet = { progress: 0, competencies: 0 }
-      }
-
+      const userUnitSet = progressDoc.unitSets[unitSet._id] ?? { progress: 0, competencies: 0 }
       const usersUnitSetProgress = userUnitSet.progress || 0
       const usersUnitSetCompetencies = userUnitSet.competencies || 0
 
@@ -104,7 +101,5 @@ export const loadMapData = async () => {
     levelsProgress[entry.level].user += userStageProgress
   })
 
-  debug('data rebuild:')
-  debug(JSON.stringify(mapData))
   return mapData
 }
