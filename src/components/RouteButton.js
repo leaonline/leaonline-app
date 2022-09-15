@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     width: '75%'
   },
   button: {
-    paddingTop: 5
+    paddingTop: 5,
   },
   iconNavigation: {
   }
@@ -63,6 +63,11 @@ const RouteButton = props => {
   const renderRouteButton = () => {
     const titleStyle = { ...styles.buttonTitle, ...{ color } }
     const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color }
+
+    if (props.style) {
+      Object.assign(buttonStyle, props.style)
+    }
+
     const containerStyle = {
       backgroundColor: 'white',
       borderRadius: 15,
