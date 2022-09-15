@@ -30,7 +30,7 @@
     "replaceUrl": "https://content.lealernen.de"
   },
   "log": {
-    "level": 2
+    "level": 0
   },
   "debug": {
     "layoutBorders": false

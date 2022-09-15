@@ -33,9 +33,9 @@ Config.debug.layoutBorders = debug.layoutBorders
  */
 Config.debug.logLevel = log.level
 
-/**
- *
- */
+Config.debug.state = true
+Config.debug.sync = false
+Config.debug.home = false
 Config.debug.map = false
 Config.debug.unit = false
 
