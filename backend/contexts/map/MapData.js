@@ -1,6 +1,7 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
+import {cursorToMap} from '../../api/utils/cursorToMap'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -91,7 +92,8 @@ MapData.schema = {
    * Summary of the progress of all unitsets that are related to this "stage" or "milestone"
    */
   'entries.$.progress': {
-    type: Number
+    type: Number,
+    min: 1
   },
 
   /**
@@ -124,7 +126,8 @@ MapData.schema = {
    * The progress of the UnitSet is already computed on the content service side.
    */
   'entries.$.unitSets.$.progress': {
-    type: Number
+    type: Number,
+    min: 1
   },
 
   /**
@@ -156,6 +159,13 @@ MapData.schema = {
 
 const log = createLog({ name: MapData.name })
 const byLevel = (a, b) => a.level - b.level
+const checkIntegrity = ({ condition, premise }) => {
+  if (!condition) {
+    throw new Error(
+      `Integrity failed: ${premise}`
+    )
+  }
+}
 
 /**
  * Creates read-optimized map data for every field. This is a very resource-
@@ -166,21 +176,27 @@ const byLevel = (a, b) => a.level - b.level
  */
 MapData.create = ({ field, dryRun }) => {
   const fieldDoc = getCollection('field').findOne(field)
-
-  if (!fieldDoc) {
-    throw new Error(`Field doc not found by _id "${field}"`)
-  }
+  checkIntegrity({
+    condition: fieldDoc,
+    premise: `Expect field doc by _id "${field}"`
+  })
 
   log('create for field', fieldDoc.title)
-
   const dimensions = getCollection('dimension').find().fetch()
   const levels = getCollection('level').find().fetch().sort(byLevel)
 
-  if (!dimensions.length) throw new Error('No Dimensions found')
-  if (!levels.length) throw new Error('No Levels found')
+  checkIntegrity({
+    condition: dimensions.length,
+    premise: `Expect at least one dimension doc`
+  })
+  checkIntegrity({
+    condition: levels.length,
+    premise: `Expect at least one level doc`
+  })
 
   const TestCycleCollection = getCollection('testCycle')
   const UnitSetCollection = getCollection('unitSet')
+  const UnitCollection = getCollection('unit')
   const mapData = {
     field,
     dimensions: dimensions.map(d => d._id),
@@ -199,6 +215,10 @@ MapData.create = ({ field, dryRun }) => {
       progress: 0,
       competencies: []
     }
+
+    // used to determine, whether to add a milestone at the end
+    // of a level or not
+    let hasAtLeastOneStage = false
 
     // -------------------------------------------------------------------------
     // phase 1 - collecting
@@ -225,15 +245,20 @@ MapData.create = ({ field, dryRun }) => {
         dimension: dimensionDoc._id
       })
 
+      // if we found no test cycle for this given combination we need to
+      // make sure there is no further map building for this test cycle.
       if (!testCycleDoc) {
-        // throw new Meteor.Error('mapData.createError', 'testCycleNotFound', {
-        //   field: field,
-        //   level: levelDoc._id,
-        //   dimension: dimensionDoc._id
-        // })
-        // TODO throw err ?
-        return log(' no TestCycle for ', levelDoc.title, dimensionDoc.title)
+        return log('no TestCycle for ', levelDoc.title, dimensionDoc.title)
       }
+
+      // get unit sets with fallback in case they are undefined on some
+      // test cycle docs and to prevent followup errors
+      const unitSets = testCycleDoc.unitSets || []
+
+      checkIntegrity({
+        condition: unitSets.length,
+        premise: `Expect at least one unit set for test cycle ${testCycleDoc._id}`
+      })
 
       // once we know, if we have any unitSets,
       // we add a new stage for this dimension
@@ -243,24 +268,56 @@ MapData.create = ({ field, dryRun }) => {
       // which
       let maxCompetencies = 0
 
-      UnitSetCollection.find({ _id: { $in: testCycleDoc.unitSets } })
-        .fetch()
-        .forEach(unitSetDoc => {
+      const unitSetCursor = UnitSetCollection.find({ _id: { $in: unitSets } })
+      const expectedUnitSets = unitSets.length
+      const actualUnitSets = unitSetCursor.count()
+
+      // If there is a mismatch between unit sets, as defined in the test cycle doc,
+      // we have an integrity issue and need to throw this as error
+      checkIntegrity({
+        condition: actualUnitSets === expectedUnitSets,
+        premise: `Expect ${expectedUnitSets} unit sets for test cycle ${testCycleDoc._id}, got ${actualUnitSets}`
+      })
+
+      const unitSetMap = cursorToMap(unitSetCursor)
+
+      unitSets
+        .forEach(unitSetId => {
+          const unitSetDoc = unitSetMap.get(unitSetId)
+
+          checkIntegrity({
+            condition: unitSetDoc,
+            premise: `Expect unit set doc by _id ${unitSetId}`
+          })
+
           const competencies = countCompetencies(unitSetDoc, log)
           log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+
+          const unitCursor = UnitCollection.find({ _id: { $in: unitSetDoc.units }})
+          const expectedUnits = unitSetDoc.units.length
+          const actualUnits = unitCursor.count()
+
+          checkIntegrity({
+            condition: expectedUnits > 0,
+            premise: `Expect units for unit set ${unitSetDoc._id} to be above 0`
+          })
+
+          // We also require strict integrity of units in a unit set
+          checkIntegrity({
+            condition: expectedUnits === actualUnits,
+            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc._id}, got ${actualUnits}`
+          })
+
           // push new stage to the stage data
-
-          if (!('progress' in unitSetDoc)) {
-            console.warn('no progress in unitset', unitSetDoc.shortCode)
-          }
-
           stages[dimensionId].push({
             dimension: dimensionIndex,
             _id: unitSetDoc._id,
-            progress: unitSetDoc.progress || 0,
+            progress: unitSetDoc.progress,
             competencies: competencies
           })
 
+          // At this point we know for sure, that there is
+          hasAtLeastOneStage = true
           maxCompetencies += competencies
         })
 
@@ -313,14 +370,10 @@ MapData.create = ({ field, dryRun }) => {
         if (i > list.length - 1) { return }
 
         const unitSet = list[i]
-        if (!('progress' in unitSet)) {
-          console.warn('no progress found on', unitSet.shortCode)
-        }
 
         // we need to sum the progress of all unitSets
         // to be able to display progress for the full stage
-        stage.progress += (unitSet.progress || 0)
-
+        stage.progress += unitSet.progress
         stage.unitSets.push(unitSet)
       })
 
@@ -331,14 +384,23 @@ MapData.create = ({ field, dryRun }) => {
       mapData.entries.push(stage)
     }
 
-    // after all stages of one iteration have been added
-    // we can finally add the milestone entry
-    mapData.entries.push(milestone)
+    // After all stages of one iteration have been added we can finally add the milestone entry.
+    // However, this is only to be added, in case there is an actual map created.
+    // This is only the case, if we have added at least one stage.
+    // There is a real case, where no test cycle is defined for a given combination
+    // of field/dimension/level and we need to be aware of that.
+    if (hasAtLeastOneStage) {
+      mapData.entries.push(milestone)
+    }
   })
 
-  if (dryRun) { return }
+  // At this point we skip on dryRun but also if we
+  // found no way to build a map for a given field.
+  // This is also important to determine, whether a field
+  // should even be listed in the overview.
+  if (dryRun || mapData.entries.length === 0) { return }
 
-  // update collections
+  // Otherwise, we can safely update the collection.
   return getCollection(MapData.name).upsert({ field }, { $set: mapData })
 }
 

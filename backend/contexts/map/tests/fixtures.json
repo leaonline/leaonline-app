@@ -24,6 +24,16 @@
       "shortNum": 1,
       "status": 3,
       "title": "Schreiben"
+    },
+    {
+      "_id": "BGBtBe5z45bfte3XJ",
+      "colorType": 3,
+      "description": "Lesen",
+      "icon": "book",
+      "shortCode": "R",
+      "shortNum": 2,
+      "status": 3,
+      "title": "Lesen"
     }
   ],
   "level": [
@@ -34,8 +44,15 @@
       "title": "Level 1",
       "isLegacy": false,
       "level": 1
+    },
+    {
+      "_id": "28ptgshFQxCRGYCW4",
+      "description": "lea.app Level 2",
+      "status": 0,
+      "title": "Level 2",
+      "isLegacy": false,
+      "level": 2
     }
-
   ],
   "testCycle": [
     {
