@@ -293,8 +293,9 @@ MapData.create = ({ field, dryRun }) => {
           const competencies = countCompetencies(unitSetDoc, log)
           log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
 
-          const unitCursor = UnitCollection.find({ _id: { $in: unitSetDoc.units }})
-          const expectedUnits = unitSetDoc.units.length
+          const units = unitSetDoc.units || []
+          const unitCursor = UnitCollection.find({ _id: { $in: units }})
+          const expectedUnits = units.length
           const actualUnits = unitCursor.count()
 
           checkIntegrity({
@@ -354,7 +355,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // first, we estimate the largest list length, which will
     // determine the number of stages we will get for our map
-    stageEntries.forEach(list => {
+    stageEntries.forEach((list = []) => {
       if (list.length > maxLength) {
         maxLength = list.length
       }
