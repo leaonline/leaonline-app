@@ -1,20 +1,20 @@
 /* eslint-env mocha */
-import {Random} from 'meteor/random'
-import {expect} from 'chai'
-import {MapData} from '../MapData'
-import {Field} from '../../content/Field'
-import {Dimension} from '../../content/Dimension'
-import {TestCycle} from '../../content/TestCycle'
-import {UnitSet} from '../../content/UnitSet'
-import {Level} from '../../content/Level'
-import {Unit} from '../../content/Unit'
+import { Random } from 'meteor/random'
+import { expect } from 'chai'
+import { MapData } from '../MapData'
+import { Field } from '../../content/Field'
+import { Dimension } from '../../content/Dimension'
+import { TestCycle } from '../../content/TestCycle'
+import { UnitSet } from '../../content/UnitSet'
+import { Level } from '../../content/Level'
+import { Unit } from '../../content/Unit'
 import {
   restoreCollections,
   stubCollection
 } from '../../../tests/helpers/stubCollection'
 import mapFixtures from './fixtures'
-import {getCollection} from '../../../api/utils/getCollection'
-import {initTestCollection} from '../../../tests/helpers/initTestCollection'
+import { getCollection } from '../../../api/utils/getCollection'
+import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 
 const MapCollection = initTestCollection(MapData)
 const FieldCollection = initTestCollection(Field)
@@ -50,7 +50,6 @@ describe('MapData', function () {
     restoreCollections()
   })
   describe(MapData.create.name, function () {
-
     // throws errors; this is the case when crucial
     // or fundmental data is not avialable.
     // such data is:
@@ -77,7 +76,6 @@ describe('MapData', function () {
         .to.throw('Expect at least one level doc')
     })
 
-
     it('throws if there are no unit sets for the testcycle', function () {
       mockDocuments()
       const testCycleDoc = TestCycleCollection.findOne()
@@ -99,18 +97,18 @@ describe('MapData', function () {
         .to.throw(`Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`)
     })
 
-    it ('throws if there are no units for a unit set', function () {
+    it('throws if there are no units for a unit set', function () {
       mockDocuments()
       const testCycleDoc = TestCycleCollection.findOne()
       const unitSetId = testCycleDoc.unitSets[0]
-      UnitSetCollection.update(unitSetId, { $set: { units: [] }})
+      UnitSetCollection.update(unitSetId, { $set: { units: [] } })
 
       const fieldDoc = FieldCollection.findOne()
       expect(() => MapData.create({ field: fieldDoc._id }))
         .to.throw(`Expect units for unit set ${unitSetId} to be above 0`)
     })
 
-    it ('throws if there is a mismatch between expected and actual units', function () {
+    it('throws if there is a mismatch between expected and actual units', function () {
       mockDocuments()
       const testCycleDoc = TestCycleCollection.findOne()
       const unitSetId = testCycleDoc.unitSets[0]

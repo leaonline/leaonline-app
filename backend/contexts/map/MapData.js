@@ -1,7 +1,7 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
-import {cursorToMap} from '../../api/utils/cursorToMap'
+import { cursorToMap } from '../../api/utils/cursorToMap'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -187,11 +187,11 @@ MapData.create = ({ field, dryRun }) => {
 
   checkIntegrity({
     condition: dimensions.length,
-    premise: `Expect at least one dimension doc`
+    premise: 'Expect at least one dimension doc'
   })
   checkIntegrity({
     condition: levels.length,
-    premise: `Expect at least one level doc`
+    premise: 'Expect at least one level doc'
   })
 
   const TestCycleCollection = getCollection('testCycle')
@@ -294,7 +294,7 @@ MapData.create = ({ field, dryRun }) => {
           log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
 
           const units = unitSetDoc.units || []
-          const unitCursor = UnitCollection.find({ _id: { $in: units }})
+          const unitCursor = UnitCollection.find({ _id: { $in: units } })
           const expectedUnits = units.length
           const actualUnits = unitCursor.count()
 

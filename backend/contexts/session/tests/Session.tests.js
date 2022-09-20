@@ -11,7 +11,6 @@ import { Unit } from '../../content/Unit'
 import { UnitSet } from '../../content/UnitSet'
 import { Progress } from '../../progress/Progress'
 import { createMethod } from '../../../infrastructure/factories/createMethod'
-import { asyncTimeout } from '../../../api/utils/asyncTimeout'
 
 const SessionCollection = initTestCollection(Session)
 const ProgressCollection = initTestCollection(Progress)
