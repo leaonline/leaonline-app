@@ -187,8 +187,9 @@ describe('Session', function () {
       const nextUnit = Session.update({ userId, sessionId })
       expect(nextUnit).to.equal(nextUnitId)
 
-      const { updatedAt, ...sessionDoc } = SessionCollection.findOne()
+      const { updatedAt, completedAt, ...sessionDoc } = SessionCollection.findOne()
       expect(updatedAt).to.be.instanceOf(Date)
+      expect(completedAt).to.equal(undefined)
       expect(sessionDoc).to.deep.equal({
         _id: sessionId,
         userId,
@@ -200,11 +201,58 @@ describe('Session', function () {
         progress: 4
       })
     })
+    it('unsets next unit if this is the last unit', function () {
+      const userId = Random.id()
+      const nextUnitId = Random.id()
+      const unitSet = Random.id()
+      const unitId = Random.id()
+      const fieldId = Random.id()
+
+      UnitCollection.insert({
+        _id: unitId,
+        pages: [{}, {}]
+      })
+      UnitCollection.insert({
+        _id: nextUnitId,
+        pages: [{}, {}]
+      })
+      UnitSetCollection.insert({
+        _id: unitSet,
+        units: [unitId]
+      })
+
+      const sessionId = SessionCollection.insert({
+        userId,
+        unitSet,
+        fieldId,
+        unit: unitId,
+        nextUnit: nextUnitId,
+        competencies: 1,
+        progress: 2
+      })
+
+      let nextUnit = Session.update({ userId, sessionId })
+      expect(nextUnit).to.equal(nextUnitId)
+      nextUnit = Session.update({ userId, sessionId })
+      expect(nextUnit).to.equal(null)
+
+      const { updatedAt, completedAt, ...sessionDoc } = SessionCollection.findOne()
+      expect(updatedAt).to.be.instanceOf(Date)
+      expect(completedAt).to.be.instanceOf(Date)
+      expect(sessionDoc).to.deep.equal({
+        _id: sessionId,
+        userId,
+        unitSet,
+        fieldId,
+        competencies: 1,
+        progress: 6
+      })
+    })
   })
   describe(Session.methods.update.name, function () {
     const method = createMethod(Session.methods.update)
 
-    it('it updates progress in the background', async function () {
+    it('it updates progress', function () {
       const userId = Random.id()
       const nextUnitId = Random.id()
       const nextNextUnitId = Random.id()
@@ -234,7 +282,6 @@ describe('Session', function () {
       const next = method._execute({ userId }, { sessionId })
       expect(next).to.equal(nextUnitId)
 
-      await asyncTimeout(150)
       const { _id, ...progress } = ProgressCollection.findOne()
       expect(progress).to.deep.equal({
         userId,

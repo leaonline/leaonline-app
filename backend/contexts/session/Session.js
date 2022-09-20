@@ -105,8 +105,6 @@ Session.create = ({ userId, unitSetDoc }) => {
  * @return {undefined|string} next unit id or undefined if not found
  */
 const getNextUnitId = ({ unitId, units = [] }) => {
-  if (!unitId) return units[0]
-
   const index = units.indexOf(unitId)
 
   if (index === -1) {
@@ -115,7 +113,7 @@ const getNextUnitId = ({ unitId, units = [] }) => {
   }
 
   // last unit
-  if (index > units.length - 1) {
+  if (index === units.length - 1) {
     return undefined
   }
 
@@ -273,17 +271,15 @@ Session.methods.update = {
       const { userId } = this
       const nextUnitId = Session.update({ sessionId, userId })
 
-      Meteor.defer(() => {
-        // get the updated session doc and update the user progress
-        const sessionDoc = getCollection(Session.name).findOne({ _id: sessionId })
-        Progress.update({
-          userId: userId,
-          unitSetId: sessionDoc.unitSet,
-          fieldId: sessionDoc.fieldId,
-          progress: sessionDoc.progress,
-          competencies: sessionDoc.competencies,
-          complete: !!sessionDoc.completedAt
-        })
+      // get the updated session doc and update the user progress
+      const sessionDoc = getCollection(Session.name).findOne({ _id: sessionId })
+      Progress.update({
+        userId: userId,
+        unitSetId: sessionDoc.unitSet,
+        fieldId: sessionDoc.fieldId,
+        progress: sessionDoc.progress,
+        competencies: sessionDoc.competencies,
+        complete: !!sessionDoc.completedAt
       })
 
       return nextUnitId
