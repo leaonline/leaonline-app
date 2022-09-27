@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, View, Text, FlatList } from 'react-native'
+import { SafeAreaView, View, FlatList } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Loading } from '../../components/Loading'
@@ -18,6 +18,7 @@ import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
+import LeaText from '../../components/LeaText'
 
 const log = Log.create('MapScreen')
 
@@ -243,7 +244,7 @@ const MapScreen = props => {
     return (
       <View>
         <View style={styles.stage}>
-          <Text>Milestone {milestone.level + 1}</Text>
+          <LeaText>Milestone {milestone.level + 1}</LeaText>
         </View>
         <LinearProgress color={Colors.secondary} value={progress} variant='determinate' />
       </View>

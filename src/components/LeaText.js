@@ -1,13 +1,16 @@
 import React from 'react'
+import { Text } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import LeaText from './LeaText'
 
 const styles = createStyleSheet({
-  default: {}
+  default: {
+    fontFamily: 'semicolon',
+    fontSize: 18
+  }
 })
 
 /**
- * TTSText is a component of Tts. It displays the spoken text.
+ * LeaText is a component ... //TODO
  *
  * @category Components
  * @param {string} props.text: The displayed text
@@ -15,6 +18,6 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  * @constructor
  */
-const TTSText = props => <LeaText style={{ ...styles.default, ...(props.style) }}>{props.text}</LeaText>
+const LeaText = props => <Text style={{ ...styles.default, ...(props.style) }}>{props.children}</Text>
 
-export default TTSText
+export default LeaText

@@ -65,9 +65,20 @@ const onConnected = async () => {
  */
 const fetchFonts = async () => {
   log('fetch fonts')
-  return Font.loadAsync({
-    semicolon: require('./assets/fonts/SemikolonPlus-Regular.ttf')
-  })
+  let handle = null // bad style, alternative?
+
+  try {
+    handle = require('./assets/fonts/SemikolonPlus-Regular.ttf')
+  } catch (error) {
+    log('WARNING: Default font not found, using fallback font.') // FIXME: isn't printed as of right now
+    handle = require('./assets/fonts/arial.ttf')
+  } finally {
+    if (handle != null) {
+      await Font.loadAsync({
+        semicolon: handle
+      })
+    }
+  }
 }
 
 /**
