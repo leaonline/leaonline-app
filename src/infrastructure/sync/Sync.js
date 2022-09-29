@@ -1,6 +1,7 @@
 import { getCollection } from '../collections/collections'
 import { callMeteor } from '../../meteor/call'
 import { Log } from '../Log'
+import { Config } from '../../env/Config'
 
 /**
  * Helps with keeping collections synced
@@ -14,7 +15,9 @@ Sync.collection = () => {
 }
 
 const log = Log.create(Sync.name)
-const debug = Log.create(Sync.name, 'debug')
+const debug = Config.debug.sync
+  ? Log.create(Sync.name, 'debug')
+  : () => {}
 
 /**
  * Receives a list of `{name, hash}` objects and determines,

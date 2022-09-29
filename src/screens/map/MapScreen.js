@@ -13,11 +13,10 @@ import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
 import { ProfileButton } from '../../components/ProfileButton'
 import { Navbar } from '../../components/Navbar'
-import { LinearProgress } from 'react-native-elements'
-import { CircularProgress } from '../../components/CircularProgress'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
+import { StaticCircularProgress } from '../../components/StaticCircularProgress'
 
 const log = Log.create('MapScreen')
 
@@ -123,10 +122,13 @@ const MapScreen = props => {
     )
   }
 
+  const nodata = mapDocs.data === null || mapDocs.data === undefined
+  const loadFailed = !mapDocs.loading && nodata
+
   // if we have loaded but there was no MapData available,
   // we display an error message with a button to go back to the home screen
-  if (!mapDocs.loading && (mapDocs.error || mapDocs.data === null || mapDocs.data === undefined)) {
-    log('no data available, display fallback')
+  if (mapDocs.error || loadFailed) {
+    log('no data available, display fallback', { error: mapDocs.error, loadFailed })
     return (
       <View style={styles.container}>
         {renderNavbar()}
@@ -140,19 +142,9 @@ const MapScreen = props => {
     )
   }
 
-  const selectStage = async stage => {
-    stage.level = mapData.levels[stage.level]
-    stage.unitSets.forEach(unitSet => {
-      unitSet.dimension = mapData.dimensions[unitSet.dimension]
-    })
-
-    await AppState.stage(stage)
-    props.navigation.navigate('Dimension')
-  }
-
   const mapData = mapDocs.data
 
-  /* MAP DATA STRUCTURE:
+  /* expected mapData structure:
    *
    * {
    *   _id: String,
@@ -180,6 +172,16 @@ const MapScreen = props => {
    * }
    */
 
+  const selectStage = async stage => {
+    stage.level = mapData.levels[stage.level]
+    stage.unitSets.forEach(unitSet => {
+      unitSet.dimension = mapData.dimensions[unitSet.dimension]
+    })
+
+    await AppState.stage(stage)
+    props.navigation.navigate('Dimension')
+  }
+
   const renderListItem = ({ index, item: entry }) => {
     if (entry.type === 'stage') {
       return renderStage(entry, index)
@@ -195,7 +197,6 @@ const MapScreen = props => {
   }
 
   const renderList = () => {
-    if (!mapData) return (<Loading />)
     return (
       <View style={styles.scrollView}>
         <FlatList
@@ -213,15 +214,18 @@ const MapScreen = props => {
     const stageIsComplete = stage.userProgress >= stage.progress
     const icon = stageIsComplete ? 'flag' : 'edit'
     const iconColor = stageIsComplete ? Colors.success : Colors.primary
-    const progress = (stage.userProgress || 0) / stage.progress
+    const progress = 100 * (stage.userProgress || 0) / stage.progress
     const title = `${t('mapScreen.stage')} ${index + 1}`
 
     return (
       <View style={styles.stage}>
-        <RouteButton title={title} icon={icon} iconColor={iconColor} handleScreen={() => selectStage(stage)} noTts />
-        <CircularProgress
-          value={progress * 100}
-          radius={23}
+        <RouteButton style={{ height: 100 }} title={title} icon={icon} iconColor={iconColor} handleScreen={() => selectStage(stage)} noTts />
+
+        <StaticCircularProgress
+          duration={0}
+          value={progress}
+          radius={60}
+          maxValue={100}
           textColor={Colors.secondary}
           activeStrokeColor={Colors.secondary}
           inActiveStrokeColor='#fff'
@@ -229,7 +233,6 @@ const MapScreen = props => {
           inActiveStrokeWidth={5}
           activeStrokeWidth={5}
           showProgressValue
-          maxValue={100}
           valueSuffix='%'
         />
         {renderUnitSets(stage.unitSets)}
@@ -238,14 +241,19 @@ const MapScreen = props => {
   }
 
   const renderMilestone = (milestone) => {
-    // <RouteButton title='Milestones' icon='edit' key={`entry-${index}`} handleScreen={() => {}} />
-    const progress = milestone.userProgress / milestone.maxProgress
+    const progress = 100 * milestone.userProgress / milestone.maxProgress
     return (
       <View>
-        <View style={styles.stage}>
+        <View style={styles.body}>
           <Text>Milestone {milestone.level + 1}</Text>
+          <StaticCircularProgress
+            value={progress}
+            radius={23}
+            valueSuffix='%'
+            textColor={Colors.primary}
+            activeStrokeColor={Colors.primary}
+          />
         </View>
-        <LinearProgress color={Colors.secondary} value={progress} variant='determinate' />
       </View>
     )
   }
@@ -261,11 +269,12 @@ const MapScreen = props => {
       const progress = Math.round(((userCompetencies || 0) / competencies) * 100)
       // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
       return (
-        <CircularProgress
+        <StaticCircularProgress
           key={`dimension-progress-${index}`}
           value={progress}
           radius={23}
           textColor={color}
+          duration={0}
           activeStrokeColor={color}
           inActiveStrokeColor='#fff'
           inActiveStrokeOpacity={0.5}

@@ -33,9 +33,9 @@ Config.debug.layoutBorders = debug.layoutBorders
  */
 Config.debug.logLevel = log.level
 
-/**
- *
- */
+Config.debug.state = false
+Config.debug.sync = false
+Config.debug.home = false
 Config.debug.map = false
 Config.debug.unit = false
 
@@ -46,9 +46,16 @@ Config.styles = {}
 Config.styles.containerMargin = 30
 
 /**
- * These are the names of the server method endpoints.
+ * These are the names and definitions for the server method endpoints.
  */
 Config.methods = {}
+
+/**
+ *
+ * @type {number}
+ */
+Config.methods.defaultTimeout = backend.methods.defaultTimeout
+
 Config.methods.createUser = backend.methods.users.create
 Config.methods.deleteUser = backend.methods.users.delete
 Config.methods.getHomeData = backend.methods.content.home

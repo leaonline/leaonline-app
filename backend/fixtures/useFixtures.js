@@ -1,5 +1,4 @@
-import { EJSON } from 'meteor/ejson'
-import fixtures from './fixtures.json'
+import fixtures from './fixtures.js'
 import { getCollection } from '../api/utils/getCollection'
 import { createLog } from '../infrastructure/log/createLog'
 import { SyncState } from '../contexts/sync/SyncState'
@@ -27,7 +26,7 @@ export const useFixtures = () => {
 
     documents.forEach(doc => {
       if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: EJSON.parse(JSON.stringify(doc)) })
+        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
         debug('upsert', JSON.stringify(upsert))
       }
 

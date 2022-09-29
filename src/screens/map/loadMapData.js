@@ -5,13 +5,15 @@ import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
 import { Config } from '../../env/Config'
 
-const debug = Log.create('loadMapData', 'debug')
+const debug = Config.debug.map
+  ? Log.create('loadMapData', 'debug')
+  : () => {}
 
 /**
  * Loads map data to build the map, that will be filled with user data
  * @return {Promise<*>}
  */
-export const loadMapData = async (withDebug) => {
+export const loadMapData = async () => {
   const fieldDoc = await AppState.field()
   const fieldId = fieldDoc?._id
 
@@ -34,8 +36,8 @@ export const loadMapData = async (withDebug) => {
 
   // if neither the doc nor any entries wer sent -> skip
   if (!hasData || !hasDimensions || !hasEntries || !hasLevels) {
-    debug(mapData)
     debug('data incomplete, skip with null')
+    debug({ mapData })
     return null
   }
 
@@ -49,30 +51,42 @@ export const loadMapData = async (withDebug) => {
 
   // we load the progress doc here and immediately resolve
   // the values
-  const progressDoc = await loadProgressDoc(fieldId)
-  debug({ progressDoc })
+  let progressDoc = await loadProgressDoc(fieldId)
+
+  if (!progressDoc) {
+    progressDoc = {
+      unitSets: []
+    }
+  }
 
   const levelsProgress = {}
 
   mapData.entries.forEach((entry, index) => {
     entry.key = `map-entry-${index}`
 
+    // a milestone contains a summary of the progress of the stages
+    // where maxProgress is the maximum achievable progress and
+    // where userProgress is the current user's progress (defaults to zero)
     if (entry.type === 'milestone') {
       entry.maxProgress = levelsProgress[entry.level].max
-      entry.userProgress = levelsProgress[entry.level].user
+      entry.userProgress = levelsProgress[entry.level].user || 0
       return
     }
+
+    // set defaults
+    entry.userProgress = entry.userProgress || 0
+    entry.progress = entry.progress || 0
 
     let userStageProgress = 0
 
     entry.unitSets.forEach(unitSet => {
-      const userUnitSet = progressDoc
-        ? progressDoc.unitSets[unitSet._id]
-        : { progress: 0, competencies: 0 }
+      const userUnitSet = progressDoc.unitSets[unitSet._id] ?? { progress: 0, competencies: 0 }
+      const usersUnitSetProgress = userUnitSet.progress || 0
+      const usersUnitSetCompetencies = userUnitSet.competencies || 0
 
-      userStageProgress += userUnitSet.progress
-      unitSet.userProgress = userUnitSet.progress
-      unitSet.userCompetencies = userUnitSet.competencies
+      userStageProgress += usersUnitSetProgress
+      unitSet.userProgress = usersUnitSetProgress
+      unitSet.userCompetencies = usersUnitSetCompetencies
     })
 
     entry.userProgress = userStageProgress

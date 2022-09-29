@@ -77,7 +77,7 @@ export const ChoiceRenderer = props => {
     setSelected({})
     setCompared({})
 
-    return props.submitResponse({
+    props.submitResponse({
       responses: getResponses({}),
       data: props
     })

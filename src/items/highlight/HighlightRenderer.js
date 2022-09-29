@@ -4,7 +4,6 @@ import { TTSengine } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import { Log } from '../../infrastructure/Log'
 
 const pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
 const separatorChars = /[.,;:?!]+/g
@@ -13,7 +12,6 @@ const whiteSpace = /^\s+$/
 
 const Tts = TTSengine.component()
 const tokenCache = new Map()
-const log = Log.create('HighlightRenderer')
 
 const styles = createStyleSheet({
   container: {
@@ -90,10 +88,9 @@ export const HighlightRenderer = props => {
   // 2. clear all compared
   // 3. submit a fresh "empty" response
   useEffect(() => {
-    log('content id changed', props.contentId)
     setSelected({})
     setCompared({})
-    return props.submitResponse({
+    props.submitResponse({
       responses: getResponses({}),
       data: props
     })
