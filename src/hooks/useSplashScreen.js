@@ -6,6 +6,7 @@ import { initAppState } from '../startup/initAppState'
 import { connectMeteor } from '../meteor/connect'
 import { Log } from '../infrastructure/Log'
 import { loginMeteor } from '../meteor/loginMeteor'
+import { loggedIn } from '../meteor/loggedIn'
 
 const log = Log.create('App')
 
