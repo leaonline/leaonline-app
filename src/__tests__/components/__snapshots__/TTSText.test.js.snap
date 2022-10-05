@@ -5,6 +5,8 @@ exports[`Text alignment center 1`] = `
   style={
     Object {
       "color": "#f59d1d",
+      "fontFamily": "semicolon",
+      "fontSize": 18,
       "paddingLeft": 5,
       "textAlign": "center",
     }
@@ -19,6 +21,8 @@ exports[`Text alignment left 1`] = `
   style={
     Object {
       "color": "#f59d1d",
+      "fontFamily": "semicolon",
+      "fontSize": 18,
       "paddingLeft": 5,
       "textAlign": "left",
     }
@@ -33,6 +37,8 @@ exports[`Text alignment right 1`] = `
   style={
     Object {
       "color": "#f59d1d",
+      "fontFamily": "semicolon",
+      "fontSize": 18,
       "paddingLeft": 5,
       "textAlign": "right",
     }
@@ -47,6 +53,8 @@ exports[`Text color secondary 1`] = `
   style={
     Object {
       "color": "#193b5e",
+      "fontFamily": "semicolon",
+      "fontSize": 18,
       "paddingLeft": 5,
       "textAlign": "center",
     }
