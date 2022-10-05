@@ -71,7 +71,7 @@ const fetchFonts = async () => {
     handle = require('./assets/fonts/SemikolonPlus-Regular.ttf')
   } catch (error) {
     log('WARNING: Default font not found, using fallback font.') // FIXME: isn't printed as of right now
-    handle = require('./assets/fonts/arial.ttf')
+    handle = require('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf')
   } finally {
     if (handle != null) {
       await Font.loadAsync({
