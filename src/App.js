@@ -30,11 +30,11 @@ TTSengine.on('beforeSpeak', () => Vibration.vibrate(150))
  * @component
  * @returns {JSX.Element}
  */
-export default function App() {
+export default function App () {
   const { appIsReady, onLayoutRootView } = useSplashScreen()
 
   if (!appIsReady) {
-    return null;
+    return null
   }
 
   return (
