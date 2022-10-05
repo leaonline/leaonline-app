@@ -16,7 +16,7 @@
         "testCycle": false
       },
       "remap": {
-        "active": true,
+        "active": false,
         "dryRun": false
       }
     }
