@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { View, Vibration } from 'react-native'
 import * as Font from 'expo-font'
-import AppLoading from 'expo-app-loading'
+import * as SplashScreen from 'expo-splash-screen';
+
 import * as Speech from 'expo-speech'
 import { Log } from './infrastructure/Log'
 import { connectMeteor } from './meteor/connect'
@@ -13,6 +14,7 @@ import { createStyleSheet } from './styles/createStyleSheet'
 import { initAppState } from './startup/initAppState'
 import './startup/initContexts'
 import './i18n'
+import { START_UP_DELAY } from './constants/App';
 
 const log = Log.create('App')
 
@@ -101,33 +103,48 @@ TTSengine.on('beforeSpeak', () => Vibration.vibrate(150))
  * @component
  * @returns {JSX.Element}
  */
-export default function App () {
-  const [initialized, setInitialized] = useState(false)
-  const [waitTimeout, setTimeoutComplete] = useState(false)
+export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  // use this effect to make the splash screen remain
-  // for a few seconds, once the font has been loaded
-  useEffect(() => {
-    if (initialized) {
-      // TODO Timeout variable should be later set in a separate global environment file
-      setTimeout(() => {
-        setTimeoutComplete(true)
-      }, 1000)
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
     }
-  }, [initialized])
+  }, [appIsReady])
 
-  if (!waitTimeout) {
-    return (
-      <AppLoading
-        startAsync={startApp}
-        onFinish={() => setInitialized(true)}
-        onError={(error) => console.error(error)}
-      />
-    )
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Keep the splash screen visible while we fetch resources
+        SplashScreen.preventAutoHideAsync();
+
+        await startApp()
+
+        // use this effect to make the splash screen remain
+        // for a few seconds, once the font has been loaded
+        await new Promise(resolve => setTimeout(resolve, START_UP_DELAY));
+      } catch (e) {
+        console.log(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.screen} onLayout={onLayoutRootView}>
       <Navigator loggedIn={!!loggedIn()} />
     </View>
   )
