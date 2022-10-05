@@ -1,7 +1,19 @@
 const map = new Map()
 
-export const LocalCollections = {}
+/**
+ * Repository to manage and access local (unnamed; non-persistent) Mongo Collections
+ * by name.
+ *
+ * @category api
+ * @namespace
+ */
+const LocalCollections = {}
 
+/**
+ * Adds a collection by given name to the repository
+ * @param name {string}
+ * @param collection {Mongo.Collection}
+ */
 LocalCollections.add = (name, collection) => {
   if (map.has(name)) {
     throw new Error(`Collection "${name}" already exists`)
@@ -9,4 +21,11 @@ LocalCollections.add = (name, collection) => {
   map.set(name, collection)
 }
 
+/**
+ * Get a local Mongo Collection by name
+ * @param name {string}
+ * @return {Mongo.Collection|undefined}
+ */
 LocalCollections.get = name => map.get(name)
+
+export { LocalCollections }

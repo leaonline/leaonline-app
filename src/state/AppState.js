@@ -1,4 +1,5 @@
 import { Log } from '../infrastructure/Log'
+import { Config } from '../env/Config'
 
 /**
  * The AppState is the single point of truth for application-wide
@@ -11,7 +12,10 @@ export const AppState = {
   name: 'appState'
 }
 
-const debug = Log.create('AppState', 'debug')
+const debug = Config.debug.state
+  ? Log.create('AppState', 'debug')
+  : () => {}
+
 const createKey = name => `lea.online@${name}`
 const KEYS = {
   SCREEN: createKey('screen'),
@@ -38,7 +42,7 @@ const updateSingle = async (key, value) => {
     return undefined
   } else if (value !== undefined) {
     // by passing an undefined value
-    debug(key, 'set new value')
+    debug(key, 'set new value', value)
     await storage.setItem(key, value)
     return value
   } else {

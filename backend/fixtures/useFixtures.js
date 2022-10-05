@@ -1,5 +1,4 @@
-import { EJSON } from 'meteor/ejson'
-import fixtures from './fixtures.json'
+import fixtures from './fixtures.js'
 import { getCollection } from '../api/utils/getCollection'
 import { createLog } from '../infrastructure/log/createLog'
 import { SyncState } from '../contexts/sync/SyncState'
@@ -15,6 +14,10 @@ const { remap } = Meteor.settings.remotes.content
  * Otherwise, removes all fixture docs from DB.
  *
  * This is useful, in case you want to start the app without using a production data dump.
+ *
+ * @category startup
+ * @module useFixtures
+ * @return {undefined} nothing to return
  */
 export const useFixtures = () => {
   Object.entries(fixtures).forEach(([name, documents]) => {
@@ -23,7 +26,7 @@ export const useFixtures = () => {
 
     documents.forEach(doc => {
       if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: EJSON.parse(JSON.stringify(doc)) })
+        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
         debug('upsert', JSON.stringify(upsert))
       }
 

@@ -4,6 +4,10 @@ import { ensureConnected } from './ensureConnected'
 import { MeteorError } from '../errors/MeteorError'
 import { Log } from '../infrastructure/Log'
 import { createSchema } from '../schema/createSchema'
+import { Config } from '../env/Config'
+import { createTimedPromise } from '../utils/createTimedPromise'
+
+const DEFAULT_TIMEOUT = Config.methods.defaultTimeout
 
 /**
  * Wraps a Meteor.call in a promise but also allows to hook in various
@@ -29,6 +33,7 @@ import { createSchema } from '../schema/createSchema'
  * @param options.failure {function?} optional function called when response is received
  *                            and the first argument is not undefined
  * @param options.debug {boolean=} optional flag to debug internal behaviour
+ * @param options.timeout {number=} optional value to set a timeout, otherwise a default is used
  * @return {Promise<any>} a promise, resolving to anything (depending on the
  *                        method implementation on the server)
  */
@@ -69,27 +74,41 @@ export const callMeteor = (options) => {
 }
 
 /**
+ * Options for the timed promise in `call`
+ * @private
+ * @type {{throwIfTimedOut: boolean, timeout: number}}
+ */
+const timedPromiseOptions = { timeout: DEFAULT_TIMEOUT, throwIfTimedOut: true }
+
+/**
  * Internal actual method call. See {callMeteor} for functionality.
  * @private
  * @see {callMeteor}
  */
-const call = ({ name, args, prepare, receive }) => new Promise((resolve, reject) => {
-  // inform that we are connected and about to call the server
-  if (typeof prepare === 'function') { prepare() }
+const call = ({ name, args, prepare, receive }) => {
+  const promise = new Promise((resolve, reject) => {
+    // inform that we are connected and about to call the server
+    if (typeof prepare === 'function') { prepare() }
 
-  Meteor.call(name, args, (error, result) => {
-    // inform that we are have received
-    // something back from the server
-    if (typeof receive === 'function') { receive() }
+    Meteor.call(name, args, (error, result) => {
+      // inform that we have received
+      // something from the server
+      if (typeof receive === 'function') { receive() }
 
-    if (error) {
-      // we convert server responses to MeteorError
-      return reject(MeteorError.from(error))
-    }
+      if (error) {
+        // we convert server responses to MeteorError
+        return reject(MeteorError.from(error))
+      }
 
-    return resolve(result)
+      return resolve(result)
+    })
   })
-})
+
+  // let the promise race against a timeout to ensure
+  // our UI remains responsive in case we didn't get any
+  // response from the server
+  return createTimedPromise(promise, timedPromiseOptions)
+}
 
 const optionalFunction = { type: Function, optional: true }
 const callMethodSchema = createSchema({

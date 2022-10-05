@@ -3,8 +3,10 @@ import { DDP } from 'meteor/ddp-client'
 
 /**
  * Manages connection and calls to the content server.
+ * @category api
+ * @namespace
  */
-export const ContentConnection = {}
+const ContentConnection = {}
 
 let contentConnection
 const contentUrl = Meteor.settings.remotes.content.url
@@ -74,13 +76,13 @@ ContentConnection.get = ({ name, ids = [], log }) => {
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
-//  INTERNAL
+//  INTERNAL* @obj
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
 /**
- * @private
  * generates a function to create jwt
+ * @private
  */
 const getToken = (function () {
   const { content } = Meteor.settings.remotes
@@ -98,3 +100,5 @@ const getToken = (function () {
     return jwt.compact()
   }
 })()
+
+export { ContentConnection }

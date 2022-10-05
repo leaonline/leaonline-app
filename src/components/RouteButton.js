@@ -63,6 +63,11 @@ const RouteButton = props => {
   const renderRouteButton = () => {
     const titleStyle = { ...styles.buttonTitle, ...{ color }, fontFamily: 'semicolon' }
     const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color, fontFamily: 'semicolon' }
+
+    if (props.style) {
+      Object.assign(buttonStyle, props.style)
+    }
+
     const containerStyle = {
       backgroundColor: 'white',
       borderRadius: 15,

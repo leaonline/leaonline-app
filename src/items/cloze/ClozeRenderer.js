@@ -113,8 +113,6 @@ export const ClozeRenderer = props => {
   // the parent decided to activate {showCorrectResponse}
   useEffect(() => {
     if (props.showCorrectResponse) {
-      console.debug('score result', props.scoreResult)
-      console.debug('score defins', props.value.scoring)
       const result = {}
       const targets = {}
 
@@ -133,7 +131,7 @@ export const ClozeRenderer = props => {
           result[index] = CompareState.getValue(entry.score, answerValue)
         }
       })
-      console.debug(result)
+
       setCompared(result)
     }
   }, [props.showCorrectResponse])

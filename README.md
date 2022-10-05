@@ -27,7 +27,7 @@ development.
 ## Guides and Documentation
 
 - [common used terms](./docs/guide/COMMON_TERMS.md)
-- backend api docs (TBD)
+- [backend api docs](./docs/api/backend)
 - [backend startup](./docs/guide/BACKEND_STARTUP.md)
 - [backend sync](./docs/guide/BACKEND_SYNC.md)
 - [backend remap](./docs/guide/BACKEND_REMAP.md)

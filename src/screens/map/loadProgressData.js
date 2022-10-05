@@ -2,7 +2,9 @@ import { Log } from '../../infrastructure/Log'
 import { callMeteor } from '../../meteor/call'
 import { Config } from '../../env/Config'
 
-const debug = Log.create('loadProgressData', 'debug')
+const debug = Config.debug.map
+  ? Log.create('loadProgressData', 'debug')
+  : () => {}
 
 export const loadProgressDoc = async (fieldId) => {
   debug('for', { fieldId })
