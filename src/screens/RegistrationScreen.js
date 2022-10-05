@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, View, SafeAreaView, TextInput, ActivityIndicator, Text } from 'react-native'
+import { Alert, View, SafeAreaView, TextInput, ActivityIndicator } from 'react-native'
 import Colors from '../constants/Colors'
 import { TTSengine } from '../components/Tts'
 import { Log } from '../infrastructure/Log'
@@ -10,6 +10,7 @@ import RouteButton from '../components/RouteButton'
 import { createSchema, RegEx } from '../schema/createSchema'
 import { ActionButton } from '../components/ActionButton'
 import { loginMeteor } from '../meteor/loginMeteor'
+import LeaText from '../components/LeaText'
 
 const emailSchema = createSchema({
   email: {
@@ -243,7 +244,7 @@ const RegistrationScreen = props => {
             dontShowText
             speed={0.4}
           />
-          <Text style={{ fontSize: 44, color: Colors.secondary, fontWeight: 'bold' }}>{splitCode}</Text>
+          <LeaText style={{ fontSize: 44, color: Colors.secondary, fontWeight: 'bold' }}>{splitCode}</LeaText>
         </View>
       )
     })

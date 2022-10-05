@@ -1,5 +1,6 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
+import LeaText from '../components/LeaText'
 import RouteButton from '../components/RouteButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
 
@@ -42,11 +43,11 @@ const CompleteScreen = props => {
   return (
     <View style={styles.container}>
       <View style={styles.body}>
-        <Text>CompleteScreen</Text>
+        <LeaText>CompleteScreen</LeaText>
       </View>
 
       <View style={styles.body}>
-        <Text>Du hast es geschafft</Text>
+        <LeaText>Du hast es geschafft</LeaText>
       </View>
 
       <View style={styles.navigationButtons}>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Text, Pressable, Modal, View } from 'react-native'
+import { Pressable, Modal, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { ActionButton } from './ActionButton'
 import Colors from '../constants/Colors'
+import LeaText from './LeaText'
 
 /**
  * Renders a pressable element that triggers a Modal dialog with
@@ -51,7 +52,7 @@ export const Select = props => {
       </Modal>
 
       <Pressable style={styles.select} onPress={() => setModalVisible(true)}>
-        <Text style={props.labelStyle}>{label}</Text>
+        <LeaText style={props.labelStyle}>{label}</LeaText>
       </Pressable>
     </View>
   )

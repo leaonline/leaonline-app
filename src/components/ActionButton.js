@@ -63,8 +63,8 @@ export const ActionButton = props => {
     )
   }
 
-  const buttonStyle = props.style || { borderRadius: 15, paddingTop: 10 }
-  const titleStyle = { color: props.color || Colors.primary, width: '80%' }
+  const buttonStyle = { ...props.style, borderRadius: 15, paddingTop: 10, fontFamily: 'semicolon' }
+  const titleStyle = { color: props.color || Colors.primary, width: '80%', fontFamily: 'semicolon' }
 
   if (props.active) {
     buttonStyle.backgroundColor = props.color
