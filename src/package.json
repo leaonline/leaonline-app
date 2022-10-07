@@ -23,7 +23,6 @@
     "babel-preset-es2015": "^6.24.1",
     "colors": "1.4.0",
     "expo": "^46.0.0",
-    "expo-app-loading": "~2.1.0",
     "expo-checkbox": "~2.2.0",
     "expo-constants": "~13.2.4",
     "expo-crypto": "~11.0.0",
