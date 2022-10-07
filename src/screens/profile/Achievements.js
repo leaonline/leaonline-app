@@ -59,7 +59,7 @@ export const Achievements = () => {
           <>
             <Tts text={current.title} color={current.color} id={`${current.title}-tts`} dontShowText />
             <ListItem.Content style={{ alignItems: 'center' }}>
-              <ListItem.Title style={{ color: current.color, fontSize: 24 }}>{current.title}</ListItem.Title>
+              <ListItem.Title style={{ color: current.color, fontSize: 24, fontFamily: 'semicolon' }}>{current.title}</ListItem.Title>
             </ListItem.Content>
           </>
         }

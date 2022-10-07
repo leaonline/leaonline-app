@@ -61,8 +61,8 @@ const RouteButton = props => {
    * Only displays the icon if "onlyIcon" is true.
    */
   const renderRouteButton = () => {
-    const titleStyle = { ...styles.buttonTitle, ...{ color } }
-    const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color }
+    const titleStyle = { ...styles.buttonTitle, ...{ color }, fontFamily: 'semicolon' }
+    const buttonStyle = { borderRadius: 15, paddingTop: 10, color, borderColor: color, fontFamily: 'semicolon' }
 
     if (props.style) {
       Object.assign(buttonStyle, props.style)

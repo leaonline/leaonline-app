@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
-  Text,
   View,
   SafeAreaView,
   ScrollView,
@@ -30,10 +29,11 @@ import { getDimensionColor } from './getDimensionColor'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sendResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
-import './registerComponents'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { collectScoreForComplete } from './collectScoreForComplete'
+import LeaText from '../../components/LeaText'
+import './registerComponents'
 
 const Tts = TTSengine.component()
 /**
@@ -202,7 +202,7 @@ const UnitScreen = props => {
     const title = unitDoc
       ? unitDoc.shortCode
       : unitSetDoc.shortCode
-    return (<Text>{title}</Text>)
+    return (<LeaText>{title}</LeaText>)
   }
 
   /**
@@ -562,7 +562,7 @@ const UnitScreen = props => {
 
           {/* 2. PART INSTRUCTIONS */}
           <View style={{ ...styles.unitCard, paddingTop: 0 }}>
-            <Text style={styles.pageText}>
+            <LeaText style={styles.pageText}>
               <Icon
                 testID='info-icon'
                 reverse
@@ -571,13 +571,13 @@ const UnitScreen = props => {
                 name='info'
                 type='font-awesome-5'
               />
-            </Text>
+            </LeaText>
             {renderContent(unitDoc.instructions)}
           </View>
 
           {/* 3. PART TASK PAGE CONTENT */}
           <View style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
-            <Text style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</Text>
+            <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
             {renderContent(unitDoc.pages[page].instructions)}
 

@@ -1,6 +1,7 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { Log } from '../../infrastructure/Log'
+import LeaText from '../LeaText'
 
 export const UnitContentElementFactory = {}
 
@@ -37,6 +38,6 @@ UnitContentElementFactory.Renderer = props => {
 
 const fallback = props => (
   <View key={props.key}>
-    <Text>Fallback: {props.type} / {props.subtype}</Text>
+    <LeaText>Fallback: {props.type} / {props.subtype}</LeaText>
   </View>
 )

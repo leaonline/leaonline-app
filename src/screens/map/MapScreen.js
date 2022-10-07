@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, View, Text, FlatList } from 'react-native'
+import { SafeAreaView, View, FlatList } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Loading } from '../../components/Loading'
@@ -16,6 +16,7 @@ import { Navbar } from '../../components/Navbar'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
+import LeaText from '../../components/LeaText'
 import { StaticCircularProgress } from '../../components/StaticCircularProgress'
 
 const log = Log.create('MapScreen')
@@ -244,8 +245,8 @@ const MapScreen = props => {
     const progress = 100 * milestone.userProgress / milestone.maxProgress
     return (
       <View>
-        <View style={styles.body}>
-          <Text>Milestone {milestone.level + 1}</Text>
+        <View style={styles.stage}>
+          <LeaText>Milestone {milestone.level + 1}</LeaText>
           <StaticCircularProgress
             value={progress}
             radius={23}
