@@ -59,7 +59,7 @@ const HomeScreen = props => {
   useKeepAwake()
   const { t } = useTranslation()
   const { data, error, loading } = loadDocs(loadHomeData)
-
+  console.debug(data?.length)
   const renderContent = () => {
     if (loading) {
       return (
