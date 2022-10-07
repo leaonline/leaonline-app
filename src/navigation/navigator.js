@@ -10,7 +10,7 @@ import DimensionScreen from '../screens/map/DimensionScreen'
 import UnitScreen from '../screens/unit/UnitScreen'
 import RegistrationScreen from '../screens/RegistrationScreen'
 import ProfileScreen from '../screens/profile/ProfileScreen'
-import CompleteScreen from '../screens/CompleteScreen'
+import CompleteScreen from '../screens/complete/CompleteScreen'
 
 import { useTranslation } from 'react-i18next'
 

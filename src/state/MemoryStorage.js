@@ -13,4 +13,4 @@ MemoryStorage.getItem = async key => data.get(key)
 
 MemoryStorage.setItem = async (key, value) => data.set(key, value)
 
-MemoryStorage.remoteItem = async key => data.delete(key)
+MemoryStorage.removeItem = async key => data.delete(key)

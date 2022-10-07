@@ -66,7 +66,9 @@ const resources = {
       },
       allTrue: 'Great!'
     },
-    completeScreen: {}
+    completeScreen: {
+      congratulations: 'Congratulations!'
+    }
   },
   de: {
     actions: {
@@ -125,7 +127,11 @@ const resources = {
       },
       allTrue: 'Super!'
     },
-    completeScreen: {}
+    completeScreen: {
+      congratulations: 'Du hast es geschafft!',
+      correctScores: 'Du hast {{count}} richtige Lösungen!',
+      continue: 'Weiter zur Aufgabenübersicht'
+    }
   }
 }
 

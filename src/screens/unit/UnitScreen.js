@@ -33,6 +33,7 @@ import { toArrayIfNot } from '../../utils/toArrayIfNot'
 import './registerComponents'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
+import { collectScoreForComplete } from './collectScoreForComplete'
 
 const Tts = TTSengine.component()
 /**
@@ -208,7 +209,7 @@ const UnitScreen = props => {
    * Renders the navbar. Navbar needs to be available early on, because
    * we also render it when we show <Loading> or <ErrorMessage>
    */
-  const renderNavBar = () => {
+  const renderNavBar = ({ dimensionColor, value }) => {
     return (
       <Navbar>
         <Confirm
@@ -226,7 +227,7 @@ const UnitScreen = props => {
           <LinearProgress
             style={{ borderColor: dimensionColor, ...styles.progressBar }}
             trackColor='transparent'
-            color={dimensionColor} value={0.5} variant='determinate'
+            color={dimensionColor} value={value} variant='determinate'
           />
           {renderDebugTitle()}
         </View>
@@ -242,7 +243,7 @@ const UnitScreen = props => {
   if (!docs || docs.loading) {
     return (
       <View style={styles.container}>
-        {renderNavBar()}
+        {renderNavBar({ dimensionColor: null, value: 0})}
         <Loading />
       </View>
     )
@@ -255,7 +256,7 @@ const UnitScreen = props => {
     log('no data available, display fallback', { docs })
     return (
       <View style={styles.container}>
-        {renderNavBar()}
+        {renderNavBar({ dimensionColor: null, value: 0 })}
         <ErrorMessage
           error={docs.error}
           message={t('unitScreen.notAvailable')}
@@ -359,6 +360,7 @@ const UnitScreen = props => {
 
   if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
     log('render story', unitSetDoc.shortCode)
+    const currentProgress = 1 / unitSetDoc.progress
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
@@ -366,7 +368,7 @@ const UnitScreen = props => {
             ref={scrollViewRef} style={styles.scrollView}
             keyboardShouldPersistTaps='always'
           >
-            {renderNavBar()}
+            {renderNavBar({ dimensionColor, value: currentProgress })}
             <View style={styles.elements}>
               {renderContent(unitSetDoc.story)}
             </View>
@@ -409,8 +411,6 @@ const UnitScreen = props => {
     const scoreResult = await getScoring(itemDoc, { responses })
     scoreRef.current[page] = scoreResult
 
-    log('score', type, subtype, scoreResult.score)
-
     // submit everything (in the background)
     const responseDoc = {}
 
@@ -447,7 +447,6 @@ const UnitScreen = props => {
     responseDoc.itemId = data.contentId
     responseDoc.itemType = data.subtype
     responseDoc.scores = scoreResult.map(entry => {
-      console.debug(entry)
       // some items score single values, others multiple
       // some items have single competencies, others multiple
       // we therefore make all these properties to arrays
@@ -458,6 +457,8 @@ const UnitScreen = props => {
       copy.value = toArrayIfNot(copy.value)
       return copy
     })
+
+    responseDoc.scores.forEach(entry => collectScoreForComplete(entry.score))
 
     log('submit response to server', responseDoc)
     await sendResponse({ responseDoc })
@@ -547,7 +548,7 @@ const UnitScreen = props => {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
-        {renderNavBar()}
+        {renderNavBar({ dimensionColor, value: 0.5 })}
         <ScrollView
           ref={scrollViewRef}
           style={styles.scrollView}

@@ -20,6 +20,23 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.testCompany.leaonline"
     },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "transformer": "node_modules/react-native-svg-transformer/index.js",
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",

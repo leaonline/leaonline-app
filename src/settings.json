@@ -1,6 +1,6 @@
 {
   "backend": {
-    "url": "ws://134.102.113.220:8080/websocket",
+    "url": "ws://192.168.178.49:8080/websocket",
     "maxTimeout": 10000,
     "interval": 250,
     "methods": {
@@ -26,7 +26,7 @@
     }
   },
   "content": {
-    "url": "http://134.102.113.220:3030",
+    "url": "http://192.168.178.49:3030",
     "replaceUrl": "https://content.lealernen.de"
   },
   "log": {
