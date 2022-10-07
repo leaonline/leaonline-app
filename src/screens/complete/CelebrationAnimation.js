@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Animated, Dimensions } from "react-native";
-import * as Animatable from "react-native-animatable";
-const { width } = Dimensions.get("screen");
+import React from 'react'
+import { View, Animated, Dimensions } from 'react-native'
+import * as Animatable from 'react-native-animatable'
+const { width } = Dimensions.get('screen')
 
 /** this component Show falling down star top to in the cup animation
  *  on LesenLevelWinnerScreen
@@ -9,52 +9,53 @@ const { width } = Dimensions.get("screen");
  **/
 
 const range = (count) => {
-  const array = [];
+  const array = []
   for (let i = 0; i < count; i++) {
-    array.push(i);
+    array.push(i)
   }
-  return array;
-};
+  return array
+}
 
 export default class CelebrationAnimation extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       parentWidth: 0,
       parentHeight: 0,
-      animation: new Animated.Value(1),
-    };
-    this.increasingValue = 19;
+      animation: new Animated.Value(1)
+    }
+    this.increasingValue = 19
   }
-  getStatusOfAnimation = () => {
-    this.props.updateState();
+
+  getStatusOfAnimation () {
+    this.props.updateState()
   };
-  componentDidMount() {
+
+  componentDidMount () {
     this.animatIonTimer = setTimeout(() => {
-      this.getStatusOfAnimation();
-    }, 9000);
+      this.getStatusOfAnimation()
+    }, 9000)
     Animated.timing(this.state.animation, {
       toValue: 0,
       duration: 11000,
-      useNativeDriver: false,
+      useNativeDriver: false
     }).start(() => {
-      this.getStatusOfAnimation();
-    });
+      this.getStatusOfAnimation()
+    })
   }
 
-
-  componentWillUnmount() {
-    clearTimeout(this.animatIonTimer);
-
+  componentWillUnmount () {
+    clearTimeout(this.animatIonTimer)
   }
 
-  _onLayout = (event) => {
+  handleOnLayout (event) {
     this.setState({
       parentWidth: event.nativeEvent.layout.width,
-      parentHeight: event.nativeEvent.layout.height,
-    });
+      parentHeight: event.nativeEvent.layout.height
+    })
   };
-  _FailAnimation = ({ style, duration, delay, startY, endY, children }) => {
+
+  _FailAnimation ({ style, duration, delay, startY, endY, children }) {
     return (
       <Animatable.View
         style={style}
@@ -64,82 +65,86 @@ export default class CelebrationAnimation extends React.Component {
           from: { translateY: startY, translateX: 10 },
           to: {
             translateY: endY + 80,
-            translateX: -20,
-          },
+            translateX: -20
+          }
         }}
         easing={(t) => Math.pow(t, 1.2)}
         useNativeDriver
       >
         {children}
       </Animatable.View>
-    );
+    )
   };
-  _SwingAnimation = ({ animationEffect, delay, duration, children }) => {
+
+  _SwingAnimation ({ animationEffect, delay, duration, children }) {
     return (
       <Animatable.View
         animation={animationEffect}
         delay={delay}
         duration={duration}
-        direction="alternate"
-        easing="linear"
+        direction='alternate'
+        easing='linear'
       >
         {children}
       </Animatable.View>
-    );
+    )
   };
-  _imgRandom = (imgs) => {
-    let r = Math.ceil(Math.random() * imgs.length);
-    return imgs[r - 1];
+
+  _imgRandom (imgs) {
+    const r = Math.ceil(Math.random() * imgs.length)
+    return imgs[r - 1]
   };
-  _getAnimationEffect = (animationEffectAry) => {
+
+  _getAnimationEffect (animationEffectAry) {
     return animationEffectAry[
       Math.floor(Math.random() * animationEffectAry.length)
-      ];
+    ]
   };
-  render() {
-    let FailAnimation = this._FailAnimation;
-    let SwingAnimation = this._SwingAnimation;
+
+  render () {
+    const FailAnimation = this._FailAnimation
+    const SwingAnimation = this._SwingAnimation
     const animationEffectAry = [
-      "flash",
-      "jello",
-      "pulse",
-      "rotate",
-      "rubberBand",
-      "swing",
-      "tada",
-    ];
+      'flash',
+      'jello',
+      'pulse',
+      'rotate',
+      'rubberBand',
+      'swing',
+      'tada'
+    ]
     const {
       imgs,
       count,
       duration,
       startY = 0,
       speed = 50,
-      stopAnimarion,
-    } = this.props;
+      stopAnimarion
+    } = this.props
     return (
       <View
         style={{
-          position: "absolute",
+          position: 'absolute',
           bottom: 0,
           left: width / 3,
           right: width / 3,
-          top: 0,
+          top: 0
         }}
-        testID="swingAnimation1"
-        onLayout={this._onLayout}
+        testID='swingAnimation1'
+        onLayout={this.handleOnLayout}
       >
         {range(count).map((i) => (
           <FailAnimation
-            key={i + "test"}
+            key={i + 'test'}
             startY={startY}
             speed={speed}
             endY={stopAnimarion}
             style={{
-              position: "absolute",
+              position: 'absolute',
               left:
-                Math.random() * this.state.parentWidth == 0
+                Math.random() * this.state.parentWidth === 0
                   ? 50
-                  : Math.random() * this.state.parentWidth,
+                  : Math.random() * this.state.parentWidth
             }}
             duration={duration}
             delay={i * (duration / count)}
@@ -155,13 +160,13 @@ export default class CelebrationAnimation extends React.Component {
                   opacity: this.state.animation,
                   bottom: this.state.animation.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [-10, 1],
-                  }),
+                    outputRange: [-10, 1]
+                  })
                 }}
                 delay={3000}
                 duration={1000}
-                direction="alternate"
-                easing="fadeOut"
+                direction='alternate'
+                easing='fadeOut'
                 iterationCount={1}
               >
                 {this._imgRandom(imgs)}
@@ -170,6 +175,6 @@ export default class CelebrationAnimation extends React.Component {
           </FailAnimation>
         ))}
       </View>
-    );
+    )
   }
 }

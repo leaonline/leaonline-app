@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Image,
   View,
@@ -18,11 +18,10 @@ const styles = createStyleSheet({
   },
   container: {
     flex: 1,
-    alignItems: "center",
-    flexGrow: 6,
+    alignItems: 'center',
+    flexGrow: 6
   }
 })
-
 
 export const Celebrate = props => {
   const [animationStopPosition, setAnimationStopPosition] = useState(0)
@@ -32,10 +31,10 @@ export const Celebrate = props => {
     setAnimationStopPosition(y)
   }
   const starImages = [
-    <Star key={1} height={25} width={25}/>,
-    <Star key={2} height={20} width={20}/>,
-    <Star key={3} height={15} width={15}/>,
-    <Star key={4} height={30} width={30}/>
+    <Star key={1} height={25} width={25} />,
+    <Star key={2} height={20} width={20} />,
+    <Star key={3} height={15} width={15} />,
+    <Star key={4} height={30} width={30} />
   ]
 
   const renderTrophy = () => {
@@ -44,7 +43,8 @@ export const Celebrate = props => {
       : TrophyAnimated
 
     return (
-      <Image onLayout={onLayout}
+      <Image
+        onLayout={onLayout}
         style={styles.trophyImage}
         source={imageSource}
       />
@@ -59,9 +59,9 @@ export const Celebrate = props => {
         stopAnimarion={animationStopPosition}
         duration={14200}
         updateState={() => setStopCupAnimation(true)}
-        />
-        {props.children}
-        {renderTrophy()}
+      />
+      {props.children}
+      {renderTrophy()}
     </View>
   )
 }

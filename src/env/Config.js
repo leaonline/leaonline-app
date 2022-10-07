@@ -11,7 +11,7 @@ export const Config = {}
 
 /**
  * We use this expo-internal to determine, whether this is development mode.
- */justifyContent: 'flex-end',
+ */
 Config.isDevelopment = Constants.manifest.packagerOpts?.dev
 
 /**
@@ -26,18 +26,18 @@ Config.debug = {}
  * If this returns true, then every UI element that can render borders will render a solid red border.
  * This is useful, if you want to debug positioning, padding and margin or flex layout.
  */
-Config.debug.layoutBorders = true // debug.layoutBorders
+Config.debug.layoutBorders = !!debug.layoutBorders
 
 /**
  * The default log level.
  */
 Config.debug.logLevel = log.level
 
-Config.debug.state = true
-Config.debug.sync = false
-Config.debug.home = false
-Config.debug.map = false
-Config.debug.unit = false
+Config.debug.state = !!debug.state
+Config.debug.sync = !!debug.sync
+Config.debug.home = !!debug.home
+Config.debug.map = !!debug.map
+Config.debug.unit = !!debug.unit
 
 /**
  * Global styles.

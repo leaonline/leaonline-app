@@ -1,7 +1,5 @@
 import React from 'react'
-import { View,   SafeAreaView,
-  ScrollView } from 'react-native'
-import RouteButton from '../../components/RouteButton'
+import { View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { useTranslation } from 'react-i18next'
 import { loadDocs } from '../../meteor/loadDocs'
@@ -15,7 +13,6 @@ import { Loading } from '../../components/Loading'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { ActionButton } from '../../components/ActionButton'
 import { clearTestCycleData } from './clearTestCycleData'
-import { CelebrationAnimation } from './CelebrationAnimation'
 import { Celebrate } from './Celebrate'
 import Colors from '../../constants/Colors'
 import { Layout } from '../../constants/Layout'
@@ -100,7 +97,7 @@ const CompleteScreen = props => {
           icon='times'
           tts={false}
           style={styles.confirm}
-          disabled={true}
+          disabled
         />
         <View style={styles.progressContainer}>
           <LinearProgress
@@ -120,7 +117,7 @@ const CompleteScreen = props => {
   if (!docs || docs.loading) {
     return (
       <View style={styles.container}>
-        {renderNavBar({ dimensionColor: null, value: 0})}
+        {renderNavBar({ dimensionColor: null, value: 0 })}
         <Loading />
       </View>
     )
@@ -130,7 +127,6 @@ const CompleteScreen = props => {
   const loadFailed = !docs.loading && nodata
 
   if (docs.error || loadFailed) {
-    log('no data available, display fallback', { docs })
     return (
       <View style={styles.container}>
         {renderNavBar({ dimensionColor: null, value: 0 })}
@@ -155,23 +151,28 @@ const CompleteScreen = props => {
 
   return (
     <View style={styles.container}>
-          {renderNavBar({ dimensionColor })}
-          <Celebrate>
-            <View>
-              <Tts text={t('completeScreen.congratulations')}
-                   color={dimensionColor}
-                   iconColor={dimensionColor} />
-            { count > 0
-              ? (<Tts text={t('completeScreen.correctScores', { count })}
-                     color={dimensionColor}
-                     iconColor={dimensionColor}/>)
-              : null
-            }
-            </View>
-          </Celebrate>
+      {renderNavBar({ dimensionColor })}
+      <Celebrate>
+        <View>
+          <Tts
+            text={t('completeScreen.congratulations')}
+            color={dimensionColor}
+            iconColor={dimensionColor}
+          />
+          {count > 0
+            ? (<Tts
+                text={t('completeScreen.correctScores', { count })}
+                color={dimensionColor}
+                iconColor={dimensionColor}
+               />)
+            : null}
+        </View>
+      </Celebrate>
       <View style={styles.navigationButtons}>
-        <ActionButton tts={t('completeScreen.continue')}
-          color={dimensionColor} onPress={finish} />
+        <ActionButton
+          tts={t('completeScreen.continue')}
+          color={dimensionColor} onPress={finish}
+        />
       </View>
     </View>
   )

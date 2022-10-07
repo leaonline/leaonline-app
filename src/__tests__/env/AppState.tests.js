@@ -12,7 +12,7 @@ beforeEach(() => src.clear())
 
 const testUpdateSingle = async (targetFn) => {
   AppState.init(null)
-  await expect(targetFn(undefined)).rejects.toThrow('appState.noStorage');
+  await expect(targetFn(undefined)).rejects.toThrow('appState.noStorage')
   AppState.init(testStorage)
   expect(await targetFn(undefined)).toEqual(undefined)
   await targetFn('foo')

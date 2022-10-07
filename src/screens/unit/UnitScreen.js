@@ -243,7 +243,7 @@ const UnitScreen = props => {
   if (!docs || docs.loading) {
     return (
       <View style={styles.container}>
-        {renderNavBar({ dimensionColor: null, value: 0})}
+        {renderNavBar({ dimensionColor: null, value: 0 })}
         <Loading />
       </View>
     )

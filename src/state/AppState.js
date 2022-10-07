@@ -140,7 +140,6 @@ const updateSingle = async (key, value, fn = defaultTransform) => {
     case undefined:
       return get(key)
     default:
-      const newValue = await fn(value)
-      return update(key, newValue)
+      return update(key, await fn(value))
   }
 }

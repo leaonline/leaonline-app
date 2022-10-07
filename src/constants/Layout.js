@@ -1,9 +1,8 @@
-import { StatusBar } from 'react-native'
-
 export const Layout = {}
 
 Layout.containter = () => ({
   flex: 1,
-  alignItems: 'center',
- // marginTop: StatusBar.currentHeight
+  alignItems: 'center'
+  // import { StatusBar } from 'react-native'
+  // marginTop: StatusBar.currentHeight
 })

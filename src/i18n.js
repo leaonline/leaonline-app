@@ -67,7 +67,9 @@ const resources = {
       allTrue: 'Great!'
     },
     completeScreen: {
-      congratulations: 'Congratulations!'
+      congratulations: 'Congratulations!',
+      correctScores: 'You have {{count}} correct answers!',
+      continue: 'Continue to the overview map'
     }
   },
   de: {
