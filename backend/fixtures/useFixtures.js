@@ -3,11 +3,9 @@ import { getCollection } from '../api/utils/getCollection'
 import { createLog } from '../infrastructure/log/createLog'
 import { SyncState } from '../contexts/sync/SyncState'
 import { Meteor } from 'meteor/meteor'
-import { runRemap } from '../server/remap'
 
 const fixturesIsActive = Meteor.settings.useFixtures
 const debug = createLog({ name: 'useFixtures', type: 'debug' })
-const { remap } = Meteor.settings.remotes.content
 
 /**
  * Inserts fixture docs for every relevant context into db, if "useFixtures" is set to true in the settings.
@@ -39,8 +37,6 @@ export const useFixtures = () => {
     debug(name, 'update sync state')
     SyncState.update(name)
   })
-
-  runRemap(remap)
 
   debug('all done')
 }

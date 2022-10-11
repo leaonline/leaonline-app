@@ -1,5 +1,4 @@
 import './settings'
 import './accounts'
 import './contexts'
-import './fixtures'
 import './connections'

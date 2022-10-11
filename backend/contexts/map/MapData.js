@@ -300,13 +300,13 @@ MapData.create = ({ field, dryRun }) => {
 
           checkIntegrity({
             condition: expectedUnits > 0,
-            premise: `Expect units for unit set ${unitSetDoc._id} to be above 0`
+            premise: `Expect units for unit set ${unitSetDoc._id} to be above 0 (${JSON.stringify(unitSetDoc)})`
           })
 
           // We also require strict integrity of units in a unit set
           checkIntegrity({
             condition: expectedUnits === actualUnits,
-            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc._id}, got ${actualUnits}`
+            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc._id}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
           })
 
           // push new stage to the stage data
