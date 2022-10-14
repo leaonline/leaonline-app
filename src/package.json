@@ -17,9 +17,9 @@
     "@meteorrn/core": "^2.3.0",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/netinfo": "9.3.0",
-    "@react-navigation/native": "^6.0.6",
-    "@react-navigation/native-stack": "^6.2.5",
-    "@react-navigation/stack": "^6.0.11",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native-stack": "^6.9.1",
+    "@react-navigation/stack": "^6.3.2",
     "babel-preset-es2015": "^6.24.1",
     "colors": "1.4.0",
     "expo": "^46.0.0",
@@ -51,7 +51,8 @@
     "react-native-web": "~0.18.7",
     "simpl-schema": "^1.12.0",
     "string.prototype.matchall": "^4.0.6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@react-native-community/slider": "4.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

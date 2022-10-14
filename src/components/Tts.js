@@ -29,8 +29,8 @@ const runHandlers = name => {
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
- * @param {string} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.primary  (examples in ./constants/Colors.js)
- * @param {string} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.primary  (examples in ./constants/Colors.js)
+ * @param {string} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary  (examples in ./constants/Colors.js)
+ * @param {string} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples in ./constants/Colors.js)
  * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
@@ -47,9 +47,9 @@ const ttsComponent = props => {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
-  const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.primary)
+  const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.secondary)
 
-  const getIdleColor = () => props.color || Colors.primary
+  const getIdleColor = () => props.color || Colors.secondary
   const debug = props.debug || TTSengine.debug
     ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
     : () => {}
@@ -96,7 +96,8 @@ const ttsComponent = props => {
     Speech.speak(props.text, {
       language: 'ger',
       pitch: 1,
-      rate: props.speed || 1,
+      rate: props.speed || TTSengine.currentSpeed,
+      voice: props.voice || TTSengine.currentVoice,
       onStart: () => {
         debug('onStart')
         startSpeak()
@@ -132,6 +133,9 @@ const ttsComponent = props => {
     setIsSpeaking(true)
     setSpeakingId(props.id)
     setIconColor(Colors.success)
+    if (props.onStart) {
+      props.onStart({ isDone, isSpeaking, speakingId })
+    }
   }
 
   /**
@@ -153,8 +157,12 @@ const ttsComponent = props => {
     }
   }
 
+  const ttsContainerStyle = { ...styles.body }
+  if (props.align) {
+    ttsContainerStyle.alignItems = props.align
+  }
   return (
-    <View style={styles.body}>
+    <View style={ttsContainerStyle}>
       <Pressable
         onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
       >
@@ -208,9 +216,64 @@ export const TTSengine = {
   stop () {
     Speech.stop()
   },
+  availableVoices: null,
   isSpeaking: false,
   speakId: 0,
   iconColor: null,
   debug: false,
-  component: () => ttsComponent
+  defaultSpeed: 1,
+  currentSpeed: 1,
+  currentVoice: undefined,
+  component: () => ttsComponent,
+  updateSpeed: newSpeed => {
+    if (newSpeed < 0.1 || newSpeed > 2.0) {
+      throw new Error(`New speed not in range, expected ${newSpeed} between 0.1 and 2.0`)
+    }
+    TTSengine.currentSpeed = newSpeed
+  },
+  setVoice: identifier => {
+    TTSengine.currentVoice = identifier
+  },
+  speakImmediately: text => {
+    Speech.stop()
+    Speech.speak(text, {
+      language: 'ger',
+      pitch: 1,
+      rate: TTSengine.currentSpeed,
+      volume: 1.0,
+      voice: TTSengine.currentVoice
+    })
+  },
+  getVoices: () => new Promise(resolve => {
+    if (TTSengine.availableVoices !== null) {
+      return resolve(TTSengine.availableVoices)
+    }
+
+    loadVoices(5, loaded => {
+      TTSengine.availableVoices = loaded
+      return resolve(loaded)
+    })
+  })
+}
+
+const loadVoices = (counter, onComplete) => {
+  const langPattern = /de[-_]+/g
+
+  setTimeout(async () => {
+    const voices = await Speech.getAvailableVoicesAsync();
+
+    if (voices.length > 0) {
+      const filtered = voices.filter(v => langPattern.test(v.language))
+      console.log("voices found", filtered)
+      onComplete(filtered)
+    }
+    else {
+      console.log("voices not found")
+      if (!counter || counter < 10) {
+        loadVoices((counter ?? 0) + 1);
+      } else {
+        onComplete([])
+      }
+    }
+  }, (counter ?? 1) * 300);
 }

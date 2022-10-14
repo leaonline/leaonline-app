@@ -31,17 +31,21 @@ export const connectMeteor = () => {
   log('connect to', Config.backend.url)
   check({ endpoint: Config.backend.url }, endpointSchema)
 
-  return new Promise((resolve, reject) => {
-    const status = Meteor.status()
+  return new Promise((resolve) => {
+    const complete = (status, error) => resolve({ status, error })
 
     // skip with current status, if already connected
-    if (status.connected) { return resolve(status) }
+    const initialStatus = Meteor.status()
+    if (initialStatus.connected) {
+      return resolve(initialStatus)
+    }
 
     // break early on any errors during connect attempt
     try {
       Meteor.connect(Config.backend.url, { AsyncStorage })
-    } catch (e) {
-      return reject(e)
+    } catch (connectError) {
+      const errorStatus = Meteor.status()
+      return complete(errorStatus, connectError)
     }
 
     // during Meteor.connect the internal connection status
@@ -55,13 +59,13 @@ export const connectMeteor = () => {
       if (updatedStatus.connected) {
         clearInterval(timer)
         timer = null
-        return resolve(updatedStatus)
+        return complete(updatedStatus)
       }
 
       if (count > maxTimeout) {
         clearInterval(timer)
         timer = null
-        reject(new Error('connectMeteorTimeout'))
+        return complete(updatedStatus, new Error('connectMeteorTimeout'))
       }
 
       count += interval

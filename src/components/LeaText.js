@@ -1,11 +1,11 @@
 import React from 'react'
 import { Text } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
-
+import { Units } from '../utils/Units'
 const styles = createStyleSheet({
   default: {
     fontFamily: 'semicolon',
-    fontSize: 18
+    fontSize: 18 * Units.vw
   }
 })
 

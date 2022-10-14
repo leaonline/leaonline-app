@@ -10,6 +10,14 @@ import { initReactI18next } from 'react-i18next'
  */
 const resources = {
   en: {
+    common: {
+      yes: 'Yes',
+      no: 'No',
+      continue: 'Continue'
+    },
+    connecting: {
+      title: 'You are offline. I\'m trying to connect.'
+    },
     actions: {
       back: 'Back'
     },
@@ -69,6 +77,14 @@ const resources = {
     completeScreen: {}
   },
   de: {
+    common: {
+      yes: 'Ja',
+      no: 'Nein',
+      continue: 'Weiter'
+    },
+    connecting: {
+      title: 'Du bist nicht mit dem Internet verbunden.'
+    },
     actions: {
       back: 'Zurück'
     },
@@ -79,7 +95,9 @@ const resources = {
       approve: 'Ok'
     },
     welcomeScreen: {
-      text: 'Herzlich Willkommen zu lea online'
+      title: 'Willkommen',
+      text: 'Herzlich Willkommen zu lea online! Bitte stelle zunächst die Sprachausgabe ein.',
+      continue: 'Wenn du damit zufrieden bist, tippe auf "weiter".'
     },
     registrationScreen: {
       headerTitle: 'Nutzerkonto anlegen',
@@ -93,9 +111,9 @@ const resources = {
       complete: 'Ihr Konto wurde erfolgreich angelegt. Zur Wiederherstellung Ihres Kontos können Sie sich die folgenden Codes notieren. Sie können die Codes auch später noch in Ihrem Profil abrufen.'
     },
     TandCScreen: {
-      headerTitle: 'Allgemeine Geschäftsbedingungen',
-      text: 'Hiermit stimme ich folgenden Bedingungen zu ...',
-      checkBoxText: 'Ich habe die allgemeinen Geschäftsbedingungen gelesen und stimme ihnen zu'
+      headerTitle: 'Nutzungsbedingungen',
+      text: 'Bitte nimmt dir kurz etwas Zeit für unsere Nutzungsbedingungen.',
+      checkBoxText: 'Ich habe die Nutzungsbedingungen verstanden und stimme ihnen zu.'
     },
     homeScreen: {
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'

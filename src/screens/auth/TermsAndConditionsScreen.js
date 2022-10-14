@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { CheckBox } from 'react-native-elements'
-import Colors from '../constants/Colors'
-import { TTSengine } from '../components/Tts'
+import Colors from '../../constants/Colors'
+import { TTSengine } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
-import { createStyleSheet } from '../styles/createStyleSheet'
-import RouteButton from '../components/RouteButton'
-import { Confirm } from '../components/Confirm'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import RouteButton from '../../components/RouteButton'
+import { Confirm } from '../../components/Confirm'
+import { Layout } from '../../constants/Layout'
+import { useLegal } from '../../hooks/useLegal'
 
 /**
  * @private tts ref
@@ -17,11 +19,7 @@ const Tts = TTSengine.component()
  * @private stylesheet
  */
 const styles = createStyleSheet({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    margin: 30
-  },
+  container: Layout.containter(),
   body: {
     flex: 2,
     flexDirection: 'row'
@@ -57,26 +55,29 @@ const styles = createStyleSheet({
  */
 const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
-
+  const { termsAndConditions } = useLegal('terms')
   const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
 
   const checkboxHandler = () => {
+    const isChecked = termsAndConditionsIsChecked
     setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
-    setTermsAndConditionsColor(Colors.gray)
+    setTermsAndConditionsColor(isChecked ? Colors.gray : Colors.secondary)
   }
 
-  const showWarning = () => {
-    setShowModal(true)
-    setTermsAndConditionsColor(Colors.danger)
+  const renderTCText = () => {
+    return termsAndConditions.map((text, index) => (<Tts text={text} key={index} /> ))
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.body}>
-        <Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
-      </View>
+
+      <Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
+
+      <ScrollView>
+        {renderTCText()}
+      </ScrollView>
 
       <Confirm
         id='tac-screen-confirm'
@@ -99,36 +100,22 @@ const TermsAndConditionsScreen = props => {
           id='TandCScreen.checkBoxText'
           text={t('TandCScreen.checkBoxText')}
           color={termsAndConditionsColor}
-          align='left'
+          align='center'
         />
         <CheckBox
-          center checked={termsAndConditionsIsChecked} onPress={checkboxHandler}
+          center checked={termsAndConditionsIsChecked}
+          onPress={checkboxHandler}
+          checkedColor={termsAndConditionsColor}
           uncheckedColor={termsAndConditionsColor}
         />
       </View>
 
-      <View style={styles.navigationButtons}>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            waitForSpeech
-            icon='arrow-alt-circle-left'
-            handleScreen={() => props.navigation.navigate('Welcome')}
-          />
-        </View>
-        <View style={styles.routeButtonContainer}>
-          <RouteButton
-            onlyIcon
-            waitForSpeech
-            icon='arrow-alt-circle-right'
-            handleScreen={() => {
-              termsAndConditionsIsChecked
-                ? props.navigation.navigate('Registration')
-                : showWarning()
-            }}
-          />
-        </View>
-      </View>
+      <RouteButton
+        title={t('common.continue')}
+        align='center'
+        disabled={!termsAndConditionsIsChecked}
+        handleScreen={() => props.navigation.navigate('Registration')}
+      />
     </View>
   )
 }

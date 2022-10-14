@@ -12,7 +12,6 @@ const Tts = TTSengine.component()
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
     flexDirection: 'row'
   },
   buttonTitle: {
@@ -95,6 +94,7 @@ const RouteButton = props => {
             <Button
               icon={<Icon type='font-awesome-5' name={props.icon} size={25} color={props.iconColor || color} />}
               title={props.title}
+              disabled={props.disabled}
               titleStyle={titleStyle}
               buttonStyle={buttonStyle}
               containerStyle={containerStyle}

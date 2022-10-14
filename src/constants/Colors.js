@@ -15,5 +15,6 @@ export default {
   info: '#86c4f1',
   right: '#00FF00',
   missing: '#FFFF00',
-  wrong: '#FF0000'
+  wrong: '#FF0000',
+  white: '#FFFFFF'
 }

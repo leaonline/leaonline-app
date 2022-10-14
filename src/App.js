@@ -1,28 +1,22 @@
 import React from 'react'
-import { View, Vibration } from 'react-native'
-
-import * as Speech from 'expo-speech'
-import { loggedIn } from './meteor/loggedIn'
-import { TTSengine } from './components/Tts'
-import Navigator from './navigation/navigator'
-import { createStyleSheet } from './styles/createStyleSheet'
-import './startup/initContexts'
 import './i18n'
 import useSplashScreen from './hooks/useSplashScreen'
+import { useConnection } from './hooks/useConnection'
+import { ErrorMessage } from './components/ErrorMessage'
+import { initContexts } from './startup/initContexts'
+import { initAppState } from './startup/initAppState'
+import { fetchFonts } from './startup/initFonts'
+import { initTTs } from './startup/initTTS'
+import { Connecting } from './components/Connecting'
+import { ViewContainer } from './components/ViewContainer'
+import { MainNavigation } from './navigation/MainNavigation'
 
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  screen: {
-    flex: 1
-  }
-})
-
-// inject expo-speech as our current
-// speech-synthesis implementation
-TTSengine.setSpeech(Speech, { speakImmediately: true })
-TTSengine.on('beforeSpeak', () => Vibration.vibrate(150))
+const initFunction = [
+  initContexts,
+  initAppState,
+  fetchFonts,
+  initTTs
+]
 
 /**
  * Main Application entry point
@@ -31,15 +25,30 @@ TTSengine.on('beforeSpeak', () => Vibration.vibrate(150))
  * @returns {JSX.Element}
  */
 export default function App () {
-  const { appIsReady, onLayoutRootView } = useSplashScreen()
+  const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
+  const { connectionError, connected } = useConnection()
 
-  if (!appIsReady) {
-    return null
+  // splashscreen is still active...
+  if (!appIsReady) { return null }
+
+  const anyError = error ?? connectionError
+  if (anyError) {
+    return (
+      <ViewContainer onLayout={onLayoutRootView} >
+        <ErrorMessage message={anyError.message} onLayout={onLayoutRootView} />
+      </ViewContainer>
+    )
+  }
+
+  if (!connected) {
+    return (
+      <ViewContainer onLayout={onLayoutRootView}>
+        <Connecting />
+      </ViewContainer>
+    )
   }
 
   return (
-    <View style={styles.screen} onLayout={onLayoutRootView}>
-      <Navigator loggedIn={!!loggedIn()} />
-    </View>
+    <MainNavigation onLayout={onLayoutRootView} />
   )
 }

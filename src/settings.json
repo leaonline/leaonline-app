@@ -1,7 +1,7 @@
 {
   "backend": {
     "url": "ws://192.168.178.49:8080/websocket",
-    "maxTimeout": 10000,
+    "maxTimeout": 3000,
     "interval": 250,
     "methods": {
       "defaultTimeout": 5000,
