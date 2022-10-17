@@ -1,20 +1,15 @@
 import React, { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { TTSengine } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
 import { LeaLogo } from '../../components/images/LeaLogo'
 import { Layout } from '../../constants/Layout'
-import { TTSSpeedSlider } from '../../components/system/TTSSpeedSlider'
-import { ActionButton } from '../../components/ActionButton'
 import { useVoices } from '../../hooks/useVoices'
-import LeaText from '../../components/LeaText'
-import { LeaButton } from '../../components/LeaButton'
 import { Loading } from '../../components/Loading'
-import { ButtonGroup } from 'react-native-elements'
 import { LeaButtonGroup } from '../../components/LeaButtonGroup'
-
+import { SimpleWizard } from '../../components/wizard/SimpleWizard'
 /**
  * @private TTS Ref
  */
@@ -58,6 +53,7 @@ const speeds = [0.5, 0.7, 0.9, 1.0, 1.15]
  */
 export const AuthDecisionScreen = props => {
   const { t } = useTranslation()
+  const [showIndex, setShowIndex] = useState(2)
   const { voices, voicesLoaded } = useVoices()
   const [speechRunOnce, setSpeechRunOnce] = useState(false)
   const welcomeText = t('welcomeScreen.text')
@@ -101,12 +97,17 @@ export const AuthDecisionScreen = props => {
     )
   }
 
+  const onSpeedSet = (text, index) => {
+    setSpeed(index, text)
+    if (showIndex < 4) setShowIndex(4)
+  }
+
   const voiceSpeedOptions = () => {
     const groupData = ['sehr langsam', 'langsam', 'normal', 'schnell', 'sehr schnell']
     return (
       <LeaButtonGroup
         data={groupData}
-        onPress={(text, index) => setSpeed(index, text)} />
+        onPress={onSpeedSet} />
     )
   }
 
@@ -115,14 +116,14 @@ export const AuthDecisionScreen = props => {
       <LeaLogo style={styles.logo}/>
 
 
-      <View style={styles.decisionContainer}>
-        <Tts id="welcomeScreen.text" style={styles.text} text={welcomeText} onStart={setOnStart}/>
+      <View style={styles.decisionContainer} show={showIndex}>
+        <Tts id="welcomeScreen.text" style={styles.text} text={welcomeText} />
 
         {voiceOptions()}
 
         {voiceSpeedOptions()}
 
-        <Tts id="welcomeScreen.text" style={styles.text} text={speedTestText} align="center" onStart={setOnStart}/>
+        <Tts id="welcomeScreen.text" style={styles.text} text={speedTestText} align="center" />
 
 
         <RouteButton

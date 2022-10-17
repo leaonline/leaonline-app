@@ -2,27 +2,8 @@ import { ButtonGroup } from 'react-native-elements'
 import React, { useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import Colors from '../constants/Colors'
-
-const styles = createStyleSheet({
-  buttonContainer: {
-    borderRadius: 15,
-    minHeight: 50,
-    backgroundColor: Colors.white,
-    // dropshadow - ios only
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    // dropshadow - android only
-    elevation: 0.5
-  },
-  textStyle: {
-    fontFamily: 'semicolon',
-  },
-  selectedButtonStyle: {
-    backgroundColor: Colors.primary
-  }
-})
+import { Layout } from '../constants/Layout'
+import { mergeStyles } from '../styles/mergeStyles'
 
 /**
  *
@@ -43,15 +24,46 @@ export const LeaButtonGroup = props => {
     }
   }
 
+  const isFirstButton = index === 0
+  const isLastButton = index === props.data.length - 1
+  const selectedButtonStyle = {}
+  const radius = Layout.borderRadius()
+
+  if (isFirstButton) {
+    selectedButtonStyle.borderTopLeftRadius = radius
+    selectedButtonStyle.borderBottomLeftRadius = radius
+  }
+
+  if (isLastButton) {
+    selectedButtonStyle.borderTopRightRadius = radius
+    selectedButtonStyle.borderBottomRightRadius = radius
+  }
+
   return (
     <ButtonGroup
       onPress={select}
       selectedIndex={index}
       buttons={props.data}
       textStyle={styles.textStyle}
-      buttonStyle={styles.buttonStyle}
-      containerStyle={styles.buttonContainer}
-      selectedButtonStyle={styles.selectedButtonStyle}
+      containerStyle={styles.container}
+      selectedButtonStyle={mergeStyles(styles.selectedButtonStyle, selectedButtonStyle)}
     />
   )
 }
+
+
+const styles = createStyleSheet({
+  container: {
+    minHeight: 50,
+    ...Layout.button(),
+    ...Layout.dropShadow(),
+    overflow: 'visible',
+    borderWidth: 0
+  },
+  textStyle: {
+    ...Layout.defaultFont()
+  },
+  selectedButtonStyle: {
+    backgroundColor: Colors.primary,
+  }
+})

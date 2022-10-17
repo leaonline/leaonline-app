@@ -26,7 +26,7 @@ Config.debug = {}
  * If this returns true, then every UI element that can render borders will render a solid red border.
  * This is useful, if you want to debug positioning, padding and margin or flex layout.
  */
-Config.debug.layoutBorders = true// debug.layoutBorders
+Config.debug.layoutBorders = debug.layoutBorders
 
 /**
  * The default log level.
