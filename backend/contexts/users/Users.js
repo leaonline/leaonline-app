@@ -68,9 +68,7 @@ Users.schema = {
     type: String
   },
 
-  // adding the restore code schema from them,
-  // since this can changed, based on Meteor.settings
-  ...RestoreCodes.schema(),
+  restore: String,
 
   // adding Email schema from UserEmail
   ...UserEmail.schema()
@@ -86,18 +84,6 @@ Users.schema = {
 Users.methods = {}
 
 /**
- * Creates a new user account. Auto-generates username and password:
- * - the username is a 32 character long hex-String
- * - the password is a 43 character long varchar string
- *
- * Stores email only encrypted, email is only used to send confirmation and
- * restore email.
- *
- * Additionally restore codes are generated and added to the user.
- *
- * The created user is returned, separated from the password, which
- * should only be used once to store it in a mobile's secure storage.
- *
  * @method
  * @param {string=} email optional user email to send restore codes
  */
@@ -105,33 +91,103 @@ Users.methods.create = {
   name: 'users.methods.create',
   isPublic: true,
   schema: {
-    email: UserEmail.schema()
+    voice: {
+      type: String,
+      optional: true
+    },
+    speed: {
+      type: Number,
+      optional: true
+    }
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
 
-    return function (options) {
-      const email = options?.email
+    return function (options = {}) {
+      const { userId } = this
+      if (userId) {
+        throw new Meteor.Error(
+          'createUser.error',
+          'createUser.alreadyExist',
+          { userId }
+        )
+      }
+      const { voice, speed } = options
       const username = Random.hexString(32)
       const password = Random.secret()
-      const restore = RestoreCodes.generate()
+      const codes = RestoreCodes.generate()
+      const restore = codes.join('-')
+      const newUserId = Accounts.createUser({ username, password })
+      const updateDoc = { restore, voice, speed }
 
-      const userId = Accounts.createUser({ username, password })
-      const updateDoc = { restore }
+      Meteor.users.update(newUserId, { $set: updateDoc })
 
-      // email can be optional and is used for restoring accounts
-      if (email) {
-        updateDoc.email = UserEmail.encrypt(email)
-      }
-
-      Meteor.users.update(userId, { $set: updateDoc })
-
-      const user = Meteor.users.findOne(userId, { fields: { services: 0 } })
-      console.debug('user created:', user._id)
-
-      return { user, password }
+      const credentials = { user: { username }, password }
+      Accounts._runLoginHandlers(this, credentials)
+      return Accounts._loginUser(this, newUserId)
     }
   })
+}
+
+Users.methods.restore = {
+  name: 'users.methods.restore',
+  isPublic: true,
+  schema: {
+    codes: Array,
+    'codes.$': String,
+    voice: {
+      type: String,
+      optional: true
+    },
+    speed: {
+      type: Number,
+      optional: true
+    }
+  },
+  run: function ({ codes, voice, speed }) {
+    const restore = codes.join('-')
+    const userCursor = Meteor.users.find({ restore })
+
+    if (userCursor.count() === 0) {
+      throw new Meteor.Error(
+        'permissionDenied',
+        'restore.failed',
+        { codes }
+      )
+    }
+
+    const user = userCursor.fetch()[0]
+    const hasVoice = typeof voice === 'string'
+    const hasSpeed = typeof speed === 'number'
+
+    if (hasVoice || hasSpeed) {
+      const update = {}
+      if (hasVoice) { update.voice = voice }
+      if (hasSpeed) { update.speed = speed }
+      Meteor.users.update(user._id, { $set: update})
+    }
+
+    return Accounts._loginUser(this, user._id)
+  }
+}
+
+Users.methods.getCodes = {
+  name: 'users.methods.getCodes',
+  schema: {},
+  run: function () {
+    const { userId } = this
+    const user = userId && Meteor.users.findOne(userId)
+
+    if (!user) {
+      throw new Meteor.Error(
+        'permissionDenied',
+        'getCodes.failed',
+        { userId }
+      )
+    }
+
+    return user.restore
+  }
 }
 
 /**
