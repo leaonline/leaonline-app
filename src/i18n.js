@@ -19,7 +19,8 @@ const resources = {
       title: 'You are offline. I\'m trying to connect.'
     },
     actions: {
-      back: 'Back'
+      back: 'Back',
+      close: 'Close'
     },
     alert: {
       title: 'Stop',
@@ -28,7 +29,7 @@ const resources = {
       approve: 'Ok'
     },
     welcomeScreen: {
-      text: 'Welcome to lea online'
+      text: 'Welcome to lea.\u00ADonline'
     },
     registrationScreen: {
       headerTitle: 'Create user account',
@@ -53,6 +54,9 @@ const resources = {
       headerTitle: 'Your Profile',
       progress: 'Overall progress',
       title: 'My successes'
+    },
+    accountInfo: {
+      whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.'
     },
     mapScreen: {
       stage: 'Stage',
@@ -86,17 +90,18 @@ const resources = {
       title: 'Du bist nicht mit dem Internet verbunden.'
     },
     actions: {
-      back: 'Zurück'
+      back: 'Zurück',
+      close: 'Schließen'
     },
     alert: {
       title: 'Stop',
       navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
-      checkBox: 'Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, um fortzufahren',
+      checkBox: 'Sie müssen die Allgemeinen Geschäfts\u00ADbedingungen akzeptieren, um fortzufahren',
       approve: 'Ok'
     },
     welcomeScreen: {
       title: 'Willkommen',
-      text: 'Herzlich Willkommen zu lea online! Bitte stelle zunächst die Sprachausgabe ein.',
+      text: 'Herzlich Willkommen zu lea\u00AD.online! Bitte stelle zunächst die Sprach\u00ADausgabe ein.',
       continue: 'Wenn du damit zufrieden bist, tippe auf "weiter".'
     },
     registrationScreen: {
@@ -113,15 +118,29 @@ const resources = {
     TandCScreen: {
       headerTitle: 'Nutzungsbedingungen',
       text: 'Bitte nimmt dir kurz etwas Zeit für unsere Nutzungsbedingungen.',
-      checkBoxText: 'Ich habe die Nutzungsbedingungen verstanden und stimme ihnen zu.'
+      checkBoxText: 'Ich habe die Nutzungs\u00ADbedingungen verstanden und stimme ihnen zu.',
+      agreeResearch: 'Optional: Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu.',
+      newUser: 'Ich bin neu',
+      restoreWithCode: 'Ich habe einen Anmelde\u00ADcode'
+    },
+    restoreScreen: {
+      title: 'Mit Code anmelden',
+      instructions: 'Bitte gib hier deine Codes ein, um dein Nutzerkonto wiederherzustellen.',
+      checkCode: 'Nutzerkonto wiederherstellen',
+      noCode: 'Ich habe keinen Code oder habe ihn vergessen',
     },
     homeScreen: {
+      title: 'Startseite',
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
     },
     profileScreen: {
       headerTitle: 'Dein Profil',
       progress: 'Gesamter Fortschritt',
       title: 'Meine Erfolge'
+    },
+    accountInfo: {
+      restoreCodes: 'Profil sichern',
+      whyRestore: 'Mit diesen Codes kannst du dein Profil sichern. Notiere sie dir oder mache ein Foto.'
     },
     mapScreen: {
       stage: 'Level',

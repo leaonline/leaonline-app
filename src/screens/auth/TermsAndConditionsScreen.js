@@ -1,47 +1,36 @@
-import React, { useState } from 'react'
+import React, { useReducer, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { CheckBox } from 'react-native-elements'
 import Colors from '../../constants/Colors'
 import { TTSengine } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
 import { Confirm } from '../../components/Confirm'
-import { Layout } from '../../constants/Layout'
 import { useLegal } from '../../hooks/useLegal'
+import { LeaLogo } from '../../components/images/LeaLogo'
+import { Units } from '../../utils/Units'
+import { Checkbox } from '../../components/Checkbox'
+import { Layout } from '../../constants/Layout'
 
-/**
- * @private tts ref
- */
-const Tts = TTSengine.component()
+const initialState = {
+  termsAndConditionsIsChecked: false,
+  highlightCheckbox: false
+}
 
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  container: Layout.containter(),
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  checkBox: {
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  },
-  routeButtonContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center',
-    paddingTop: 10
+const reducer = (prevState, nextState) => {
+  switch (nextState.type) {
+    case 'terms':
+      return {
+        ...prevState,
+        termsAndConditionsIsChecked: nextState.terms,
+      }
+    case 'highlight':
+      return {
+        ...prevState,
+        highlightCheckbox: nextState.highlight
+      }
   }
-})
+}
 
 /**
  * TermsAndConditionsScreen displays the terms and conditions
@@ -56,68 +45,112 @@ const styles = createStyleSheet({
 const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
   const { termsAndConditions } = useLegal('terms')
-  const [termsAndConditionsIsChecked, setTermsAndConditionsCheck] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const [termsAndConditionsColor, setTermsAndConditionsColor] = useState(Colors.gray)
+  const [state, dispatch] = useReducer(reducer, initialState, undefined)
+  const { termsAndConditionsIsChecked, highlightCheckbox } = state
+  const checkboxHandler = (type, currentValue) => {
+    const options = { type, [type]: !currentValue }
+    dispatch(options)
 
-  const checkboxHandler = () => {
-    const isChecked = termsAndConditionsIsChecked
-    setTermsAndConditionsCheck(!termsAndConditionsIsChecked)
-    setTermsAndConditionsColor(isChecked ? Colors.gray : Colors.secondary)
+    if (type === 'terms' && !currentValue) {
+      dispatch({ type: 'highlight', highlight: false })
+    }
   }
 
-  const renderTCText = () => {
-    return termsAndConditions.map((text, index) => (<Tts text={text} key={index} /> ))
+  const renderTCText = () => termsAndConditions
+    .map((text, index) => (
+      <Tts style={styles.paragraph} text={text} block={true} key={index} align="flex-start"/>
+    ))
+
+  const handleAction = (route) => {
+    if (!termsAndConditionsIsChecked) {
+      return dispatch({ type: 'highlight', highlight: true })
+    }
+    return props.navigation.navigate(route)
   }
 
   return (
-    <View style={styles.container}>
+    <>
+      <LeaLogo style={styles.logo}/>
 
-      <Tts text={t('TandCScreen.text')} id='TandCScreen.text' />
-
-      <ScrollView>
-        {renderTCText()}
-      </ScrollView>
-
-      <Confirm
-        id='tac-screen-confirm'
-        noButton
-        question={t('alert.checkBox')}
-        approveText={t('alert.approve')}
-        onApprove={() => setShowModal(false)}
-        icon='times'
-        open={showModal}
-        tts
-        style={{
-          borderRadius: 2,
-          borderWidth: 1,
-          borderColor: Colors.dark
-        }}
-      />
-
-      <View style={styles.checkBox}>
+      <View style={styles.container}>
         <Tts
-          id='TandCScreen.checkBoxText'
-          text={t('TandCScreen.checkBoxText')}
-          color={termsAndConditionsColor}
-          align='center'
-        />
-        <CheckBox
-          center checked={termsAndConditionsIsChecked}
-          onPress={checkboxHandler}
-          checkedColor={termsAndConditionsColor}
-          uncheckedColor={termsAndConditionsColor}
-        />
-      </View>
+          style={styles.paragraph}
+          text={t('TandCScreen.text')}
+          id="TandCScreen.text"
+          block={true}
+          align="center"/>
 
-      <RouteButton
-        title={t('common.continue')}
-        align='center'
-        disabled={!termsAndConditionsIsChecked}
-        handleScreen={() => props.navigation.navigate('Registration')}
-      />
-    </View>
+        <ScrollView contentContainerStyle={styles.tcContainer}>
+          {renderTCText()}
+        </ScrollView>
+
+        <View style={styles.checkBoxes}>
+          <Checkbox
+            id="TandCScreen.checkBoxText"
+            text={t('TandCScreen.checkBoxText')}
+            highlight={highlightCheckbox && Colors.danger}
+            checked={termsAndConditionsIsChecked}
+            checkedColor={Colors.secondary}
+            uncheckedColor={Colors.gray}
+            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}/>
+        </View>
+        <View style={styles.decisionContainer}>
+          <RouteButton
+            title={t('TandCScreen.newUser')}
+            align="center"
+            block={true}
+            containerStyle={{ flex: 1 }}
+            handleScreen={() => handleAction('registration')}
+          />
+          <RouteButton
+            title={t('TandCScreen.restoreWithCode')}
+            align="center"
+            block={true}
+            containerStyle={{ flex: 1 }}
+            handleScreen={() => handleAction('restore')}
+          />
+        </View>
+      </View>
+    </>
   )
 }
+
+/**
+ * @private tts ref
+ */
+const Tts = TTSengine.component()
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: {
+    flex: 1,
+    padding: Units.vw * 5,
+    alignItems: 'stretch',
+    justifyContent: 'space-between'
+  },
+  tcContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap'
+  },
+  paragraph: {
+    marginBottom: 30
+  },
+  logo: {
+    height: 100,
+    width: '100%'
+  },
+  checkBoxes: {
+    borderTopWidth: Layout.lineWidth(0.5),
+    borderColor: Colors.dark,
+    paddingTop: Layout.lineWidth(20)
+  },
+  decisionContainer: {
+    flexDirection: 'row'
+  },
+  highlight: { borderColor: Colors.danger, borderWidth: 1 }
+})
 
 export default TermsAndConditionsScreen

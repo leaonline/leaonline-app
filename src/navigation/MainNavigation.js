@@ -4,9 +4,9 @@ import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import { AuthDecisionScreen } from '../screens/auth/AuthDecisionScreen'
+import { WelcomeScreen } from '../screens/auth/WelcomeScreen'
 import TermsAndConditionsScreen from '../screens/auth/TermsAndConditionsScreen'
-import RegistrationScreen from '../screens/auth/RegistrationScreen'
+import { RegistrationScreen } from '../screens/auth/RegistrationScreen'
 import HomeScreen from '../screens/home/HomeScreen'
 import MapScreen from '../screens/map/MapScreen'
 import DimensionScreen from '../screens/map/DimensionScreen'
@@ -16,6 +16,13 @@ import CompleteScreen from '../screens/CompleteScreen'
 import { useTranslation } from 'react-i18next'
 import { useLogin } from '../hooks/useLogin'
 import { TTSengine } from '../components/Tts'
+import Colors from '../constants/Colors'
+import { Platform } from 'react-native'
+import { Layout } from '../constants/Layout'
+import { RestoreScreen } from '../screens/auth/RestoreScreen'
+import { ProfileButton } from '../components/ProfileButton'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import { useKeepAwake } from 'expo-keep-awake'
 
 const Tts = TTSengine.component()
 
@@ -29,48 +36,117 @@ const Tts = TTSengine.component()
  * @returns {JSX.Element}
  */
 const Stack = createNativeStackNavigator()
+const headerStyle = { backgroundColor: Colors.light }
 
-export const MainNavigation =  (props) => {
+export const MainNavigation = (props) => {
+  useKeepAwake()
   const { t } = useTranslation()
   const { state, authContext } = useLogin()
   const { userToken } = state
-  const welcomeTitle = t('welcomeScreen.title')
 
   const renderScreens = () => {
-    if (userToken) return (
-      <>
-        <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Map' component={MapScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Dimension' component={DimensionScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Unit' component={UnitScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='Profile' component={ProfileScreen} options={{ title: t('profileScreen.headerTitle') }} />
-        <Stack.Screen name='Complete' component={CompleteScreen} options={{ headerShown: false }} />
-      </>
-    )
+    if (userToken) {
+      const headerRight = () => (<ProfileButton route="profile"/>)
+      return (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerStyle,
+              title: t('homeScreen.title'),
+              headerTitle: () => (<></>),
+              headerRight
+            }}/>
+          <Stack.Screen name="Map" component={MapScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Dimension" component={DimensionScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Unit" component={UnitScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="profile" component={ProfileScreen} options={{ title: t('profileScreen.headerTitle') }}/>
+          <Stack.Screen name="Complete" component={CompleteScreen} options={{ headerShown: false }}/>
+        </>
+      )
+    }
+
+    const welcomeTitle = t('welcomeScreen.title')
+    const tcTitle = t('TandCScreen.headerTitle')
+    const registerTitle = t('registrationScreen.title')
+    const restoreTitle = t('restoreScreen.title')
 
     return (
       <>
         <Stack.Screen
-          name='authDecision'
-          component={AuthDecisionScreen}
-          options={{ title: welcomeTitle,  headerTitle: () => (<Tts text={welcomeTitle} align='center' />) }}
+          name="authDecision"
+          component={WelcomeScreen}
+          options={{ title: welcomeTitle, headerStyle, headerTitle: () => (<Tts text={welcomeTitle}/>) }}
         />
         <Stack.Screen
-          name='termsAndConditions'
+          name="termsAndConditions"
           component={TermsAndConditionsScreen}
-          options={{ headerTitle: () => (<Tts text={t('TandCScreen.headerTitle')} />) }}
+          options={{
+            title: tcTitle,
+            headerStyle,
+            headerBackTitleVisible: false,
+            headerTitle: () => (<Tts text={tcTitle}/>)
+          }}
+        />
+        <Stack.Screen
+          name="registration"
+          component={RegistrationScreen}
+          options={{
+            title: registerTitle,
+            headerStyle,
+            headerBackTitleVisible: false,
+            headerTitle: () => (<Tts text={registerTitle}/>)
+          }}
+        />
+        <Stack.Screen
+          name="restore"
+          component={RestoreScreen}
+          options={{
+            title: registerTitle,
+            headerStyle,
+            headerBackTitleVisible: false,
+            headerTitle: () => (<Tts text={restoreTitle}/>)
+          }}
         />
       </>
     )
   }
 
+  const screenOptions = Platform.select({
+    ios: {
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      cancelButtonText: 'foo',
+      contentStyle: {
+        padding: 0,
+        margin: 0
+      }
+    },
+    android: {
+      cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
+      contentStyle: {
+        padding: 0,
+        margin: 0
+      }
+    }
+  })
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer onReady={props.onLayout}>
-        <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS }}>
+        <Stack.Navigator screenOptions={screenOptions}>
           {renderScreens()}
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
   )
 }
+
+const styles = createStyleSheet({
+  headerBackTitleStyle: {
+    ...Layout.defaultFont()
+  },
+  headerStyle: {
+    backgroundColor: Colors.light
+  }
+})

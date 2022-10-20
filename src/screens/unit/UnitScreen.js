@@ -31,7 +31,7 @@ import { sendResponse } from './sendResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
-import LeaText from '../../components/LeaText'
+import { LeaText } from '../../components/LeaText'
 import './registerComponents'
 
 const Tts = TTSengine.component()

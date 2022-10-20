@@ -16,7 +16,7 @@ import { Navbar } from '../../components/Navbar'
 import { useTranslation } from 'react-i18next'
 import { TTSengine } from '../../components/Tts'
 import { ErrorMessage } from '../../components/ErrorMessage'
-import LeaText from '../../components/LeaText'
+import { LeaText } from '../../components/LeaText'
 import { StaticCircularProgress } from '../../components/StaticCircularProgress'
 
 const log = Log.create('MapScreen')

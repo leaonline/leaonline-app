@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Log } from '../../infrastructure/Log'
-import LeaText from '../LeaText'
+import { LeaText } from '../LeaText'
 
 export const UnitContentElementFactory = {}
 

@@ -9,37 +9,9 @@ import { Layout } from '../../constants/Layout'
 import { useVoices } from '../../hooks/useVoices'
 import { Loading } from '../../components/Loading'
 import { LeaButtonGroup } from '../../components/LeaButtonGroup'
-import { SimpleWizard } from '../../components/wizard/SimpleWizard'
-/**
- * @private TTS Ref
- */
-const Tts = TTSengine.component()
+import { Units } from '../../utils/Units'
 
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  container: Layout.containter(),
-  logo: {
-    height: 100,
-    width: '100%'
-  },
-  text: {
-    flex: 1
-  },
-  slider: {
-    margin: 10
-  },
-  speechSettingContainer: {},
-  decisionContainer: {
-    flex: 1,
-    padding: '10%',
-    alignItems: 'flex-start',
-    justifyContent: 'space-evenly'
-  }
-})
-
-const speeds = [0.5, 0.7, 0.9, 1.0, 1.15]
+const speeds = [0.6, 0.9, 1.1]
 
 /**
  * WelcomeScreen displays the welcome text as an introduction for the new
@@ -51,7 +23,7 @@ const speeds = [0.5, 0.7, 0.9, 1.0, 1.15]
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-export const AuthDecisionScreen = props => {
+export const WelcomeScreen = props => {
   const { t } = useTranslation()
   const [showIndex, setShowIndex] = useState(2)
   const { voices, voicesLoaded } = useVoices()
@@ -62,7 +34,7 @@ export const AuthDecisionScreen = props => {
   if (!voicesLoaded) {
     return (
       <View style={styles.container}>
-        <Loading />
+        <Loading/>
       </View>
     )
   }
@@ -72,65 +44,92 @@ export const AuthDecisionScreen = props => {
       setSpeechRunOnce(true)
     }
   }
-  const setNewVoice = (voice, text) => {
+  const setNewVoice = (voice, index) => {
+    TTSengine.stop()
     TTSengine.setVoice(voice.identifier)
-    TTSengine.speakImmediately(text)
-  }
-  const setSpeed = (value, text) => {
-    TTSengine.updateSpeed(speeds[value])
-    TTSengine.speakImmediately(`Ich spreche den text ${text}`)
+    TTSengine.speakImmediately(`Stimme ${index + 1}`)
   }
 
   const voiceOptions = () => {
     // if there are no voices to choose from,
     // we simply skip and don't show this option at all
-    if (voices.length < 2) {
+    if (!voices || voices.length < 2) {
       return null
     }
 
-    const groupData = TTSengine.availableVoices.map((voice, index) => `Stimme ${index +1}` )
+    const justNumbers = voices.length > 3
+    const groupData = voices
+      .map((voice, index) => justNumbers
+          ? String(index + 1)
+          : `Stimme ${index + 1}`)
 
     return (
       <LeaButtonGroup
         data={groupData}
-        onPress={(text, index) => setNewVoice(TTSengine.availableVoices[index], text)} />
+        onPress={(text, index) => setNewVoice(voices[index], index)}/>
     )
   }
 
   const onSpeedSet = (text, index) => {
-    setSpeed(index, text)
-    if (showIndex < 4) setShowIndex(4)
+    TTSengine.stop()
+    TTSengine.updateSpeed(speeds[index])
+    TTSengine.speakImmediately(`Ich spreche den text für dich ${text}`)
+    if (showIndex < 4) {
+      setShowIndex(4)
+    }
   }
 
   const voiceSpeedOptions = () => {
-    const groupData = ['sehr langsam', 'langsam', 'normal', 'schnell', 'sehr schnell']
+    const groupData = ['lang\u00ADsam', 'normal', 'schnell']
     return (
       <LeaButtonGroup
         data={groupData}
-        onPress={onSpeedSet} />
+        onPress={onSpeedSet}/>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <>
       <LeaLogo style={styles.logo}/>
 
 
-      <View style={styles.decisionContainer} show={showIndex}>
-        <Tts id="welcomeScreen.text" style={styles.text} text={welcomeText} />
+      <View style={styles.container} show={showIndex}>
+        <Tts id="welcomeScreen.text" style={styles.text} text={welcomeText}/>
 
         {voiceOptions()}
 
         {voiceSpeedOptions()}
 
-        <Tts id="welcomeScreen.text" style={styles.text} text={speedTestText} align="center" />
+        <Tts id="welcomeScreen.text" style={styles.text} text={speedTestText} align="center"/>
 
 
         <RouteButton
           title={t('common.continue')}
+          block={true}
           handleScreen={() => props.navigation.navigate('termsAndConditions')}
         />
       </View>
-    </View>
+    </>
   )
 }
+
+/**
+ * @private TTS Ref
+ */
+const Tts = TTSengine.component()
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  logo: {
+    height: 100,
+    width: '100%'
+  },
+  container: {
+    flex: 1,
+    padding: Units.vw * 9,
+    alignItems: 'stretch',
+    justifyContent: 'space-between'
+  }
+})
