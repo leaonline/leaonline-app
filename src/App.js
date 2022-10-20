@@ -34,7 +34,7 @@ export default function App () {
   const anyError = error ?? connectionError
   if (anyError) {
     return (
-      <ViewContainer onLayout={onLayoutRootView} >
+      <ViewContainer onLayout={onLayoutRootView}>
         <ErrorMessage message={anyError.message} onLayout={onLayoutRootView} />
       </ViewContainer>
     )

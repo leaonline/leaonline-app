@@ -28,5 +28,4 @@ export const initContexts = () => {
     ContextRepository.add(context.name, context)
     log(context.name, 'complete')
   })
-
 }

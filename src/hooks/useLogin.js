@@ -75,9 +75,9 @@ export const useLogin = () => {
       dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
     }
 
-      // Otherwise, we need to listen to the package's
-      // DDP even 'onLogin'  and dispatch then.
-      // Note, that 'onLogin'  is only fired, when the
+    // Otherwise, we need to listen to the package's
+    // DDP even 'onLogin'  and dispatch then.
+    // Note, that 'onLogin'  is only fired, when the
     // package has successfully restored the login via token!
     else {
       const handleOnLogin = () => dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })

@@ -41,7 +41,8 @@ export const loadHomeData = async () => {
 
     // as a default we still return all fields
     return fallback()
-  } catch (e) {
+  }
+  catch (e) {
     Log.warn('loadHomeData failed:', e.message)
     return fallback()
   }

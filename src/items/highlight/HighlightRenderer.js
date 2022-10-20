@@ -221,8 +221,6 @@ export const HighlightRenderer = props => {
       }
     })
 
-    console.debug({ right, wrong, missing })
-
     const renderTarget = (target, color, text) => {
       if (target.length === 0) return null
 

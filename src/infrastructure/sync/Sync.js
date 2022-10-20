@@ -132,7 +132,8 @@ const update = (collection, docs) => {
       result = collection.update({ _id: doc._id }, { $set: doc })
       updated++
       debug('updated doc', result)
-    } else {
+    }
+    else {
       result = collection.insert(doc)
       inserted++
       debug('inserted doc', result)

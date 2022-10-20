@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Config } from '../env/Config'
 
 export const Log = {}
@@ -58,7 +59,10 @@ Log.setLevel = level => {
   logLevel = level
 }
 
-Log.create = (name, type = 'log') => {
+Log.create = (name, type = 'log', flag) => {
+  if (typeof flag === 'boolean' && flag !== true) {
+    return () => {} // noOp on conditionals
+  }
   if (!Object.hasOwnProperty.call(allLevels, type)) {
     throw new Error(`Unsupported log type: ${type}`)
   }
@@ -82,3 +86,4 @@ Log.log = (...args) => allLevels.log.run(...args)
 Log.warn = (...args) => allLevels.warning.run(...args)
 
 Log.error = (...args) => allLevels.error.run(...args)
+/* eslint-enable no-console */

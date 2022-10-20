@@ -1,19 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
-import { TTSengine } from '../../components/Tts'
-import { createStyleSheet } from '../../styles/createStyleSheet'
+import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useUser } from '../../hooks/useUser'
 import { ErrorMessage } from '../../components/ErrorMessage'
 
 /**
- *
- * @param props
- * @constructor
+ * Screen for registering a new user.
+ * This screen should automatically run without further actions required.
+ * @category Screens
+ * @component
+ * @returns {JSX.Element}
  */
-export const RegistrationScreen = props => {
+export const RegistrationScreen = () => {
   const { t } = useTranslation()
+  const { Tts } = useTts()
   const { user } = useUser()
   const { signUp } = useContext(AuthContext)
   const [error, setError] = useState(null)
@@ -22,7 +24,6 @@ export const RegistrationScreen = props => {
     if (!user) {
       const currentVoice = TTSengine.currentVoice
       const currentSpeed = TTSengine.currentSpeed
-      console.debug(currentVoice, currentSpeed)
       const onError = e => setError(e)
       signUp({ currentVoice, currentSpeed, onError })
     }
@@ -39,9 +40,3 @@ export const RegistrationScreen = props => {
     </>
   )
 }
-
-const styles = createStyleSheet({
-
-})
-
-const Tts = TTSengine.component()

@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { TextInput, View } from 'react-native'
 import Colors from '../constants/Colors'
@@ -15,11 +14,14 @@ const createArray = (length, fill = '') => {
 
 const alphaChars = /^[A-Za-z]/i
 /**
- *
+ * A textinput where each character is projected to one input field and focus
+ * is shifted automatically after typing.
+ * @category Components
+ * @component
  * @param props {object}
  * @param props.length {number} the amount of cells to be rendered
  * @param props.onEnd {function=} called when the last field received and input
- * @constructor
+ * @returns {JSX.Element}
  */
 export const CharacterInput = props => {
   const { Tts } = useTts()
@@ -46,13 +48,13 @@ export const CharacterInput = props => {
       if (nextRef) {
         nextRef.focus()
       }
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
 
     if (!alphaChars.test(nativeEvent.key)) {
-      e.preventDefault();
-      return false;
+      e.preventDefault()
+      return false
     }
   }
 
@@ -64,7 +66,8 @@ export const CharacterInput = props => {
     const nextRef = refs.current.get(index + 1)
     if (nextRef) {
       nextRef.focus()
-    } else {
+    }
+    else {
       refs.current.get(index).blur()
       if (props.onEnd) {
         props.onEnd(newChars)
@@ -83,7 +86,8 @@ export const CharacterInput = props => {
           key={key}
           value={chars[index]}
           onChangeText={char => updateChars(char, index)}
-          maxLength={1} />
+          maxLength={1}
+        />
       )
     })
   }

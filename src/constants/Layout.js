@@ -26,7 +26,7 @@ Layout.defaultFont = () => ({
   fontStyle: 'normal',
   fontWeight: 'normal',
   padding: 0,
-  margin: 0,
+  margin: 0
 })
 
 Layout.borderRadius = () => 15

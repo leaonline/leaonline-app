@@ -43,7 +43,8 @@ export const connectMeteor = () => {
     // break early on any errors during connect attempt
     try {
       Meteor.connect(Config.backend.url, { AsyncStorage })
-    } catch (connectError) {
+    }
+    catch (connectError) {
       const errorStatus = Meteor.status()
       return complete(errorStatus, connectError)
     }

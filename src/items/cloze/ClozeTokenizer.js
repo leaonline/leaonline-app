@@ -24,7 +24,8 @@ ClozeTokenizer.tokenize = ({ text, flavor, isTable }) => {
         return tokenize(cell.trim()).map(toTokens, { flavor })
       }).flat().filter(cell => cell.length > 0)
     })
-  } else {
+  }
+  else {
     const preprocessedValue = text.replace(newLineRegExp, newLineReplacer)
     return tokenize(preprocessedValue).map(toTokens, { flavor })
   }

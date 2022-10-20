@@ -5,11 +5,12 @@ import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
+import { Log } from '../infrastructure/Log'
 
 /** @private **/
 let Speech = null
 
-/** @private stylesheet **/
+/** @private **/
 const styles = createStyleSheet({
   body: {
     flex: 0,
@@ -59,9 +60,7 @@ const ttsComponent = props => {
 
   const getIdleIconColor = () => props.iconColor || props.color || Colors.secondary
   const getIdleTextColor = () => props.color || Colors.secondary
-  const debug = props.debug || TTSengine.debug
-    ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
-    : () => {}
+  const debug = Log.create('TTS', 'debug', props.debug || TTSengine.debug)
 
   useEffect(() => {
     debug('set isSpeaking', isSpeaking)
@@ -177,12 +176,13 @@ const ttsComponent = props => {
     <View style={ttsContainerStyle}>
       <Pressable
         disabled={props.disabled}
-        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}>
+        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
+      >
         <Icon
           testID={props.id}
           color={props.disabled ? Colors.gray : iconColor}
           size={iconSize}
-          style={{padding: 5}}
+          style={{ padding: 5 }}
           name='volume-up'
           type='font-awesome-5'
         />
@@ -237,6 +237,7 @@ export const TTSengine = {
   defaultSpeed: 1,
   currentSpeed: 1,
   currentVoice: undefined,
+  /** @deprecated use `useTts` hook from this module instead */
   component: () => ttsComponent,
   updateSpeed: newSpeed => {
     if (newSpeed < 0.1 || newSpeed > 2.0) {
@@ -273,22 +274,21 @@ const loadVoices = (counter, onComplete) => {
   const langPattern = /de[-_]+/g
 
   setTimeout(async () => {
-    const voices = await Speech.getAvailableVoicesAsync();
+    const voices = await Speech.getAvailableVoicesAsync()
 
     if (voices.length > 0) {
       const filtered = voices.filter(v => langPattern.test(v.language))
-      console.log("voices found", filtered)
       onComplete(filtered)
     }
     else {
-      console.log("voices not found")
       if (!counter || counter < 10) {
-        loadVoices((counter ?? 0) + 1);
-      } else {
+        loadVoices((counter ?? 0) + 1)
+      }
+      else {
         onComplete([])
       }
     }
-  }, (counter ?? 1) * 300);
+  }, (counter ?? 1) * 300)
 }
 
 export const useTts = () => ({ Tts: ttsComponent })

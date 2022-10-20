@@ -9,9 +9,11 @@ export const fetchFonts = async () => {
 
   try {
     handle = require('../assets/fonts/SemikolonPlus-Regular.ttf')
-  } catch (error) {
+  }
+  catch (error) {
     handle = require('../assets/fonts/OpenSansVariable.ttf')
-  } finally {
+  }
+  finally {
     if (handle != null) {
       await Font.loadAsync({
         semicolon: handle

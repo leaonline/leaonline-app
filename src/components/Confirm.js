@@ -2,12 +2,27 @@ import React, { useState } from 'react'
 import { View, Modal } from 'react-native'
 import { ActionButton } from './ActionButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import { TTSengine } from './Tts'
+import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 
-const Tts = TTSengine.component()
-
+/**
+ * A base-modal with confirm actions and respective state and callbacks.
+ *
+ * @category Components
+ * @component
+ * @param props {object}
+ * @param props.question {string} the question to ask the user to confirm, i.e. "do you want to..."
+ * @param props.approveText {string} the text for the approve button
+ * @param props.denyText {string} the text for the deny button
+ * @param props.onApprove {function=}
+ * @param props.onDeny {function=}
+ * @param props.open {boolean=} Initial / externally defined open/closed state
+ * @param props.noButton {boolean=}
+ * @param props.noConfirm {boolean=}
+ * @returns {JSX.Element}
+ */
 export const Confirm = props => {
+  const { Tts } = useTts()
   const [modalOpen, setModalOpen] = useState(false)
   const { onApprove, onDeny, open, ...fordwardedProps } = props
 
@@ -26,7 +41,6 @@ export const Confirm = props => {
   const onResponse = (targetFn) => {
     setModalOpen(false)
     setTimeout(() => {
-      console.debug('response', targetFn)
       if (targetFn) targetFn()
     }, 250)
   }
@@ -37,7 +51,8 @@ export const Confirm = props => {
     }
     if (props.noConfirm) {
       return <ActionButton {...fordwardedProps} onPress={() => onResponse(onApprove)} />
-    } else {
+    }
+    else {
       return <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)} />
     }
   }
@@ -61,7 +76,7 @@ export const Confirm = props => {
         animationType='fade'
         transparent={false}
         visible={getModalOpen()}
-        onRequestClose={() => { setModalOpen(!false) }}
+        onRequestClose={() => setModalOpen(false)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -77,15 +92,6 @@ export const Confirm = props => {
       {renderIcon()}
     </>
   )
-}
-
-/**
- * Allows to trigger a confirm-modal by given id from outside of a render
- * cycle.
- * @param id
- */
-Confirm.triggerById = id => {
-  console.debug('trigger by id', id)
 }
 
 const styles = createStyleSheet({

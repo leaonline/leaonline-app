@@ -11,7 +11,8 @@ import { Scoring } from './Scoring'
 export const getScoring = async (itemDoc, responseDoc) => {
   try {
     return Scoring.score(itemDoc, responseDoc)
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
     return []
   }

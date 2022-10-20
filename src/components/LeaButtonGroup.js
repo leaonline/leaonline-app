@@ -51,7 +51,6 @@ export const LeaButtonGroup = props => {
   )
 }
 
-
 const styles = createStyleSheet({
   container: {
     minHeight: 50,
@@ -63,6 +62,6 @@ const styles = createStyleSheet({
     ...Layout.defaultFont()
   },
   selectedButtonStyle: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.primary
   }
 })

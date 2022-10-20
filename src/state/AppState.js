@@ -40,12 +40,14 @@ const updateSingle = async (key, value) => {
     debug(key, 'remove item')
     await storage.removeItem(key)
     return undefined
-  } else if (value !== undefined) {
+  }
+  else if (value !== undefined) {
     // by passing an undefined value
     debug(key, 'set new value', value)
     await storage.setItem(key, value)
     return value
-  } else {
+  }
+  else {
     // for undefined values we return the stored value
     debug(key, 'get item')
     return await storage.getItem(key)

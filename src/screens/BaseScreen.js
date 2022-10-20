@@ -24,11 +24,11 @@ export const ScreenBase = (props) => {
   const loadFailed = !props.loading && nodata
 
   if (loadFailed) {
-      return (
-        <SafeAreaView style={props.style}>
-          <ErrorMessage error={new Error('screenBase.notData')} />
-        </SafeAreaView>
-      )
+    return (
+      <SafeAreaView style={props.style}>
+        <ErrorMessage error={new Error('screenBase.notData')} />
+      </SafeAreaView>
+    )
   }
 
   return (<SafeAreaView style={props.style}>{props.children}</SafeAreaView>)

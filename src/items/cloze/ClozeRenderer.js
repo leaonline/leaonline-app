@@ -169,7 +169,8 @@ export const ClozeRenderer = props => {
             if (compareColor) {
               inputStyle.backgroundColor = compareColor
               inputStyle.borderColor = compareColor
-            } else {
+            }
+            else {
               inputStyle.borderColor = dimensionColor
             }
 
@@ -308,12 +309,14 @@ const createTokens = (value) => {
 
     if (value.isTable) {
       tokens.forEach(row => row.forEach(assignIndex))
-    } else {
+    }
+    else {
       tokens.forEach(assignIndex)
     }
 
     return tokens
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
     return []
   }

@@ -4,7 +4,6 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'
 import { Layout } from '../constants/Layout'
 
-
 /**
  * LeaText is a component ... //TODO
  *
@@ -12,17 +11,19 @@ import { Layout } from '../constants/Layout'
  * @param {string} props.text: The displayed text
  * @param {StyleSheet} props.style: The style elements for the text
  * @returns {JSX.Element}
- * @constructor
+ * @component
  */
 export const LeaText = props => {
   const style = mergeStyles(styles.default, props.style)
   return (
     <Text
-      textBreakStrategy={'highQuality'}
-      android_hyphenationFrequency={'full'}
-      style={style}>
+      textBreakStrategy='highQuality'
+      android_hyphenationFrequency='full'
+      style={style}
+    >
       {props.children}
-    </Text>)
+    </Text>
+  )
 }
 
 const styles = createStyleSheet({

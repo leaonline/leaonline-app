@@ -288,7 +288,8 @@ const UnitScreen = props => {
 
     if (!dimensionRoute) {
       props.navigation.navigate('Dimension')
-    } else {
+    }
+    else {
       props.navigation.navigate({ key: dimensionRoute.key })
     }
   }
@@ -447,7 +448,6 @@ const UnitScreen = props => {
     responseDoc.itemId = data.contentId
     responseDoc.itemType = data.subtype
     responseDoc.scores = scoreResult.map(entry => {
-      console.debug(entry)
       // some items score single values, others multiple
       // some items have single competencies, others multiple
       // we therefore make all these properties to arrays
@@ -470,7 +470,8 @@ const UnitScreen = props => {
       setAllTrue(page)
       Vibration.vibrate(500)
       scrollViewRef.current?.scrollToEnd({ animated: true })
-    } else {
+    }
+    else {
       Vibration.vibrate(100)
     }
   }

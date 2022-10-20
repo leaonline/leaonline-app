@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
 import { LeaLogo } from '../../components/images/LeaLogo'
-import { Layout } from '../../constants/Layout'
 import { useVoices } from '../../hooks/useVoices'
 import { Loading } from '../../components/Loading'
 import { LeaButtonGroup } from '../../components/LeaButtonGroup'
@@ -27,23 +26,17 @@ export const WelcomeScreen = props => {
   const { t } = useTranslation()
   const [showIndex, setShowIndex] = useState(2)
   const { voices, voicesLoaded } = useVoices()
-  const [speechRunOnce, setSpeechRunOnce] = useState(false)
   const welcomeText = t('welcomeScreen.text')
   const speedTestText = t('welcomeScreen.continue')
 
   if (!voicesLoaded) {
     return (
       <View style={styles.container}>
-        <Loading/>
+        <Loading />
       </View>
     )
   }
 
-  const setOnStart = () => {
-    if (!speechRunOnce) {
-      setSpeechRunOnce(true)
-    }
-  }
   const setNewVoice = (voice, index) => {
     TTSengine.stop()
     TTSengine.setVoice(voice.identifier)
@@ -60,13 +53,14 @@ export const WelcomeScreen = props => {
     const justNumbers = voices.length > 3
     const groupData = voices
       .map((voice, index) => justNumbers
-          ? String(index + 1)
-          : `Stimme ${index + 1}`)
+        ? String(index + 1)
+        : `Stimme ${index + 1}`)
 
     return (
       <LeaButtonGroup
         data={groupData}
-        onPress={(text, index) => setNewVoice(voices[index], index)}/>
+        onPress={(text, index) => setNewVoice(voices[index], index)}
+      />
     )
   }
 
@@ -84,28 +78,27 @@ export const WelcomeScreen = props => {
     return (
       <LeaButtonGroup
         data={groupData}
-        onPress={onSpeedSet}/>
+        onPress={onSpeedSet}
+      />
     )
   }
 
   return (
     <>
-      <LeaLogo style={styles.logo}/>
-
+      <LeaLogo style={styles.logo} />
 
       <View style={styles.container} show={showIndex}>
-        <Tts id="welcomeScreen.text" style={styles.text} text={welcomeText}/>
+        <Tts id='welcomeScreen.text' style={styles.text} text={welcomeText} />
 
         {voiceOptions()}
 
         {voiceSpeedOptions()}
 
-        <Tts id="welcomeScreen.text" style={styles.text} text={speedTestText} align="center"/>
-
+        <Tts id='welcomeScreen.text' style={styles.text} text={speedTestText} align='center' />
 
         <RouteButton
           title={t('common.continue')}
-          block={true}
+          block
           handleScreen={() => props.navigation.navigate('termsAndConditions')}
         />
       </View>

@@ -16,13 +16,15 @@ afterEach(() => {
 it('throws on invalid args', async () => {
   try {
     await createUser({ email: 'foo', override: true })
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('email must be a valid email address')
   }
 
   try {
     await createUser({ email: 'foo@example.com', override: 'hello' })
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('override must be of type Boolean')
   }
 })
@@ -40,7 +42,8 @@ it('throws if not connected', async () => {
 
   try {
     await createUser()
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('notConnected')
   }
 })
@@ -60,7 +63,8 @@ it('throws if server responded with error', async () => {
   let user
   try {
     user = await createUser()
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('foo-error from srv')
   }
 
@@ -85,7 +89,8 @@ it('throws if the server responded with invalid data', async () => {
   // empty response but no error
   try {
     user = await createUser()
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('invalidResponse')
   }
 
@@ -93,7 +98,8 @@ it('throws if the server responded with invalid data', async () => {
   srv.callsFake((n, a, cb) => cb(undefined, {}))
   try {
     user = await createUser()
-  } catch (e) {
+  }
+  catch (e) {
     expect(e.message).toMatch('invalidResponse')
   }
 

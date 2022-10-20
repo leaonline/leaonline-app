@@ -66,7 +66,8 @@ export const callMeteor = (options) => {
   // by adding a default catch handler
   if (typeof failure === 'function') {
     promise.catch(failure)
-  } else {
+  }
+  else {
     promise.catch(error => debugLog('error received from backend', error.message))
   }
 

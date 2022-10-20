@@ -66,7 +66,8 @@ const createNewUser = async ({ email }) => {
 
   try {
     responseSchema.validate(response || {})
-  } catch (e) {
+  }
+  catch (e) {
     const err = new Error('invalidResponse')
     err.details = e.message
     throw err

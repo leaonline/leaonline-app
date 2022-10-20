@@ -27,7 +27,8 @@ export class MeteorError extends Error {
     if (MeteorError.isLike(e)) {
       err.errorType = e.errorType
       err.isClientSafe = e.isClientSafe
-    } else {
+    }
+    else {
     // native errors or their subclasses
       err.errorType = e.name
       err.message = e.message
@@ -52,7 +53,8 @@ export class MeteorError extends Error {
 
     if (reason) {
       this.message = `${reason} [${error}]`
-    } else {
+    }
+    else {
       this.message = `[${error}]`
     }
 

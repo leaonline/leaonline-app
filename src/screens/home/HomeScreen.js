@@ -38,7 +38,7 @@ const HomeScreen = props => {
       return (
         <RouteButton
           title={item.title} icon={item.icon} key={key}
-          block={true}
+          block
           handleScreen={() => selectField(item)}
         />
       )
@@ -49,7 +49,7 @@ const HomeScreen = props => {
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
       <Tts
         text={t('homeScreen.text')} color={Colors.secondary}
-        block={true}
+        block
         id='homeScreen.text'
       />
       {renderButtons()}

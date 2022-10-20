@@ -127,7 +127,7 @@ const resources = {
       title: 'Mit Code anmelden',
       instructions: 'Bitte gib hier deine Codes ein, um dein Nutzerkonto wiederherzustellen.',
       checkCode: 'Nutzerkonto wiederherstellen',
-      noCode: 'Ich habe keinen Code oder habe ihn vergessen',
+      noCode: 'Ich habe keinen Code oder habe ihn vergessen'
     },
     homeScreen: {
       title: 'Startseite',

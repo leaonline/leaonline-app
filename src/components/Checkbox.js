@@ -7,7 +7,13 @@ import { mergeStyles } from '../styles/mergeStyles'
 import { TTSengine } from './Tts'
 
 /**
+ * Our custom checkbox implementation, consists of
+ * - an actual checkbox + state logic
+ * - a tts button + text
+ * - a `Pressable` around the tts to update state also when tapping the text
  *
+ * @category Components
+ * @component
  * @param props {object}
  * @param props.onPress {function}
  * @param props.text {string}
@@ -16,7 +22,6 @@ import { TTSengine } from './Tts'
  * @param props.checkedColor {string=}
  * @param props.uncheckedColor {string=}
  * @returns {JSX.Element}
- * @constructor
  */
 export const Checkbox = props => {
   const highlightStyle = props.highlight && { borderWidth: 1, borderColor: props.highlight }
@@ -40,7 +45,7 @@ export const Checkbox = props => {
           color={ttsColor}
           iconColor={checkedColor}
           align='center'
-          block={true}
+          block
         />
       </Pressable>
     </View>
@@ -57,6 +62,6 @@ const styles = createStyleSheet({
     marginBottom: 20
   },
   checkbox: {
-    padding: 10,
-  },
+    padding: 10
+  }
 })

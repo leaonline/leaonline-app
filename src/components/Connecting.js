@@ -1,11 +1,9 @@
-import React  from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import React from 'react'
+import { ActivityIndicator, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { useTranslation } from 'react-i18next'
-import { TTSengine } from './Tts'
-
-const Tts = TTSengine.component()
+import { useTts } from './Tts'
 
 const styles = createStyleSheet({
   container: Layout.containter(),
@@ -14,8 +12,15 @@ const styles = createStyleSheet({
   }
 })
 
+/**
+ * Default visual for indicating to users, that we are connecting to the servers.
+ * @returns {JSX.Element}
+ * @component
+ */
 export const Connecting = () => {
   const { t } = useTranslation()
+  const { Tts } = useTts()
+
   return (
     <View style={styles.container}>
       <ActivityIndicator style={styles.indicator} />

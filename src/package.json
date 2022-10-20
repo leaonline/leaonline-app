@@ -6,8 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "standard --env jest --env mocha | snazzy",
-    "lint:fix": "standard --fix --env jest --env mocha | snazzy",
+    "lint": "standardx --env jest --env mocha | snazzy",
+    "lint:fix": "standardx --fix --env jest --env mocha | snazzy",
     "test": "node_modules/.bin/jest --coverage",
     "docs": "jsdoc -c jsdoc.conf.json"
   },
@@ -56,23 +56,48 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
+    "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-env": "^7.16.11",
     "@babel/register": "^7.17.0",
     "@testing-library/react-native": "^8.0.0",
     "@types/react-test-renderer": "^17.0.1",
     "better-docs": "^2.3.2",
+    "eslint-plugin-import": "^2.26.0",
     "jest-expo": "^46.0.0",
     "jsdoc": "^3.6.7",
     "react-test-renderer": "^18.0.0",
     "sinon": "^14.0.0",
     "snazzy": "^9.0.0",
-    "standard": "^16.0.4"
+    "standardx": "^7.0.0"
   },
-  "standard": {
-    "env": [
-      "mocha",
-      "jest"
-    ]
+  "eslintConfig": {
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": false
+    },
+    "plugins": [
+      "import"
+    ],
+    "rules": {
+      "import/no-default-export": "off",
+      "brace-style": [
+        "error",
+        "stroustrup",
+        {
+          "allowSingleLine": true
+        }
+      ],
+      "no-console": [
+        "error",
+        {
+          "allow": [
+            "warn",
+            "error"
+          ]
+        }
+      ]
+    }
   },
   "private": true
 }

@@ -1,18 +1,17 @@
 import React from 'react'
 import { View } from 'react-native'
-import { TTSengine } from './Tts'
+import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 import { LeaButton } from './LeaButton'
 import { mergeStyles } from '../styles/mergeStyles'
 import { createStyleSheet } from '../styles/createStyleSheet'
-
-
 
 /**
  * ActionButton contains a TTS and a button and a handler for the action.
  * It renders with default styles.
  *
  * @category Components
+ * @component
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
@@ -20,11 +19,11 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  * @param {boolean=} props.block Display in block mode, where the button stretches over full h-space
  * @param {object=} props.containerStyle Applies / overrides additional container styles
  * @param {object=} props.buttonContainerStyle Applies / overrides additional button container styles
- * @extends LeaButton
- * @component
+ * @augments LeaButton
  * @returns {JSX.Element}
  */
 export const ActionButton = props => {
+  const { Tts } = useTts()
   const skipTts = props.tts === false
 
   const renterTts = () => {
@@ -35,19 +34,10 @@ export const ActionButton = props => {
     const iconActiveColor = props.iconActiveColor ?? Colors.secondary
 
     return (
-      <Tts text={ttsText} activeIconColor={iconActiveColor} iconColor={iconColor} color={props.color || Colors.primary} id={`${ttsText}-tts`}  dontShowText />
+      <Tts text={ttsText} activeIconColor={iconActiveColor} iconColor={iconColor} color={props.color || Colors.primary} id={`${ttsText}-tts`} dontShowText />
     )
   }
 
-  /*
-  const buttonStyle = { ...styles.button, ...props.style  }
-  const titleStyle = { color: props.color || Colors.primary, width: '80%', fontFamily: 'semicolon' }
-
-  if (props.active) {
-    buttonStyle.backgroundColor = props.color
-    titleStyle.color = Colors.light
-  }
-  */
   const blockStyle = props.block ? { flexGrow: 1 } : undefined
   const buttonProps = {
     ...props,
@@ -67,20 +57,15 @@ export const ActionButton = props => {
 /**
  * @private
  */
-const Tts = TTSengine.component()
-
-/**
- * @private
- */
 const styles = createStyleSheet({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   button: {
     width: '100%'
   },
   buttonContainer: {
-    marginLeft: 10,
+    marginLeft: 10
   }
 })

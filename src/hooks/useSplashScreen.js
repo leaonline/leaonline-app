@@ -28,10 +28,12 @@ const useSplashScreen = (initFunctions) => {
         // use this effect to make the splash screen remain
         // for a few seconds, once the font has been loaded
         await new Promise(resolve => setTimeout(resolve, START_UP_DELAY))
-      } catch (e) {
+      }
+      catch (e) {
         console.error(e)
         setError(e)
-      } finally {
+      }
+      finally {
         // Tell the application to render
         setAppIsReady(true)
       }

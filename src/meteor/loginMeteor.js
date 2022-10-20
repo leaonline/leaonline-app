@@ -35,7 +35,8 @@ export const loginMeteor = async () => {
 
   try {
     return await loginWithPassword(username, password)
-  } catch (e) {
+  }
+  catch (e) {
     if (e.error === 'too-many-requests') {
       Log.warn(e.message)
       Log.warn('reattempt login in 500ms')
@@ -64,7 +65,8 @@ const loginWithPassword = (username, password) => new Promise((resolve, reject) 
     if (error) {
       // we convert server responses to MeteorError
       reject(MeteorError.from(error))
-    } else {
+    }
+    else {
       resolve(Meteor.user())
     }
   })

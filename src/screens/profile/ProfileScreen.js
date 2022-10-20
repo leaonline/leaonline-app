@@ -10,7 +10,6 @@ import { Achievements } from './Achievements'
  * @constructor
  */
 const ProfileScreen = () => {
-
   return (
     <SafeAreaView>
       <ScrollView>

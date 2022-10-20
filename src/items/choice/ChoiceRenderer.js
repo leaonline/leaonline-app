@@ -156,8 +156,6 @@ export const ChoiceRenderer = props => {
 }
 
 const getUpdate = ({ index, flavor, selected }) => {
-  console.debug('getUpdate', { index, flavor, selected })
-
   // single choice: just replace index
   if (flavor === Choice.flavors.single.value) {
     return { [index]: true }

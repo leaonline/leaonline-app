@@ -56,7 +56,7 @@ export const LeaButton = props => {
       disabledStyle={styles.disabled}
       containerStyle={containerStyle}
       disabled={props.disabled}
-      type="outline"
+      type='outline'
       onPress={props.onPress}
       icon={renderIcon()}
       iconPosition={props.iconPosition || defaults.icon.position}

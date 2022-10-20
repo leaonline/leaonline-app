@@ -28,9 +28,11 @@ export const loadDocs = (fn, { runArgs = [], debug = false } = {}) => {
       try {
         const data = await fn(debug)
         setData(data)
-      } catch (e) {
+      }
+      catch (e) {
         setError(e)
-      } finally {
+      }
+      finally {
         setLoading(false)
       }
     })()

@@ -31,12 +31,12 @@ export const RestoreScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Tts text={t('restoreScreen.instructions')}/>
-      <CharacterInput id="row-1" length={4} onEnd={newCodes => updateCodes(newCodes, 0)}/>
-      <CharacterInput id="row-2" length={4} onEnd={newCodes => updateCodes(newCodes, 1)}/>
-      <CharacterInput id="row-3" length={4} onEnd={newCdes => updateCodes(newCdes, 2)}/>
-      <ErrorMessage error={error}/>
-      <ActionButton disabled={!allCodes} title={t('restoreScreen.checkCode')} onPress={checkCodes}/>
+      <Tts text={t('restoreScreen.instructions')} />
+      <CharacterInput id='row-1' length={4} onEnd={newCodes => updateCodes(newCodes, 0)} />
+      <CharacterInput id='row-2' length={4} onEnd={newCodes => updateCodes(newCodes, 1)} />
+      <CharacterInput id='row-3' length={4} onEnd={newCdes => updateCodes(newCdes, 2)} />
+      <ErrorMessage error={error} />
+      <ActionButton disabled={!allCodes} title={t('restoreScreen.checkCode')} onPress={checkCodes} />
     </View>
   )
 }

@@ -5,7 +5,7 @@ import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 
 export const ProfileButton = props => {
-  const navigation  = useNavigation()
+  const navigation = useNavigation()
   const toProfile = () => navigation.navigate(props.route)
   return (
     <View style={{ display: 'flex', marginLeft: 'auto' }}>

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { View, Modal } from 'react-native'
 import { TTSengine } from '../../components/Tts'
-import { currentUser } from '../../meteor/currentUser'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from '../../components/ActionButton'
 import { callMeteor } from '../../meteor/call'
@@ -9,7 +8,6 @@ import { Log } from '../../infrastructure/Log'
 import { deleteAccount } from '../../meteor/deleteAccount'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
-import { Layout } from '../../constants/Layout'
 import { AuthContext } from '../../contexts/AuthContext'
 
 /**
@@ -49,7 +47,8 @@ export const AccountInfo = () => {
         setCodes(restore.split('-')) // TODO config via env
       }
       setModalVisible(true)
-    } catch (e) {
+    }
+    catch (e) {
       console.error(e)
     }
   }
@@ -64,7 +63,6 @@ export const AccountInfo = () => {
       failure: error => Log.error(error)
     })
   }
-
 
   return (
     <View style={{ alignItems: 'center' }}>
@@ -81,12 +79,12 @@ export const AccountInfo = () => {
           <View style={styles.codes}>
             {renderCodes()}
           </View>
-          <ActionButton icon={'times'} text={t('actions.close')} onPress={() => setModalVisible(!modalVisible)} />
+          <ActionButton icon='times' text={t('actions.close')} onPress={() => setModalVisible(!modalVisible)} />
         </View>
       </Modal>
 
       <ActionButton text='löschen' onPress={deleteMeteorAccount} />
-      <ActionButton icon={'sign-out-alt'} text={t('actions.signOut')} onPress={handleSignOut} />
+      <ActionButton icon='sign-out-alt' text={t('actions.signOut')} onPress={handleSignOut} />
     </View>
   )
 }

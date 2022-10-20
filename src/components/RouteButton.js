@@ -1,9 +1,8 @@
 import React from 'react'
-import { Alert, StyleSheet } from 'react-native'
+import { Alert } from 'react-native'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from './ActionButton'
-
 
 /**
  * RouteButton is an ActionButton with a default handler
@@ -14,7 +13,7 @@ import { ActionButton } from './ActionButton'
  * @category Components
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.waitForSpeech It throws an alert that tts is still speaking and prevents the navigation, if false the tts is stopped (Default 'false')
- * @param ActionButton.props
+ * @augments {ActionButton}
  * @component
  * @returns {JSX.Element}
  */
@@ -26,12 +25,12 @@ const RouteButton = props => {
       TTSengine.isSpeaking
         ? Alert.alert(t('alert.title'), t('alert.navText'))
         : props.handleScreen()
-    } else {
+    }
+    else {
       TTSengine.stop()
       props.handleScreen()
     }
   }
-
 
   return (<ActionButton {...props} onPress={navigationHandler} />)
 }

@@ -1,11 +1,10 @@
-import React, { useReducer, useState } from 'react'
+import React, { useReducer } from 'react'
 import { ScrollView, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { TTSengine } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
-import { Confirm } from '../../components/Confirm'
 import { useLegal } from '../../hooks/useLegal'
 import { LeaLogo } from '../../components/images/LeaLogo'
 import { Units } from '../../utils/Units'
@@ -22,7 +21,7 @@ const reducer = (prevState, nextState) => {
     case 'terms':
       return {
         ...prevState,
-        termsAndConditionsIsChecked: nextState.terms,
+        termsAndConditionsIsChecked: nextState.terms
       }
     case 'highlight':
       return {
@@ -58,7 +57,7 @@ const TermsAndConditionsScreen = props => {
 
   const renderTCText = () => termsAndConditions
     .map((text, index) => (
-      <Tts style={styles.paragraph} text={text} block={true} key={index} align="flex-start"/>
+      <Tts style={styles.paragraph} text={text} block key={index} align='flex-start' />
     ))
 
   const handleAction = (route) => {
@@ -70,15 +69,16 @@ const TermsAndConditionsScreen = props => {
 
   return (
     <>
-      <LeaLogo style={styles.logo}/>
+      <LeaLogo style={styles.logo} />
 
       <View style={styles.container}>
         <Tts
           style={styles.paragraph}
           text={t('TandCScreen.text')}
-          id="TandCScreen.text"
-          block={true}
-          align="center"/>
+          id='TandCScreen.text'
+          block
+          align='center'
+        />
 
         <ScrollView contentContainerStyle={styles.tcContainer}>
           {renderTCText()}
@@ -86,26 +86,27 @@ const TermsAndConditionsScreen = props => {
 
         <View style={styles.checkBoxes}>
           <Checkbox
-            id="TandCScreen.checkBoxText"
+            id='TandCScreen.checkBoxText'
             text={t('TandCScreen.checkBoxText')}
             highlight={highlightCheckbox && Colors.danger}
             checked={termsAndConditionsIsChecked}
             checkedColor={Colors.secondary}
             uncheckedColor={Colors.gray}
-            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}/>
+            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
+          />
         </View>
         <View style={styles.decisionContainer}>
           <RouteButton
             title={t('TandCScreen.newUser')}
-            align="center"
-            block={true}
+            align='center'
+            block
             containerStyle={{ flex: 1 }}
             handleScreen={() => handleAction('registration')}
           />
           <RouteButton
             title={t('TandCScreen.restoreWithCode')}
-            align="center"
-            block={true}
+            align='center'
+            block
             containerStyle={{ flex: 1 }}
             handleScreen={() => handleAction('restore')}
           />
