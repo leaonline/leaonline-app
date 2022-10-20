@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View, Pressable } from 'react-native'
 import { Icon } from 'react-native-elements'
-import TTSText from './TTSText'
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { LeaText } from './LeaText'
 
 /** @private **/
 let Speech = null
@@ -12,7 +12,13 @@ let Speech = null
 /** @private stylesheet **/
 const styles = createStyleSheet({
   body: {
-    flexDirection: 'row'
+    flex: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  text: {
+
   }
 })
 
@@ -29,9 +35,11 @@ const runHandlers = name => {
  * @param {string} props.text: The displayed and spoken text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
- * @param {string} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary  (examples in ./constants/Colors.js)
- * @param {string} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples in ./constants/Colors.js)
- * @param {string} props.align: The parameter to change the text alignment ('left', 'right', 'center', 'justify')
+ * @param {boolean=} props.block: Makes the container flexGrow. If this causes problems, use style instead.
+ * @param {boolean=} props.disabled: Makes the button disabled
+ * @param {string=} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary  (examples in ./constants/Colors.js)
+ * @param {string=} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples in ./constants/Colors.js)
+ * @param {string=} props.activeIconColor: The color of the icon when speaking is active
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {string} props.fontStyle: The parameter to change the font style of the text. Default: 'normal' ('italic')
@@ -49,7 +57,8 @@ const ttsComponent = props => {
   const [speakingId, setSpeakingId] = useState(0)
   const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.secondary)
 
-  const getIdleColor = () => props.color || Colors.secondary
+  const getIdleIconColor = () => props.iconColor || props.color || Colors.secondary
+  const getIdleTextColor = () => props.color || Colors.secondary
   const debug = props.debug || TTSengine.debug
     ? (...args) => console.debug(`[TTS](${props.id}):`, ...args)
     : () => {}
@@ -72,7 +81,7 @@ const ttsComponent = props => {
   useEffect(() => {
     if (isDone) {
       debug('reset after done')
-      setIconColor(getIdleColor())
+      setIconColor(getIdleIconColor())
       setIsSpeaking(false)
       setSpeakingId(0)
     }
@@ -119,7 +128,7 @@ const ttsComponent = props => {
    */
   const stopSpeak = () => {
     debug('stop')
-    setIconColor(getIdleColor())
+    setIconColor(getIdleIconColor())
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
@@ -132,7 +141,7 @@ const ttsComponent = props => {
     debug('start')
     setIsSpeaking(true)
     setSpeakingId(props.id)
-    setIconColor(Colors.success)
+    setIconColor(props.activeIconColor ?? Colors.primary)
     if (props.onStart) {
       props.onStart({ isDone, isSpeaking, speakingId })
     }
@@ -142,34 +151,38 @@ const ttsComponent = props => {
    * Displays the spoken text if "dontShowText" is false.
    */
   const displayedText = () => {
-    if (!props.dontShowText) {
-      // color always defaults to secondary and align always to left
-      const styleProps = {
-        color: getIdleColor(),
-        flexShrink: props.shrink || 1,
-        fontSize: props.fontSize || 18,
-        textAlign: props.align,
-        paddingTop: props.paddingTop || 8,
-        fontStyle: props.fontStyle || 'normal'
-      }
+    if (props.dontShowText) { return null }
 
-      return (<TTSText style={styleProps} text={props.text} />)
+    // color always defaults to secondary
+    const styleProps = { color: getIdleTextColor(), marginLeft: 10 }
+
+    if (props.block) {
+      styleProps.flex = 1
+      styleProps.flexGrow = 1
     }
+
+    return (<LeaText style={styleProps}>{props.text}</LeaText>)
   }
 
   const ttsContainerStyle = { ...styles.body }
   if (props.align) {
     ttsContainerStyle.alignItems = props.align
   }
+  if (props.style) {
+    Object.assign(ttsContainerStyle, props.style)
+  }
+  const iconSize = props.smallButton ? 20 : 30
+
   return (
     <View style={ttsContainerStyle}>
       <Pressable
-        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
-      >
+        disabled={props.disabled}
+        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}>
         <Icon
           testID={props.id}
-          reverse color={iconColor}
-          size={props.smallButton ? 15 : 20}
+          color={props.disabled ? Colors.gray : iconColor}
+          size={iconSize}
+          style={{padding: 5}}
           name='volume-up'
           type='font-awesome-5'
         />
@@ -214,7 +227,7 @@ export const TTSengine = {
     handlers[name].push(fn)
   },
   stop () {
-    Speech.stop()
+    return Speech.stop()
   },
   availableVoices: null,
   isSpeaking: false,
@@ -277,3 +290,5 @@ const loadVoices = (counter, onComplete) => {
     }
   }, (counter ?? 1) * 300);
 }
+
+export const useTts = () => ({ Tts: ttsComponent })

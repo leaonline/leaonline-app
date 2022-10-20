@@ -1,13 +1,9 @@
 import React from 'react'
 import { Text } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import { Units } from '../utils/Units'
-const styles = createStyleSheet({
-  default: {
-    fontFamily: 'semicolon',
-    fontSize: 18 * Units.vw
-  }
-})
+import { mergeStyles } from '../styles/mergeStyles'
+import { Layout } from '../constants/Layout'
+
 
 /**
  * LeaText is a component ... //TODO
@@ -18,6 +14,17 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  * @constructor
  */
-const LeaText = props => <Text style={{ ...styles.default, ...(props.style) }}>{props.children}</Text>
+export const LeaText = props => {
+  const style = mergeStyles(styles.default, props.style)
+  return (
+    <Text
+      textBreakStrategy={'highQuality'}
+      android_hyphenationFrequency={'full'}
+      style={style}>
+      {props.children}
+    </Text>)
+}
 
-export default LeaText
+const styles = createStyleSheet({
+  default: Layout.defaultFont()
+})
