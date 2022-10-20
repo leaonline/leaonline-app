@@ -164,7 +164,7 @@ Users.methods.restore = {
       const update = {}
       if (hasVoice) { update.voice = voice }
       if (hasSpeed) { update.speed = speed }
-      Meteor.users.update(user._id, { $set: update})
+      Meteor.users.update(user._id, { $set: update })
     }
 
     return Accounts._loginUser(this, user._id)
