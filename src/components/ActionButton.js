@@ -16,9 +16,11 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
  * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
+ * @param {boolean=} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
+ * @param {boolean=} props.block Display in block mode, where the button stretches over full h-space
  * @param {object=} props.containerStyle Applies / overrides additional container styles
- * @inheritDoc {LeaButton}
+ * @param {object=} props.buttonContainerStyle Applies / overrides additional button container styles
+ * @extends LeaButton
  * @component
  * @returns {JSX.Element}
  */
@@ -29,8 +31,11 @@ export const ActionButton = props => {
     if (skipTts) { return null }
 
     const ttsText = props.tts || props.text || props.title
+    const iconColor = props.iconColor ?? props.color ?? Colors.primary
+    const iconActiveColor = props.iconActiveColor ?? Colors.secondary
+
     return (
-      <Tts text={ttsText} color={props.color || Colors.primary} id={`${ttsText}-tts`}  dontShowText />
+      <Tts text={ttsText} activeIconColor={iconActiveColor} iconColor={iconColor} color={props.color || Colors.primary} id={`${ttsText}-tts`}  dontShowText />
     )
   }
 
@@ -43,11 +48,12 @@ export const ActionButton = props => {
     titleStyle.color = Colors.light
   }
   */
-
+  const blockStyle = props.block ? { flexGrow: 1 } : undefined
   const buttonProps = {
     ...props,
     title: props.title || props.text || props.tts,
-    buttonStyle: mergeStyles(styles.button, props.buttonStyle)
+    buttonStyle: mergeStyles(styles.button, props.buttonStyle),
+    containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
@@ -69,9 +75,12 @@ const Tts = TTSengine.component()
 const styles = createStyleSheet({
   container: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   button: {
     width: '100%'
+  },
+  buttonContainer: {
+    marginLeft: 10,
   }
 })

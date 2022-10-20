@@ -21,6 +21,7 @@ import { Layout } from '../constants/Layout'
  * @param props.color {string=} Optional color to apply
  * @param props.titleStyle {object=} Optional title styles overrides
  * @param props.buttonStyle {object=} Optional button style overrides
+ * @param props.containerStyle {object=} Optional container style overrides
  * @param props.icon {string=} Optional icon to display
  * @param props.iconColor {string=} Optional icon color to apply
  * @param props.iconSize {number=} Optional icon size
@@ -39,19 +40,22 @@ export const LeaButton = props => {
         size={props.iconSize || defaults.icon.size}
         name={props.icon}
         type={defaults.icon.type}
+        style={styles.icon}
       />
     )
   }
 
   const titleStyle = mergeStyles(styles.title, props.titleStyle)
   const buttonStyle = mergeStyles(styles.button, props.buttonStyle)
-
+  const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
     <Button
       title={props.title}
       titleStyle={titleStyle}
       buttonStyle={buttonStyle}
-      containerStyle={styles.container}
+      disabledStyle={styles.disabled}
+      containerStyle={containerStyle}
+      disabled={props.disabled}
       type="outline"
       onPress={props.onPress}
       icon={renderIcon()}
@@ -82,15 +86,23 @@ const styles = createStyleSheet({
   button: {
     backgroundColor: Colors.white,
     ...Layout.button(),
-    ...Layout.dropShadow()
+    ...Layout.dropShadow({ android: false })
   },
   title: {
     color: Colors.primary,
-    ...Layout.defaultFont()
+    ...Layout.defaultFont(),
+    flexGrow: 1
   },
   container: {
+    ...Layout.dropShadow({ ios: false }),
+    borderRadius: 15,
     borderWidth: 0,
     overflow: 'visible'
   },
-  icon: {}
+  disabled: {
+    opacity: 0.5
+  },
+  icon: {
+    marginLeft: 7
+  }
 })

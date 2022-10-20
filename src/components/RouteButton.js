@@ -14,7 +14,7 @@ import { ActionButton } from './ActionButton'
  * @category Components
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean} props.waitForSpeech It throws an alert that tts is still speaking and prevents the navigation, if false the tts is stopped (Default 'false')
- * @inheritDoc {ActionButton}
+ * @param ActionButton.props
  * @component
  * @returns {JSX.Element}
  */

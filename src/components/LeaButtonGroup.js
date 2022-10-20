@@ -57,8 +57,7 @@ const styles = createStyleSheet({
     minHeight: 50,
     ...Layout.button(),
     ...Layout.dropShadow(),
-    overflow: 'visible',
-    borderWidth: 0
+    overflow: 'visible'
   },
   textStyle: {
     ...Layout.defaultFont()
