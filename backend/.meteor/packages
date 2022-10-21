@@ -45,7 +45,7 @@ accounts-password@2.3.1
 #========================================
 # COLLECTIONS
 #========================================
-aldeed:collection2
+aldeed:collection2@3.5.0!
 dburles:mongo-collection-instances
 leaonline:collection-factory
 
