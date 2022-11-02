@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import {
   View,
-  SafeAreaView,
   ScrollView,
   Platform,
   KeyboardAvoidingView,
@@ -10,115 +9,27 @@ import {
 } from 'react-native'
 import { Log } from '../../infrastructure/Log'
 import { Layout } from '../../constants/Layout'
-import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
-import { Config } from '../../env/Config'
-import { LinearProgress, Icon } from 'react-native-elements'
+import { useContentElementFactory } from '../../components/factories/UnitContentElementFactory'
+import { Icon } from 'react-native-elements'
 import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadUnitData } from './loadUnitData'
-import { Loading } from '../../components/Loading'
 import { ActionButton } from '../../components/ActionButton'
 import { useTranslation } from 'react-i18next'
 import { completeUnit } from './completeUnit'
 import { getScoring } from '../../scoring/getScoring'
-import { Navbar } from '../../components/Navbar'
-import { ProfileButton } from '../../components/ProfileButton'
 import { Confirm } from '../../components/Confirm'
 import { getDimensionColor } from './getDimensionColor'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sendResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
-import { TTSengine } from '../../components/Tts'
-import { ErrorMessage } from '../../components/ErrorMessage'
+import { useTts } from '../../components/Tts'
 import { LeaText } from '../../components/LeaText'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import { ScreenBase } from '../BaseScreen'
+import { CurrentProgress } from '../../components/CurrentProgress'
 import './registerComponents'
-
-const Tts = TTSengine.component()
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  container: Layout.containter(),
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  scrollView: {
-    marginHorizontal: 20,
-    width: '100%'
-  },
-  safeAreaView: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center'
-  },
-  elements: {
-    alignItems: 'center',
-    flex: 1
-  },
-  element: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  navigationButtons: {
-    flexDirection: 'row'
-  },
-  routeButtonContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center'
-  },
-  unitCard: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    margin: 10,
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderColor: '#fff',
-    // dropshadow - ios only
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    // dropshadow - android only
-    elevation: 5
-  },
-  pageText: {
-    backgroundColor: Colors.dark,
-    color: Colors.light,
-    padding: 3,
-    borderColor: Colors.dark
-  },
-  allTrue: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    alignContent: 'flex-start',
-    justifyContent: 'space-between',
-    flexShrink: 1,
-    borderColor: Colors.success,
-    backgroundColor: '#eaffee',
-    borderWidth: 4
-  },
-  // navbar
-  confirm: {
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: Colors.dark
-  },
-  progressContainer: {
-    flex: 1,
-    flexGrow: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center'
-  },
-  progressBar: { height: 16, borderRadius: 16, borderWidth: 1 }
-})
 
 const log = Log.create('UnitScreen')
 
@@ -160,14 +71,73 @@ const UnitScreen = props => {
     }
   }, [])
 
-  const { t } = useTranslation()
-  const [page, setPage] = useState(0)
   const responseRef = useRef({})
   const scoreRef = useRef({})
   const scrollViewRef = useRef()
   const [scored, setScored] = useState()
   const [allTrue, setAllTrue] = useState()
-  const docs = loadDocs(loadUnitData)
+  const [session, sessionActions] = useContext(AppSessionContext)
+  const { unitSet, dimension } = session
+  const docs = loadDocs(() => loadUnitData(unitSet))
+  const { t } = useTranslation()
+  const { Tts } = useTts()
+
+  const page = session.page || 0
+
+  // ---------------------------------------------------------------------------
+  // Navigation updates
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    const current = session.progress ?? 0
+    const max = session.unitSet?.progress ?? 1
+    const value = (current + 1) / (max + 1)
+
+    props.navigation.setOptions({
+      headerTitle: () => (<CurrentProgress value={value} dimension={session.dimension}/>)
+    })
+  }, [session.progress, session.unitSet])
+
+  useEffect(() => {
+    //If users attempt to cancel we surely first show a modal
+    // and ask if cancelling was intended.
+    const cancelUnit = async () => {
+      // todo send cancel information silently to server
+
+      await sessionActions.multi({
+        unit: null,
+        unitSet: null,
+        progress: null,
+        page: null
+      })
+
+      const navState = props.navigation.getState()
+      const dimensionRoute = navState.routes.find(r => r.name === 'dimension')
+
+      if (!dimensionRoute) {
+        props.navigation.navigate('dimension')
+      }
+      else {
+        props.navigation.navigate({ key: dimensionRoute.key })
+      }
+    }
+
+    props.navigation.setOptions({
+      headerLeft: () => (
+        <Confirm
+          id="unit-screen-confirm"
+          pressable={true}
+          question={t('unitScreen.abort.question')}
+          approveText={t('unitScreen.abort.abort')}
+          denyText={t('unitScreen.abort.continue')}
+          onApprove={() => cancelUnit()}
+          onDeny={() => {}}
+          icon="times"
+          tts={false}
+          style={styles.confirm}
+        />
+      )
+    })
+  }, [])
 
   // ---------------------------------------------------------------------------
   // Prevent backwards functionality
@@ -190,109 +160,24 @@ const UnitScreen = props => {
     return () => props.navigation.removeListener('beforeRemove', beforeGoingBack)
   }, [props.navigation])
 
-  /**
-   * Renders the shortCode of the current unit or unitSet if
-   * Config.debug.unit is true.
-   */
-  const renderDebugTitle = () => {
-    if (!Config.debug.unit) {
-      return null
-    }
-    const title = unitDoc
-      ? unitDoc.shortCode
-      : unitSetDoc.shortCode
-    return (<LeaText>{title}</LeaText>)
-  }
-
-  /**
-   * Renders the navbar. Navbar needs to be available early on, because
-   * we also render it when we show <Loading> or <ErrorMessage>
-   */
-  const renderNavBar = () => {
-    return (
-      <Navbar>
-        <Confirm
-          id='unit-screen-confirm'
-          question={t('unitScreen.abort.question')}
-          approveText={t('unitScreen.abort.abort')}
-          denyText={t('unitScreen.abort.continue')}
-          onApprove={() => cancelUnit()}
-          onDeny={() => {}}
-          icon='times'
-          tts={false}
-          style={styles.confirm}
-        />
-        <View style={styles.progressContainer}>
-          <LinearProgress
-            style={{ borderColor: dimensionColor, ...styles.progressBar }}
-            trackColor='transparent'
-            color={dimensionColor} value={0.5} variant='determinate'
-          />
-          {renderDebugTitle()}
-        </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-      </Navbar>
-    )
+  // ---------------------------------------------------------------------------
+  // SKip early
+  // ---------------------------------------------------------------------------
+  if (!docs.data || docs.error) {
+    return (<ScreenBase {...docs} style={styles.container} />)
   }
 
   // ---------------------------------------------------------------------------
-  // skip early until docs are fully loaded
+  // Used to dynamically render elements
   // ---------------------------------------------------------------------------
-
-  if (!docs || docs.loading) {
-    return (
-      <View style={styles.container}>
-        {renderNavBar()}
-        <Loading />
-      </View>
-    )
-  }
-
-  const nodata = docs.data === null || docs.data === undefined
-  const loadFailed = !docs.loading && nodata
-
-  if (docs.error || loadFailed) {
-    log('no data available, display fallback', { docs })
-    return (
-      <View style={styles.container}>
-        {renderNavBar()}
-        <ErrorMessage
-          error={docs.error}
-          message={t('unitScreen.notAvailable')}
-          label={t('actions.back')}
-          onConfirm={() => props.navigation.navigate('Map')}
-        />
-      </View>
-    )
-  }
-
+  const { Renderer } = useContentElementFactory()
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
   const showCorrectResponse = scored === page
-  const dimensionColor = getDimensionColor(unitSetDoc.dimension)
+  const dimensionColor = getDimensionColor(dimension)
 
   // ---------------------------------------------------------------------------
   // NAVIGATION
   // ---------------------------------------------------------------------------
-
-  /**
-   * If users attempt to cancel we surely first show a modal
-   * and ask if cancelling was intended.
-   * This method is called, when users have approved to cancel
-   * @return {Promise<void>}
-   */
-  const cancelUnit = async () => {
-    // todo send cancel information silently to server
-
-    const state = props.navigation.getState()
-    const dimensionRoute = state.routes.find(r => r.name === 'Dimension')
-
-    if (!dimensionRoute) {
-      props.navigation.navigate('Dimension')
-    }
-    else {
-      props.navigation.navigate({ key: dimensionRoute.key })
-    }
-  }
 
   /**
    * Completes the unit and awaits the server response.
@@ -301,10 +186,10 @@ const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
-
+    sessionActions.progress(session.progress  + 1)
     return nextUnitId
-      ? props.navigation.push('Unit')
-      : props.navigation.navigate('Complete')
+      ? props.navigation.push('unit')
+      : props.navigation.navigate('complete')
   }
 
   // ---------------------------------------------------------------------------
@@ -335,19 +220,15 @@ const UnitScreen = props => {
           <KeyboardAvoidingView
             key={index}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
+            style={styles.itemContainer}
           >
-            <UnitContentElementFactory.Renderer {...elementData} />
+            <Renderer {...elementData} />
           </KeyboardAvoidingView>
         )
       }
 
       // all other elements are simply "display" elements
-      return (
-        <View key={index} style={styles.element}>
-          <UnitContentElementFactory.Renderer key={index} {...elementData} />
-        </View>
-      )
+      return (<Renderer key={index} {...elementData} />)
     })
   }
 
@@ -361,27 +242,21 @@ const UnitScreen = props => {
   if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
     log('render story', unitSetDoc.shortCode)
     return (
-      <View style={styles.container}>
-        <SafeAreaView style={styles.safeAreaView}>
-          <ScrollView
-            ref={scrollViewRef} style={styles.scrollView}
-            keyboardShouldPersistTaps='always'
-          >
-            {renderNavBar()}
-            <View style={styles.elements}>
-              {renderContent(unitSetDoc.story)}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
+      <ScreenBase {...docs} style={styles.container}>
+        <ScrollView ref={scrollViewRef} style={styles.scrollView} keyboardShouldPersistTaps="always">
+          <View style={styles.unitCard}>
+            {renderContent(unitSetDoc.story)}
+          </View>
+        </ScrollView>
 
         {/* -------- continue button ---------  */}
-        <View style={styles.navigationButtons}>
-          <ActionButton
-            tts={t('unitScreen.story.continue')}
-            color={dimensionColor} onPress={finish}
-          />
-        </View>
-      </View>
+        <ActionButton
+          block={true}
+          tts={t('unitScreen.story.continue')}
+          color={dimensionColor}
+          onPress={finish}
+        />
+      </ScreenBase>
     )
   }
 
@@ -416,34 +291,34 @@ const UnitScreen = props => {
     const responseDoc = {}
 
     /*
-      userId: String,
-      sessionId: String,
-      unitSetId: String,
-      unitId: String,
-      dimensionId: String,
-      timeStamp: Date,
-      page: Number,
-      itemId: String,
-      itemType: String,
-      scores: Array,
-      'scores.$': Object,
-      'scores.$.competency': Array,
-      'scores.$.competency.$': String,
-      'scores.$.correctResponse': Array,
-      'scores.$.correctResponse.$': {
-        type: oneOf(String, Integer, RegExp)
-      },
-      'scores.$.isUndefined': Boolean,
-      'scores.$.score': Boolean,
-      'scores.$.value': Array,
-      'scores.$.value.$': {
-        type: oneOf(String, Integer)
-      }
-  */
+     userId: String,
+     sessionId: String,
+     unitSetId: String,
+     unitId: String,
+     dimensionId: String,
+     timeStamp: Date,
+     page: Number,
+     itemId: String,
+     itemType: String,
+     scores: Array,
+     'scores.$': Object,
+     'scores.$.competency': Array,
+     'scores.$.competency.$': String,
+     'scores.$.correctResponse': Array,
+     'scores.$.correctResponse.$': {
+     type: oneOf(String, Integer, RegExp)
+     },
+     'scores.$.isUndefined': Boolean,
+     'scores.$.score': Boolean,
+     'scores.$.value': Array,
+     'scores.$.value.$': {
+     type: oneOf(String, Integer)
+     }
+     */
     responseDoc.sessionId = sessionDoc._id
     responseDoc.unitSetId = unitSetDoc._id
     responseDoc.unitId = unitDoc._id
-    responseDoc.dimensionId = unitSetDoc.dimension
+    responseDoc.dimensionId = dimension._id
     responseDoc.page = page
     responseDoc.itemId = data.contentId
     responseDoc.itemType = data.subtype
@@ -476,7 +351,10 @@ const UnitScreen = props => {
     }
   }
 
-  const nextPage = () => setPage(page + 1)
+  const nextPage = () => sessionActions.multi({
+    page: page + 1,
+    progress: session.progress + 1
+  })
 
   const renderFooter = () => {
     if (keyboardStatus === 'shown') {
@@ -492,10 +370,11 @@ const UnitScreen = props => {
   const renderTaskPageAction = () => {
     // if the page has not been checked yet we render a check-action button
     if (!showCorrectResponse) {
-      log('render check button')
       return (
         <ActionButton
-          tts={t('unitScreen.actions.check')} color={dimensionColor}
+          block={true}
+          tts={t('unitScreen.actions.check')}
+          color={dimensionColor}
           onPress={checkScore}
         />
       )
@@ -510,6 +389,7 @@ const UnitScreen = props => {
       log('render next page button')
       return (
         <ActionButton
+          block={true}
           tts={t('unitScreen.actions.next')} color={dimensionColor}
           onPress={nextPage}
         />
@@ -519,6 +399,7 @@ const UnitScreen = props => {
     log('render complete unit button')
     return (
       <ActionButton
+        block={true}
         tts={t('unitScreen.actions.complete')}
         color={dimensionColor} onPress={finish}
       />
@@ -532,66 +413,131 @@ const UnitScreen = props => {
 
     return (
       <View style={{ ...styles.unitCard, ...styles.allTrue }}>
-        <Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')} />
+        <Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')}/>
         <Icon
-          testID='alltrue-icon'
+          testID="alltrue-icon"
           reverse
           color={Colors.success}
           size={20}
-          name='thumbs-up'
-          type='font-awesome-5'
+          name="thumbs-up"
+          type="font-awesome-5"
         />
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaView}>
-        {renderNavBar()}
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          keyboardShouldPersistTaps='always'
-        >
+    <ScreenBase {...docs} style={styles.container}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        keyboardShouldPersistTaps="always"
+      >
 
-          {/* 1. PART STIMULI */}
-          <View style={styles.unitCard}>
-            {renderContent(unitDoc.stimuli)}
-          </View>
+        {/* 1. PART STIMULI */}
+        <View style={styles.unitCard}>
+          {renderContent(unitDoc.stimuli)}
+        </View>
 
-          {/* 2. PART INSTRUCTIONS */}
-          <View style={{ ...styles.unitCard, paddingTop: 0 }}>
-            <LeaText style={styles.pageText}>
-              <Icon
-                testID='info-icon'
-                reverse
-                color={Colors.dark}
-                size={8}
-                name='info'
-                type='font-awesome-5'
-              />
-            </LeaText>
-            {renderContent(unitDoc.instructions)}
-          </View>
+        {/* 2. PART INSTRUCTIONS */}
+        <View style={{ ...styles.unitCard, paddingTop: 0 }}>
+          <LeaText style={styles.pageText}>
+            <Icon
+              testID="info-icon"
+              reverse
+              color={Colors.dark}
+              size={10}
+              name="info"
+              type="font-awesome-5"
+            />
+          </LeaText>
+          {renderContent(unitDoc.instructions)}
+        </View>
 
-          {/* 3. PART TASK PAGE CONTENT */}
-          <View style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
-            <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
+        {/* 3. PART TASK PAGE CONTENT */}
+        <View  style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
+          <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
-            {renderContent(unitDoc.pages[page].instructions)}
+          {renderContent(unitDoc.pages[page].instructions)}
 
-            {renderContent(unitDoc.pages[page].content)}
-          </View>
+          {renderContent(unitDoc.pages[page].content)}
+        </View>
 
-          {renderAllTrue()}
+        {renderAllTrue()}
 
-        </ScrollView>
-      </SafeAreaView>
-      {/* -------- continue button ---------  */}
+      </ScrollView>
       {renderFooter()}
-    </View>
+    </ScreenBase>
   )
 }
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: {
+    ...Layout.container({ margin: '2%' })
+  },
+  itemContainer: {
+    flex: 1,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  scrollView: {
+    width: '100%',
+  },
+  element: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  navigationButtons: {
+    paddingTop: 7,
+    borderTopWidth: 0.5,
+    borderTop: Colors.gray,
+    alignItems: 'stretch'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
+  },
+  unitCard: {
+    ...Layout.container(),
+    margin: 0,
+    backgroundColor: Colors.white,
+    borderRadius: 10,
+    padding: 5,
+    borderColor: Colors.white,
+    ...Layout.dropShadow(),
+    overflow: 'visible',
+    marginTop: 2,
+    marginBottom: 10,
+    marginLeft: 8,
+    marginRight: 8
+  },
+  pageText: {
+    alignSelf: 'center',
+    backgroundColor: Colors.dark,
+    color: Colors.light,
+    padding: 3,
+    borderColor: Colors.dark
+  },
+  allTrue: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    alignContent: 'flex-start',
+    justifyContent: 'space-between',
+    flexShrink: 1,
+    borderColor: Colors.success,
+    backgroundColor: '#eaffee',
+    borderWidth: 4
+  },
+  // navbar
+  confirm: {
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: Colors.dark
+  }
+})
 
 export default UnitScreen

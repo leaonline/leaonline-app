@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, Dimensions } from 'react-native'
+import { Image, Dimensions, View } from 'react-native'
 import { Log } from '../../../infrastructure/Log'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
@@ -7,14 +7,7 @@ import { ContentServer } from '../../../remotes/ContentServer'
 
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug')
-const styles = createStyleSheet({
-  image: {
-    width: win.width,
-    height: win.width / 2,
-    resizeMode: 'contain',
-    alignSelf: 'center'
-  }
-})
+
 
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
@@ -43,9 +36,23 @@ export const ImageRenderer = props => {
   const loader = () => loadComplete ? null : (<Loading />)
 
   return (
-    <>
+    <View style={styles.imageContainer}>
       {loader()}
-      <Image {...imageProps} />
-    </>
+      <Image {...imageProps} resizeMode='cover' />
+    </View>
   )
 }
+
+const styles = createStyleSheet({
+  image: {
+    flex: 1,
+    width: win.width,
+    height: win.width / 2,
+    alignSelf: 'stretch',
+    resizeMode: 'cover',
+    marginLeft: 40
+  },
+  imageContainer: {
+    flexDirection: 'row'
+  }
+})

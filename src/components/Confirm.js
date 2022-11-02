@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { View, Modal } from 'react-native'
+import { View, Modal, Pressable } from 'react-native'
 import { ActionButton } from './ActionButton'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { useTts } from './Tts'
 import Colors from '../constants/Colors'
+import { Icon } from 'react-native-elements'
 
 /**
  * A base-modal with confirm actions and respective state and callbacks.
@@ -45,16 +46,28 @@ export const Confirm = props => {
     }, 250)
   }
 
-  const renderIcon = () => {
+  const renderButton = () => {
     if (props.noButton) {
       return null
     }
-    if (props.noConfirm) {
-      return <ActionButton {...fordwardedProps} onPress={() => onResponse(onApprove)} />
+
+    const onPress = props.noConfirm
+      ? () => onResponse(onApprove)
+      : () => setModalOpen(true)
+
+    if (props.pressable) {
+      return (
+        <Pressable style={styles.buttonContainer} onPress={onPress}>
+          <Icon
+            name={props.icon} type="font-awesome-5" color={Colors.secondary}
+            style
+            size={18}
+          />
+        </Pressable>
+      )
     }
-    else {
-      return <ActionButton {...fordwardedProps} onPress={() => setModalOpen(true)} />
-    }
+
+    return (<ActionButton {...fordwardedProps} onPress={onPress} />)
   }
 
   const renderApprove = () => {
@@ -89,7 +102,7 @@ export const Confirm = props => {
           </View>
         </View>
       </Modal>
-      {renderIcon()}
+      {renderButton()}
     </>
   )
 }
@@ -123,5 +136,13 @@ const styles = createStyleSheet({
   modalText: {
     marginBottom: 15,
     textAlign: 'center'
+  },
+  buttonContainer: {
+    display: 'flex',
+    marginLeft: 'auto',
+    borderWidth: 1,
+    borderColor: Colors.secondary,
+    padding: 10,
+    borderRadius: 3
   }
 })

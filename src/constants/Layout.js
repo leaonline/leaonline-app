@@ -1,16 +1,26 @@
 import Colors from './Colors'
-import { PixelRatio } from 'react-native'
+import { Dimensions, PixelRatio } from 'react-native'
+
+const {width, height } = Dimensions.get('screen')
+const ratio = PixelRatio.get()
+const isLarge = width * ratio > 1300
 
 export const Layout = {}
 
+Layout.isLarge = () => isLarge
+
 Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
 
-Layout.containter = () => ({
+const defaultContainerMargin = isLarge
+  ? '8%'
+  : '3%'
+
+Layout.container = ({ margin = defaultContainerMargin } = {}) => ({
   flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 20
-  // marginTop: StatusBar.currentHeight
+  margin,
+  alignItems: 'stretch',
+  justifyItems: 'stretch',
+  justifyContent: 'space-around'
 })
 
 Layout.content = () => {

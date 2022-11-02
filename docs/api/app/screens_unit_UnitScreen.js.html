@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> screens/unit/UnitScreen.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="Achievements.html">Achievements</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="LeaButtonGroup.html">LeaButtonGroup</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li><li><a href="Select.html">Select</a></li><li><a href="UnitContentElementFactory.Renderer.html">Renderer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AppState">AppState</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#collections">collections</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#deleteAccount">deleteAccount</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#loadDocs">loadDocs</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MemoryStorage">MemoryStorage</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useLogin">useLogin</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="LeaLogo.html">LeaLogo</a></li><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>screens/unit/UnitScreen.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useRef } from 'react'
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard,
+  Vibration
+} from 'react-native'
+import { Log } from '../../infrastructure/Log'
+import { Layout } from '../../constants/Layout'
+import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
+import { Config } from '../../env/Config'
+import { LinearProgress, Icon } from 'react-native-elements'
+import Colors from '../../constants/Colors'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { loadDocs } from '../../meteor/loadDocs'
+import { loadUnitData } from './loadUnitData'
+import { Loading } from '../../components/Loading'
+import { ActionButton } from '../../components/ActionButton'
+import { useTranslation } from 'react-i18next'
+import { completeUnit } from './completeUnit'
+import { getScoring } from '../../scoring/getScoring'
+import { Navbar } from '../../components/Navbar'
+import { ProfileButton } from '../../components/ProfileButton'
+import { Confirm } from '../../components/Confirm'
+import { getDimensionColor } from './getDimensionColor'
+import { shouldRenderStory } from './shouldRenderStory'
+import { sendResponse } from './sendResponse'
+import { toArrayIfNot } from '../../utils/toArrayIfNot'
+import { TTSengine } from '../../components/Tts'
+import { ErrorMessage } from '../../components/ErrorMessage'
+import { LeaText } from '../../components/LeaText'
+import './registerComponents'
+
+const Tts = TTSengine.component()
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: Layout.containter(),
+  body: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  scrollView: {
+    marginHorizontal: 20,
+    width: '100%'
+  },
+  safeAreaView: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center'
+  },
+  elements: {
+    alignItems: 'center',
+    flex: 1
+  },
+  element: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  navigationButtons: {
+    flexDirection: 'row'
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
+  },
+  unitCard: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderColor: '#fff',
+    // dropshadow - ios only
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    // dropshadow - android only
+    elevation: 5
+  },
+  pageText: {
+    backgroundColor: Colors.dark,
+    color: Colors.light,
+    padding: 3,
+    borderColor: Colors.dark
+  },
+  allTrue: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    alignContent: 'flex-start',
+    justifyContent: 'space-between',
+    flexShrink: 1,
+    borderColor: Colors.success,
+    backgroundColor: '#eaffee',
+    borderWidth: 4
+  },
+  // navbar
+  confirm: {
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: Colors.dark
+  },
+  progressContainer: {
+    flex: 1,
+    flexGrow: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  progressBar: { height: 16, borderRadius: 16, borderWidth: 1 }
+})
+
+const log = Log.create('UnitScreen')
+
+/**
+ * On this screen, the respective Unit is displayed and the users can interact
+ * with it, by solving the tasks on its pages.
+ *
+ * If a unit is completed and there is no next unit in the queue, it navigates
+ * the users to the {CompleteScreen}.
+ *
+ * If a next unit exists, it will load this next unit.
+ *
+ * On cancel, it navigates users back to the {MapScreen}.
+ *
+ * @category Screens
+ * @component
+ * @param props {object}
+ * @param props.navigation {object} navigation API
+ * @returns {JSX.Element}
+ */
+const UnitScreen = props => {
+  // We need to know the Keyboard state in order to show or hide elements.
+  // For example: In "editing" mode of a writing item we want to hide the "check" button.
+  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
+  const keyboardDidShow = () => setKeyboardStatus('shown')
+  const keyboardDidHide = () => {
+    setKeyboardStatus('hidden')
+    scrollViewRef.current?.scrollToEnd({ animated: true })
+  }
+
+  useEffect(() => {
+    const didShowSub = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
+    const didHideSub = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
+
+    // cleanup function
+    return () => {
+      didShowSub.remove()
+      didHideSub.remove()
+    }
+  }, [])
+
+  const { t } = useTranslation()
+  const [page, setPage] = useState(0)
+  const responseRef = useRef({})
+  const scoreRef = useRef({})
+  const scrollViewRef = useRef()
+  const [scored, setScored] = useState()
+  const [allTrue, setAllTrue] = useState()
+  const docs = loadDocs(loadUnitData)
+
+  // ---------------------------------------------------------------------------
+  // Prevent backwards functionality
+  // ---------------------------------------------------------------------------
+  // hitting the back-button should only be executed, when the modal has been
+  // confirmed. Otherwise we first trigger the modal.
+  useEffect(() => {
+    const beforeGoingBack = (e) => {
+      // GO_BACK is the action type from the device's back button
+      // where we launch the modal and prevent the event from firing
+      if (e.data.action.type === 'GO_BACK') {
+        e.preventDefault()
+        // trigger modal
+      }
+    }
+
+    props.navigation.addListener('beforeRemove', beforeGoingBack)
+
+    // remove listeners on destroy
+    return () => props.navigation.removeListener('beforeRemove', beforeGoingBack)
+  }, [props.navigation])
+
+  /**
+   * Renders the shortCode of the current unit or unitSet if
+   * Config.debug.unit is true.
+   */
+  const renderDebugTitle = () => {
+    if (!Config.debug.unit) {
+      return null
+    }
+    const title = unitDoc
+      ? unitDoc.shortCode
+      : unitSetDoc.shortCode
+    return (&lt;LeaText>{title}&lt;/LeaText>)
+  }
+
+  /**
+   * Renders the navbar. Navbar needs to be available early on, because
+   * we also render it when we show &lt;Loading> or &lt;ErrorMessage>
+   */
+  const renderNavBar = () => {
+    return (
+      &lt;Navbar>
+        &lt;Confirm
+          id='unit-screen-confirm'
+          question={t('unitScreen.abort.question')}
+          approveText={t('unitScreen.abort.abort')}
+          denyText={t('unitScreen.abort.continue')}
+          onApprove={() => cancelUnit()}
+          onDeny={() => {}}
+          icon='times'
+          tts={false}
+          style={styles.confirm}
+        />
+        &lt;View style={styles.progressContainer}>
+          &lt;LinearProgress
+            style={{ borderColor: dimensionColor, ...styles.progressBar }}
+            trackColor='transparent'
+            color={dimensionColor} value={0.5} variant='determinate'
+          />
+          {renderDebugTitle()}
+        &lt;/View>
+        &lt;ProfileButton onPress={() => props.navigation.navigate('Profile')} />
+      &lt;/Navbar>
+    )
+  }
+
+  // ---------------------------------------------------------------------------
+  // skip early until docs are fully loaded
+  // ---------------------------------------------------------------------------
+
+  if (!docs || docs.loading) {
+    return (
+      &lt;View style={styles.container}>
+        {renderNavBar()}
+        &lt;Loading />
+      &lt;/View>
+    )
+  }
+
+  const nodata = docs.data === null || docs.data === undefined
+  const loadFailed = !docs.loading &amp;&amp; nodata
+
+  if (docs.error || loadFailed) {
+    log('no data available, display fallback', { docs })
+    return (
+      &lt;View style={styles.container}>
+        {renderNavBar()}
+        &lt;ErrorMessage
+          error={docs.error}
+          message={t('unitScreen.notAvailable')}
+          label={t('actions.back')}
+          onConfirm={() => props.navigation.navigate('Map')}
+        />
+      &lt;/View>
+    )
+  }
+
+  const { unitSetDoc, unitDoc, sessionDoc } = docs.data
+  const showCorrectResponse = scored === page
+  const dimensionColor = getDimensionColor(unitSetDoc.dimension)
+
+  // ---------------------------------------------------------------------------
+  // NAVIGATION
+  // ---------------------------------------------------------------------------
+
+  /**
+   * If users attempt to cancel we surely first show a modal
+   * and ask if cancelling was intended.
+   * This method is called, when users have approved to cancel
+   * @return {Promise&lt;void>}
+   */
+  const cancelUnit = async () => {
+    // todo send cancel information silently to server
+
+    const state = props.navigation.getState()
+    const dimensionRoute = state.routes.find(r => r.name === 'Dimension')
+
+    if (!dimensionRoute) {
+      props.navigation.navigate('Dimension')
+    }
+    else {
+      props.navigation.navigate({ key: dimensionRoute.key })
+    }
+  }
+
+  /**
+   * Completes the unit and awaits the server response.
+   * Based on the returned route it either cycles into the next unit
+   * or navigates to the resulting route (usually complete screen).
+   */
+  const finish = async () => {
+    const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
+
+    return nextUnitId
+      ? props.navigation.push('Unit')
+      : props.navigation.navigate('Complete')
+  }
+
+  // ---------------------------------------------------------------------------
+  // RENDERING
+  // ---------------------------------------------------------------------------
+
+  /**
+   *  This is the generic content rendering method, which
+   *  applies to all content structure across units and unitSets
+   *  with their story pages.
+   *  Rendering of the elements is delegated to their respective
+   *  registered renderer using the {UnitContentElementFactory}
+   **/
+  const renderContent = (list) => {
+    if (!list?.length) { return null }
+
+    return list.map((element, index) => {
+      const elementData = { ...element }
+      elementData.dimensionColor = dimensionColor
+
+      // item elements are "interactive" beyond tts
+      // and require their own view and handlers
+      if (element.type === 'item') {
+        elementData.submitResponse = submitResponse
+        elementData.showCorrectResponse = showCorrectResponse
+        elementData.scoreResult = showCorrectResponse &amp;&amp; scoreRef.current[page]
+        return (
+          &lt;KeyboardAvoidingView
+            key={index}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+          >
+            &lt;UnitContentElementFactory.Renderer {...elementData} />
+          &lt;/KeyboardAvoidingView>
+        )
+      }
+
+      // all other elements are simply "display" elements
+      return (
+        &lt;View key={index} style={styles.element}>
+          &lt;UnitContentElementFactory.Renderer key={index} {...elementData} />
+        &lt;/View>
+      )
+    })
+  }
+
+  // ---------------------------------------------------------------------------
+  // STORY DISPLAY
+  // ---------------------------------------------------------------------------
+
+  // if this is the very beginning of this unit set AND
+  // we have a story to render, let's do it right now
+
+  if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
+    log('render story', unitSetDoc.shortCode)
+    return (
+      &lt;View style={styles.container}>
+        &lt;SafeAreaView style={styles.safeAreaView}>
+          &lt;ScrollView
+            ref={scrollViewRef} style={styles.scrollView}
+            keyboardShouldPersistTaps='always'
+          >
+            {renderNavBar()}
+            &lt;View style={styles.elements}>
+              {renderContent(unitSetDoc.story)}
+            &lt;/View>
+          &lt;/ScrollView>
+        &lt;/SafeAreaView>
+
+        {/* -------- continue button ---------  */}
+        &lt;View style={styles.navigationButtons}>
+          &lt;ActionButton
+            tts={t('unitScreen.story.continue')}
+            color={dimensionColor} onPress={finish}
+          />
+        &lt;/View>
+      &lt;/View>
+    )
+  }
+
+  // ---------------------------------------------------------------------------
+  // TASK DISPLAY
+  // ---------------------------------------------------------------------------
+  log('render unit', unitDoc._id, unitDoc.shortCode, 'page', page, 'checked', scored)
+
+  const submitResponse = async ({ responses, data }) => {
+    log('item submit', data.contentId, responses)
+    responseRef.current[page] = { responses, data }
+  }
+
+  const checkScore = async () => {
+    // get scoring method
+    const currentResponse = responseRef.current[page]
+    log('check score', { currentResponse })
+
+    if (!currentResponse || !currentResponse.data || !currentResponse.responses) {
+      throw new Error('Response always needs to exist')
+    }
+
+    const { responses, data } = currentResponse
+    const { type, subtype, value } = data
+    const itemDoc = { type, subtype, ...value }
+    const scoreResult = await getScoring(itemDoc, { responses })
+    scoreRef.current[page] = scoreResult
+
+    log('score', type, subtype, scoreResult.score)
+
+    // submit everything (in the background)
+    const responseDoc = {}
+
+    /*
+      userId: String,
+      sessionId: String,
+      unitSetId: String,
+      unitId: String,
+      dimensionId: String,
+      timeStamp: Date,
+      page: Number,
+      itemId: String,
+      itemType: String,
+      scores: Array,
+      'scores.$': Object,
+      'scores.$.competency': Array,
+      'scores.$.competency.$': String,
+      'scores.$.correctResponse': Array,
+      'scores.$.correctResponse.$': {
+        type: oneOf(String, Integer, RegExp)
+      },
+      'scores.$.isUndefined': Boolean,
+      'scores.$.score': Boolean,
+      'scores.$.value': Array,
+      'scores.$.value.$': {
+        type: oneOf(String, Integer)
+      }
+  */
+    responseDoc.sessionId = sessionDoc._id
+    responseDoc.unitSetId = unitSetDoc._id
+    responseDoc.unitId = unitDoc._id
+    responseDoc.dimensionId = unitSetDoc.dimension
+    responseDoc.page = page
+    responseDoc.itemId = data.contentId
+    responseDoc.itemType = data.subtype
+    responseDoc.scores = scoreResult.map(entry => {
+      // some items score single values, others multiple
+      // some items have single competencies, others multiple
+      // we therefore make all these properties to arrays
+      // to comply with the server's defined schema
+      const copy = { ...entry }
+      copy.competency = toArrayIfNot(copy.competency)
+      copy.correctResponse = toArrayIfNot(copy.correctResponse)
+      copy.value = toArrayIfNot(copy.value)
+      return copy
+    })
+
+    log('submit response to server', responseDoc)
+    await sendResponse({ responseDoc })
+
+    setScored(page)
+
+    // if all scores are true then we add another box
+    // with positive reinforcement
+    if (scoreResult.every(entry => entry.score)) {
+      setAllTrue(page)
+      Vibration.vibrate(500)
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+    }
+    else {
+      Vibration.vibrate(100)
+    }
+  }
+
+  const nextPage = () => setPage(page + 1)
+
+  const renderFooter = () => {
+    if (keyboardStatus === 'shown') {
+      return null
+    }
+    return (
+      &lt;View style={styles.navigationButtons}>
+        {renderTaskPageAction()}
+      &lt;/View>
+    )
+  }
+
+  const renderTaskPageAction = () => {
+    // if the page has not been checked yet we render a check-action button
+    if (!showCorrectResponse) {
+      log('render check button')
+      return (
+        &lt;ActionButton
+          tts={t('unitScreen.actions.check')} color={dimensionColor}
+          onPress={checkScore}
+        />
+      )
+    }
+
+    // if this page has been scored, we can display a "continue" button
+    // which either moves to the next page or completes the unit
+
+    const hasNextPage = page &lt; unitDoc.pages.length - 1
+
+    if (hasNextPage) {
+      log('render next page button')
+      return (
+        &lt;ActionButton
+          tts={t('unitScreen.actions.next')} color={dimensionColor}
+          onPress={nextPage}
+        />
+      )
+    }
+
+    log('render complete unit button')
+    return (
+      &lt;ActionButton
+        tts={t('unitScreen.actions.complete')}
+        color={dimensionColor} onPress={finish}
+      />
+    )
+  }
+
+  const renderAllTrue = () => {
+    if (allTrue !== page) {
+      return null
+    }
+
+    return (
+      &lt;View style={{ ...styles.unitCard, ...styles.allTrue }}>
+        &lt;Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')} />
+        &lt;Icon
+          testID='alltrue-icon'
+          reverse
+          color={Colors.success}
+          size={20}
+          name='thumbs-up'
+          type='font-awesome-5'
+        />
+      &lt;/View>
+    )
+  }
+
+  return (
+    &lt;View style={styles.container}>
+      &lt;SafeAreaView style={styles.safeAreaView}>
+        {renderNavBar()}
+        &lt;ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          keyboardShouldPersistTaps='always'
+        >
+
+          {/* 1. PART STIMULI */}
+          &lt;View style={styles.unitCard}>
+            {renderContent(unitDoc.stimuli)}
+          &lt;/View>
+
+          {/* 2. PART INSTRUCTIONS */}
+          &lt;View style={{ ...styles.unitCard, paddingTop: 0 }}>
+            &lt;LeaText style={styles.pageText}>
+              &lt;Icon
+                testID='info-icon'
+                reverse
+                color={Colors.dark}
+                size={8}
+                name='info'
+                type='font-awesome-5'
+              />
+            &lt;/LeaText>
+            {renderContent(unitDoc.instructions)}
+          &lt;/View>
+
+          {/* 3. PART TASK PAGE CONTENT */}
+          &lt;View style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
+            &lt;LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}&lt;/LeaText>
+
+            {renderContent(unitDoc.pages[page].instructions)}
+
+            {renderContent(unitDoc.pages[page].content)}
+          &lt;/View>
+
+          {renderAllTrue()}
+
+        &lt;/ScrollView>
+      &lt;/SafeAreaView>
+      {/* -------- continue button ---------  */}
+      {renderFooter()}
+    &lt;/View>
+  )
+}
+
+export default UnitScreen
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

@@ -1,5 +1,4 @@
 import { callMeteor } from '../../meteor/call'
-import { AppState } from '../../state/AppState'
 import { Dimension } from '../../contexts/Dimension'
 import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
@@ -13,8 +12,7 @@ const debug = Config.debug.map
  * Loads map data to build the map, that will be filled with user data
  * @return {Promise<*>}
  */
-export const loadMapData = async () => {
-  const fieldDoc = await AppState.field()
+export const loadMapData = async (fieldDoc) => {
   const fieldId = fieldDoc?._id
 
   if (!fieldId) {

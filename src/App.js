@@ -10,6 +10,12 @@ import { initTTs } from './startup/initTTS'
 import { Connecting } from './components/Connecting'
 import { ViewContainer } from './components/ViewContainer'
 import { MainNavigation } from './navigation/MainNavigation'
+import { AppSession } from './state/AppSession'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const {AppSessionProvider } = AppSession.init({
+  storage: AsyncStorage
+})
 
 const initFunction = [
   initContexts,
@@ -17,6 +23,7 @@ const initFunction = [
   fetchFonts,
   initTTs
 ]
+
 
 /**
  * Main Application entry point
@@ -27,11 +34,11 @@ const initFunction = [
 export default function App () {
   const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
   const { connectionError, connected } = useConnection()
-
   // splashscreen is still active...
   if (!appIsReady) { return null }
 
   const anyError = error ?? connectionError
+
   if (anyError) {
     return (
       <ViewContainer onLayout={onLayoutRootView}>
@@ -49,6 +56,8 @@ export default function App () {
   }
 
   return (
-    <MainNavigation onLayout={onLayoutRootView} />
+    <AppSessionProvider>
+      <MainNavigation onLayout={onLayoutRootView} />
+    </AppSessionProvider>
   )
 }

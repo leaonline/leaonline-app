@@ -43,26 +43,7 @@ import { CompareState } from '../utils/CompareState'
 
  */
 
-const styles = createStyleSheet({
-  container: {
-    width: '100%',
-    marginRight: 40,
-    marginLeft: 40,
-    marginTop: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderColor: '#fff',
-    // dropshadow - ios only
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    // dropshadow - android only
-    elevation: 0.5
-  }
-})
+
 
 export const ChoiceRenderer = props => {
   const [selected, setSelected] = useState({})
@@ -125,13 +106,16 @@ export const ChoiceRenderer = props => {
       const compareState = compared[index]
       const color = CompareState.getColor(compareState)
       const isActive = color !== undefined
+
       return (
         <ActionButton
           key={index}
           active={isActive}
+          block={true}
           color={color || dimensionColor}
           text={choice.text}
           onPress={() => {}}
+          containerStyle={styles.button}
         />
       )
     }
@@ -141,19 +125,28 @@ export const ChoiceRenderer = props => {
     return (
       <ActionButton
         key={index}
+        block={true}
         active={isActive}
         color={dimensionColor}
         text={choice.text}
         onPress={onPress}
+        containerStyle={styles.button}
       />
     )
   }
   return (
-    <View style={styles.container}>
+    <React.Fragment>
       {choices.map(toChoiceButton)}
-    </View>
+    </React.Fragment>
   )
 }
+
+const styles = createStyleSheet({
+  button: {
+    marginTop: 10,
+    marginBottom: 10
+  }
+})
 
 const getUpdate = ({ index, flavor, selected }) => {
   // single choice: just replace index

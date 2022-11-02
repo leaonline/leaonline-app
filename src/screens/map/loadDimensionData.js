@@ -1,9 +1,6 @@
-import { AppState } from '../../state/AppState'
 import { Dimension } from '../../contexts/Dimension'
 
-export const loadDimensionData = async () => {
-  const stage = await AppState.stage()
-
+export const loadDimensionData = async (stage) => {
   if (!stage?.unitSets?.length) { return null }
 
   stage.unitSets.forEach(unitSet => {

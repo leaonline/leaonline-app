@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 import { ScrollView, View } from 'react-native'
 import Colors from '../../constants/Colors'
-import { TTSengine } from '../../components/Tts'
+import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
@@ -43,6 +43,7 @@ const reducer = (prevState, nextState) => {
  */
 const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
+  const { Tts } = useTts()
   const { termsAndConditions } = useLegal('terms')
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
   const { termsAndConditionsIsChecked, highlightCheckbox } = state
@@ -67,6 +68,43 @@ const TermsAndConditionsScreen = props => {
     return props.navigation.navigate(route)
   }
 
+  const renderCheckbox = () => {
+    return (
+      <View style={styles.checkBoxes}>
+        <Checkbox
+          id='TandCScreen.checkBoxText'
+          text={t('TandCScreen.checkBoxText')}
+          highlight={highlightCheckbox && Colors.danger}
+          checked={termsAndConditionsIsChecked}
+          checkedColor={Colors.secondary}
+          uncheckedColor={Colors.gray}
+          onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
+        />
+      </View>
+    )
+  }
+
+  const renderDecision = () => {
+    return (
+      <View style={styles.decisionContainer}>
+        <RouteButton
+          title={t('TandCScreen.newUser')}
+          align='center'
+          block={true}
+          containerStyle={{ flex: 1 }}
+          handleScreen={() => handleAction('registration')}
+        />
+        <RouteButton
+          title={t('TandCScreen.restoreWithCode')}
+          align='center'
+          block={true}
+          containerStyle={{ flex: 1 }}
+          handleScreen={() => handleAction('restore')}
+        />
+      </View>
+    )
+  }
+
   return (
     <>
       <LeaLogo style={styles.logo} />
@@ -84,50 +122,19 @@ const TermsAndConditionsScreen = props => {
           {renderTCText()}
         </ScrollView>
 
-        <View style={styles.checkBoxes}>
-          <Checkbox
-            id='TandCScreen.checkBoxText'
-            text={t('TandCScreen.checkBoxText')}
-            highlight={highlightCheckbox && Colors.danger}
-            checked={termsAndConditionsIsChecked}
-            checkedColor={Colors.secondary}
-            uncheckedColor={Colors.gray}
-            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
-          />
-        </View>
-        <View style={styles.decisionContainer}>
-          <RouteButton
-            title={t('TandCScreen.newUser')}
-            align='center'
-            block
-            containerStyle={{ flex: 1 }}
-            handleScreen={() => handleAction('registration')}
-          />
-          <RouteButton
-            title={t('TandCScreen.restoreWithCode')}
-            align='center'
-            block
-            containerStyle={{ flex: 1 }}
-            handleScreen={() => handleAction('restore')}
-          />
-        </View>
+        {renderCheckbox()}
+        {renderDecision()}
       </View>
     </>
   )
 }
 
 /**
- * @private tts ref
- */
-const Tts = TTSengine.component()
-
-/**
  * @private stylesheet
  */
 const styles = createStyleSheet({
   container: {
-    flex: 1,
-    padding: Units.vw * 5,
+    ...Layout.container(),
     alignItems: 'stretch',
     justifyContent: 'space-between'
   },
@@ -137,7 +144,7 @@ const styles = createStyleSheet({
     flexWrap: 'wrap'
   },
   paragraph: {
-    marginBottom: 30
+    marginBottom: 10
   },
   logo: {
     height: 100,
@@ -146,10 +153,11 @@ const styles = createStyleSheet({
   checkBoxes: {
     borderTopWidth: Layout.lineWidth(0.5),
     borderColor: Colors.dark,
-    paddingTop: Layout.lineWidth(20)
+    paddingTop: 10
   },
   decisionContainer: {
-    flexDirection: 'row'
+    height: 100,
+    flex: 0
   },
   highlight: { borderColor: Colors.danger, borderWidth: 1 }
 })

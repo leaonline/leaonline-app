@@ -1,8 +1,7 @@
 import React from 'react'
-import { TTSengine } from '../../Tts'
-
-const Tts = TTSengine.component()
+import { useTts } from '../../Tts'
 
 export const PlainTextRenderer = props => {
-  return (<Tts color={props.dimensionColor} text={props.value} />)
+  const { Tts } = useTts()
+  return (<Tts block={true} color={props.dimensionColor} text={props.value} />)
 }

@@ -13,5 +13,5 @@ export const ViewContainer = ({ style, children, ...props }) => {
 }
 
 const styles = createStyleSheet({
-  container: Layout.containter()
+  container: Layout.container()
 })

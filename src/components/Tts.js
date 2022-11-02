@@ -160,6 +160,10 @@ const ttsComponent = props => {
       styleProps.flexGrow = 1
     }
 
+    if (props.fontStyle) {
+      Object.assign(styleProps, props.fontStyle)
+    }
+
     return (<LeaText style={styleProps}>{props.text}</LeaText>)
   }
 

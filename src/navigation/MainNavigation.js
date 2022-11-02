@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { CardStyleInterpolators } from '@react-navigation/stack'
 import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-
 import { WelcomeScreen } from '../screens/auth/WelcomeScreen'
 import TermsAndConditionsScreen from '../screens/auth/TermsAndConditionsScreen'
 import { RegistrationScreen } from '../screens/auth/RegistrationScreen'
@@ -21,6 +20,7 @@ import { Platform } from 'react-native'
 import { RestoreScreen } from '../screens/auth/RestoreScreen'
 import { ProfileButton } from '../components/ProfileButton'
 import { useKeepAwake } from 'expo-keep-awake'
+import { BackButton } from '../components/BackButton'
 
 /**
  * StackNavigator navigates between screens in a push/pop fashion.
@@ -44,23 +44,65 @@ export const MainNavigation = (props) => {
   const renderScreens = () => {
     if (userToken) {
       const headerRight = () => (<ProfileButton route='profile' />)
+      const mapScreenTitle = t('mapScreen.title')
+      const profileScreenTitle = t('profileScreen.headerTitle')
       return (
         <>
           <Stack.Screen
-            name='Home'
+            name='home'
             component={HomeScreen}
             options={{
               headerStyle,
-              title: t('homeScreen.title'),
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
               headerTitle: () => (<></>),
               headerRight
             }}
           />
-          <Stack.Screen name='Map' component={MapScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='Dimension' component={DimensionScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='Unit' component={UnitScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='profile' component={ProfileScreen} options={{ title: t('profileScreen.headerTitle') }} />
-          <Stack.Screen name='Complete' component={CompleteScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='map'
+            component={MapScreen}
+            options={{
+              headerStyle,
+              title:  mapScreenTitle,
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerRight
+            }}
+          />
+          <Stack.Screen
+            name='dimension'
+            component={DimensionScreen}
+            options={{
+              headerStyle,
+              title: mapScreenTitle,
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerRight
+            }} />
+          <Stack.Screen
+            name='unit'
+            component={UnitScreen}
+            options={{
+              headerStyle,
+              title: t('unitScreen.title'),
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerRight
+            }} />
+          <Stack.Screen name='complete' component={CompleteScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='profile'
+            component={ProfileScreen}
+            options={{
+              headerStyle,
+              title:  profileScreenTitle,
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerLeft: () => (<BackButton icon='arrow-left' />),
+              headerTitle: () => (<Tts text={profileScreenTitle}/>),
+              headerRight: () => (<></>)
+            }} />
         </>
       )
     }

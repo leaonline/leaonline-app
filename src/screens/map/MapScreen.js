@@ -1,78 +1,22 @@
-import React from 'react'
-import { SafeAreaView, View, FlatList } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { View, FlatList } from 'react-native'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { Loading } from '../../components/Loading'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadMapData } from './loadMapData'
 import { Log } from '../../infrastructure/Log'
-import { AppState } from '../../state/AppState'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
-import { Confirm } from '../../components/Confirm'
 import Colors from '../../constants/Colors'
-import { ProfileButton } from '../../components/ProfileButton'
-import { Navbar } from '../../components/Navbar'
 import { useTranslation } from 'react-i18next'
-import { TTSengine } from '../../components/Tts'
-import { ErrorMessage } from '../../components/ErrorMessage'
 import { LeaText } from '../../components/LeaText'
 import { StaticCircularProgress } from '../../components/StaticCircularProgress'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import { ScreenBase } from '../BaseScreen'
+import { useTts } from '../../components/Tts'
+import { BackButton } from '../../components/BackButton'
 
 const log = Log.create('MapScreen')
-
-/**
- * @private TTS Ref
- */
-const Tts = TTSengine.component()
-
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  container: Layout.containter(),
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  stage: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flex: 2
-  },
-  scrollView: {
-    marginHorizontal: 20,
-    width: '100%'
-  },
-  safeAreaView: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center'
-  },
-  routeButtonContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center'
-  },
-  loading: {
-    flex: 2,
-    alignItems: 'center'
-  },
-  buttons: {
-    alignItems: 'center',
-    flex: 1
-  },
-  // examples
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16
-  },
-  title: {
-    fontSize: 32
-  }
-})
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -89,61 +33,24 @@ const styles = createStyleSheet({
  */
 const MapScreen = props => {
   const { t } = useTranslation()
-  const mapDocs = loadDocs(loadMapData)
-
-  const renderNavbar = () => {
-    return (
-      <Navbar>
-        <Confirm
-          id='map-screen-confirm'
-          noConfirm
-          onApprove={() => props.navigation.navigate('Home')}
-          icon='home'
-          tts={false}
-          style={{
-            borderRadius: 2,
-            borderWidth: 1,
-            borderColor: Colors.dark
-          }}
-        />
-        <View style={{ width: '50%' }}>
-          <Tts text='Map' color={Colors.secondary} id='mapScreen.headerTitle' paddingTop={10} smallButton />
-        </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-      </Navbar>
-    )
-  }
-
-  if (!mapDocs || mapDocs.loading) {
-    return (
-      <View style={styles.container}>
-        {renderNavbar()}
-        <Loading />
-      </View>
-    )
-  }
-
-  const nodata = mapDocs.data === null || mapDocs.data === undefined
-  const loadFailed = !mapDocs.loading && nodata
-
-  // if we have loaded but there was no MapData available,
-  // we display an error message with a button to go back to the home screen
-  if (mapDocs.error || loadFailed) {
-    log('no data available, display fallback', { error: mapDocs.error, loadFailed })
-    return (
-      <View style={styles.container}>
-        {renderNavbar()}
-        <ErrorMessage
-          error={mapDocs.error}
-          message={t('mapScreen.notAvailable')}
-          label={t('actions.back')}
-          onConfirm={() => props.navigation.navigate('Home')}
-        />
-      </View>
-    )
-  }
-
+  const { Tts } = useTts()
+  const [session, sessionActions] = useContext(AppSessionContext)
+  const mapDocs = loadDocs(() => loadMapData(session.field))
   const mapData = mapDocs.data
+
+  useEffect(() => {
+    const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
+    props.navigation.setOptions({
+      title: mapScreenTitle,
+      headerTitle: () => (<Tts block={true} text={mapScreenTitle}/>)
+    })
+  }, [session.field])
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
+    })
+  }, [])
 
   /* expected mapData structure:
    *
@@ -179,8 +86,9 @@ const MapScreen = props => {
       unitSet.dimension = mapData.dimensions[unitSet.dimension]
     })
 
-    await AppState.stage(stage)
-    props.navigation.navigate('Dimension')
+    await sessionActions.stage(stage)
+    console.debug('move to dimension')
+    props.navigation.navigate('dimension')
   }
 
   const renderListItem = ({ index, item: entry }) => {
@@ -198,6 +106,10 @@ const MapScreen = props => {
   }
 
   const renderList = () => {
+    if (!mapData?.entries?.length) {
+      return null
+    }
+
     return (
       <View style={styles.scrollView}>
         <FlatList
@@ -220,7 +132,8 @@ const MapScreen = props => {
 
     return (
       <View style={styles.stage}>
-        <RouteButton style={{ height: 100 }} title={title} icon={icon} iconColor={iconColor} handleScreen={() => selectStage(stage)} noTts />
+        <RouteButton style={{ height: 100 }} title={title} icon={icon} iconColor={iconColor}
+                     handleScreen={() => selectStage(stage)} noTts/>
 
         <StaticCircularProgress
           duration={0}
@@ -229,12 +142,12 @@ const MapScreen = props => {
           maxValue={100}
           textColor={Colors.secondary}
           activeStrokeColor={Colors.secondary}
-          inActiveStrokeColor='#fff'
+          inActiveStrokeColor="#fff"
           inActiveStrokeOpacity={0.5}
           inActiveStrokeWidth={5}
           activeStrokeWidth={5}
           showProgressValue
-          valueSuffix='%'
+          valueSuffix="%"
         />
         {renderUnitSets(stage.unitSets)}
       </View>
@@ -250,7 +163,7 @@ const MapScreen = props => {
           <StaticCircularProgress
             value={progress}
             radius={23}
-            valueSuffix='%'
+            valueSuffix="%"
             textColor={Colors.primary}
             activeStrokeColor={Colors.primary}
           />
@@ -277,24 +190,42 @@ const MapScreen = props => {
           textColor={color}
           duration={0}
           activeStrokeColor={color}
-          inActiveStrokeColor='#fff'
+          inActiveStrokeColor="#fff"
           inActiveStrokeOpacity={0.5}
           inActiveStrokeWidth={5}
           activeStrokeWidth={5}
           showProgressValue
           maxValue={100}
-          valueSuffix='%'
+          valueSuffix="%"
         />
       )
     })
   }
 
   return (
-    <View style={styles.container}>
-      {renderNavbar()}
-      <SafeAreaView style={styles.safeAreaView}>{renderList()}</SafeAreaView>
-    </View>
+    <ScreenBase {...mapDocs} style={styles.container}>
+      {renderList()}
+    </ScreenBase>
   )
 }
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: Layout.container(),
+  scrollView: {
+    marginHorizontal: 20,
+    width: '100%'
+  },
+  stage: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flex: 2
+  },
+  title: {
+    fontSize: 32
+  }
+})
 
 export default MapScreen

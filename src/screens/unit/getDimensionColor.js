@@ -5,11 +5,13 @@ import Colors from '../../constants/Colors'
 /**
  * Gets a color by dimension id. Falls back to primary if no dimension doc
  * is found or no Color is defined for the linked colorType property.
- * @param dimensionId {string}
- * @return {string}
+ * @param dimension {string|object} either an _id string or the dimension document
+ * @return {string} a valid hex color code
  */
-export const getDimensionColor = dimensionId => {
-  const dimensionDoc = Dimension.collection().findOne(dimensionId)
+export const getDimensionColor = (dimension) => {
+  const dimensionDoc = typeof dimension === 'object'
+    ? dimension
+    : Dimension.collection().findOne(dimension)
 
   if (!dimensionDoc) {
     return Colors.primary

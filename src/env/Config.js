@@ -1,7 +1,7 @@
 import Constants from 'expo-constants'
 import settings from '../settings.json'
 
-const { backend, content, log, debug } = settings
+const { backend, content, log, debug, isDevelopment } = settings
 
 /**
  * These are the unified application globals.
@@ -12,7 +12,7 @@ export const Config = {}
 /**
  * We use this expo-internal to determine, whether this is development mode.
  */
-Config.isDevelopment = Constants.manifest.packagerOpts?.dev
+Config.isDevelopment = !!(Constants.manifest.packagerOpts?.dev) || !!(settings.isDevelopment)
 
 /**
  * There are multiple debug options.

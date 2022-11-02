@@ -1,4 +1,5 @@
 {
+  "isDevelopment": true,
   "backend": {
     "url": "ws://192.168.178.49:8080/websocket",
     "maxTimeout": 3000,

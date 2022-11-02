@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import RouteButton from '../../components/RouteButton'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadHomeData } from './loadHomeData'
-import { AppState } from '../../state/AppState'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
 import { ScreenBase } from '../BaseScreen'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import { Layout } from '../../constants/Layout'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -23,11 +24,13 @@ import { ScreenBase } from '../BaseScreen'
 const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
+  const [session, sessionActions] = useContext(AppSessionContext)
   const { data, error, loading } = loadDocs(loadHomeData)
 
   const selectField = async value => {
-    await AppState.field(value)
-    props.navigation.navigate('Map')
+    const { _id, title } = value
+    await sessionActions.field({ _id, title })
+    props.navigation.navigate('map')
   }
 
   /**
@@ -38,7 +41,7 @@ const HomeScreen = props => {
       return (
         <RouteButton
           title={item.title} icon={item.icon} key={key}
-          block
+          block={true}
           handleScreen={() => selectField(item)}
         />
       )
@@ -48,9 +51,10 @@ const HomeScreen = props => {
   return (
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
       <Tts
-        text={t('homeScreen.text')} color={Colors.secondary}
-        block
-        id='homeScreen.text'
+        id="homeScreen.text"
+        text={t('homeScreen.text')}
+        color={Colors.secondary}
+        block={true}
       />
       {renderButtons()}
     </ScreenBase>
@@ -60,11 +64,5 @@ const HomeScreen = props => {
 export default HomeScreen
 
 const styles = createStyleSheet({
-  container: {
-    flex: 1,
-    margin: '10%',
-    alignItems: 'stretch',
-    justifyItems: 'stretch',
-    justifyContent: 'space-around'
-  }
+  container: Layout.container()
 })

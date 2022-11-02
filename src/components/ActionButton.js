@@ -37,12 +37,13 @@ export const ActionButton = props => {
       <Tts text={ttsText} activeIconColor={iconActiveColor} iconColor={iconColor} color={props.color || Colors.primary} id={`${ttsText}-tts`} dontShowText />
     )
   }
-
+  const activeStyle = props.active ? { backgroundColor: props.color, color: Colors.white } : undefined
   const blockStyle = props.block ? { flexGrow: 1 } : undefined
   const buttonProps = {
     ...props,
     title: props.title || props.text || props.tts,
-    buttonStyle: mergeStyles(styles.button, props.buttonStyle),
+    buttonStyle: mergeStyles(styles.button, props.buttonStyle, activeStyle),
+    titleStyle: activeStyle,
     containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }
   const containerStyle = mergeStyles(styles.container, props.containerStyle)

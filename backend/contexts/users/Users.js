@@ -177,7 +177,7 @@ Users.methods.getCodes = {
   run: function () {
     const { userId } = this
     const user = userId && Meteor.users.findOne(userId)
-
+console.debug(user)
     if (!user) {
       throw new Meteor.Error(
         'permissionDenied',

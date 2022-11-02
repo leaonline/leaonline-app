@@ -1,17 +1,27 @@
 import React from 'react'
-import { View } from 'react-native'
 import { Log } from '../../infrastructure/Log'
 import { LeaText } from '../LeaText'
 
+const debug = Log.create('UnitContentElementFactory', 'debug')
+
+/**
+ * Registers a content element renderer to be invoked by the factory
+ * @component
+ * @category Components
+ * @type {object}
+ * @class
+ * @hideconstructor
+ */
 export const UnitContentElementFactory = {}
 
 const components = new Map()
 const toKey = ({ type, subtype }) => `${type}-${subtype}`
+
 /**
- * Registers a content element renderer to be invoked by the factory
  * @param type
  * @param subtype
  * @param component
+ * @method
  */
 UnitContentElementFactory.register = ({ type, subtype, component }) => {
   const key = toKey({ type, subtype })
@@ -19,15 +29,18 @@ UnitContentElementFactory.register = ({ type, subtype, component }) => {
 }
 
 /**
- * Invokes a renderer by given type/subtype
- * @param props
- * @return {*}
+ * Returns a registered renderer by given type/subtype. If none is found, returns a fallback.
+ * @param props {object}
+ * @param props.type {string} the content type
+ * @param props.subtype {string} the content subtype
+ * @returns {JSX.Element}
  * @constructor
+ * @component
  */
 UnitContentElementFactory.Renderer = props => {
   const key = toKey(props)
   const component = components.get(key)
-  Log.debug('[UnitContentElementFactory]: render', key, !!component)
+  debug('render', key, !!component)
 
   if (component) {
     return component(props)
@@ -37,7 +50,13 @@ UnitContentElementFactory.Renderer = props => {
 }
 
 const fallback = props => (
-  <View key={props.key}>
+  <React.Fragment key={props.key}>
     <LeaText>Fallback: {props.type} / {props.subtype}</LeaText>
-  </View>
+  </React.Fragment>
 )
+
+/**
+ * Use-hook to retrieve the Renderer component
+ * @return {{Renderer: UnitContentElementFactory.Renderer }}
+ */
+export const useContentElementFactory = () => ({ Renderer: UnitContentElementFactory.Renderer })

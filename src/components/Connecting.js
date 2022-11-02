@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useTts } from './Tts'
 
 const styles = createStyleSheet({
-  container: Layout.containter(),
+  container: Layout.container(),
   indicator: {
     height: 50
   }

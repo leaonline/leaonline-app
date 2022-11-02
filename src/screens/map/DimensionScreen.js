@@ -1,47 +1,19 @@
-import React from 'react'
-import { View } from 'react-native'
+import React, { useContext,useEffect } from 'react'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
-import { Loading } from '../../components/Loading'
 import { loadDimensionData } from './loadDimensionData'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Log } from '../../infrastructure/Log'
-import { AppState } from '../../state/AppState'
 import { Layout } from '../../constants/Layout'
-import { Confirm } from '../../components/Confirm'
-import Colors from '../../constants/Colors'
-import { ProfileButton } from '../../components/ProfileButton'
-import { Navbar } from '../../components/Navbar'
 import { Config } from '../../env/Config'
-import { TTSengine } from '../../components/Tts'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import { ScreenBase } from '../BaseScreen'
+import { useTts } from '../../components/Tts'
+import { useTranslation } from 'react-i18next'
+import { BackButton } from '../../components/BackButton'
 
 const log = Log.create('DimensionScreen')
-
-/**
- * @private TTS Ref
- */
-const Tts = TTSengine.component()
-
-/**
- * @private stylesheet
- */
-const styles = createStyleSheet({
-  container: Layout.containter(),
-  body: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  routeButtonContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center'
-  }
-})
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -59,27 +31,37 @@ const styles = createStyleSheet({
  * @returns {JSX.Element}
  */
 const DimensionScreen = props => {
-  const docs = loadDocs(loadDimensionData)
+  const { t } = useTranslation()
+  const { Tts } = useTts()
+  const [session, sessionActions] = useContext(AppSessionContext)
+  const docs = loadDocs(() => loadDimensionData(session.stage))
 
-  if (!docs || docs.loading) {
-    return (
-      <Loading />
-    )
-  }
+  useEffect(() => {
+    const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
+    props.navigation.setOptions({
+      title: dimensionScreenTitle,
+      headerTitle: () => (<Tts text={dimensionScreenTitle}/>)
+    })
+  }, [session.field])
 
-  if (docs.data === null) {
-    props.navigation.navigate('Map')
-    return null
-  }
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.stage(null)}/>)
+    })
+  }, [])
 
-  const selectUnitSet = async unitSet => {
-    const normalized = { ...unitSet, ...{ dimension: unitSet.dimension._id } }
-    log('selected', normalized)
-    await AppState.unitSet(normalized)
-    props.navigation.navigate('Unit')
+  const selectUnitSet = async unitSetDoc => {
+    const { dimension, ...unitSet } = unitSetDoc
+    console.debug(unitSet)
+    await sessionActions.multi({ unitSet, dimension })
+    props.navigation.navigate('unit')
   }
 
   const renderDimensions = () => {
+    if (!docs?.data?.unitSets?.length) {
+      return null
+    }
+
     return docs.data.unitSets.map((unitSet, index) => {
       const color = ColorTypeMap.get(unitSet.dimension.colorType)
       const title = Config.debug.map
@@ -90,6 +72,8 @@ const DimensionScreen = props => {
           key={index}
           color={color}
           title={title}
+          titleStyle={{ color }}
+          block={true}
           icon={unitSet.dimension.icon}
           handleScreen={() => selectUnitSet(unitSet)}
         />
@@ -98,28 +82,35 @@ const DimensionScreen = props => {
   }
 
   return (
-    <View style={styles.container}>
-      <Navbar>
-        <Confirm
-          id='dimension-screen-confirm'
-          noConfirm
-          onApprove={() => props.navigation.navigate('Map')}
-          icon='arrow-left'
-          tts={false}
-          style={{
-            borderRadius: 2,
-            borderWidth: 1,
-            borderColor: Colors.dark
-          }}
-        />
-        <View style={{ width: '55%' }}>
-          <Tts text='Dimension' color={Colors.secondary} id='dimensionScreen.headerTitle' paddingTop={10} smallButton />
-        </View>
-        <ProfileButton onPress={() => props.navigation.navigate('Profile')} />
-      </Navbar>
-      {renderDimensions()}
-    </View>
+    <ScreenBase {...docs} style={styles.container}>
+      <Tts text={t('dimensionScreen.instructions')} />
+        {renderDimensions()}
+    </ScreenBase>
   )
 }
+
+/**
+ * @private stylesheet
+ */
+const styles = createStyleSheet({
+  container: Layout.container(),
+  instructions: {
+    flex: 1
+  },
+  dimensionContainer: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  iconNavigation: {
+    paddingBottom: 5,
+    padding: 100
+  },
+  routeButtonContainer: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center'
+  }
+})
 
 export default DimensionScreen

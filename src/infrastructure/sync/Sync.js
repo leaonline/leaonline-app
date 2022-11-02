@@ -11,7 +11,7 @@ export const Sync = {
 }
 
 Sync.collection = () => {
-  throw new Error('not initialized')
+  throw new Error(`${Sync.name} is not initialized`)
 }
 
 const log = Log.create(Sync.name)

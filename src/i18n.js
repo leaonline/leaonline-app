@@ -51,16 +51,22 @@ const resources = {
       text: 'Welcome! Please select an area.'
     },
     profileScreen: {
-      headerTitle: 'Your Profile',
+      headerTitle: 'My account',
       progress: 'Overall progress',
-      title: 'My successes'
+      title: 'My achievements'
     },
     accountInfo: {
-      whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.'
+      whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.',
+      signOut: 'Sign out',
+      delete: 'Delete my account'
     },
     mapScreen: {
+      title: 'Übersicht',
       stage: 'Stage',
       notAvailable: 'The overview cannot be downloaded currently.'
+    },
+    dimensionScreen: {
+      instructions: 'Please select a topic'
     },
     unitScreen: {
       story: {
@@ -134,17 +140,22 @@ const resources = {
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
     },
     profileScreen: {
-      headerTitle: 'Dein Profil',
+      headerTitle: 'Mein Profil',
       progress: 'Gesamter Fortschritt',
       title: 'Meine Erfolge'
     },
     accountInfo: {
       restoreCodes: 'Profil sichern',
-      whyRestore: 'Mit diesen Codes kannst du dein Profil sichern. Notiere sie dir oder mache ein Foto.'
+      whyRestore: 'Mit diesen Codes kannst du dein Profil sichern. Notiere sie dir oder mache ein Foto.',
+      signOut: 'Profil abmelden',
+      delete: 'Profil endgültig löschen'
     },
     mapScreen: {
       stage: 'Level',
       notAvailable: 'Die Übersicht kann derzeit nicht geladen werden.'
+    },
+    dimensionScreen: {
+      instructions: 'Bitte wähle einen Bereich'
     },
     unitScreen: {
       story: {

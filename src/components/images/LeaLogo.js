@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image } from 'react-native'
+import { mergeStyles } from '../../styles/mergeStyles'
 
 const logos = {
   footer: {
@@ -8,10 +9,18 @@ const logos = {
   }
 }
 
+/**
+ * Renders one of the given lea logos. Available are currently: [footer] defaults to 'footer' if not found.
+ * @component
+ * @category Components
+ * @constructor
+ * @returns {JSX.Element}
+ * @param props {object}
+ * @param props.logo {string=} name of the available logos
+ * @param props.style {object=} optional style overrides
+ */
 export const LeaLogo = props => {
   const { src, styles } = (logos[props.logo] ?? logos.footer)
-  const imageStyle = props.style
-    ? { ...styles.logo, ...props.style }
-    : styles.logo
+  const imageStyle = mergeStyles(styles.logo, props.style)
   return (<Image style={imageStyle} resizeMethod='resize' resizeMode='contain' source={src} />)
 }

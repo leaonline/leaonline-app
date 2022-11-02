@@ -9,6 +9,7 @@ import { useVoices } from '../../hooks/useVoices'
 import { Loading } from '../../components/Loading'
 import { LeaButtonGroup } from '../../components/LeaButtonGroup'
 import { Units } from '../../utils/Units'
+import { Layout } from '../../constants/Layout'
 
 const speeds = [0.6, 0.9, 1.1]
 
@@ -88,13 +89,22 @@ export const WelcomeScreen = props => {
       <LeaLogo style={styles.logo} />
 
       <View style={styles.container} show={showIndex}>
-        <Tts id='welcomeScreen.text' style={styles.text} text={welcomeText} />
+        <Tts
+          id='welcomeScreen.text'
+          block={true}
+          style={styles.text}
+          text={welcomeText} />
 
         {voiceOptions()}
 
         {voiceSpeedOptions()}
 
-        <Tts id='welcomeScreen.text' style={styles.text} text={speedTestText} align='center' />
+        <Tts
+          id='welcomeScreen.text'
+          block={true}
+          style={styles.text}
+          text={speedTestText}
+          align='center' />
 
         <RouteButton
           title={t('common.continue')}
@@ -120,8 +130,7 @@ const styles = createStyleSheet({
     width: '100%'
   },
   container: {
-    flex: 1,
-    padding: Units.vw * 9,
+    ...Layout.container(),
     alignItems: 'stretch',
     justifyContent: 'space-between'
   }
