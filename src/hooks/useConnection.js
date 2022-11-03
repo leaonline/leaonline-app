@@ -25,6 +25,7 @@ Meteor.connect(Config.backend.url, {
 export const useConnection = () => {
   const [connected, setConnected] = useState(null)
   const [connectionError, setConnectionError] = useState(null)
+  const status = Meteor.useTracker(() => Meteor.status())
 
   // we use separate functions as the handlers, so they get removed
   // on unmount, which happens on auto-reload and would cause errors

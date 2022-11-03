@@ -4,6 +4,7 @@ import { AccountInfo } from './AccountInfo'
 import { Achievements } from './Achievements'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
+import { TTSSettings } from './TTSSettings'
 
 /**
  *  TODO
@@ -15,8 +16,9 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Achievements />
-        <AccountInfo />
+        <Achievements containerStyle={styles.section} />
+        <TTSSettings containerStyle={styles.section} />
+        <AccountInfo containerStyle={styles.section} />
       </ScrollView>
     </SafeAreaView>
   )
@@ -26,6 +28,9 @@ const styles = createStyleSheet({
   container: Layout.container(),
   scroll: {
     flexGrow: 1
+  },
+  section: {
+    marginBottom: 30
   }
 })
 

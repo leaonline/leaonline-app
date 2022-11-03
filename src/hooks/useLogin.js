@@ -1,10 +1,12 @@
 import { useReducer, useEffect, useMemo } from 'react'
 import Meteor from '@meteorrn/core'
+import { loadSettingsFromUserProfile } from '../env/loadSettingsFromUserProfile'
 
 /** @private */
 const initialState = {
   isLoading: true,
   isSignout: false,
+  isDeleted: false,
   userToken: null
 }
 
@@ -15,18 +17,28 @@ const reducer = (prevState, nextState) => {
       return {
         ...prevState,
         userToken: nextState.token,
+        isDeleted: false,
         isLoading: false
       }
     case 'SIGN_IN':
       return {
         ...prevState,
         isSignOut: false,
+        isDeleted: false,
         userToken: nextState.token
       }
     case 'SIGN_OUT':
       return {
         ...prevState,
         isSignout: true,
+        isDeleted: false,
+        userToken: null
+      }
+    case 'DELETE':
+      return {
+        ...prevState,
+        isSignout: false,
+        isDeleted: true,
         userToken: null
       }
   }
@@ -67,20 +79,24 @@ export const useLogin = () => {
   // in case it exists, but we need to "know" that for our auth workflow
   useEffect(() => {
     const authToken = Meteor.getAuthToken()
+    const handleOnLogin = () => {
+      const user = Meteor.user()
+      loadSettingsFromUserProfile(user)
+      dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
+    }
 
     // There may be the situation where the auth token
     // is immediately available. If so, we can safely
     // dispatch and don't need any further information.
-    if (authToken) {
-      dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
+    if (authToken && !state.isDeleted) {
+      handleOnLogin()
     }
 
-    // Otherwise, we need to listen to the package's
-    // DDP even 'onLogin'  and dispatch then.
-    // Note, that 'onLogin'  is only fired, when the
+      // Otherwise, we need to listen to the package's
+      // DDP even 'onLogin'  and dispatch then.
+      // Note, that 'onLogin'  is only fired, when the
     // package has successfully restored the login via token!
     else {
-      const handleOnLogin = () => dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
       Data.on('onLogin', handleOnLogin)
       return () => Data.off('onLogin', handleOnLogin)
     }
@@ -125,6 +141,15 @@ export const useLogin = () => {
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
         dispatch({ type, token })
+      })
+    },
+    deleteAccount: ({ onError }) => {
+      Meteor.call('users.methods.delete', {}, (err) => {
+        if (err) {
+          return onError(err)
+        }
+
+        dispatch({ type: 'DELETE' })
       })
     }
   }), [])

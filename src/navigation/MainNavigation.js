@@ -11,7 +11,7 @@ import MapScreen from '../screens/map/MapScreen'
 import DimensionScreen from '../screens/map/DimensionScreen'
 import UnitScreen from '../screens/unit/UnitScreen'
 import ProfileScreen from '../screens/profile/ProfileScreen'
-import CompleteScreen from '../screens/CompleteScreen'
+import CompleteScreen from '../screens/complete/CompleteScreen'
 import { useTranslation } from 'react-i18next'
 import { useLogin } from '../hooks/useLogin'
 import { useTts } from '../components/Tts'
@@ -90,7 +90,16 @@ export const MainNavigation = (props) => {
               headerTitleAlign: 'center',
               headerRight
             }} />
-          <Stack.Screen name='complete' component={CompleteScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='complete'
+            component={CompleteScreen}
+            options={{
+              headerStyle,
+              title: t('completeScreen.title'),
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerRight
+          }} />
           <Stack.Screen
             name='profile'
             component={ProfileScreen}

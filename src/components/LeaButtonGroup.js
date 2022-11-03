@@ -9,6 +9,7 @@ import { mergeStyles } from '../styles/mergeStyles'
  *
  * @param props {object}
  * @param props.data {Array<React.component|string>}
+ * @param props.active {number=}
  * @param props.onPress {function|undefined}
  * @returns {JSX.Element}
  * @constructor
@@ -39,8 +40,13 @@ export const LeaButtonGroup = props => {
     selectedButtonStyle.borderBottomRightRadius = radius
   }
 
+  const selectedIndexes = typeof props.active === 'number'
+    ? [props.active]
+    : undefined
+
   return (
     <ButtonGroup
+      selectedIndexes={selectedIndexes}
       onPress={select}
       selectedIndex={index}
       buttons={props.data}

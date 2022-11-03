@@ -3,6 +3,7 @@ import { Accounts } from 'meteor/accounts-base'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { RestoreCodes } from '../../api/accounts/RestoreCodes'
 import { UserEmail } from '../../api/accounts/UserEmail'
+import { updateUserProfile } from './updateUserProfile'
 
 /**
  * Representation of users in the database.
@@ -68,7 +69,19 @@ Users.schema = {
     type: String
   },
 
+  /**
+   * The restore code
+   */
   restore: String,
+
+  voice: {
+    type: String,
+    optional: true
+  },
+  speed: {
+    type: Number,
+    optional: true
+  },
 
   // adding Email schema from UserEmail
   ...UserEmail.schema()
@@ -84,8 +97,12 @@ Users.schema = {
 Users.methods = {}
 
 /**
+ * Creates a new user and automatically authenticates them.
  * @method
- * @param {string=} email optional user email to send restore codes
+ * @param options {object}
+ * @param options.voice {string=} the current selected voice
+ * @param options.speed {number=} the current selected speed for voices
+ * @throws {Meteor.Error} if already authenticated
  */
 Users.methods.create = {
   name: 'users.methods.create',
@@ -105,6 +122,7 @@ Users.methods.create = {
 
     return function (options = {}) {
       const { userId } = this
+
       if (userId) {
         throw new Meteor.Error(
           'createUser.error',
@@ -112,6 +130,7 @@ Users.methods.create = {
           { userId }
         )
       }
+
       const { voice, speed } = options
       const username = Random.hexString(32)
       const password = Random.secret()
@@ -122,13 +141,59 @@ Users.methods.create = {
 
       Meteor.users.update(newUserId, { $set: updateDoc })
 
+      // validate the new account with the created credentials
       const credentials = { user: { username }, password }
       Accounts._runLoginHandlers(this, credentials)
+
+      // finally, login this user as they should not need
+      // to manually authenticate
       return Accounts._loginUser(this, newUserId)
     }
   })
 }
 
+/**
+ * Allows users to update certain parts of their profile, such as
+ * selected voice and speed.
+ *
+ * @method
+ * @param options {object}
+ * @param options.voice {string=} the current selected voice
+ * @param options.speed {number=} the current selected speed for voices
+ * @return {number} 1 if updated, 0 if not
+ * @throws {Meteor.Error} if not authenticated or no options passed
+ */
+Users.methods.updateProfile = {
+  name: 'users.methods.updateProfile',
+  schema: {
+    voice: {
+      type: String,
+      optional: true
+    },
+    speed: {
+      type: Number,
+      optional: true
+    }
+  },
+  run: function ({ voice, speed }) {
+    const { userId } = this
+    const nothingToUpdate = typeof voice !== 'string' && typeof speed !== 'number'
+
+    if (!userId || nothingToUpdate) {
+      throw new Meteor.Error(
+        'permissionDenied',
+        'updateProfile.failed',
+        { userId }
+      )
+    }
+
+    return updateUserProfile({ userId, speed, voice })
+  }
+}
+
+/**
+ * Restores a user with a given restore-code.
+ */
 Users.methods.restore = {
   name: 'users.methods.restore',
   isPublic: true,
@@ -157,14 +222,12 @@ Users.methods.restore = {
     }
 
     const user = userCursor.fetch()[0]
+    const userId = user._id
     const hasVoice = typeof voice === 'string'
     const hasSpeed = typeof speed === 'number'
 
     if (hasVoice || hasSpeed) {
-      const update = {}
-      if (hasVoice) { update.voice = voice }
-      if (hasSpeed) { update.speed = speed }
-      Meteor.users.update(user._id, { $set: update })
+      updateUserProfile({ userId, speed, voice })
     }
 
     return Accounts._loginUser(this, user._id)
@@ -177,7 +240,7 @@ Users.methods.getCodes = {
   run: function () {
     const { userId } = this
     const user = userId && Meteor.users.findOne(userId)
-console.debug(user)
+
     if (!user) {
       throw new Meteor.Error(
         'permissionDenied',
@@ -203,19 +266,17 @@ console.debug(user)
  */
 Users.methods.delete = {
   name: 'users.methods.delete',
-  schema: {
-    _id: String,
-    username: String
-  },
+  schema: {},
   run: onServerExec(function () {
-    return function ({ _id, username }) {
-      if (_id !== this.userId || Meteor.users.find({ _id, username }).count() === 0) {
-        throw new Meteor.Error('403', 'permissionDenied', { _id })
+    return function () {
+      const { userId } = this
+
+      if (!userId) {
+        throw new Meteor.Error('permissionDenied', 'delete.failed', { userId })
       }
 
       // TODO delete all associated data here, too
-
-      return !!Meteor.users.remove({ _id, username })
+      return !!Meteor.users.remove({ _id: userId })
     }
   })
 }

@@ -5,7 +5,7 @@ import Colors from '../constants/Colors'
 
 const Tts = TTSengine.component()
 
-export const Loading = ({ text }) => {
+export const Loading = ({ text, color }) => {
   const renderText = () => {
     if (!text) return null
 
@@ -15,10 +15,8 @@ export const Loading = ({ text }) => {
   }
   return (
     <View>
-      <ActivityIndicator size='large' color={Colors.secondary} />
-      {
-        renderText()
-      }
+      <ActivityIndicator size='large' color={color ?? Colors.secondary} />
+      {renderText()}
     </View>
   )
 }

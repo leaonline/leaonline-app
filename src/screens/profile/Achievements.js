@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import profileData from '../../resources/profileData'
 import { TTSengine } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
+import { mergeStyles } from '../../styles/mergeStyles'
 
 const Tts = TTSengine.component()
 
@@ -27,7 +28,7 @@ const changeColor = list => list.map(element => ({
  * @return {*}
  * @constructor
  */
-export const Achievements = () => {
+export const Achievements = (props) => {
   const { t } = useTranslation()
   const allDimensions = changeColor(profileData.progress.dimensions)
   const expandedStates = allDimensions.map((/* entry, index */) => useState(false))
@@ -84,11 +85,10 @@ export const Achievements = () => {
     )
   })
 
+  const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
-    <View style={styles.container}>
-      <View style={{ alignItems: 'center' }}>
-        <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' smallButton />
-      </View>
+    <View style={containerStyle}>
+      <Tts text={t('profileScreen.title')} color={Colors.secondary} id='profileScreen.title' />
       {renderProfileProgress(allDimensions)}
       <View style={styles.body} />
       <View style={styles.progressTitle}>

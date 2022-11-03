@@ -1,17 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View } from 'react-native'
-import { TTSengine } from '../../components/Tts'
+import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
 import { LeaLogo } from '../../components/images/LeaLogo'
-import { useVoices } from '../../hooks/useVoices'
-import { Loading } from '../../components/Loading'
-import { LeaButtonGroup } from '../../components/LeaButtonGroup'
-import { Units } from '../../utils/Units'
+import { TTSVoiceConfig } from '../../tts/TTSVoiceConfig'
+import { TTSSpeedConfig } from '../../tts/TTSSpeedConfig'
 import { Layout } from '../../constants/Layout'
-
-const speeds = [0.6, 0.9, 1.1]
 
 /**
  * WelcomeScreen displays the welcome text as an introduction for the new
@@ -25,79 +21,23 @@ const speeds = [0.6, 0.9, 1.1]
  */
 export const WelcomeScreen = props => {
   const { t } = useTranslation()
-  const [showIndex, setShowIndex] = useState(2)
-  const { voices, voicesLoaded } = useVoices()
+  const { Tts } = useTts()
   const welcomeText = t('welcomeScreen.text')
   const speedTestText = t('welcomeScreen.continue')
-
-  if (!voicesLoaded) {
-    return (
-      <View style={styles.container}>
-        <Loading />
-      </View>
-    )
-  }
-
-  const setNewVoice = (voice, index) => {
-    TTSengine.stop()
-    TTSengine.setVoice(voice.identifier)
-    TTSengine.speakImmediately(`Stimme ${index + 1}`)
-  }
-
-  const voiceOptions = () => {
-    // if there are no voices to choose from,
-    // we simply skip and don't show this option at all
-    if (!voices || voices.length < 2) {
-      return null
-    }
-
-    const justNumbers = voices.length > 3
-    const groupData = voices
-      .map((voice, index) => justNumbers
-        ? String(index + 1)
-        : `Stimme ${index + 1}`)
-
-    return (
-      <LeaButtonGroup
-        data={groupData}
-        onPress={(text, index) => setNewVoice(voices[index], index)}
-      />
-    )
-  }
-
-  const onSpeedSet = (text, index) => {
-    TTSengine.stop()
-    TTSengine.updateSpeed(speeds[index])
-    TTSengine.speakImmediately(`Ich spreche den text für dich ${text}`)
-    if (showIndex < 4) {
-      setShowIndex(4)
-    }
-  }
-
-  const voiceSpeedOptions = () => {
-    const groupData = ['lang\u00ADsam', 'normal', 'schnell']
-    return (
-      <LeaButtonGroup
-        data={groupData}
-        onPress={onSpeedSet}
-      />
-    )
-  }
 
   return (
     <>
       <LeaLogo style={styles.logo} />
 
-      <View style={styles.container} show={showIndex}>
+      <View style={styles.container}>
         <Tts
           id='welcomeScreen.text'
           block={true}
           style={styles.text}
           text={welcomeText} />
 
-        {voiceOptions()}
-
-        {voiceSpeedOptions()}
+        <TTSVoiceConfig />
+        <TTSSpeedConfig />
 
         <Tts
           id='welcomeScreen.text'
@@ -116,10 +56,6 @@ export const WelcomeScreen = props => {
   )
 }
 
-/**
- * @private TTS Ref
- */
-const Tts = TTSengine.component()
 
 /**
  * @private stylesheet

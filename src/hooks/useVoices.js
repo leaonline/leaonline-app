@@ -3,6 +3,7 @@ import { TTSengine } from '../components/Tts'
 
 export const useVoices = () => {
   const [voices, setVoices] = useState([])
+  const [currentVoice, setCurrentVoice] = useState(null)
   const [voicesLoaded, setVoicesLoaded] = useState(false)
 
   useEffect(() => {
@@ -14,8 +15,9 @@ export const useVoices = () => {
       .then(result => {
         setVoices(result)
         setVoicesLoaded(true)
+        setCurrentVoice(TTSengine.currentVoice || null)
       })
   }, [])
 
-  return { voices, voicesLoaded }
+  return { voices, voicesLoaded, currentVoice }
 }

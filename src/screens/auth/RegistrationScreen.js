@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useUser } from '../../hooks/useUser'
 import { ErrorMessage } from '../../components/ErrorMessage'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { Layout } from '../../constants/Layout'
+import { Loading } from '../../components/Loading'
 
 /**
  * Screen for registering a new user.
@@ -22,21 +25,33 @@ export const RegistrationScreen = () => {
 
   useEffect(() => {
     if (!user) {
-      const currentVoice = TTSengine.currentVoice
-      const currentSpeed = TTSengine.currentSpeed
+      const voice = TTSengine.currentVoice
+      const speed = TTSengine.currentSpeed
       const onError = e => setError(e)
-      signUp({ currentVoice, currentSpeed, onError })
+      setTimeout(() => signUp({ voice, speed, onError }), 1000)
     }
   }, [user])
 
   if (error) {
-    return (<ErrorMessage error={error} />)
+    return (
+      <View style={styles.container}>
+        <ErrorMessage error={error} />
+      </View>
+    )
   }
 
   return (
-    <>
-      <ActivityIndicator />
-      <Tts text={t('registerScreen.creatingAccount')} />
-    </>
+    <View style={styles.container}>
+      <Loading />
+      <Tts text={t('registrationScreen.creating')} />
+    </View>
   )
 }
+
+const styles = createStyleSheet({
+  container: {
+    ...Layout.container(),
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+})

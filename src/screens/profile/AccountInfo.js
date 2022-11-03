@@ -1,16 +1,15 @@
 import React, { useContext, useState } from 'react'
 import { View, Modal } from 'react-native'
-import { TTSengine, useTts } from '../../components/Tts'
+import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from '../../components/ActionButton'
 import { callMeteor } from '../../meteor/call'
-import { Log } from '../../infrastructure/Log'
-import { deleteAccount } from '../../meteor/deleteAccount'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
 import { AuthContext } from '../../contexts/AuthContext'
 import { Layout } from '../../constants/Layout'
-import { expectNoConsoleError } from 'react-native/Libraries/Utilities/ReactNativeTestTools'
+import { ErrorMessage } from '../../components/ErrorMessage'
+import { mergeStyles } from '../../styles/mergeStyles'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -22,14 +21,16 @@ import { expectNoConsoleError } from 'react-native/Libraries/Utilities/ReactNati
  * @return {*}
  * @constructor
  */
-export const AccountInfo = () => {
+export const AccountInfo = (props) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [codes, setCodes] = useState([])
+  const [error, setError] = useState(null)
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const { signOut } = useContext(AuthContext)
+  const { signOut, deleteAccount } = useContext(AuthContext)
 
-  const handleSignOut = () => signOut({ onError: err => console.error(err) })
+  const onError = err => setError(err)
+  const handleSignOut = () => signOut({ onError })
   const renderCodes = () => {
     if (!codes) { return null }
     return codes.map((code, index) => {
@@ -39,7 +40,6 @@ export const AccountInfo = () => {
   }
 
   const requestRestoreCode = async () => {
-    console.debug('request restore codes', codes)
     try {
       if (!codes?.length) {
         const restore = await callMeteor({ name: 'users.methods.getCodes', args: {} })
@@ -54,23 +54,17 @@ export const AccountInfo = () => {
     }
   }
 
-  const deleteMeteorAccount = () => {
-    const log = Log.create('deleteMeteorAccount')
-
-    deleteAccount({
-      prepare: () => log('send delete request'),
-      receive: () => log('response receive'),
-      success: () => log('successful deleted'),
-      failure: error => Log.error(error)
-    })
-  }
+  const deleteMeteorAccount = () => deleteAccount({ onError })
+  const containerStyle = mergeStyles(styles.container, props.containerStyle)
 
   return (
     <React.Fragment>
-      <View style={styles.container}>
+      <View style={containerStyle}>
+        <Tts text={t('accountInfo.title')} />
         <ActionButton icon='lock' text={t('accountInfo.restoreCodes')} onPress={requestRestoreCode} block />
         <ActionButton icon='sign-out-alt' text={t('accountInfo.signOut')} block onPress={handleSignOut} />
         <ActionButton icon='trash' text={t('accountInfo.delete')} onPress={deleteMeteorAccount} block />
+        <ErrorMessage error={error} />
       </View>
       <Modal
         animationType='slide'

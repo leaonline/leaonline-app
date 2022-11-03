@@ -32,15 +32,8 @@ const resources = {
       text: 'Welcome to lea.\u00ADonline'
     },
     registrationScreen: {
-      headerTitle: 'Create user account',
-      form: {
-        text: 'To use the lea app, you need to create an account. However, it is completely anonymous. You can delete your account at any time.',
-        placeholder: 'Your email address',
-        email: 'The email address is optional and will only be used to restore the account',
-        register: 'Create my account now'
-      },
-      registering: 'Your account is created',
-      complete: 'Your account has been created successfully. To restore your account, you can write down the following codes. You can also retrieve the codes later in your profile.'
+      title: 'Create user account',
+      creating: 'Your account is created'
     },
     TandCScreen: {
       headerTitle: 'General terms and conditions',
@@ -56,6 +49,7 @@ const resources = {
       title: 'My achievements'
     },
     accountInfo: {
+      title: 'Profile Options',
       whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.',
       signOut: 'Sign out',
       delete: 'Delete my account'
@@ -84,7 +78,11 @@ const resources = {
       },
       allTrue: 'Great!'
     },
-    completeScreen: {}
+    completeScreen: {
+      congratulations: 'Congratulations!',
+      correctScores: 'You have {{count}} correct answers!',
+      continue: 'Continue to the overview map'
+    }
   },
   de: {
     common: {
@@ -111,15 +109,8 @@ const resources = {
       continue: 'Wenn du damit zufrieden bist, tippe auf "weiter".'
     },
     registrationScreen: {
-      headerTitle: 'Nutzerkonto anlegen',
-      form: {
-        text: 'Um die lea App nutzen zu können, müssen Sie ein Konto anlegen. Es ist jedoch vollkommen anonym. Sie können ihr Konto jederzeit wieder löschen.',
-        placeholder: 'Ihre Email-Addresse',
-        email: 'Die Angabe der Email-Adresse ist optional und wird nur zur Wiederherstellung des Kontos verwendet',
-        register: 'Mein Konto jetzt anlegen'
-      },
-      registering: 'Ihr Konto wird angelegt',
-      complete: 'Ihr Konto wurde erfolgreich angelegt. Zur Wiederherstellung Ihres Kontos können Sie sich die folgenden Codes notieren. Sie können die Codes auch später noch in Ihrem Profil abrufen.'
+      title: 'Profil anlegen',
+      creating: 'Dein Profil wird jetzt angelegt',
     },
     TandCScreen: {
       headerTitle: 'Nutzungsbedingungen',
@@ -145,6 +136,7 @@ const resources = {
       title: 'Meine Erfolge'
     },
     accountInfo: {
+      title: 'Profil Optionen',
       restoreCodes: 'Profil sichern',
       whyRestore: 'Mit diesen Codes kannst du dein Profil sichern. Notiere sie dir oder mache ein Foto.',
       signOut: 'Profil abmelden',
@@ -173,7 +165,21 @@ const resources = {
       },
       allTrue: 'Super!'
     },
-    completeScreen: {}
+    completeScreen: {
+      congratulations: 'Du hast es geschafft!',
+      correctScores: 'Du hast {{count}} richtige Lösungen!',
+      continue: 'Weiter zur Aufgabenübersicht'
+    },
+    tts: {
+      settings: 'Meine Spracheinstellungen',
+      voice: 'Stimme {{value}}',
+      speedText: 'Ich spreche den text für dich {{value}}',
+      speed: {
+        slow: 'Lang\u00ADsam',
+        medium: 'Normal',
+        fast: 'Schnell'
+      }
+    }
   }
 }
 

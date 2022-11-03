@@ -334,6 +334,12 @@ const UnitScreen = props => {
       return copy
     })
 
+    console.debug('get competencies')
+    const competencies =  responseDoc.scores.filter(entry => entry.score === true).length
+    const prevCompetencies = session.competencies || 0
+    console.debug({ competencies, prevCompetencies })
+    sessionActions.competencies(prevCompetencies + competencies)
+
     log('submit response to server', responseDoc)
     await sendResponse({ responseDoc })
 

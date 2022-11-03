@@ -11,7 +11,8 @@ Accounts.config({
   defaultFieldSelector: {
     _id: 1,
     username: 1,
-    restore: 1
+    voice: 1,
+    speed: 1
   }
 })
 

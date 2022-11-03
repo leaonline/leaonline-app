@@ -6,6 +6,8 @@ import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
+import { promiseWithTimeout } from '../utils/promiseWithTimeout'
+import { Config } from '../env/Config'
 
 /** @private **/
 let Speech = null
@@ -18,11 +20,10 @@ const styles = createStyleSheet({
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
-  text: {
-
-  }
+  text: {}
 })
 
+const globalDebug = Log.create('TTS', 'debug', Config.debug.tts)
 const handlers = {}
 const runHandlers = name => {
   if (!handlers[name]) { return }
@@ -38,8 +39,10 @@ const runHandlers = name => {
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {boolean=} props.block: Makes the container flexGrow. If this causes problems, use style instead.
  * @param {boolean=} props.disabled: Makes the button disabled
- * @param {string=} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary  (examples in ./constants/Colors.js)
- * @param {string=} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples in ./constants/Colors.js)
+ * @param {string=} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary
+ *   (examples in ./constants/Colors.js)
+ * @param {string=} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples
+ *   in ./constants/Colors.js)
  * @param {string=} props.activeIconColor: The color of the icon when speaking is active
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
@@ -60,7 +63,9 @@ const ttsComponent = props => {
 
   const getIdleIconColor = () => props.iconColor || props.color || Colors.secondary
   const getIdleTextColor = () => props.color || Colors.secondary
-  const debug = Log.create('TTS', 'debug', props.debug || TTSengine.debug)
+  const debug = props.debug || TTSengine.debug
+    ? globalDebug
+    : () => {}
 
   useEffect(() => {
     debug('set isSpeaking', isSpeaking)
@@ -187,8 +192,8 @@ const ttsComponent = props => {
           color={props.disabled ? Colors.gray : iconColor}
           size={iconSize}
           style={{ padding: 5 }}
-          name='volume-up'
-          type='font-awesome-5'
+          name="volume-up"
+          type="font-awesome-5"
         />
       </Pressable>
       {displayedText()}
@@ -214,19 +219,25 @@ const ttsComponent = props => {
  * @property debug {boolean} debugs all internal tts events if true
  */
 export const TTSengine = {
-  setSpeech (s, { speakImmediately = false } = {}) {
-    Speech = s
+  setSpeech (s, { speakImmediately = false, text = '', timeout = 500 } = {}) {
+    return promiseWithTimeout(new Promise((resolve) => {
+      globalDebug('set speech', { speakImmediately })
+      Speech = s
 
-    if (speakImmediately) {
-      Speech.speak('', {
-        language: 'ger',
-        pitch: 1,
-        rate: 1,
-        volume: 0.0
-      })
-    }
+      if (speakImmediately) {
+        Speech.speak(text, {
+          language: 'ger',
+          pitch: 1,
+          rate: 1,
+          volume: 0,
+          onDone: resolve,
+          onError: resolve
+        })
+      }
+    }), timeout)
   },
   on: (name, fn) => {
+    globalDebug('add global listener', name)
     handlers[name] = handlers[name] || []
     handlers[name].push(fn)
   },
@@ -244,15 +255,18 @@ export const TTSengine = {
   /** @deprecated use `useTts` hook from this module instead */
   component: () => ttsComponent,
   updateSpeed: newSpeed => {
+    globalDebug('set new speed', newSpeed)
     if (newSpeed < 0.1 || newSpeed > 2.0) {
       throw new Error(`New speed not in range, expected ${newSpeed} between 0.1 and 2.0`)
     }
     TTSengine.currentSpeed = newSpeed
   },
   setVoice: identifier => {
+    globalDebug('set default voice', identifier)
     TTSengine.currentVoice = identifier
   },
   speakImmediately: text => {
+    globalDebug('speak immediately', text)
     Speech.stop()
     Speech.speak(text, {
       language: 'ger',
@@ -263,6 +277,7 @@ export const TTSengine = {
     })
   },
   getVoices: () => new Promise(resolve => {
+    globalDebug('get voices')
     if (TTSengine.availableVoices !== null) {
       return resolve(TTSengine.availableVoices)
     }
@@ -275,6 +290,7 @@ export const TTSengine = {
 }
 
 const loadVoices = (counter, onComplete) => {
+  globalDebug('load voices', { counter })
   const langPattern = /de[-_]+/g
 
   setTimeout(async () => {

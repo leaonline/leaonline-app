@@ -38,7 +38,7 @@ Config.debug.sync = false
 Config.debug.home = false
 Config.debug.map = false
 Config.debug.unit = false
-
+Config.debug.tts = false
 /**
  * Global styles.
  */
