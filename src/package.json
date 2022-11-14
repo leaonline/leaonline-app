@@ -13,9 +13,11 @@
   "dependencies": {
     "@babel/preset-react": "^7.16.0",
     "@expo/vector-icons": "^13.0.0",
-    "@meteorrn/core": "^2.3.0",
+    "@meteorrn/core": "git+ssh://git@github.com/jankapunkt/meteor-react-native.git#update-dependencies",
+    "@meteorrn/minimongo": "git+ssh://git@github.com/meteorrn/minimongo-cache.git#refactor-to-es6",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/netinfo": "9.3.0",
+    "@react-native-community/slider": "4.2.3",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "@react-navigation/stack": "^6.3.2",
@@ -28,9 +30,11 @@
     "expo-device": "~4.3.0",
     "expo-font": "~10.2.0",
     "expo-keep-awake": "~10.2.0",
+    "expo-modules-autolinking": "~0.10.1",
     "expo-secure-store": "~11.3.0",
     "expo-speech": "~10.3.0",
     "expo-splash-screen": "~0.16.2",
+    "expo-status-bar": "~1.4.0",
     "i18next": "^21.5.4",
     "jest": "^26.6.3",
     "jest-expo": "latest",
@@ -50,10 +54,7 @@
     "react-native-web": "~0.18.7",
     "simpl-schema": "^1.12.0",
     "string.prototype.matchall": "^4.0.6",
-    "uuid": "^8.3.2",
-    "@react-native-community/slider": "4.2.3",
-    "expo-status-bar": "~1.4.0",
-    "expo-modules-autolinking": "~0.10.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

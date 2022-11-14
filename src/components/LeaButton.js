@@ -4,6 +4,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import Colors from '../constants/Colors'
 import { mergeStyles } from '../styles/mergeStyles'
 import { Layout } from '../constants/Layout'
+import { Vibration } from 'react-native'
 
 /**
  * The LeaButton is the very base class for any button in our application.
@@ -45,6 +46,10 @@ export const LeaButton = props => {
     )
   }
 
+  const handlePress = () => {
+    Vibration.vibrate(50)
+    if (props.onPress) { props.onPress()}
+  }
   const titleStyle = mergeStyles(styles.title, props.titleStyle)
   const buttonStyle = mergeStyles(styles.button, props.buttonStyle)
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
@@ -56,8 +61,8 @@ export const LeaButton = props => {
       disabledStyle={styles.disabled}
       containerStyle={containerStyle}
       disabled={props.disabled}
-      type='outline'
-      onPress={props.onPress}
+      type="outline"
+      onPress={handlePress}
       icon={renderIcon()}
       iconPosition={props.iconPosition || defaults.icon.position}
     />

@@ -14,7 +14,8 @@ import { Layout } from '../constants/Layout'
  * @component
  */
 export const LeaText = props => {
-  const style = mergeStyles(styles.default, props.style)
+  const { color } = props
+  const style = mergeStyles(styles.default, props.style, color ? { color } : undefined)
   return (
     <Text
       textBreakStrategy='highQuality'

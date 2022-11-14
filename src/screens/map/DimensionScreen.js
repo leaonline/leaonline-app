@@ -52,7 +52,6 @@ const DimensionScreen = props => {
 
   const selectUnitSet = async unitSetDoc => {
     const { dimension, ...unitSet } = unitSetDoc
-    console.debug(unitSet)
     await sessionActions.multi({ unitSet, dimension })
     props.navigation.navigate('unit')
   }

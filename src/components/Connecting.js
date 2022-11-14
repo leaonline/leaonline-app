@@ -5,13 +5,6 @@ import { Layout } from '../constants/Layout'
 import { useTranslation } from 'react-i18next'
 import { useTts } from './Tts'
 
-const styles = createStyleSheet({
-  container: Layout.container(),
-  indicator: {
-    height: 50
-  }
-})
-
 /**
  * Default visual for indicating to users, that we are connecting to the servers.
  * @returns {JSX.Element}
@@ -23,8 +16,18 @@ export const Connecting = () => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator style={styles.indicator} />
+      <ActivityIndicator style={styles.indicator} size='large' />
       <Tts text={t('connecting.title')} align='center' />
     </View>
   )
 }
+
+const styles = createStyleSheet({
+  container: {
+    ...Layout.container(),
+    justifyContent: 'center'
+  },
+  indicator: {
+    height: 50
+  }
+})

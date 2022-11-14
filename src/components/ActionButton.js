@@ -24,7 +24,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  */
 export const ActionButton = props => {
   const { Tts } = useTts()
-  const skipTts = props.tts === false
+  const skipTts = props.tts === false || props.noTts
 
   const renterTts = () => {
     if (skipTts) { return null }
@@ -37,6 +37,7 @@ export const ActionButton = props => {
       <Tts text={ttsText} activeIconColor={iconActiveColor} iconColor={iconColor} color={props.color || Colors.primary} id={`${ttsText}-tts`} dontShowText />
     )
   }
+
   const activeStyle = props.active ? { backgroundColor: props.color, color: Colors.white } : undefined
   const blockStyle = props.block ? { flexGrow: 1 } : undefined
   const buttonProps = {

@@ -12,6 +12,7 @@ import { ViewContainer } from './components/ViewContainer'
 import { MainNavigation } from './navigation/MainNavigation'
 import { AppSession } from './state/AppSession'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAppState } from './hooks/useAppState'
 
 const {AppSessionProvider } = AppSession.init({
   storage: AsyncStorage
@@ -34,6 +35,7 @@ const initFunction = [
 export default function App () {
   const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
   const { connectionError, connected } = useConnection()
+
   // splashscreen is still active...
   if (!appIsReady) { return null }
 

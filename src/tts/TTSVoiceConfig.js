@@ -6,6 +6,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { LeaButtonGroup } from '../components/LeaButtonGroup'
 import { TTSengine } from '../components/Tts'
+import { useTranslation } from 'react-i18next'
 
 const setNewVoice = (voice, index) => {
   TTSengine.stop()
@@ -21,6 +22,7 @@ const setNewVoice = (voice, index) => {
  * @component
  */
 export const TTSVoiceConfig = props => {
+  const { t } = useTranslation()
   const { voices, voicesLoaded, currentVoice } = useVoices()
   const [selected, setSelected] = useState(false)
 

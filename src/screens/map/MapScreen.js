@@ -42,7 +42,7 @@ const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts block={true} text={mapScreenTitle}/>)
+      headerTitle: () => (<Tts text={mapScreenTitle}/>)
     })
   }, [session.field])
 
@@ -81,13 +81,14 @@ const MapScreen = props => {
    */
 
   const selectStage = async stage => {
-    stage.level = mapData.levels[stage.level]
-    stage.unitSets.forEach(unitSet => {
+    const newStage = { ...stage }
+    newStage.level = mapData.levels[newStage.level]
+    newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
+    newStage.unitSets.forEach(unitSet => {
       unitSet.dimension = mapData.dimensions[unitSet.dimension]
     })
 
-    await sessionActions.stage(stage)
-    console.debug('move to dimension')
+    await sessionActions.stage(newStage)
     props.navigation.navigate('dimension')
   }
 
@@ -115,7 +116,7 @@ const MapScreen = props => {
         <FlatList
           data={mapData.entries}
           initialNumToRender={10}
-          removeClippedSubviews={false}
+          removeClippedSubviews={true}
           renderItem={renderListItem}
           keyExtractor={item => item.key}
         />
@@ -132,13 +133,18 @@ const MapScreen = props => {
 
     return (
       <View style={styles.stage}>
-        <RouteButton style={{ height: 100 }} title={title} icon={icon} iconColor={iconColor}
-                     handleScreen={() => selectStage(stage)} noTts/>
+        <RouteButton
+          containerStyle={styles.stageButton}
+          title={title}
+          block={true}
+          icon={icon}
+          iconColor={iconColor}
+          handleScreen={() => selectStage(stage)} noTts />
 
         <StaticCircularProgress
           duration={0}
           value={progress}
-          radius={60}
+          radius={20}
           maxValue={100}
           textColor={Colors.secondary}
           activeStrokeColor={Colors.secondary}
@@ -186,7 +192,7 @@ const MapScreen = props => {
         <StaticCircularProgress
           key={`dimension-progress-${index}`}
           value={progress}
-          radius={23}
+          radius={20}
           textColor={color}
           duration={0}
           activeStrokeColor={color}
@@ -213,15 +219,23 @@ const MapScreen = props => {
  * @private stylesheet
  */
 const styles = createStyleSheet({
-  container: Layout.container(),
+  container: {
+    ...Layout.container()
+  },
   scrollView: {
-    marginHorizontal: 20,
     width: '100%'
   },
   stage: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    flex: 2
+    alignItems: 'center',
+    alignContent: 'flex-start',
+    justifyContent: 'space-between',
+    justifyItems: 'flex-start',
+    height: 150
+  },
+  stageButton: {
+    width: 150
   },
   title: {
     fontSize: 32

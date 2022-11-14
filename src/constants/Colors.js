@@ -13,8 +13,8 @@ export default {
   danger: '#d95a7d',
   success: '#00ddb6',
   info: '#86c4f1',
-  right: '#00FF00',
-  missing: '#FFFF00',
-  wrong: '#FF0000',
+  right: '#5BB984',
+  missing: '#EA7878',
+  wrong: '#EA7878',
   white: '#FFFFFF'
 }

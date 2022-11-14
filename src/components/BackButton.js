@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, View } from 'react-native'
+import { Pressable, Vibration, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -8,6 +8,9 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 export const BackButton = (props) => {
   const navigation = useNavigation()
   const handleOnPress = async () => {
+    if (props.vibrate !== false) {
+      Vibration.vibrate(50)
+    }
     if (props.onPress) {
       await props.onPress()
     }
@@ -15,7 +18,7 @@ export const BackButton = (props) => {
   }
 
   return (
-    <Pressable style={styles.buttonContainer} onPress={handleOnPress}>
+    <Pressable style={styles.buttonContainer} onPress={handleOnPress} hitSlop={10} android_ripple={rippleConfig}>
       <Icon
         name={props.icon} type="font-awesome-5" color={Colors.secondary}
         style
@@ -32,6 +35,13 @@ const styles = createStyleSheet({
     borderWidth: 1,
     borderColor: Colors.secondary,
     padding: 10,
-    borderRadius: 3
+    borderRadius: 3,
+    overflow: 'hidden'
   }
 })
+
+const rippleConfig = {
+  color: Colors.secondary,
+  borderless: false,
+  radius: 40
+}

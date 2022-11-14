@@ -30,6 +30,7 @@ import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
 import { CurrentProgress } from '../../components/CurrentProgress'
 import './registerComponents'
+import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
 
 const log = Log.create('UnitScreen')
 
@@ -195,6 +196,14 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   // RENDERING
   // ---------------------------------------------------------------------------
+
+  const renderInstructions = (list) => {
+    if (!list?.length) { return null }
+
+    return (
+      <InstructionsGraphics source={list[0]} color={dimensionColor} />
+    )
+  }
 
   /**
    *  This is the generic content rendering method, which
@@ -457,7 +466,7 @@ const UnitScreen = props => {
               type="font-awesome-5"
             />
           </LeaText>
-          {renderContent(unitDoc.instructions)}
+          {renderInstructions(unitDoc.instructions)}
         </View>
 
         {/* 3. PART TASK PAGE CONTENT */}

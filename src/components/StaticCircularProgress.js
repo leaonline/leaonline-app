@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import Svg, { G, Circle, Defs, LinearGradient, Stop, Text } from 'react-native-svg'
 import Colors from '../constants/Colors'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 const StaticCircularProgress = (props) => {
   const {
@@ -51,7 +52,7 @@ const StaticCircularProgress = (props) => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Svg
         width={radius * 2}
         height={radius * 2}
@@ -85,5 +86,11 @@ const StaticCircularProgress = (props) => {
     </View>
   )
 }
+
+const styles = createStyleSheet({
+  container: {
+
+  }
+})
 
 export { StaticCircularProgress }

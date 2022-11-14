@@ -25,8 +25,6 @@ Meteor.connect(Config.backend.url, {
 export const useConnection = () => {
   const [connected, setConnected] = useState(null)
   const [connectionError, setConnectionError] = useState(null)
-  const status = Meteor.useTracker(() => Meteor.status())
-
   // we use separate functions as the handlers, so they get removed
   // on unmount, which happens on auto-reload and would cause errors
   // if not handled
@@ -34,12 +32,17 @@ export const useConnection = () => {
     const onError = (e) => setConnectionError(e)
     Meteor.ddp.on('error', onError)
 
-    const onConnected = () => connected !== true && setConnected(true)
+    const onConnected = () => {
+      console.debug('CONNECTION: on connected')
+      if (connected !== true) setConnected(true)
+    }
+
     Meteor.ddp.on('connected', onConnected)
 
     // if the connection is lost, we not only switch the state
     // but also force to reconnect to the server
     const onDisconnected = () => {
+      console.debug('CONNECTION: on disconnected')
       Meteor.ddp.autoConnect = true
       if (connected !== false) {
         setConnected(false)

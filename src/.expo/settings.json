@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": "mc-y7b",
   "https": false,
-  "scheme": null,
-  "devClient": false
+  "scheme": "com.testCompany.leaonline",
+  "devClient": true
 }

@@ -1,12 +1,17 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Vibration, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 
 export const ProfileButton = props => {
   const navigation = useNavigation()
-  const toProfile = () => navigation.navigate(props.route)
+  const toProfile = () => {
+    if (props.vibrate !== false) {
+      Vibration.vibrate(50)
+    }
+    navigation.navigate(props.route)
+  }
   return (
     <View style={{ display: 'flex', marginLeft: 'auto' }}>
       <Icon

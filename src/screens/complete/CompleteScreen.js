@@ -9,6 +9,9 @@ import { loadDocs } from '../../meteor/loadDocs'
 import { loadCompleteData } from './loadCompleteData'
 import { useTts } from '../../components/Tts'
 import { getDimensionColor } from '../unit/getDimensionColor'
+import { ActionButton } from '../../components/ActionButton'
+import { Celebrate } from './Celebrate'
+import { Vibration } from 'react-native'
 import { LeaText } from '../../components/LeaText'
 
 /**
@@ -26,7 +29,7 @@ import { LeaText } from '../../components/LeaText'
 const CompleteScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const [session] = useContext(AppSessionContext)
+  const [session, sessionActions] = useContext(AppSessionContext)
   const docs = loadDocs(() => loadCompleteData(session))
   const dimensionColor = getDimensionColor(session.dimension)
 
@@ -37,6 +40,8 @@ const CompleteScreen = props => {
     props.navigation.setOptions({
       headerTitle: () => (<CurrentProgress value={1} dimension={session.dimension}/>)
     })
+
+    Vibration.vibrate(1000)
   }, [])
 
   // ---------------------------------------------------------------------------
@@ -55,12 +60,23 @@ const CompleteScreen = props => {
     }
 
     props.navigation.addListener('beforeRemove', beforeGoingBack)
-
     // remove listeners on destroy
     return () => props.navigation.removeListener('beforeRemove', beforeGoingBack)
   }, [props.navigation])
 
   const count = session.competencies || 0
+  const moveToMap = () => {
+    // clear session variables: unit unitSet progress
+    sessionActions.multi({
+      unit: null,
+      unitSet: null,
+      progress: null,
+      competencies: null
+    })
+
+    // clear the navigation stack and move to the map
+    props.navigation.navigate('map')
+  }
 
   return (
     <ScreenBase {...docs} style={styles.container}>
@@ -73,6 +89,12 @@ const CompleteScreen = props => {
         color={dimensionColor}
         iconColor={dimensionColor}
       />
+
+      <LeaText style={styles.count} color={dimensionColor}>{count}</LeaText>
+
+      <Celebrate />
+
+      <ActionButton color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>
   )
 }
@@ -80,6 +102,14 @@ const CompleteScreen = props => {
 const styles = createStyleSheet({
   container: {
     ...Layout.container()
+  },
+  count: {
+    alignSelf: 'center',
+    fontSize: 50,
+    lineHeight: 100,
+    margin: 0,
+    padding: 0,
+    fontWeight: 'bold'
   },
   body: {
     flex: 2,
