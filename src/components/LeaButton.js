@@ -91,18 +91,18 @@ const styles = createStyleSheet({
   button: {
     backgroundColor: Colors.white,
     ...Layout.button(),
-    ...Layout.dropShadow({ android: false })
+    ...Layout.dropShadow({ android: false }),
   },
   title: {
     color: Colors.primary,
     ...Layout.defaultFont(),
-    flexGrow: 1
+    flexGrow: 1,
   },
   container: {
     ...Layout.dropShadow({ ios: false }),
     borderRadius: 15,
     borderWidth: 0,
-    overflow: 'visible'
+    overflow: 'visible',
   },
   disabled: {
     opacity: 0.5

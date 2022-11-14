@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react'
 import Meteor from '@meteorrn/core'
 import * as SecureStore from 'expo-secure-store'
 import { Config } from '../env/Config'
+import { Log } from '../infrastructure/Log'
+
+const log = Log.create('useConnection')
 
 // get detailed info about internals
-Meteor.isVerbose = true
+Meteor.enableVerbose()
 
 // connect with Meteor and use a secure store
 // to persist our received login token, so it's encrypted
@@ -15,7 +18,10 @@ Meteor.connect(Config.backend.url, {
     getItem: SecureStore.getItemAsync,
     setItem: SecureStore.setItemAsync,
     removeItem: SecureStore.deleteItemAsync
-  }
+  },
+  autoConnect: true,
+  autoReconnect: true,
+  reconnectInterval: 500,
 })
 
 /**
@@ -33,7 +39,7 @@ export const useConnection = () => {
     Meteor.ddp.on('error', onError)
 
     const onConnected = () => {
-      console.debug('CONNECTION: on connected')
+      log('connected to', Config.backend.url)
       if (connected !== true) setConnected(true)
     }
 
@@ -42,13 +48,14 @@ export const useConnection = () => {
     // if the connection is lost, we not only switch the state
     // but also force to reconnect to the server
     const onDisconnected = () => {
-      console.debug('CONNECTION: on disconnected')
+      console.debug('disconnected from', Config.backend.url)
       Meteor.ddp.autoConnect = true
       if (connected !== false) {
         setConnected(false)
       }
       Meteor.reconnect()
     }
+
     Meteor.ddp.on('disconnected', onDisconnected)
 
     // remove all of these listeners on unmount

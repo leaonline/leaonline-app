@@ -9,6 +9,7 @@ import Colors from '../../constants/Colors'
 import { ScreenBase } from '../BaseScreen'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { Layout } from '../../constants/Layout'
+import { ActionButton } from '../../components/ActionButton'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -39,10 +40,12 @@ const HomeScreen = props => {
   const renderButtons = () => {
     return (data || []).map((item, key) => {
       return (
-        <RouteButton
-          title={item.title} icon={item.icon} key={key}
+        <ActionButton
+          key={key}
+          title={item.title}
+          icon={item.icon}
           block={true}
-          handleScreen={() => selectField(item)}
+          onPress={() => selectField(item)}
         />
       )
     })

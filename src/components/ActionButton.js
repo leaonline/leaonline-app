@@ -43,7 +43,7 @@ export const ActionButton = props => {
   const buttonProps = {
     ...props,
     title: props.title || props.text || props.tts,
-    buttonStyle: mergeStyles(styles.button, props.buttonStyle, activeStyle),
+    buttonStyle: mergeStyles({}, props.buttonStyle, activeStyle),
     titleStyle: activeStyle,
     containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }
@@ -56,16 +56,10 @@ export const ActionButton = props => {
   )
 }
 
-/**
- * @private
- */
 const styles = createStyleSheet({
   container: {
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  button: {
-    width: '100%'
   },
   buttonContainer: {
     marginLeft: 10
