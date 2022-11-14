@@ -35,6 +35,7 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
+.builds
 
 # Dependency directories
 node_modules/
@@ -119,3 +120,6 @@ dist
 
 # Font directory
 src/assets/fonts/
+
+# deployment folders
+src/.deploy
