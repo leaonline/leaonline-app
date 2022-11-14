@@ -1,21 +1,31 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, StatusBar } from 'react-native'
+import { View } from 'react-native'
 import Markdown from 'react-native-markdown-display'
+import { createStyleSheet } from '../../../styles/createStyleSheet'
+import { Layout } from '../../../constants/Layout'
 
-// const renderer = { heading (text, levle) {} }
-
+/**
+ * Renders markdown
+ * @param props {object}
+ * @param props.value {string} the markdown text
+ * @return {JSX.Element}
+ * @constructor
+ */
 export const MarkdownRenderer = props => {
   return (
-    <>
-      <StatusBar barStyle='dark-content' />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior='automatic'
-          style={{ height: '100%' }}
-        >
-          <Markdown>{props.value}</Markdown>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <View style={styles.container}>
+      <Markdown style={styles.text}>{props.value}</Markdown>
+    </View>
   )
 }
+
+const styles = createStyleSheet( {
+  container: {
+    ...Layout.container()
+  },
+  text: {
+    body: {
+      ...Layout.defaultFont()
+    }
+  }
+})
