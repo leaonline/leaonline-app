@@ -59,8 +59,15 @@ Log.setLevel = level => {
   logLevel = level
 }
 
-Log.create = (name, type = 'log', flag) => {
-  if (typeof flag === 'boolean' && flag !== true) {
+/**
+ * Creates a new log type.
+ * @param name {string} the namespace for the log
+ * @param type {string='log'} the log type name
+ * @param force {boolean=} overrides global logLevel
+ * @return {(function())|*|(function(...[*]): void)}
+ */
+Log.create = (name, type = 'log', force) => {
+  if (typeof force === 'boolean' && force !== true) {
     return () => {} // noOp on conditionals
   }
   if (!Object.hasOwnProperty.call(allLevels, type)) {

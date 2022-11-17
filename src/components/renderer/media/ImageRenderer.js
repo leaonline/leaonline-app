@@ -6,7 +6,7 @@ import { Loading } from '../../Loading'
 import { ContentServer } from '../../../remotes/ContentServer'
 
 const win = Dimensions.get('window')
-const debug = Log.create('ImageRenderer', 'debug')
+const debug = Log.create('ImageRenderer', 'debug', true)
 
 
 export const ImageRenderer = props => {

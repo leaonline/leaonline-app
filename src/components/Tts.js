@@ -20,7 +20,8 @@ const styles = createStyleSheet({
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
-  text: {}
+  text: {},
+  icon: { padding: 5 }
 })
 
 const globalDebug = Log.create('TTS', 'debug', Config.debug.tts)
@@ -180,25 +181,25 @@ const ttsComponent = props => {
     Object.assign(ttsContainerStyle, props.style)
   }
   const iconSize = props.smallButton ? 20 : 30
+  const onPress = () => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()
 
   return (
     <View style={ttsContainerStyle}>
       <Pressable
         disabled={props.disabled}
-        onPress={() => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()}
+        onPress={onPress}
       >
         <Icon
           testID={props.id}
           color={props.disabled ? Colors.gray : iconColor}
           size={iconSize}
-          style={{ padding: 5 }}
+          style={styles.icon}
           name="volume-up"
           type="font-awesome-5"
         />
       </Pressable>
       {displayedText()}
     </View>
-
   )
 }
 

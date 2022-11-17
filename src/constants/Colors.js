@@ -16,5 +16,6 @@ export default {
   right: '#5BB984',
   missing: '#EA7878',
   wrong: '#EA7878',
-  white: '#FFFFFF'
+  white: '#FFFFFF',
+  transparent: '#ffffff00'
 }

@@ -1,0 +1,324 @@
+[
+  [
+    {
+      "index": 0,
+      "length": 1,
+      "value": "T"
+    },
+    {
+      "index": 0,
+      "length": 1,
+      "value": "H"
+    },
+    {
+      "index": 0,
+      "length": 1,
+      "value": "Z"
+    },
+    {
+      "index": 0,
+      "length": 1,
+      "value": "E"
+    },
+    {
+      "index": 0,
+      "length": 4,
+      "value": "Zahl"
+    }
+  ],
+  [
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 0,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 1,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 2,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 3,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "index": 0,
+      "length": 3,
+      "value": "654"
+    }
+  ],
+  [
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 4,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 5,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 6,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 7,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "index": 0,
+      "length": 3,
+      "value": "102"
+    }
+  ],
+  [
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 8,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 9,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 10,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 11,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "index": 0,
+      "length": 3,
+      "value": "850"
+    }
+  ],
+  [
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 12,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 13,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 14,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 15,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "index": 0,
+      "length": 3,
+      "value": "953"
+    }
+  ],
+  [
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 16,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 17,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 18,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "flavor": 2,
+      "index": 1,
+      "isBlock": false,
+      "isToken": true,
+      "itemIndex": 19,
+      "length": 30,
+      "pattern": "0123456789",
+      "tts": "",
+      "value": [
+        "Array"
+      ]
+    },
+    {
+      "index": 0,
+      "length": 3,
+      "value": "298"
+    }
+  ]
+]

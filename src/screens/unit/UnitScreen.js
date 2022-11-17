@@ -272,7 +272,7 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   // TASK DISPLAY
   // ---------------------------------------------------------------------------
-  log('render unit', unitDoc._id, unitDoc.shortCode, 'page', page, 'checked', scored)
+  log('render unit', unitDoc._id, unitDoc.shortCode, 'page=', page, 'checked=', scored)
 
   const submitResponse = async ({ responses, data }) => {
     log('item submit', data.contentId, responses)

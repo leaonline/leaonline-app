@@ -179,6 +179,9 @@ const resources = {
         medium: 'Normal',
         fast: 'Schnell'
       }
+    },
+    item: {
+      correctResponse: 'Die richtige Antwort lautet: {{value}}'
     }
   }
 }
