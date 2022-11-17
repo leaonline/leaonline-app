@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { CurrentProgress } from '../../components/CurrentProgress'
 import { Layout } from '../../constants/Layout'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
@@ -37,10 +36,6 @@ const CompleteScreen = props => {
   // Navigation updates
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    props.navigation.setOptions({
-      headerTitle: () => (<CurrentProgress value={1} dimension={session.dimension}/>)
-    })
-
     Vibration.vibrate(1000)
   }, [])
 

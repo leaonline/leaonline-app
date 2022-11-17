@@ -28,7 +28,6 @@ import { useTts } from '../../components/Tts'
 import { LeaText } from '../../components/LeaText'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
-import { CurrentProgress } from '../../components/CurrentProgress'
 import './registerComponents'
 import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
 
@@ -88,16 +87,6 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   // Navigation updates
   // ---------------------------------------------------------------------------
-  useEffect(() => {
-    const current = session.progress ?? 0
-    const max = session.unitSet?.progress ?? 1
-    const value = (current + 1) / (max + 1)
-
-    props.navigation.setOptions({
-      headerTitle: () => (<CurrentProgress value={value} dimension={session.dimension}/>)
-    })
-  }, [session.progress, session.unitSet])
-
   useEffect(() => {
     //If users attempt to cancel we surely first show a modal
     // and ask if cancelling was intended.
@@ -187,7 +176,11 @@ const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
-    sessionActions.progress(session.progress  + 1)
+    await sessionActions.multi({
+      progress: session.progress  + 1,
+      unit: nextUnitId,
+      page: 0
+    })
     return nextUnitId
       ? props.navigation.push('unit')
       : props.navigation.navigate('complete')

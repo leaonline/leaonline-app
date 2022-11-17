@@ -21,6 +21,7 @@ import { RestoreScreen } from '../screens/auth/RestoreScreen'
 import { ProfileButton } from '../components/ProfileButton'
 import { useKeepAwake } from 'expo-keep-awake'
 import { BackButton } from '../components/BackButton'
+import { CurrentProgress } from '../components/CurrentProgress'
 
 /**
  * StackNavigator navigates between screens in a push/pop fashion.
@@ -88,7 +89,8 @@ export const MainNavigation = (props) => {
               title: t('unitScreen.title'),
               headerBackVisible: false,
               headerTitleAlign: 'center',
-              headerRight
+              headerRight,
+              headerTitle: CurrentProgress
             }} />
           <Stack.Screen
             name='complete'
@@ -98,7 +100,8 @@ export const MainNavigation = (props) => {
               title: t('completeScreen.title'),
               headerBackVisible: false,
               headerTitleAlign: 'center',
-              headerRight
+              headerRight,
+              headerTitle: CurrentProgress
           }} />
           <Stack.Screen
             name='profile'
