@@ -26,6 +26,6 @@ export const loadProgressDoc = async (fieldId) => {
   })
 
   progressDoc.unitSets = unitSets
-
+console.debug(progressDoc)
   return progressDoc
 }

@@ -35,7 +35,13 @@ const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const mapDocs = loadDocs(() => loadMapData(session.field))
+  const mapDocs = loadDocs(() => loadMapData({
+    fieldDoc: session.field,
+    loadUserData: session.loadUserData,
+    onUserDataLoaded: () => sessionActions.loadUserData(null)
+  }), {
+    runArgs: [session.field, session.loadUserData]
+  })
   const mapData = mapDocs.data
 
   useEffect(() => {
@@ -125,6 +131,7 @@ const MapScreen = props => {
   }
 
   const renderStage = (stage, index) => {
+    console.debug('stage', index, 'progress:', stage.userProgress, stage.progress)
     const stageIsComplete = stage.userProgress >= stage.progress
     const icon = stageIsComplete ? 'flag' : 'edit'
     const iconColor = stageIsComplete ? Colors.success : Colors.primary
@@ -139,7 +146,7 @@ const MapScreen = props => {
           block={true}
           icon={icon}
           iconColor={iconColor}
-          handleScreen={() => selectStage(stage)} noTts />
+          handleScreen={() => selectStage(stage)} noTts/>
 
         <StaticCircularProgress
           duration={0}

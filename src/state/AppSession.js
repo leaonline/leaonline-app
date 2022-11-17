@@ -6,7 +6,7 @@ export const AppSession = {}
 
 let currentStorage = null
 const { EJSON } = Meteor
-const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies']
+const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies','loadUserData']
 const validateKey = key => {
   if (!validKeys.includes(key)) {
     throw new Error(`Unknown key ${key}, allowed are only ${validKeys.toString()}`)
@@ -40,7 +40,7 @@ AppSession.init = ({ storage }) => {
 
         dispatch(options)
 
-        updateMulti(options)
+        updateMulti(options).catch(onError)
       }
     }
 

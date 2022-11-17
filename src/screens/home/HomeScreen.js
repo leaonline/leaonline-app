@@ -30,7 +30,10 @@ const HomeScreen = props => {
 
   const selectField = async value => {
     const { _id, title } = value
-    await sessionActions.field({ _id, title })
+    await sessionActions.multi({
+      field: { _id, title },
+      loadUserData: true
+    })
     props.navigation.navigate('map')
   }
 

@@ -8,11 +8,16 @@ const debug = Config.debug.map
   ? Log.create('loadMapData', 'debug')
   : () => {}
 
+// we use a simple RAM cache for the map data
+// so it's only loaded once per session but we never
+// persist it in order to obtain new changes from the server
+const mapCache = new Map()
+
 /**
  * Loads map data to build the map, that will be filled with user data
  * @return {Promise<*>}
  */
-export const loadMapData = async (fieldDoc) => {
+export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) => {
   const fieldId = fieldDoc?._id
 
   if (!fieldId) {
@@ -20,10 +25,12 @@ export const loadMapData = async (fieldDoc) => {
     return null
   }
 
-  const mapData = await callMeteor({
-    name: Config.methods.getMapData,
-    args: { fieldId }
-  })
+  const mapData = mapCache.has(fieldId)
+    ? mapCache.get(fieldId)
+    : await callMeteor({
+      name: Config.methods.getMapData,
+      args: { fieldId }
+    })
 
   const hasData = !!mapData
   const hasDimensions = hasData && !!mapData.dimensions?.length
@@ -47,55 +54,61 @@ export const loadMapData = async (fieldDoc) => {
   // on the navigation bar incl. a TTS button
   mapData.fieldName = fieldDoc.title
 
-  // we load the progress doc here and immediately resolve
-  // the values
-  let progressDoc = await loadProgressDoc(fieldId)
+  if (loadUserData) {
+    // we load the progress doc here and immediately resolve
+    // the values
+    let progressDoc = await loadProgressDoc(fieldId)
 
-  if (!progressDoc) {
-    progressDoc = {
-      unitSets: []
-    }
-  }
-
-  const levelsProgress = {}
-
-  mapData.entries.forEach((entry, index) => {
-    entry.key = `map-entry-${index}`
-
-    // a milestone contains a summary of the progress of the stages
-    // where maxProgress is the maximum achievable progress and
-    // where userProgress is the current user's progress (defaults to zero)
-    if (entry.type === 'milestone') {
-      entry.maxProgress = levelsProgress[entry.level].max
-      entry.userProgress = levelsProgress[entry.level].user || 0
-      return
+    if (!progressDoc) {
+      progressDoc = {
+        unitSets: []
+      }
     }
 
-    // set defaults
-    entry.userProgress = entry.userProgress || 0
-    entry.progress = entry.progress || 0
+    const levelsProgress = {}
 
-    let userStageProgress = 0
+    mapData.entries.forEach((entry, index) => {
+      entry.key = `map-entry-${index}`
 
-    entry.unitSets.forEach(unitSet => {
-      const userUnitSet = progressDoc.unitSets[unitSet._id] ?? { progress: 0, competencies: 0 }
-      const usersUnitSetProgress = userUnitSet.progress || 0
-      const usersUnitSetCompetencies = userUnitSet.competencies || 0
+      // a milestone contains a summary of the progress of the stages
+      // where maxProgress is the maximum achievable progress and
+      // where userProgress is the current user's progress (defaults to zero)
+      if (entry.type === 'milestone') {
+        entry.maxProgress = levelsProgress[entry.level].max
+        entry.userProgress = levelsProgress[entry.level].user || 0
+        return
+      }
 
-      userStageProgress += usersUnitSetProgress
-      unitSet.userProgress = usersUnitSetProgress
-      unitSet.userCompetencies = usersUnitSetCompetencies
+      // set defaults
+      entry.userProgress = entry.userProgress || 0
+      entry.progress = entry.progress || 0
+
+      let userStageProgress = 0
+
+      entry.unitSets.forEach(unitSet => {
+        const userUnitSet = progressDoc.unitSets[unitSet._id] ?? { progress: 0, competencies: 0 }
+        const usersUnitSetProgress = userUnitSet.progress || 0
+        const usersUnitSetCompetencies = userUnitSet.competencies || 0
+
+        userStageProgress += usersUnitSetProgress
+        unitSet.userProgress = usersUnitSetProgress
+        unitSet.userCompetencies = usersUnitSetCompetencies
+      })
+
+      entry.userProgress = userStageProgress
+
+      if (!levelsProgress[entry.level]) {
+        levelsProgress[entry.level] = { max: 0, user: 0 }
+      }
+
+      levelsProgress[entry.level].max += entry.progress
+      levelsProgress[entry.level].user += userStageProgress
     })
 
-    entry.userProgress = userStageProgress
+    onUserDataLoaded()
+  }
 
-    if (!levelsProgress[entry.level]) {
-      levelsProgress[entry.level] = { max: 0, user: 0 }
-    }
-
-    levelsProgress[entry.level].max += entry.progress
-    levelsProgress[entry.level].user += userStageProgress
-  })
+  mapCache.set(fieldId, mapData)
 
   return mapData
 }

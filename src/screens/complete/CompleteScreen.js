@@ -67,7 +67,8 @@ const CompleteScreen = props => {
       unitSet: null,
       progress: null,
       competencies: null,
-      page: null
+      page: null,
+      loadUserData: true
     })
 
     // clear the navigation stack and move to the map
