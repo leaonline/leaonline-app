@@ -22,7 +22,7 @@ const validateKey = key => {
 AppSession.init = ({ storage }) => {
   currentStorage = storage
   const initialState = {}
-  const { update, restore, remove } = createStorageApi({ storage })
+  const { update, restore, remove, updateMulti } = createStorageApi({ storage })
 
   for (const key of validKeys) {
     initialState[key] = null // TODO async restore somehow
@@ -39,6 +39,8 @@ AppSession.init = ({ storage }) => {
         }
 
         dispatch(options)
+
+        updateMulti(options)
       }
     }
 
@@ -121,5 +123,24 @@ const createStorageApi = ({ storage }) => {
 
   const remove = async (key) => storage.removeItem(key)
 
-  return { restore, update, remove }
+  const updateMulti = async (options) => {
+    const entries = Object.entries(options)
+    const removePairs = entries.filter(([key, value]) => value === null)
+    const updatePairs = entries.filter(([key, value]) => value !== null)
+
+    if (removePairs.length > 0) {
+      await storage.multiRemove(removePairs.map(toRemovePairs))
+    }
+    if (updatePairs.length > 0) {
+      await storage.multiSet(updatePairs.map(toStoragePairs))
+    }
+  }
+
+  return { restore, update, remove, updateMulti }
 }
+
+const toRemovePairs = (pair => pair[0])
+const toStoragePairs = (([key, value]) => {
+  return [key, JSON.stringify(value)]
+})
+
