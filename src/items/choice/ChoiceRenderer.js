@@ -1,53 +1,56 @@
 import React, { useState, useEffect } from 'react'
-import { View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { ActionButton } from '../../components/ActionButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Choice } from './Choice'
 import { CompareState } from '../utils/CompareState'
-
+import { useTts } from '../../components/Tts'
+import { mergeStyles } from '../../styles/mergeStyles'
+import { LeaText } from '../../components/LeaText'
+import { Checkbox } from '../../components/Checkbox'
+import Colors from '../../constants/Colors'
 /*
-  "contentId": "DE9tqjzEE46mfjMPJ",
-  "dimensionColor": "#d95a7d",
-  "showCorrectResponse": false,
-  "submitResponse": [Function submitResponse],
-  "subtype": "choice",
-  "type": "item",
-  "value": Object {
-    "choices": Array [
-      Object {
-        "text": "P",
-      },
-      Object {
-        "text": "B",
-      },
-      Object {
-        "text": "w",
-      },
-      Object {
-        "text": "F",
-      },
-    ],
-    "flavor": 1,
-    "scoring": Array [
-      Object {
-        "competency": "LqxzYagNNtkM9uDFx",
-        "correctResponse": Array [
-          1,
-        ],
-        "requires": 1,
-      },
-    ],
-    "shuffle": false,
-  },
-  "width": "12",
+ "contentId": "DE9tqjzEE46mfjMPJ",
+ "dimensionColor": "#d95a7d",
+ "showCorrectResponse": false,
+ "submitResponse": [Function submitResponse],
+ "subtype": "choice",
+ "type": "item",
+ "value": Object {
+ "choices": Array [
+ Object {
+ "text": "P",
+ },
+ Object {
+ "text": "B",
+ },
+ Object {
+ "text": "w",
+ },
+ Object {
+ "text": "F",
+ },
+ ],
+ "flavor": 1,
+ "scoring": Array [
+ Object {
+ "competency": "LqxzYagNNtkM9uDFx",
+ "correctResponse": Array [
+ 1,
+ ],
+ "requires": 1,
+ },
+ ],
+ "shuffle": false,
+ },
+ "width": "12",
 
  */
-
-
 
 export const ChoiceRenderer = props => {
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
+  const { Tts } = useTts()
 
   // When contentId changes we have a new element to be rendered:
   // 1. clear all selections when the content id changes
@@ -102,49 +105,78 @@ export const ChoiceRenderer = props => {
     })
   }
   const toChoiceButton = (choice, index) => {
-    if (props.showCorrectResponse) {
-      const compareState = compared[index]
-      const color = CompareState.getColor(compareState)
-      const isActive = color !== undefined
-
-      return (
-        <ActionButton
-          key={index}
-          active={isActive}
-          block={true}
-          color={color || dimensionColor}
-          text={choice.text}
-          onPress={() => {}}
-          containerStyle={styles.button}
-        />
-      )
-    }
-
-    const isActive = selected[index]
+    const isSelected = !!(selected[index])
+    const key = `choice-${index}`
+    const selectedStyle = isSelected
+      ? { borderWidth: 1, borderColor: dimensionColor }
+      : undefined
     const onPress = () => selectChoice(index)
+
     return (
-      <ActionButton
-        key={index}
-        block={true}
-        active={isActive}
-        color={dimensionColor}
+      <Checkbox
+        key={key}
+        ttsText={choice.tts}
         text={choice.text}
+        hideTts={!choice.tts}
         onPress={onPress}
-        containerStyle={styles.button}
+        checked={isSelected}
+        checkedColor={dimensionColor}
+        uncheckedColor={Colors.gray}
+        iconColor={dimensionColor}
+        containerStyle={selectedStyle}
+        checkedIcon="dot-circle-o"
+        uncheckedIcon="circle-o"
+        textColor={Colors.dark}
+        textAlign="center"
       />
     )
   }
+
+  const toDisabledChoiceButton = (choice, index) => {
+    const compareState = compared[index]
+    const scoredColor = CompareState.getColor(compareState)
+    const isSelected = scoredColor !== undefined
+    const key = `choice-${index}`
+    const selectedStyle = isSelected
+      ? { borderWidth: 1, borderColor: scoredColor }
+      : undefined
+
+    return (
+      <Checkbox
+        key={key}
+        ttsText={choice.tts}
+        text={choice.text}
+        hideTts={!choice.tts}
+        onPress={() => {}}
+        checked={isSelected}
+        checkedColor={scoredColor ?? dimensionColor}
+        uncheckedColor={Colors.gray}
+        containerStyle={selectedStyle}
+        iconColor={scoredColor ?? dimensionColor}
+        checkedIcon="dot-circle-o"
+        uncheckedIcon="circle-o"
+        textColor={scoredColor ?? Colors.dark}
+        textAlign="center"
+      />
+    )
+  }
+
   return (
-    <React.Fragment>
-      {choices.map(toChoiceButton)}
-    </React.Fragment>
+    <View style={styles.container}>
+      {choices.map(props.showCorrectResponse ? toDisabledChoiceButton : toChoiceButton)}
+    </View>
   )
 }
 
 const styles = createStyleSheet({
-  button: {
-    marginTop: 10,
-    marginBottom: 10
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+
   }
 })
 

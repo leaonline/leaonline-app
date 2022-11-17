@@ -45,6 +45,7 @@ export const ActionButton = props => {
     title: props.title || props.text || props.tts,
     buttonStyle: mergeStyles({}, props.buttonStyle, activeStyle),
     titleStyle: activeStyle,
+    color: props.color,
     containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }
   const containerStyle = mergeStyles(styles.container, props.containerStyle)

@@ -4,6 +4,8 @@ import { TTSengine } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
+import { LeaText } from '../../components/LeaText'
+import { CompareState } from '../utils/CompareState'
 
 const pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
 const separatorChars = /[.,;:?!]+/g
@@ -13,68 +15,7 @@ const whiteSpace = /^\s+$/
 const Tts = TTSengine.component()
 const tokenCache = new Map()
 
-const styles = createStyleSheet({
-  container: {
-    width: '90%',
-    marginRight: 40,
-    marginLeft: 40,
-    marginTop: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderColor: '#fff',
-    // dropshadow - ios only
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-    // dropshadow - android only
-    elevation: 0.5
-  },
-  ttsContainer: {
-    width: '100%',
-    alignContent: 'center'
-  },
-  comparecontainer: {
-    width: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 5
-  },
-  tokenContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  token: {
-    padding: 5,
-    fontSize: 18,
-    fontFamily: 'semicolon',
-    color: Colors.dark,
-    backgroundColor: '#fff'
-  },
-  selected: {
-    backgroundColor: Colors.primary,
-    color: Colors.light
-  },
-  break: {
-    alignSelf: 'stretch',
-    width: '100%'
-  },
-  right: {
-    backgroundColor: Colors.success,
-    color: Colors.light
-  },
-  wrong: {
-    backgroundColor: Colors.danger,
-    color: Colors.light
-  },
-  missing: {
-    backgroundColor: Colors.warning,
-    color: Colors.light
-  }
-})
+
 
 export const HighlightRenderer = props => {
   const { dimensionColor } = props
@@ -163,14 +104,10 @@ export const HighlightRenderer = props => {
       }
 
       if (props.showCorrectResponse) {
-        if (compared[index] === 1) {
-          Object.assign(tokenStyle, styles.right)
-        }
-        if (compared[index] === 0) {
-          Object.assign(tokenStyle, styles.wrong)
-        }
-        if (compared[index] === -1) {
-          Object.assign(tokenStyle, styles.missing)
+        const backgroundColor = CompareState.getColor(compared[index])
+
+        if (backgroundColor) {
+          Object.assign(tokenStyle, { backgroundColor })
         }
       }
 
@@ -186,7 +123,7 @@ export const HighlightRenderer = props => {
 
       return (
         <TouchableHighlight onPress={onElementPress} key={index}>
-          <Text style={tokenStyle}>{value}</Text>
+          <LeaText style={tokenStyle}>{value}</LeaText>
         </TouchableHighlight>
       )
     })
@@ -200,61 +137,12 @@ export const HighlightRenderer = props => {
       )
     : null
 
-  // if we are in compared mode, we should add the three possible
-  // categories: right, wrong, missing
-  const renderCompared = () => {
-    if (!props.showCorrectResponse) { return null }
-
-    const right = []
-    const wrong = []
-    const missing = []
-
-    Object.entries(compared).forEach(([index, value]) => {
-      switch (value) {
-        case 0: wrong.push(index)
-          break
-        case 1: right.push(index)
-          break
-        case -1: missing.push(index)
-          break
-        default: throw new Error(`Unexpected compare value ${value}`)
-      }
-    })
-
-    const renderTarget = (target, color, text) => {
-      if (target.length === 0) return null
-
-      return (
-        <View style={styles.ttsContainer}>
-          <Text style={{ backgroundColor: color, color: Colors.light, padding: 5 }}>
-            {text}
-          </Text>
-          {target.map((tokenIndex, keyIndex) => {
-            const value = tokens[tokenIndex]?.value
-            return (
-              <Text key={keyIndex}>{value}</Text>
-            )
-          })}
-        </View>
-      )
-    }
-
-    return (
-      <View style={styles.comparecontainer}>
-        {renderTarget(right, Colors.success, t('item.right'))}
-        {renderTarget(wrong, Colors.danger, t('item.wrong'))}
-        {renderTarget(missing, Colors.warning, t('item.missing'))}
-      </View>
-    )
-  }
-
   return (
     <View style={styles.container}>
       {renderTts()}
       <View style={styles.tokenContainer}>
         {renderTokens()}
       </View>
-      {renderCompared()}
     </View>
   )
 }
@@ -304,3 +192,48 @@ const getResponses = (selection) => {
 
   return responses
 }
+
+const styles = createStyleSheet({
+  container: {
+    marginLeft: 5,
+    marginRight: 5
+  },
+  ttsContainer: {
+    alignContent: 'center'
+  },
+  comparecontainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 5
+  },
+  tokenContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  token: {
+    padding: 5,
+    paddingRight: 2,
+    color: Colors.dark,
+    backgroundColor: '#fff'
+  },
+  selected: {
+    backgroundColor: Colors.primary,
+    color: Colors.light
+  },
+  break: {
+    alignSelf: 'stretch',
+    width: '100%'
+  },
+  right: {
+    backgroundColor: Colors.success,
+    color: Colors.light
+  },
+  wrong: {
+    backgroundColor: Colors.danger,
+    color: Colors.light
+  },
+  missing: {
+    backgroundColor: Colors.warning,
+    color: Colors.light
+  }
+})
