@@ -13,20 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
+        node-version: 14
 
     - name: cache dependencies
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-14-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-node-14-
 
     - run: cd backend && npm install
     - run: cd backend && npm run lint:code
@@ -36,17 +36,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout leaonline:corelib repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: leaonline/corelib
           path: github/corelib
 
 
       - name: Checkout leaonline:service-registry repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: leaonline/service-registry
           path: github/service-registry
@@ -54,37 +54,37 @@ jobs:
       # CACHING
       - name: Install Meteor
         id: cache-meteor-install
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.meteor
-          key: v1-meteor-${{ hashFiles('.meteor/versions') }}
+          key: v3-meteor-${{ hashFiles('.meteor/versions') }}
           restore-keys: |
-                v1-meteor-
+                v3-meteor-
 
       - name: Cache NPM dependencies
         id: cache-meteor-npm
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: v1-npm-${{ hashFiles('package-lock.json') }}
+          key: v3-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-                v1-npm-
+                v3-npm-
 
       - name: Cache Meteor build
         id: cache-meteor-build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .meteor/local/resolver-result-cache.json
             .meteor/local/plugin-cache
             .meteor/local/isopacks
             .meteor/local/bundler-cache/scanner
-          key: v1-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
+          key: v3-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
-            v1-meteor_build_cache-
+            v3-meteor_build_cache-
 
       - name: Setup meteor
-        uses: meteorengineer/setup-meteor@v1
+        uses: meteorengineer/setup-meteor@v3
         with:
           meteor-release: '2.5'
 
