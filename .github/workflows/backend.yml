@@ -86,7 +86,7 @@ jobs:
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '2.5'
+          meteor-release: '2.8.1'
 
       - name: Install NPM Dependencies
         run: cd backend && meteor npm ci
