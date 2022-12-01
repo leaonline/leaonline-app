@@ -36,7 +36,7 @@ export const AccountInfo = (props) => {
     if (!codes) { return null }
     return codes.map((code, index) => {
       const text = code.split('').join(' ')
-      return (<Tts key={code} block fontStyle={styles.code} text={text} />)
+      return (<Tts key={code} align='center' block fontStyle={styles.code} text={text} />)
     })
   }
 

@@ -5,11 +5,12 @@ import { RemoteDDPLogger } from '../infrastructure/log/RemoteDDPLogger'
 
 export const initExceptionHandling = async () => {
   if (Config.log.target) {
-    const { transport } = Config.log.target
+    const { active, transport } = Config.log.target
 
-    if (transport === 'ddp') {
+    if (active && transport === 'ddp') {
       Log.setTarget(RemoteDDPLogger)
     }
+
     // TODO support http
   }
   ErrorUtils.setGlobalHandler((error, isFatal) => {

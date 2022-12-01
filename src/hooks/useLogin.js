@@ -13,6 +13,11 @@ const initialState = {
 /** @private */
 const reducer = (prevState, nextState) => {
   switch (nextState.type) {
+    case 'PROFILE_LOADED':
+      return {
+        ...prevState,
+        profileLoaded: true
+      }
     case 'RESTORE_TOKEN':
       return {
         ...prevState,
@@ -74,16 +79,21 @@ const Data = Meteor.getData()
 export const useLogin = () => {
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
 
+  Meteor.useTracker(() => {
+    const user = Meteor.user()
+
+    if (!state.profileLoaded && user) {
+      loadSettingsFromUserProfile(user)
+      dispatch({ type: 'PROFILE_LOADED' })
+    }
+  }, [])
+
   // Case 1: restore token already exists
   // MeteorRN loads the token on connection automatically,
   // in case it exists, but we need to "know" that for our auth workflow
   useEffect(() => {
     const authToken = Meteor.getAuthToken()
-    const handleOnLogin = () => {
-      const user = Meteor.user()
-      loadSettingsFromUserProfile(user)
-      dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
-    }
+    const handleOnLogin = () => dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
 
     // There may be the situation where the auth token
     // is immediately available. If so, we can safely
@@ -92,9 +102,9 @@ export const useLogin = () => {
       handleOnLogin()
     }
 
-    // Otherwise, we need to listen to the package's
-    // DDP even 'onLogin'  and dispatch then.
-    // Note, that 'onLogin'  is only fired, when the
+      // Otherwise, we need to listen to the package's
+      // DDP even 'onLogin'  and dispatch then.
+      // Note, that 'onLogin'  is only fired, when the
     // package has successfully restored the login via token!
     else {
       Data.on('onLogin', handleOnLogin)
@@ -144,12 +154,18 @@ export const useLogin = () => {
       })
     },
     deleteAccount: ({ onError }) => {
-      Meteor.call('users.methods.delete', {}, (err) => {
-        if (err) {
-          return onError(err)
+      Meteor.call('users.methods.delete', {}, (deleteError) => {
+        if (deleteError) {
+          return onError(deleteError)
         }
 
-        dispatch({ type: 'DELETE' })
+        Meteor.logout(logoutError => {
+          if (logoutError) {
+            return onError(logoutError)
+          }
+
+          dispatch({ type: 'DELETE' })
+        })
       })
     }
   }), [])

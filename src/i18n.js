@@ -126,6 +126,9 @@ const resources = {
       checkCode: 'Nutzerkonto wiederherstellen',
       noCode: 'Ich habe keinen Code oder habe ihn vergessen'
     },
+    restore: {
+      failed: 'Wiederherstellung fehlgeschlagen. Bitte prüfe, ob dein code richtig geschrieben ist.'
+    },
     homeScreen: {
       title: 'Startseite',
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'

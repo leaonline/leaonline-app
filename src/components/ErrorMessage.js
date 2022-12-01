@@ -5,6 +5,8 @@ import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import Colors from '../constants/Colors'
 import { Layout } from '../constants/Layout'
+import i18n from '../i18n'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Displays a visual component with a given error or defined message.
@@ -20,6 +22,8 @@ import { Layout } from '../constants/Layout'
  * @returns {JSX.Element|null}
  */
 export const ErrorMessage = ({ error, message, label, onConfirm }) => {
+  const { t  } = useTranslation()
+
   if (!error && !message) {
     return null
   }
@@ -33,9 +37,16 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
 
   const { Tts } = useTts()
 
+  let title = error.error || error.name
+  let textBase = message || error.reason || error.message
+
+  if (textBase && textBase.includes('.') && i18n.hasLoadedNamespace(textBase)) {
+    textBase = t(textBase)
+  }
+
   return (
     <View style={styles.default}>
-      <Tts iconColor={Colors.danger} color={Colors.danger} text={message || error.message} />
+      <Tts block={true} iconColor={Colors.danger} color={Colors.danger} text={textBase} />
       {renderConfirm()}
     </View>
   )

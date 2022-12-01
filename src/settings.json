@@ -31,8 +31,9 @@
     "replaceUrl": "https://content.lealernen.de"
   },
   "log": {
-    "level": 3,
+    "level": 0,
     "target": {
+      "active": false,
       "transport": "ddp",
       "method": "analytics.methods.send",
       "batchSize": 1,

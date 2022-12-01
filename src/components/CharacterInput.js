@@ -3,7 +3,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { TextInput, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { Layout } from '../constants/Layout'
-import { useTts } from './Tts'
+import { TTSengine, useTts } from './Tts'
 
 const createArray = (length, fill = '') => {
   const array = []
@@ -12,7 +12,7 @@ const createArray = (length, fill = '') => {
   return array
 }
 
-const alphaChars = /^[A-Za-z]/i
+const alphaChars = /^[A-Za-z\d]/i
 /**
  * A textinput where each character is projected to one input field and focus
  * is shifted automatically after typing.
@@ -21,6 +21,7 @@ const alphaChars = /^[A-Za-z]/i
  * @param props {object}
  * @param props.length {number} the amount of cells to be rendered
  * @param props.onEnd {function=} called when the last field received and input
+ * @param props.onNegativeEnd {function=} called when the first field received a backspace input
  * @returns {JSX.Element}
  */
 export const CharacterInput = props => {
@@ -29,6 +30,14 @@ export const CharacterInput = props => {
   const refs = useRef(new Map())
 
   const setRef = (key, ref) => {
+    if (key === 0) {
+      props.refs.current[0] = ref
+    }
+
+    if (key === props.length - 1) {
+      props.refs.current[1] = ref
+    }
+
     refs.current.set(key, ref)
   }
 
@@ -45,9 +54,23 @@ export const CharacterInput = props => {
       newChars[index] = ''
       setChars(newChars)
       const nextRef = refs.current.get(index - 1)
+
+      // if we habe a previous cell we jump into it
       if (nextRef) {
         nextRef.focus()
       }
+
+      // otherwise we try to call props.onNegativeEnd
+      // which can be used by parents to jump into a
+      // previous row, if such exists
+      else {
+        refs.current.get(index).blur()
+
+        if (props.onNegativeEnd) {
+          props.onNegativeEnd()
+        }
+      }
+
       e.preventDefault()
       return false
     }
@@ -58,12 +81,20 @@ export const CharacterInput = props => {
     }
   }
 
+
   const updateChars = (char, index) => {
+    if (!char) { return }
+
+    if (props.play) {
+      TTSengine.speakImmediately(char)
+    }
+
     const newChars = [].concat(chars)
     newChars[index] = char.toUpperCase()
     setChars(newChars)
 
     const nextRef = refs.current.get(index + 1)
+
     if (nextRef) {
       nextRef.focus()
     }
