@@ -32,8 +32,15 @@ import './registerComponents'
 import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
 import { Config } from '../../env/Config'
 import { FadePanel } from '../../components/FadePanel'
+import { Sound } from '../../env/Sound'
 
 const log = Log.create('UnitScreen')
+
+const RIGHT_ANSWER='rightAnswer'
+const WRONG_ANSWER='wrongAnswer'
+
+Sound.load(RIGHT_ANSWER, () => require('../../assets/audio/right_answer.wav'))
+Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))
 
 /**
  * On this screen, the respective Unit is displayed and the users can interact
@@ -365,9 +372,11 @@ const UnitScreen = props => {
       setAllTrue(page)
       Vibration.vibrate(500)
       scrollViewRef.current?.scrollToEnd({ animated: true })
+      await Sound.play(RIGHT_ANSWER)
     }
     else {
       Vibration.vibrate(100)
+      await Sound.play(WRONG_ANSWER)
     }
   }
 

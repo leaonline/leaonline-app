@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Meteor from '@meteorrn/core'
 import * as SecureStore from 'expo-secure-store'
 import { Config } from '../env/Config'

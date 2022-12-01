@@ -1,7 +1,16 @@
 import { simpleRandomHex } from '../../utils/simpleRandomHex'
 import { Log } from '../Log'
 
+/**
+ * This id is generated when the module is loaded and allows
+ * to keep track of events between sending batches
+ * TODO store in async storage and restore when coming from background
+ * @private
+ * @type {string}
+ */
+const sessionId = simpleRandomHex(10)
 const debug = Log.create('InterActionGraph', 'debug')
+
 /**
  * Use this to track interaction with the app
  * and send them in batches to the server.
@@ -15,17 +24,20 @@ const internal = {
 }
 const queue = ({ type, subtype, id, target, message, details }) => {
   const timeStamp = new Date()
-  const data = { type, subtype, timeStamp }
+  const data = { sessionId, type, subtype, timeStamp }
 
   if (id) { data.id = id }
   if (target) { data.target = target }
   if (message) { data.message = message }
   if (details) { data.details = details }
-  console.debug(data)
+
+  debug('queue', data)
   internal.stack.push(data)
 }
 
-const send = () => {}
+const send = () => {
+  debug('send', internal.stack.length, 'graph-items')
+}
 
 InteractionGraph.enterApp = () => {
   queue({

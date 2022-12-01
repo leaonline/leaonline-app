@@ -5,7 +5,6 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 import { Icon } from 'react-native-elements'
-import { Layout } from '../constants/Layout'
 import { makeTransparent } from '../styles/makeTransparent'
 
 /**
@@ -76,46 +75,52 @@ export const Confirm = props => {
     if (!onApprove) {
       return null
     }
-    return (<ActionButton
-      containerStyle={styles.button}
-      block={true}
-      color={Colors.secondary}
-      text={props.approveText}
-      icon={props.approveIcon}
-      onPress={() => onResponse(onApprove)} />)
+    return (
+      <ActionButton
+        containerStyle={styles.button}
+        block
+        color={Colors.secondary}
+        text={props.approveText}
+        icon={props.approveIcon}
+        onPress={() => onResponse(onApprove)}
+      />
+    )
   }
   const renderDeny = () => {
     if (!onDeny) {
       return null
     }
-    return (<ActionButton
-      containerStyle={styles.button}
-      block={true}
-      color={Colors.secondary}
-      text={props.denyText}
-      icon={props.denyIcon}
-      onPress={() => onResponse(onDeny)} />)
+    return (
+      <ActionButton
+        containerStyle={styles.button}
+        block
+        color={Colors.secondary}
+        text={props.denyText}
+        icon={props.denyIcon}
+        onPress={() => onResponse(onDeny)}
+      />
+    )
   }
 
   return (
     <>
       <Modal
         animationType='fade'
-        transparent={true}
+        transparent
         visible={getModalOpen()}
         onRequestClose={() => setModalOpen(false)}
       >
         <View style={styles.background}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {renderQuestion()}
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              {renderQuestion()}
 
-            <View style={styles.footer}>
-              {renderApprove()}
-              {renderDeny()}
+              <View style={styles.footer}>
+                {renderApprove()}
+                {renderDeny()}
+              </View>
             </View>
           </View>
-        </View>
         </View>
       </Modal>
       {renderButton()}

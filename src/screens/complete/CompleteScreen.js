@@ -12,6 +12,12 @@ import { ActionButton } from '../../components/ActionButton'
 import { Celebrate } from './Celebrate'
 import { Vibration } from 'react-native'
 import { LeaText } from '../../components/LeaText'
+import { Sound } from '../../env/Sound'
+import { Log } from '../../infrastructure/Log'
+
+const COMPLETE = 'complete'
+
+Sound.load(COMPLETE, () => require('../../assets/audio/trophy_animation.mp3'))
 
 /**
  * This screen is shown, when no Units are in the queue anymore and the
@@ -37,6 +43,9 @@ const CompleteScreen = props => {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     Vibration.vibrate(1000)
+    Sound.play(COMPLETE).catch(Log.error)
+
+    return () => Sound.unload()
   }, [])
 
   // ---------------------------------------------------------------------------

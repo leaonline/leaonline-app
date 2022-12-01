@@ -189,7 +189,7 @@ export const MainNavigation = (props) => {
   })
 
   const screenListeners = {
-    focus:  (e) => {
+    focus: (e) => {
       // Do something with the state
       const screen = (e.target || '').split('-')[0]
       InteractionGraph.enterScreen({ screen })
