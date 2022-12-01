@@ -1,11 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { LinearProgress } from 'react-native-elements'
-import { createStyleSheet } from '../styles/createStyleSheet'
-import { getDimensionColor } from '../screens/unit/getDimensionColor'
-import { AppSessionContext } from '../state/AppSessionContext'
-import Colors from '../constants/Colors'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { getDimensionColor } from '../../screens/unit/getDimensionColor'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import Colors from '../../constants/Colors'
 
+/**
+ * Represents the progress of the current selected stage/dimension
+ * combination (which is basically a UnitSet with 1..n units).
+ *
+ *
+ * @return {JSX.Element}
+ * @component
+ */
 export const CurrentProgress = () => {
   const [value, setValue] = useState(0)
   const [color, setColor] = useState(Colors.transparent)
@@ -48,7 +56,7 @@ export const CurrentProgress = () => {
 
 const styles = createStyleSheet({
   progressContainer: {
-    width: '80%',
+    width: '80%'
   },
   progressBar: { height: 16, borderRadius: 16, borderWidth: 1 }
 })

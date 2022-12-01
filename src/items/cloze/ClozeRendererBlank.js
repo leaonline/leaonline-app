@@ -71,10 +71,10 @@ export const ClozeRendererBlank = props => {
       value={value}
       // prevent various type assistance functionalities
       autoCorrect={false}
-      autoCapitalize="none"
-      contextMenuHidden={true}
-      importantForAutofill="no" // android
-      textContentType="none" // ios
+      autoCapitalize='none'
+      contextMenuHidden
+      importantForAutofill='no' // android
+      textContentType='none' // ios
       spellCheck={false}
       // appearance
       maxLength={maxLength}
@@ -83,7 +83,7 @@ export const ClozeRendererBlank = props => {
       style={inputStyle}
       // selectionColor
       // keyboard
-      returnKeyType="done"
+      returnKeyType='done'
       keyboardType={keyboardType}
       // events
       onPressIn={onPressIn}
@@ -99,7 +99,7 @@ export const ClozeRendererBlank = props => {
     const renderTooltipContent = () => {
       return (
         <View style={styles.correctResponse}>
-          <Tts text={t('item.correctResponse', { value: original })} dontShowText={true} color={color}/>
+          <Tts text={t('item.correctResponse', { value: original })} dontShowText color={color} />
           <LeaText style={styles.text}>{original}</LeaText>
         </View>
       )
@@ -110,8 +110,8 @@ export const ClozeRendererBlank = props => {
         ref={tooltipRef}
         height={100}
         popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-        withOverlay={true}
-        withPointer={true}
+        withOverlay
+        withPointer
         backgroundColor={Colors.dark}
         overlayColor={makeTransparent(Colors.white, 0.3)}
       >
@@ -129,12 +129,9 @@ const styles = createStyleSheet({
     padding: 5,
     fontSize: 18,
     fontFamily: 'semicolon',
-    color: Colors.dark,
+    color: Colors.secondary,
     backgroundColor: '#fff',
-    borderLeftWidth: 2,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderBottomWidth: 2,
+    borderWidth: 1,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
@@ -147,6 +144,6 @@ const styles = createStyleSheet({
   },
   text: {
     fontWeight: 'bold',
-    color: Colors.light
+    color: Colors.secondary
   }
 })

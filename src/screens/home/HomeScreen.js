@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
-import RouteButton from '../../components/RouteButton'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadHomeData } from './loadHomeData'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -25,7 +24,7 @@ import { ActionButton } from '../../components/ActionButton'
 const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const [session, sessionActions] = useContext(AppSessionContext)
+  const [/* session */, sessionActions] = useContext(AppSessionContext)
   const { data, error, loading } = loadDocs(loadHomeData)
 
   const selectField = async value => {
@@ -47,7 +46,7 @@ const HomeScreen = props => {
           key={key}
           title={item.title}
           icon={item.icon}
-          block={true}
+          block
           onPress={() => selectField(item)}
         />
       )
@@ -57,10 +56,10 @@ const HomeScreen = props => {
   return (
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
       <Tts
-        id="homeScreen.text"
+        id='homeScreen.text'
         text={t('homeScreen.text')}
         color={Colors.secondary}
-        block={true}
+        block
       />
       {renderButtons()}
     </ScreenBase>

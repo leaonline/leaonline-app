@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, Vibration, View } from 'react-native'
+import { Pressable, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -20,7 +20,7 @@ export const BackButton = (props) => {
   return (
     <Pressable style={styles.buttonContainer} onPress={handleOnPress} hitSlop={10} android_ripple={rippleConfig}>
       <Icon
-        name={props.icon} type="font-awesome-5" color={Colors.secondary}
+        name={props.icon} type='font-awesome-5' color={Colors.secondary}
         style
         size={18}
       />

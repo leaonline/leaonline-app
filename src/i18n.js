@@ -110,7 +110,7 @@ const resources = {
     },
     registrationScreen: {
       title: 'Profil anlegen',
-      creating: 'Dein Profil wird jetzt angelegt',
+      creating: 'Dein Profil wird jetzt angelegt'
     },
     TandCScreen: {
       headerTitle: 'Nutzungsbedingungen',

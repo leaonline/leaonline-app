@@ -34,7 +34,7 @@ export const ClozeRendererSelect = props => {
   const { color } = props
   const { Tts } = useTts()
   const { t } = useTranslation()
-  const tooltipRef = useRef(null);
+  const tooltipRef = useRef(null)
 
   const onSelect = (option, index) => {
     tooltipRef.current.toggleTooltip()
@@ -57,7 +57,8 @@ export const ClozeRendererSelect = props => {
   const renderTooltipContent = () => {
     if (props.compare && props.compare.score !== 1) {
       return renderCorrectResponse()
-    } else {
+    }
+    else {
       return renderActions()
     }
   }
@@ -68,7 +69,7 @@ export const ClozeRendererSelect = props => {
     const correct = props.options[index]
     return (
       <View style={styles.correctResponse}>
-        <Tts text={t('item.correctResponse', { value: correct })} dontShowText={true} color={color} />
+        <Tts text={t('item.correctResponse', { value: correct })} dontShowText color={color} />
         <LeaText style={styles.correctText}>{correct}</LeaText>
       </View>
     )
@@ -80,7 +81,7 @@ export const ClozeRendererSelect = props => {
         key={index}
         text={option}
         color={color}
-        block={true}
+        block
         onPress={() => onSelect(option, index)}
       />
     ))
@@ -94,8 +95,8 @@ export const ClozeRendererSelect = props => {
       ref={tooltipRef}
       height={props.options.length * 50}
       popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-      withOverlay={true}
-      withPointer={true}
+      withOverlay
+      withPointer
       backgroundColor={Colors.dark}
       overlayColor={makeTransparent(Colors.white, 0.3)}
     >

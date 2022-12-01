@@ -48,9 +48,11 @@ export const LeaButton = props => {
 
   const handlePress = () => {
     Vibration.vibrate(50)
-    if (props.onPress) { props.onPress()}
+    if (props.onPress) { props.onPress() }
   }
-  const titleStyle = mergeStyles(styles.title, props.titleStyle)
+
+  const textColor = props.color || Colors.primary
+  const titleStyle = mergeStyles(styles.title, props.titleStyle, { color: textColor })
   const buttonStyle = mergeStyles(styles.button, props.buttonStyle)
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
@@ -61,7 +63,7 @@ export const LeaButton = props => {
       disabledStyle={styles.disabled}
       containerStyle={containerStyle}
       disabled={props.disabled}
-      type="outline"
+      type='outline'
       onPress={handlePress}
       icon={renderIcon()}
       iconPosition={props.iconPosition || defaults.icon.position}
@@ -91,18 +93,18 @@ const styles = createStyleSheet({
   button: {
     backgroundColor: Colors.white,
     ...Layout.button(),
-    ...Layout.dropShadow({ android: false }),
+    ...Layout.dropShadow({ android: false })
   },
   title: {
     color: Colors.primary,
     ...Layout.defaultFont(),
-    flexGrow: 1,
+    flexGrow: 1
   },
   container: {
     ...Layout.dropShadow({ ios: false }),
     borderRadius: 15,
     borderWidth: 0,
-    overflow: 'visible',
+    overflow: 'visible'
   },
   disabled: {
     opacity: 0.5

@@ -7,9 +7,9 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
 import { useLegal } from '../../hooks/useLegal'
 import { LeaLogo } from '../../components/images/LeaLogo'
-import { Units } from '../../utils/Units'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
+import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 const initialState = {
   termsAndConditionsIsChecked: false,
@@ -48,6 +48,11 @@ const TermsAndConditionsScreen = props => {
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
   const { termsAndConditionsIsChecked, highlightCheckbox } = state
   const checkboxHandler = (type, currentValue) => {
+    InteractionGraph.action({
+      type: 'select',
+      target: checkboxHandler.name,
+      details: { type, value: currentValue }
+    })
     const options = { type, [type]: !currentValue }
     dispatch(options)
 
@@ -63,6 +68,11 @@ const TermsAndConditionsScreen = props => {
 
   const handleAction = (route) => {
     if (!termsAndConditionsIsChecked) {
+      InteractionGraph.problem({
+        type: 'missing',
+        target: 'TandCScreen.checkBoxText',
+        message: 'tried to continue without agreeing to terms'
+      })
       return dispatch({ type: 'highlight', highlight: true })
     }
     return props.navigation.navigate(route)
@@ -90,14 +100,14 @@ const TermsAndConditionsScreen = props => {
         <RouteButton
           title={t('TandCScreen.newUser')}
           align='center'
-          block={true}
+          block
           containerStyle={{ flex: 1 }}
           handleScreen={() => handleAction('registration')}
         />
         <RouteButton
           title={t('TandCScreen.restoreWithCode')}
           align='center'
-          block={true}
+          block
           containerStyle={{ flex: 1 }}
           handleScreen={() => handleAction('restore')}
         />

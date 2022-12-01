@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../../contexts/AuthContext'

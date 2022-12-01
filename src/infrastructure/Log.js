@@ -1,43 +1,54 @@
-/* eslint-disable no-console */
 import { Config } from '../env/Config'
+import { ConsoleLogger } from './log/ConsoleLogger'
 
 export const Log = {}
 
 let logLevel = Config.debug.logLevel
+let logTarget = ConsoleLogger
+
+Log.setTarget = (impl) => {
+  logTarget = impl
+}
 
 const allLevels = {
   debug: {
     index: 0,
     run: (...args) => {
       if (logLevel > 0) { return }
-      console.debug(timestamp(), ...args)
+      logTarget.debug(timestamp(), ...args)
     }
   },
   info: {
     index: 1,
     run: (...args) => {
       if (logLevel > 1) { return }
-      console.info(timestamp(), ...args)
+      logTarget.info(timestamp(), ...args)
     }
   },
   log: {
     index: 2,
     run: (...args) => {
       if (logLevel > 2) { return }
-      console.log(timestamp(), ...args)
+      logTarget.log(timestamp(), ...args)
     }
   },
   warning: {
     index: 3,
     run: (...args) => {
       if (logLevel > 3) { return }
-      console.warn(timestamp(), ...args)
+      logTarget.warn(timestamp(), ...args)
     }
   },
   error: {
     index: 4,
     run: (...args) => {
-      console.error(timestamp(), ...args)
+      logTarget.error(timestamp(), ...args)
+    }
+  },
+  fatal: {
+    index: 5,
+    run: (...args) => {
+      logTarget.error(timestamp(), ...args)
     }
   }
 }
@@ -93,4 +104,5 @@ Log.log = (...args) => allLevels.log.run(...args)
 Log.warn = (...args) => allLevels.warning.run(...args)
 
 Log.error = (...args) => allLevels.error.run(...args)
-/* eslint-enable no-console */
+
+Log.fatal = (...args) => allLevels.fatal.run(...args)

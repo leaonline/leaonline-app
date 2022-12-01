@@ -1,4 +1,4 @@
-import Constants from 'expo-constants'
+/* global __DEV__ */
 import settings from '../settings.json'
 
 const { backend, content, log, debug, isDevelopment } = settings
@@ -12,7 +12,7 @@ export const Config = {}
 /**
  * We use this expo-internal to determine, whether this is development mode.
  */
-Config.isDevelopment = !!(Constants.manifest.packagerOpts?.dev) || !!(settings.isDevelopment)
+Config.isDevelopment = !!(__DEV__) || !!(isDevelopment)
 
 /**
  * There are multiple debug options.
@@ -28,17 +28,20 @@ Config.debug = {}
  */
 Config.debug.layoutBorders = debug.layoutBorders
 
+Config.log = {}
+Config.log.level = log.level
+Config.log.target = log.target
+
 /**
  * The default log level.
  */
 Config.debug.logLevel = log.level
-
-Config.debug.state = false
-Config.debug.sync = false
-Config.debug.home = false
-Config.debug.map = false
-Config.debug.unit = false
-Config.debug.tts = false
+Config.debug.state = !!debug.state
+Config.debug.sync = !!debug.sync
+Config.debug.home = !!debug.home
+Config.debug.map = !!debug.map
+Config.debug.unit = !!debug.unit
+Config.debug.tts = !!debug.tts
 /**
  * Global styles.
  */

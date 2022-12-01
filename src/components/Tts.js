@@ -17,7 +17,7 @@ const styles = createStyleSheet({
   body: {
     flex: 0,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'flex-start'
   },
   text: {},
@@ -48,6 +48,7 @@ const runHandlers = name => {
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {string} props.fontStyle: The parameter to change the font style of the text. Default: 'normal' ('italic')
+ * @param {string} props.align Defines the vertical alignment of the button and text
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
  * @param {string} props.id: The parameter to identify the buttons
@@ -194,8 +195,8 @@ const ttsComponent = props => {
           color={props.disabled ? Colors.gray : iconColor}
           size={iconSize}
           style={styles.icon}
-          name="volume-up"
-          type="font-awesome-5"
+          name='volume-up'
+          type='font-awesome-5'
         />
       </Pressable>
       {displayedText()}

@@ -1,7 +1,7 @@
 import Colors from './Colors'
 import { Dimensions, PixelRatio } from 'react-native'
 
-const {width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 const ratio = PixelRatio.get()
 const isLarge = width * ratio > 1300
 
@@ -30,6 +30,7 @@ Layout.content = () => {
 }
 
 Layout.defaultFont = () => ({
+  color: Colors.secondary,
   fontFamily: 'semicolon',
   fontSize: 22,
   lineHeight: 28,

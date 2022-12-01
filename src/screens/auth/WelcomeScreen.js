@@ -32,19 +32,21 @@ export const WelcomeScreen = props => {
       <View style={styles.container}>
         <Tts
           id='welcomeScreen.text'
-          block={true}
+          block
           style={styles.text}
-          text={welcomeText} />
+          text={welcomeText}
+        />
 
         <TTSVoiceConfig />
         <TTSSpeedConfig />
 
         <Tts
           id='welcomeScreen.text'
-          block={true}
+          block
           style={styles.text}
           text={speedTestText}
-          align='center' />
+          align='center'
+        />
 
         <RouteButton
           title={t('common.continue')}
@@ -55,7 +57,6 @@ export const WelcomeScreen = props => {
     </>
   )
 }
-
 
 /**
  * @private stylesheet

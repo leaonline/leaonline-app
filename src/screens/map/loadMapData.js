@@ -68,6 +68,11 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
     const levelsProgress = {}
 
     mapData.entries.forEach((entry, index) => {
+      if (entry.type === 'finish') {
+        entry.key = `map-finish-${index}`
+        return
+      }
+
       entry.key = `map-entry-${index}`
 
       // a milestone contains a summary of the progress of the stages
@@ -106,6 +111,11 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
     })
 
     onUserDataLoaded()
+  }
+
+  // finally add the last "finish" entry to map data
+  if (mapData.entries && mapData.entries[mapData.entries.length - 1].type !== 'finish') {
+    mapData.entries.push({ type: 'finish' })
   }
 
   mapCache.set(fieldId, mapData)

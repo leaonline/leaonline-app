@@ -5,6 +5,8 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 import { Icon } from 'react-native-elements'
+import { Layout } from '../constants/Layout'
+import { makeTransparent } from '../styles/makeTransparent'
 
 /**
  * A base-modal with confirm actions and respective state and callbacks.
@@ -36,7 +38,7 @@ export const Confirm = props => {
 
   const renderQuestion = () => {
     if (!props.question) { return null }
-    return (<Tts style={styles.modalText} text={props.question} color={Colors.secondary} iconColor={Colors.secondary} />)
+    return (<Tts block style={styles.modalText} text={props.question} color={Colors.secondary} iconColor={Colors.secondary} />)
   }
 
   const onResponse = (targetFn) => {
@@ -59,7 +61,7 @@ export const Confirm = props => {
       return (
         <Pressable style={styles.buttonContainer} onPress={onPress}>
           <Icon
-            name={props.icon} type="font-awesome-5" color={Colors.secondary}
+            name={props.icon} type='font-awesome-5' color={Colors.secondary}
             style
             size={18}
           />
@@ -74,23 +76,36 @@ export const Confirm = props => {
     if (!onApprove) {
       return null
     }
-    return (<ActionButton text={props.approveText} onPress={() => onResponse(onApprove)} />)
+    return (<ActionButton
+      containerStyle={styles.button}
+      block={true}
+      color={Colors.secondary}
+      text={props.approveText}
+      icon={props.approveIcon}
+      onPress={() => onResponse(onApprove)} />)
   }
   const renderDeny = () => {
     if (!onDeny) {
       return null
     }
-    return (<ActionButton text={props.denyText} onPress={() => onResponse(onDeny)} />)
+    return (<ActionButton
+      containerStyle={styles.button}
+      block={true}
+      color={Colors.secondary}
+      text={props.denyText}
+      icon={props.denyIcon}
+      onPress={() => onResponse(onDeny)} />)
   }
 
   return (
     <>
       <Modal
         animationType='fade'
-        transparent={false}
+        transparent={true}
         visible={getModalOpen()}
         onRequestClose={() => setModalOpen(false)}
       >
+        <View style={styles.background}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {renderQuestion()}
@@ -101,6 +116,7 @@ export const Confirm = props => {
             </View>
           </View>
         </View>
+        </View>
       </Modal>
       {renderButton()}
     </>
@@ -108,6 +124,11 @@ export const Confirm = props => {
 }
 
 const styles = createStyleSheet({
+  background: {
+    flex: 1,
+    flewGrow: 1,
+    backgroundColor: makeTransparent(Colors.dark, 0.4)
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -115,8 +136,8 @@ const styles = createStyleSheet({
     marginTop: 22
   },
   footer: {
-    width: '100%',
-    height: '50%'
+    flex: 0,
+    alignItems: 'flex-start'
   },
   modalView: {
     margin: 20,
@@ -144,5 +165,9 @@ const styles = createStyleSheet({
     borderColor: Colors.secondary,
     padding: 10,
     borderRadius: 3
+  },
+  button: {
+    marginBottom: 5,
+    marginTop: 5
   }
 })

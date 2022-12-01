@@ -1,21 +1,18 @@
 import { callMeteor } from '../../meteor/call'
-import { Log } from '../../infrastructure/Log'
 import { Config } from '../../env/Config'
-
-const log = Log.create('loadUnitData', 'debug')
 
 export const loadUnitData = async (unitSet) => {
   if (!unitSet) {
-    throw new Error('No unitSet is selected')
+    throw new Error('No unitSet is selected in loadUnitData')
   }
 
   const result = await callMeteor({
     name: Config.methods.getUnitData,
-    args: { unitSetId: unitSet._id },
+    args: { unitSetId: unitSet._id }
   })
 
   if (!result) {
-    throw new Error('No data received')
+    throw new Error(`No data received for unit set ${unitSet._id} in loadUnitData`)
   }
 
   return result

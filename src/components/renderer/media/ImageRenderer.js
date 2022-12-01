@@ -8,7 +8,6 @@ import { ContentServer } from '../../../remotes/ContentServer'
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug', true)
 
-
 export const ImageRenderer = props => {
   const [loadComplete, setLoadComplete] = useState(false)
   const urlReplaced = ContentServer.cleanUrl(props.value)

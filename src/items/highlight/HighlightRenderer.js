@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, TouchableHighlight } from 'react-native'
+import { View, TouchableHighlight } from 'react-native'
 import { TTSengine } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
-import { useTranslation } from 'react-i18next'
 import { LeaText } from '../../components/LeaText'
 import { CompareState } from '../utils/CompareState'
 
@@ -15,11 +14,8 @@ const whiteSpace = /^\s+$/
 const Tts = TTSengine.component()
 const tokenCache = new Map()
 
-
-
 export const HighlightRenderer = props => {
   const { dimensionColor } = props
-  const { t } = useTranslation()
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
 

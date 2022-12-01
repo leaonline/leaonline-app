@@ -7,7 +7,7 @@ export default {
   primary: '#f59d1d',
   secondary: '#193b5e',
   light: '#f5f5f5',
-  gray: '#a6a6a6',
+  gray: '#bcbcbc',
   dark: '#646464',
   warning: '#FFC800',
   danger: '#d95a7d',
@@ -17,5 +17,5 @@ export default {
   missing: '#EA7878',
   wrong: '#EA7878',
   white: '#FFFFFF',
-  transparent: '#ffffff00'
+  transparent: 'transparent'
 }

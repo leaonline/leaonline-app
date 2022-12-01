@@ -10,6 +10,7 @@ import { AuthContext } from '../../contexts/AuthContext'
 import { Layout } from '../../constants/Layout'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { mergeStyles } from '../../styles/mergeStyles'
+import { Log } from '../../infrastructure/Log'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -35,7 +36,7 @@ export const AccountInfo = (props) => {
     if (!codes) { return null }
     return codes.map((code, index) => {
       const text = code.split('').join(' ')
-      return (<Tts key={code} block  fontStyle={styles.code} text={text} />)
+      return (<Tts key={code} block fontStyle={styles.code} text={text} />)
     })
   }
 
@@ -43,14 +44,13 @@ export const AccountInfo = (props) => {
     try {
       if (!codes?.length) {
         const restore = await callMeteor({ name: 'users.methods.getCodes', args: {} })
-        console.debug(restore)
         setCodes(restore.split('-')) // TODO config via env
       }
 
       setModalVisible(true)
     }
     catch (e) {
-      console.error(e)
+      Log.error(e)
     }
   }
 
@@ -58,7 +58,7 @@ export const AccountInfo = (props) => {
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
 
   return (
-    <React.Fragment>
+    <>
       <View style={containerStyle}>
         <Tts text={t('accountInfo.title')} />
         <ActionButton icon='lock' text={t('accountInfo.restoreCodes')} onPress={requestRestoreCode} block />
@@ -71,7 +71,8 @@ export const AccountInfo = (props) => {
         transparent={false}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(!modalVisible)}
-        style={styles.modal}>
+        style={styles.modal}
+      >
         <View style={styles.modalBody}>
           <Tts text={t('accountInfo.whyRestore')} block style={styles.modalInstructions} />
           <View style={styles.codes}>
@@ -80,7 +81,7 @@ export const AccountInfo = (props) => {
           <ActionButton icon='times' containerStyle={styles.modalClose} block text={t('actions.close')} onPress={() => setModalVisible(!modalVisible)} />
         </View>
       </Modal>
-    </React.Fragment>
+    </>
   )
 }
 
@@ -91,7 +92,7 @@ const styles = createStyleSheet({
     borderColor: Colors.danger
   },
   modalInstructions: {
-    flex: 1,
+    flex: 1
   },
   codes: {
     flex: 1,
@@ -102,7 +103,7 @@ const styles = createStyleSheet({
     fontWeight: 'bold',
     fontSize: 44,
     height: '100%',
-    lineHeight: 88,
+    lineHeight: 88
   },
   modal: {},
   modalClose: {

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, View } from 'react-native'
-import { ActionButton } from '../../components/ActionButton'
+import { View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Choice } from './Choice'
 import { CompareState } from '../utils/CompareState'
-import { useTts } from '../../components/Tts'
-import { mergeStyles } from '../../styles/mergeStyles'
-import { LeaText } from '../../components/LeaText'
 import { Checkbox } from '../../components/Checkbox'
 import Colors from '../../constants/Colors'
 /*
@@ -50,7 +46,6 @@ import Colors from '../../constants/Colors'
 export const ChoiceRenderer = props => {
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
-  const { Tts } = useTts()
 
   // When contentId changes we have a new element to be rendered:
   // 1. clear all selections when the content id changes
@@ -124,10 +119,10 @@ export const ChoiceRenderer = props => {
         uncheckedColor={Colors.gray}
         iconColor={dimensionColor}
         containerStyle={selectedStyle}
-        checkedIcon="dot-circle-o"
-        uncheckedIcon="circle-o"
+        checkedIcon='dot-circle-o'
+        uncheckedIcon='circle-o'
         textColor={Colors.dark}
-        textAlign="center"
+        textAlign='center'
       />
     )
   }
@@ -153,10 +148,10 @@ export const ChoiceRenderer = props => {
         uncheckedColor={Colors.gray}
         containerStyle={selectedStyle}
         iconColor={scoredColor ?? dimensionColor}
-        checkedIcon="dot-circle-o"
-        uncheckedIcon="circle-o"
+        checkedIcon='dot-circle-o'
+        uncheckedIcon='circle-o'
         textColor={scoredColor ?? Colors.dark}
-        textAlign="center"
+        textAlign='center'
       />
     )
   }

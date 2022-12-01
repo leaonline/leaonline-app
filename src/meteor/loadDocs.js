@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 /**
  * This method is a common wrapper for data loading on any of our Screens.
@@ -30,6 +31,11 @@ export const loadDocs = (fn, { runArgs = [], debug = false } = {}) => {
         setData(data)
       }
       catch (e) {
+        InteractionGraph.problem({
+          type: 'loadFailed',
+          target: loadDocs.name,
+          error: e
+        })
         setError(e)
       }
       finally {

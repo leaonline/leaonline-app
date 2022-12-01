@@ -21,50 +21,61 @@ Meteor.connect(Config.backend.url, {
   },
   autoConnect: true,
   autoReconnect: true,
-  reconnectInterval: 500,
+  reconnectInterval: 500
 })
 
 /**
  * Hook that handle auto-reconnect and updates state accordingly.
- * @return {{connected: boolean|null, connectionError: Error|null}}
+ * @return {{connected: boolean|null}}
  */
 export const useConnection = () => {
-  const [connected, setConnected] = useState(null)
-  const [connectionError, setConnectionError] = useState(null)
-  // we use separate functions as the handlers, so they get removed
-  // on unmount, which happens on auto-reload and would cause errors
-  // if not handled
-  useEffect(() => {
-    const onError = (e) => setConnectionError(e)
-    Meteor.ddp.on('error', onError)
+  const [connected, setConnected] = useState(false)
 
-    const onConnected = () => {
-      log('connected to', Config.backend.url)
-      if (connected !== true) setConnected(true)
-    }
+  const status = Meteor.useTracker(() => Meteor.status())
 
-    Meteor.ddp.on('connected', onConnected)
+  if (status.connected && !connected) {
+    log('set connnected')
+    setConnected(true)
+  }
 
-    // if the connection is lost, we not only switch the state
-    // but also force to reconnect to the server
-    const onDisconnected = () => {
-      console.debug('disconnected from', Config.backend.url)
-      Meteor.ddp.autoConnect = true
-      if (connected !== false) {
-        setConnected(false)
-      }
-      Meteor.reconnect()
-    }
+  if (connected && !status.connected) {
+    log('set connnected')
+    setConnected(false)
+  }
+  // // we use separate functions as the handlers, so they get removed
+  // // on unmount, which happens on auto-reload and would cause errors
+  // // if not handled
+  // useEffect(() => {
+  //   const onError = (e) => setConnectionError(e)
+  //   Meteor.ddp.on('error', onError)
+  //
+  //   const onConnected = () => {
+  //     log('connected to', Config.backend.url)
+  //     if (connected !== true) setConnected(true)
+  //   }
+  //
+  //   Meteor.ddp.on('connected', onConnected)
+  //
+  //   // if the connection is lost, we not only switch the state
+  //   // but also force to reconnect to the server
+  //   const onDisconnected = () => {
+  //     console.debug('disconnected from', Config.backend.url)
+  //     Meteor.ddp.autoConnect = true
+  //     if (connected !== false) {
+  //       setConnected(false)
+  //     }
+  //     Meteor.reconnect()
+  //   }
+  //
+  //   Meteor.ddp.on('disconnected', onDisconnected)
+  //
+  //   // remove all of these listeners on unmount
+  //   return () => {
+  //     Meteor.ddp.off('error', onError)
+  //     Meteor.ddp.off('connected', onConnected)
+  //     Meteor.ddp.off('disconnected', onDisconnected)
+  //   }
+  // }, [])
 
-    Meteor.ddp.on('disconnected', onDisconnected)
-
-    // remove all of these listeners on unmount
-    return () => {
-      Meteor.ddp.off('error', onError)
-      Meteor.ddp.off('connected', onConnected)
-      Meteor.ddp.off('disconnected', onDisconnected)
-    }
-  }, [])
-
-  return { connected, connectionError }
+  return { connected }
 }

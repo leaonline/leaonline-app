@@ -5,7 +5,7 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Layout } from '../../../constants/Layout'
 
 /**
- * Renders markdown
+ * Renders markdown in units
  * @param props {object}
  * @param props.value {string} the markdown text
  * @return {JSX.Element}
@@ -19,7 +19,7 @@ export const MarkdownRenderer = props => {
   )
 }
 
-const styles = createStyleSheet( {
+const styles = createStyleSheet({
   container: {
     ...Layout.container()
   },

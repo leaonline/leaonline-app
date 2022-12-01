@@ -12,19 +12,20 @@ import { ViewContainer } from './components/ViewContainer'
 import { MainNavigation } from './navigation/MainNavigation'
 import { AppSession } from './state/AppSession'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useAppState } from './hooks/useAppState'
+import { initExceptionHandling } from './startup/initExceptionHandling'
+import { CatchErrors } from './components/CatchErrors'
 
-const {AppSessionProvider } = AppSession.init({
+const { AppSessionProvider } = AppSession.init({
   storage: AsyncStorage
 })
 
 const initFunction = [
+  initExceptionHandling,
   initContexts,
   initAppState,
   fetchFonts,
   initTTs
 ]
-
 
 /**
  * Main Application entry point
@@ -34,32 +35,36 @@ const initFunction = [
  */
 export default function App () {
   const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
-  const { connectionError, connected } = useConnection()
+  const { connected } = useConnection()
 
   // splashscreen is still active...
   if (!appIsReady) { return null }
 
-  const anyError = error ?? connectionError
-
-  if (anyError) {
+  if (error) {
     return (
-      <ViewContainer onLayout={onLayoutRootView}>
-        <ErrorMessage message={anyError.message} onLayout={onLayoutRootView} />
-      </ViewContainer>
+      <CatchErrors>
+        <ViewContainer onLayout={onLayoutRootView}>
+          <ErrorMessage error={error.message} onLayout={onLayoutRootView} />
+        </ViewContainer>
+      </CatchErrors>
     )
   }
 
   if (!connected) {
     return (
-      <ViewContainer onLayout={onLayoutRootView}>
-        <Connecting />
-      </ViewContainer>
+      <CatchErrors>
+        <ViewContainer onLayout={onLayoutRootView}>
+          <Connecting />
+        </ViewContainer>
+      </CatchErrors>
     )
   }
 
   return (
-    <AppSessionProvider>
-      <MainNavigation onLayout={onLayoutRootView} />
-    </AppSessionProvider>
+    <CatchErrors>
+      <AppSessionProvider>
+        <MainNavigation onLayout={onLayoutRootView} />
+      </AppSessionProvider>
+    </CatchErrors>
   )
 }

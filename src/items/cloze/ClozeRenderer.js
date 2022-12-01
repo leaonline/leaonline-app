@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, TextInput } from 'react-native'
+import { Text, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ClozeTokenizer } from './ClozeTokenizer'
@@ -10,8 +10,9 @@ import { useTts } from '../../components/Tts'
 import { CompareState } from '../utils/CompareState'
 import { Log } from '../../infrastructure/Log'
 import { LeaText } from '../../components/LeaText'
-import { getKeyboardType, KeyboardTypes } from '../utils/KeyboardTypes'
+// import { getKeyboardType, KeyboardTypes } from '../utils/KeyboardTypes'
 import { ClozeRendererBlank } from './ClozeRendererBlank'
+import { Layout } from '../../constants/Layout'
 
 const debug = Log.create('ClozeRenderer', 'debug', true)
 
@@ -19,7 +20,7 @@ export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
   const [compared, setCompared] = useState({})
-  const { isTable, hasTableBorder = true, scoring } = value
+  const { isTable /*, hasTableBorder = true, scoring */ } = value
   const { tokens, tokenIndexes } = tokenize({ contentId, value })
 
   // on contentId changed, do:
@@ -66,7 +67,6 @@ export const ClozeRenderer = props => {
   }, [props.showCorrectResponse])
 
   const submitText = ({ text, index }) => {
-    console.debug(index)
     const update = { ...entered }
     update[index] = text
     setEntered(update)
@@ -76,19 +76,16 @@ export const ClozeRenderer = props => {
     })
   }
 
-
-
   const renderTokenGroup = (tokenGroup, groupIndex) => {
     // TODO check if we need multiline in some units
-    const isMultiline = false // !valueToken.tts && valueToken.value.length === 1
+    // const isMultiline = false // !valueToken.tts && valueToken.value.length === 1
     const compareValue = props.showCorrectResponse && compared[tokenGroup.itemIndex]
     const groupKey = `token-group-${groupIndex}`
     return (
       <View style={styles.tokenWrap} key={groupKey}>
         {tokenGroup.tts
-          ? (<RenderTts text={tokenGroup.tts} color={dimensionColor}/>)
-          : null
-        }
+          ? (<RenderTts text={tokenGroup.tts} color={dimensionColor} />)
+          : null}
         {tokenGroup.value.map((token, index) => {
           const key = `token-group-${groupIndex}-token-${index}`
           const { flavor } = token
@@ -121,7 +118,7 @@ export const ClozeRenderer = props => {
                   const { text } = e.nativeEvent
                   submitText({ text, index: sourceIndex })
                 }}
-                />
+              />
             )
           }
 
@@ -160,13 +157,14 @@ export const ClozeRenderer = props => {
     )
   }
 
-
   const renderCell = (entry, rowIndex, colIndex) => {
     if (entry.isEmpty) {
       return null
-    } else if (entry.isToken && Array.isArray(entry.value)) {
+    }
+    else if (entry.isToken && Array.isArray(entry.value)) {
       return renderTokenGroup(entry, `${rowIndex}${colIndex}`)
-    } else {
+    }
+    else {
       return (
         <LeaText>{entry.value}</LeaText>
       )
@@ -202,7 +200,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break}/>)
+            return (<View key={index} style={styles.break} />)
           }
 
           // token can be blanks, selects, empties and text
@@ -240,7 +238,7 @@ const RenderTts = ({ text, color }) => {
   }
 
   const { Tts } = useTts()
-  return (<Tts color={color} text={text} dontShowText/>)
+  return (<Tts color={color} text={text} dontShowText />)
 }
 
 // TODO add cache-busting when contentId changes
@@ -259,10 +257,7 @@ const tokenize = ({ contentId, value }) => {
       ? tokens.flat(1)
       : tokens
     const tokenIndexes = indexInput
-      .filter(tkn =>
-        ClozeHelpers.isBlank(tkn.flavor) ||
-        ClozeHelpers.isSelect(tkn.flavor) ||
-        ClozeHelpers.isEmpty(tkn.flavor))
+      .filter(isInteractiveToken)
       .map(tkn => value.isTable ? tkn.itemIndex : tkn.index)
     debug('tokens', tokens)
     debug('indexs', tokenIndexes)
@@ -270,6 +265,11 @@ const tokenize = ({ contentId, value }) => {
   }
   return cache.get(contentId)
 }
+
+const isInteractiveToken = tkn =>
+  ClozeHelpers.isBlank(tkn.flavor) ||
+  ClozeHelpers.isSelect(tkn.flavor) ||
+  ClozeHelpers.isEmpty(tkn.flavor)
 
 const createTokens = (value) => {
   try {
@@ -290,7 +290,8 @@ const createTokens = (value) => {
     }
 
     return tokens
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
     return []
   }
@@ -329,10 +330,8 @@ const styles = createStyleSheet({
     backgroundColor: '#fff'
   },
   token: {
+    ...Layout.defaultFont(),
     padding: 5,
-    fontSize: 18,
-    fontFamily: 'semicolon',
-    color: Colors.dark,
     backgroundColor: '#fff',
     alignSelf: 'center'
   },
@@ -358,7 +357,7 @@ const styles = createStyleSheet({
   },
   table: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   row: {
     flex: 1,
@@ -376,4 +375,4 @@ const styles = createStyleSheet({
     alignItems: 'center',
     justifyContent: 'center'
   }
-})
+}, true)

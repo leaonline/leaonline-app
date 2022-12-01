@@ -1,20 +1,18 @@
 import React, { useContext, useEffect } from 'react'
 import { View, FlatList } from 'react-native'
-import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadMapData } from './loadMapData'
 import { Log } from '../../infrastructure/Log'
-import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
-import Colors from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import { LeaText } from '../../components/LeaText'
-import { StaticCircularProgress } from '../../components/StaticCircularProgress'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
 import { useTts } from '../../components/Tts'
 import { BackButton } from '../../components/BackButton'
+import { Stage } from './components/Stage'
+import { MapFinish } from './components/Finish'
+import { Milestone } from './components/Milestone'
 
 const log = Log.create('MapScreen')
 
@@ -48,13 +46,13 @@ const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts text={mapScreenTitle}/>)
+      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
     })
   }, [])
 
@@ -98,20 +96,6 @@ const MapScreen = props => {
     props.navigation.navigate('dimension')
   }
 
-  const renderListItem = ({ index, item: entry }) => {
-    if (entry.type === 'stage') {
-      return renderStage(entry, index)
-    }
-
-    if (entry.type === 'milestone') {
-      return renderMilestone(entry, index)
-    }
-
-    // at this point we need to be fail-resistant
-    log('unexpected entry type', entry.type)
-    return null
-  }
-
   const renderList = () => {
     if (!mapData?.entries?.length) {
       return null
@@ -122,7 +106,7 @@ const MapScreen = props => {
         <FlatList
           data={mapData.entries}
           initialNumToRender={10}
-          removeClippedSubviews={true}
+          removeClippedSubviews
           renderItem={renderListItem}
           keyExtractor={item => item.key}
         />
@@ -130,89 +114,49 @@ const MapScreen = props => {
     )
   }
 
-  const renderStage = (stage, index) => {
-    console.debug('stage', index, 'progress:', stage.userProgress, stage.progress)
-    const stageIsComplete = stage.userProgress >= stage.progress
-    const icon = stageIsComplete ? 'flag' : 'edit'
-    const iconColor = stageIsComplete ? Colors.success : Colors.primary
-    const progress = 100 * (stage.userProgress || 0) / stage.progress
-    const title = `${t('mapScreen.stage')} ${index + 1}`
+  const renderListItem = ({ index, item: entry }) => {
+    if (entry.type === 'stage') {
+      return renderStage(entry, index)
+    }
 
+    if (entry.type === 'milestone') {
+      return renderMilestone(entry, index)
+    }
+
+    if (entry.type === 'finish') {
+      return (
+        <MapFinish key='finish' />
+      )
+    }
+
+    // at this point we need to be fail-resistant
+    log('unexpected entry type', entry.type)
+    return null
+  }
+
+  const renderStage = (stage, index) => {
+    const progress = 100 * (stage.userProgress || 0) / stage.progress
+    const key = `stage-${index}`
     return (
       <View style={styles.stage}>
-        <RouteButton
-          containerStyle={styles.stageButton}
-          title={title}
-          block={true}
-          icon={icon}
-          iconColor={iconColor}
-          handleScreen={() => selectStage(stage)} noTts/>
-
-        <StaticCircularProgress
-          duration={0}
-          value={progress}
-          radius={20}
-          maxValue={100}
-          textColor={Colors.secondary}
-          activeStrokeColor={Colors.secondary}
-          inActiveStrokeColor="#fff"
-          inActiveStrokeOpacity={0.5}
-          inActiveStrokeWidth={5}
-          activeStrokeWidth={5}
-          showProgressValue
-          valueSuffix="%"
+        <Stage
+          key={key}
+          onPress={() => selectStage(stage)}
+          unitSets={stage.unitSets}
+          dimensions={mapData.dimensions}
+          text={index + 1}
+          progress={progress}
         />
-        {renderUnitSets(stage.unitSets)}
       </View>
     )
   }
 
-  const renderMilestone = (milestone) => {
+  const renderMilestone = (milestone, index) => {
     const progress = 100 * milestone.userProgress / milestone.maxProgress
+    const key = `milestone-${index}`
     return (
-      <View>
-        <View style={styles.stage}>
-          <LeaText>Milestone {milestone.level + 1}</LeaText>
-          <StaticCircularProgress
-            value={progress}
-            radius={23}
-            valueSuffix="%"
-            textColor={Colors.primary}
-            activeStrokeColor={Colors.primary}
-          />
-        </View>
-      </View>
+      <Milestone key={key} progress={progress} />
     )
-  }
-
-  const renderUnitSets = (unitSets) => {
-    if (!unitSets?.length) { return null }
-
-    return unitSets.map(({ _id, dimension, userCompetencies, competencies }, index) => {
-      const dimensionDoc = mapData.dimensions[dimension]
-      if (!dimensionDoc) { return null }
-
-      const color = ColorTypeMap.get(dimensionDoc.colorType) || Colors.info
-      const progress = Math.round(((userCompetencies || 0) / competencies) * 100)
-      // <LinearProgress key={_id} color={color} value={progress} variant="determinate" />
-      return (
-        <StaticCircularProgress
-          key={`dimension-progress-${index}`}
-          value={progress}
-          radius={20}
-          textColor={color}
-          duration={0}
-          activeStrokeColor={color}
-          inActiveStrokeColor="#fff"
-          inActiveStrokeOpacity={0.5}
-          inActiveStrokeWidth={5}
-          activeStrokeWidth={5}
-          showProgressValue
-          maxValue={100}
-          valueSuffix="%"
-        />
-      )
-    })
   }
 
   return (

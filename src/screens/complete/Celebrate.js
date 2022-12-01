@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Animated, Dimensions, View } from 'react-native'
+import { Image, View } from 'react-native'
 import TrophyAnimated from '../../assets/images/trophy-animated.gif'
 import TrophyStatic from '../../assets/images/trophy-static.png'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 
 export const Celebrate = () => {
-  const [animationStopPosition, setAnimationStopPosition] = useState(0)
-  const [stopCupAnimation, setStopCupAnimation] = useState(false)
+  const [/* animationStopPosition */, setAnimationStopPosition] = useState(0)
+  const [stopCupAnimation] = useState(false)
   const onLayout = (event) => {
     const { y } = event.nativeEvent.layout
     setAnimationStopPosition(y)

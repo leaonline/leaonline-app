@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { CardStyleInterpolators } from '@react-navigation/stack'
 import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
@@ -21,7 +21,8 @@ import { RestoreScreen } from '../screens/auth/RestoreScreen'
 import { ProfileButton } from '../components/ProfileButton'
 import { useKeepAwake } from 'expo-keep-awake'
 import { BackButton } from '../components/BackButton'
-import { CurrentProgress } from '../components/CurrentProgress'
+import { CurrentProgress } from '../components/progress/CurrentProgress'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 /**
  * StackNavigator navigates between screens in a push/pop fashion.
@@ -65,7 +66,7 @@ export const MainNavigation = (props) => {
             component={MapScreen}
             options={{
               headerStyle,
-              title:  mapScreenTitle,
+              title: mapScreenTitle,
               headerBackVisible: false,
               headerTitleAlign: 'center',
               headerRight
@@ -80,7 +81,8 @@ export const MainNavigation = (props) => {
               headerBackVisible: false,
               headerTitleAlign: 'center',
               headerRight
-            }} />
+            }}
+          />
           <Stack.Screen
             name='unit'
             component={UnitScreen}
@@ -91,7 +93,8 @@ export const MainNavigation = (props) => {
               headerTitleAlign: 'center',
               headerRight,
               headerTitle: CurrentProgress
-            }} />
+            }}
+          />
           <Stack.Screen
             name='complete'
             component={CompleteScreen}
@@ -102,19 +105,21 @@ export const MainNavigation = (props) => {
               headerTitleAlign: 'center',
               headerRight,
               headerTitle: CurrentProgress
-          }} />
+            }}
+          />
           <Stack.Screen
             name='profile'
             component={ProfileScreen}
             options={{
               headerStyle,
-              title:  profileScreenTitle,
+              title: profileScreenTitle,
               headerBackVisible: false,
               headerTitleAlign: 'center',
               headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerTitle: () => (<Tts text={profileScreenTitle}/>),
+              headerTitle: () => (<Tts align='center' text={profileScreenTitle} />),
               headerRight: () => (<></>)
-            }} />
+            }}
+          />
         </>
       )
     }
@@ -138,7 +143,7 @@ export const MainNavigation = (props) => {
             title: tcTitle,
             headerStyle,
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts text={tcTitle} />)
+            headerTitle: () => (<Tts align='center' text={tcTitle} />)
           }}
         />
         <Stack.Screen
@@ -148,7 +153,7 @@ export const MainNavigation = (props) => {
             title: registerTitle,
             headerStyle,
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts text={registerTitle} />)
+            headerTitle: () => (<Tts align='center' text={registerTitle} />)
           }}
         />
         <Stack.Screen
@@ -158,7 +163,7 @@ export const MainNavigation = (props) => {
             title: registerTitle,
             headerStyle,
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts text={restoreTitle} />)
+            headerTitle: () => (<Tts align='center' text={restoreTitle} />)
           }}
         />
       </>
@@ -183,10 +188,18 @@ export const MainNavigation = (props) => {
     }
   })
 
+  const screenListeners = {
+    focus:  (e) => {
+      // Do something with the state
+      const screen = (e.target || '').split('-')[0]
+      InteractionGraph.enterScreen({ screen })
+    }
+  }
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer onReady={props.onLayout}>
-        <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Navigator screenOptions={screenOptions} screenListeners={screenListeners}>
           {renderScreens()}
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,10 +1,9 @@
-import React, { useContext,useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import RouteButton from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadDimensionData } from './loadDimensionData'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
-import { Log } from '../../infrastructure/Log'
 import { Layout } from '../../constants/Layout'
 import { Config } from '../../env/Config'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -12,8 +11,6 @@ import { ScreenBase } from '../BaseScreen'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { BackButton } from '../../components/BackButton'
-
-const log = Log.create('DimensionScreen')
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -40,13 +37,13 @@ const DimensionScreen = props => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
     props.navigation.setOptions({
       title: dimensionScreenTitle,
-      headerTitle: () => (<Tts text={dimensionScreenTitle}/>)
+      headerTitle: () => (<Tts align='center' text={dimensionScreenTitle} />)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.stage(null)}/>)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.stage(null)} />)
     })
   }, [])
 
@@ -64,7 +61,7 @@ const DimensionScreen = props => {
     return docs.data.unitSets.map((unitSet, index) => {
       const color = ColorTypeMap.get(unitSet.dimension.colorType)
       const title = Config.debug.map
-        ? unitSet._id + ' ' + unitSet.dimension.title
+        ? unitSet.dimension.title + ' ' + unitSet.code
         : unitSet.dimension.title
       return (
         <RouteButton
@@ -72,7 +69,7 @@ const DimensionScreen = props => {
           color={color}
           title={title}
           titleStyle={{ color }}
-          block={true}
+          block
           icon={unitSet.dimension.icon}
           handleScreen={() => selectUnitSet(unitSet)}
         />
@@ -83,7 +80,7 @@ const DimensionScreen = props => {
   return (
     <ScreenBase {...docs} style={styles.container}>
       <Tts text={t('dimensionScreen.instructions')} />
-        {renderDimensions()}
+      {renderDimensions()}
     </ScreenBase>
   )
 }

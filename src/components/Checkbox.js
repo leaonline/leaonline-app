@@ -46,7 +46,7 @@ export const Checkbox = props => {
       color={textColor}
       iconColor={iconColor}
       align='center'
-      block={true}
+      block
     />
   )
 
@@ -66,7 +66,7 @@ export const Checkbox = props => {
         uncheckedIcon={props.uncheckedIcon}
       />
       <Pressable style={{ flex: 1 }} onPress={props.onPress}>
-        {props.hideTts ? renderText() : renderTts() }
+        {props.hideTts ? renderText() : renderTts()}
       </Pressable>
     </View>
   )

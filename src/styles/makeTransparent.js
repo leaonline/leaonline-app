@@ -1,4 +1,4 @@
-export const makeTransparent = (color, transparency ) => {
+export const makeTransparent = (color, transparency) => {
   if (!color.includes('#')) {
     throw new Error('makeTransparent can only handle hex colors for now')
   }

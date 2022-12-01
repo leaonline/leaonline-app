@@ -7,8 +7,17 @@ import { Layout } from '../constants/Layout'
 import { LeaButtonGroup } from '../components/LeaButtonGroup'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 const setNewVoice = (voice, index) => {
+  InteractionGraph.action({
+    type: 'select',
+    target: TTSVoiceConfig.name,
+    message: 'set new voice',
+    details: {
+      index, voice: voice.identifier
+    }
+  })
   TTSengine.stop()
   TTSengine.setVoice(voice.identifier)
   TTSengine.speakImmediately(`Stimme ${index + 1}`)
@@ -29,7 +38,7 @@ export const TTSVoiceConfig = props => {
   if (!voicesLoaded) {
     return (
       <View style={styles.container}>
-        <Loading/>
+        <Loading />
       </View>
     )
   }

@@ -27,9 +27,6 @@
       },
       "package": "com.testCompany.leaonline"
     },
-    "web": {
-      "favicon": "./assets/icons/favicon-192.png"
-    },
     "extra": {
       "backend": {
         "url": "ws://192.168.178.49:8080/websocket",

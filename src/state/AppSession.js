@@ -1,12 +1,16 @@
 import Meteor from '@meteorrn/core'
 import React, { useEffect, useMemo, useReducer } from 'react'
 import { AppSessionContext } from './AppSessionContext'
+import { Log } from '../infrastructure/Log'
 
+/**
+ * Contains the state for an app's current session.
+ * @type {object}
+ */
 export const AppSession = {}
 
-let currentStorage = null
 const { EJSON } = Meteor
-const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies','loadUserData']
+const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies', 'loadUserData']
 const validateKey = key => {
   if (!validKeys.includes(key)) {
     throw new Error(`Unknown key ${key}, allowed are only ${validKeys.toString()}`)
@@ -20,7 +24,6 @@ const validateKey = key => {
  * @return {{AppSessionProvider: (function({children: *}))}}
  */
 AppSession.init = ({ storage }) => {
-  currentStorage = storage
   const initialState = {}
   const { update, restore, remove, updateMulti } = createStorageApi({ storage })
 
@@ -30,11 +33,12 @@ AppSession.init = ({ storage }) => {
 
   const createActions = ({ dispatch }) => {
     const actions = {
-      multi: (options, onError = console.error) => {
+      multi: (options, onError = Log.error) => {
         const stateKeys = Object.keys(options)
         try {
           stateKeys.forEach(key => validateKey(key))
-        } catch (e) {
+        }
+        catch (e) {
           return onError(e)
         }
 
@@ -45,8 +49,7 @@ AppSession.init = ({ storage }) => {
     }
 
     validKeys.forEach(key => {
-      actions[key] = (value, onError = console.error) => {
-        console.debug('session action', key)
+      actions[key] = (value, onError = Log.error) => {
         dispatch({ [key]: value })
 
         // update in background
@@ -62,9 +65,8 @@ AppSession.init = ({ storage }) => {
   }
 
   const reducer = (prevState, nextState) => {
-    //const stateKeys = Object.keys(nextState)
-    //stateKeys.forEach(key => validateKey(key))
-    //console.debug('run reducer', stateKeys)
+    // const stateKeys = Object.keys(nextState)
+    // stateKeys.forEach(key => validateKey(key))
     return {
       ...prevState,
       ...nextState
@@ -79,7 +81,6 @@ AppSession.init = ({ storage }) => {
         state[key] = value
       }
     }
-    console.debug('restored', state)
   }
 
   const AppSessionProvider = ({ children }) => {
@@ -89,7 +90,7 @@ AppSession.init = ({ storage }) => {
     // at this point we do an initial request, where
     // we try to load non-null values from the storage
     useEffect(() => {
-      restoreKeys().catch(console.error)
+      restoreKeys().catch(Log.error)
     }, [])
 
     return (
@@ -109,9 +110,9 @@ const createStorageApi = ({ storage }) => {
       if (typeof value === 'string') {
         return EJSON.parse(value)
       }
-    } catch (e) {
-      // todo log error and send to backend
-      console.error(e)
+    }
+    catch (e) {
+      Log.error(e)
     }
     return null
   }
@@ -139,8 +140,7 @@ const createStorageApi = ({ storage }) => {
   return { restore, update, remove, updateMulti }
 }
 
-const toRemovePairs = (pair => pair[0])
-const toStoragePairs = (([key, value]) => {
+const toRemovePairs = pair => pair[0]
+const toStoragePairs = ([key, value]) => {
   return [key, JSON.stringify(value)]
-})
-
+}

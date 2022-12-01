@@ -7,6 +7,7 @@ import { View } from 'react-native'
 import { ActionButton } from '../../components/ActionButton'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { AuthContext } from '../../contexts/AuthContext'
+import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 export const RestoreScreen = () => {
   const { t } = useTranslation()
@@ -25,7 +26,14 @@ export const RestoreScreen = () => {
       codes: codes.current.map(entry => entry.join('')),
       voice: TTSengine.currentVoice,
       speed: TTSengine.currentSpeed,
-      onError: err => setError(err)
+      onError: err => {
+        InteractionGraph.problem({
+          type: 'rejected',
+          target: InteractionGraph.toTargetGraph(RestoreScreen.name, checkCodes.name),
+          error: err
+        })
+        setError(err)
+      }
     })
   }
 

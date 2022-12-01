@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 import { START_UP_DELAY } from '../constants/App'
+import { Log } from '../infrastructure/Log'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 const useSplashScreen = (initFunctions) => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -19,10 +21,11 @@ const useSplashScreen = (initFunctions) => {
 
   useEffect(() => {
     async function prepare () {
+      InteractionGraph.enterApp()
+
       try {
         // Keep the splash screen visible while we fetch resources
-        SplashScreen.preventAutoHideAsync()
-
+        await SplashScreen.preventAutoHideAsync()
         await Promise.all(initFunctions.map(fn => fn()))
 
         // use this effect to make the splash screen remain
@@ -30,7 +33,7 @@ const useSplashScreen = (initFunctions) => {
         await new Promise(resolve => setTimeout(resolve, START_UP_DELAY))
       }
       catch (e) {
-        console.error(e)
+        Log.error(e)
         setError(e)
       }
       finally {
@@ -39,7 +42,7 @@ const useSplashScreen = (initFunctions) => {
       }
     }
 
-    prepare()
+    prepare().catch(Log.error)
   }, [])
 
   return {

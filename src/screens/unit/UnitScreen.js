@@ -30,6 +30,8 @@ import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
 import './registerComponents'
 import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
+import { Config } from '../../env/Config'
+import { FadePanel } from '../../components/FadePanel'
 
 const log = Log.create('UnitScreen')
 
@@ -54,6 +56,7 @@ const UnitScreen = props => {
   // We need to know the Keyboard state in order to show or hide elements.
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
+  const [fadeIn, setFadeIn] = useState(-1)
   const keyboardDidShow = () => setKeyboardStatus('shown')
   const keyboardDidHide = () => {
     setKeyboardStatus('hidden')
@@ -85,10 +88,19 @@ const UnitScreen = props => {
   const page = session.page || 0
 
   // ---------------------------------------------------------------------------
+  // update cards display
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    setFadeIn(0)
+    setTimeout(() => setFadeIn(1), 500)
+    setTimeout(() => setFadeIn(2), 1000)
+  }, [session.page])
+
+  // ---------------------------------------------------------------------------
   // Navigation updates
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    //If users attempt to cancel we surely first show a modal
+    // If users attempt to cancel we surely first show a modal
     // and ask if cancelling was intended.
     const cancelUnit = async () => {
       // todo send cancel information silently to server
@@ -114,14 +126,16 @@ const UnitScreen = props => {
     props.navigation.setOptions({
       headerLeft: () => (
         <Confirm
-          id="unit-screen-confirm"
-          pressable={true}
+          id='unit-screen-confirm'
+          pressable
           question={t('unitScreen.abort.question')}
           approveText={t('unitScreen.abort.abort')}
+          approveIcon='times'
           denyText={t('unitScreen.abort.continue')}
+          denyIcon='edit'
           onApprove={() => cancelUnit()}
           onDeny={() => {}}
-          icon="times"
+          icon='times'
           tts={false}
           style={styles.confirm}
         />
@@ -177,7 +191,7 @@ const UnitScreen = props => {
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
     await sessionActions.multi({
-      progress: session.progress  + 1,
+      progress: session.progress + 1,
       unit: nextUnitId,
       page: 0
     })
@@ -245,7 +259,7 @@ const UnitScreen = props => {
     log('render story', unitSetDoc.shortCode)
     return (
       <ScreenBase {...docs} style={styles.container}>
-        <ScrollView ref={scrollViewRef} style={styles.scrollView} keyboardShouldPersistTaps="always">
+        <ScrollView ref={scrollViewRef} style={styles.scrollView} keyboardShouldPersistTaps='always'>
           <View style={styles.unitCard}>
             {renderContent(unitSetDoc.story)}
           </View>
@@ -253,7 +267,7 @@ const UnitScreen = props => {
 
         {/* -------- continue button ---------  */}
         <ActionButton
-          block={true}
+          block
           tts={t('unitScreen.story.continue')}
           color={dimensionColor}
           onPress={finish}
@@ -336,10 +350,8 @@ const UnitScreen = props => {
       return copy
     })
 
-    console.debug('get competencies')
-    const competencies =  responseDoc.scores.filter(entry => entry.score === true).length
+    const competencies = responseDoc.scores.filter(entry => entry.score === true).length
     const prevCompetencies = session.competencies || 0
-    console.debug({ competencies, prevCompetencies })
     sessionActions.competencies(prevCompetencies + competencies)
 
     log('submit response to server', responseDoc)
@@ -380,7 +392,7 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       return (
         <ActionButton
-          block={true}
+          block
           tts={t('unitScreen.actions.check')}
           color={dimensionColor}
           onPress={checkScore}
@@ -397,7 +409,7 @@ const UnitScreen = props => {
       log('render next page button')
       return (
         <ActionButton
-          block={true}
+          block
           tts={t('unitScreen.actions.next')} color={dimensionColor}
           onPress={nextPage}
         />
@@ -407,9 +419,10 @@ const UnitScreen = props => {
     log('render complete unit button')
     return (
       <ActionButton
-        block={true}
+        block
         tts={t('unitScreen.actions.complete')}
-        color={dimensionColor} onPress={finish}
+        color={dimensionColor}
+        onPress={finish}
       />
     )
   }
@@ -421,15 +434,27 @@ const UnitScreen = props => {
 
     return (
       <View style={{ ...styles.unitCard, ...styles.allTrue }}>
-        <Tts color={Colors.success} iconColor={Colors.success} text={t('unitScreen.allTrue')}/>
+        <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
         <Icon
-          testID="alltrue-icon"
+          testID='alltrue-icon'
           reverse
           color={Colors.success}
           size={20}
-          name="thumbs-up"
-          type="font-awesome-5"
+          name='thumbs-up'
+          type='font-awesome-5'
         />
+      </View>
+    )
+  }
+
+  const renderUnitTitle = () => {
+    if (!Config.debug.unit) {
+      return
+    }
+
+    return (
+      <View style={styles.unitCard}>
+        <LeaText>{unitDoc.shortCode}</LeaText>
       </View>
     )
   }
@@ -439,37 +464,38 @@ const UnitScreen = props => {
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps='always'
       >
+        {renderUnitTitle()}
 
         {/* 1. PART STIMULI */}
-        <View style={styles.unitCard}>
+        <FadePanel style={styles.unitCard} visible={fadeIn >= 0}>
           {renderContent(unitDoc.stimuli)}
-        </View>
+        </FadePanel>
 
         {/* 2. PART INSTRUCTIONS */}
-        <View style={{ ...styles.unitCard, paddingTop: 0 }}>
+        <FadePanel style={{ ...styles.unitCard, paddingTop: 0 }} visible={fadeIn >= 1}>
           <LeaText style={styles.pageText}>
             <Icon
-              testID="info-icon"
+              testID='info-icon'
               reverse
-              color={Colors.dark}
+              color={Colors.gray}
               size={10}
-              name="info"
-              type="font-awesome-5"
+              name='info'
+              type='font-awesome-5'
             />
           </LeaText>
           {renderInstructions(unitDoc.instructions)}
-        </View>
+        </FadePanel>
 
         {/* 3. PART TASK PAGE CONTENT */}
-        <View  style={{ ...styles.unitCard, borderWidth: 4, borderColor: Colors.dark, paddingTop: 0, paddingBottom: 20 }}>
+        <FadePanel style={{ ...styles.unitCard, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }} visible={fadeIn >= 2}>
           <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
           {renderContent(unitDoc.pages[page].instructions)}
 
           {renderContent(unitDoc.pages[page].content)}
-        </View>
+        </FadePanel>
 
         {renderAllTrue()}
 
@@ -489,10 +515,10 @@ const styles = createStyleSheet({
   itemContainer: {
     flex: 1,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 10
   },
   scrollView: {
-    width: '100%',
+    width: '100%'
   },
   element: {
     flex: 1,
@@ -525,10 +551,15 @@ const styles = createStyleSheet({
   },
   pageText: {
     alignSelf: 'center',
-    backgroundColor: Colors.dark,
-    color: Colors.light,
-    padding: 3,
-    borderColor: Colors.dark
+    backgroundColor: Colors.gray,
+    color: Colors.white,
+    paddingLeft: 3,
+    paddingRight: 3,
+    paddingTop: 0,
+    paddingBottom: 0,
+    marginBottom: 6,
+    fontSize: 16,
+    borderColor: Colors.gray
   },
   allTrue: {
     flexDirection: 'row',

@@ -92,9 +92,9 @@ export const useLogin = () => {
       handleOnLogin()
     }
 
-      // Otherwise, we need to listen to the package's
-      // DDP even 'onLogin'  and dispatch then.
-      // Note, that 'onLogin'  is only fired, when the
+    // Otherwise, we need to listen to the package's
+    // DDP even 'onLogin'  and dispatch then.
+    // Note, that 'onLogin'  is only fired, when the
     // package has successfully restored the login via token!
     else {
       Data.on('onLogin', handleOnLogin)

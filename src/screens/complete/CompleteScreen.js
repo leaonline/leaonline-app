@@ -80,7 +80,8 @@ const CompleteScreen = props => {
       <Tts
         text={t('completeScreen.congratulations')}
         color={dimensionColor}
-        iconColor={dimensionColor} />
+        iconColor={dimensionColor}
+      />
       <Tts
         text={t('completeScreen.correctScores', { count })}
         color={dimensionColor}
