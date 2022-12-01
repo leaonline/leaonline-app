@@ -10,6 +10,7 @@ import { SyncState } from '../contexts/sync/SyncState'
 import { Progress } from '../contexts/progress/Progress'
 import { Session } from '../contexts/session/Session'
 import { Response } from '../contexts/response/Response'
+import { Analytics } from '../contexts/analytics/Analytics'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -24,13 +25,13 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })
 
 // create methods for backend ctx
-;[Users, Content, SyncState, Session, Response, Progress].forEach(ctx => {
+;[Users, Content, SyncState, Session, Response, Progress, Analytics].forEach(ctx => {
   const methods = Object.values(ctx.methods)
   methods.forEach(method => createMethod(method))
   register(ctx)

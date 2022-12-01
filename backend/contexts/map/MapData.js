@@ -131,6 +131,13 @@ MapData.schema = {
   },
 
   /**
+   * The relates unit set short-code
+   */
+  'entries.$.unitSets.$.code': {
+    type: String,
+  },
+
+  /**
    * We only store the number of achievable competencies here.
    */
   'entries.$.unitSets.$.competencies': {
@@ -158,6 +165,7 @@ MapData.schema = {
 }
 
 const log = createLog({ name: MapData.name })
+const warn = createLog({ name: MapData.name, type:'warn' })
 const byLevel = (a, b) => a.level - b.level
 const checkIntegrity = ({ condition, premise }) => {
   if (!condition) {
@@ -206,7 +214,7 @@ MapData.create = ({ field, dryRun }) => {
 
   // for each level
   levels.forEach((levelDoc, levelIndex) => {
-    log('collect level (milestone)', levelDoc._id)
+    log('collect level (milestone)', levelDoc.title)
 
     // each level ends with a milestone
     const milestone = {
@@ -237,7 +245,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // for each dimension
     dimensions.forEach((dimensionDoc, dimensionIndex) => {
-      log('collect dimension', dimensionDoc._id)
+      log('collect dimension', dimensionDoc.title)
       const dimensionId = dimensionDoc._id
       const testCycleDoc = TestCycleCollection.findOne({
         field: field,
@@ -248,7 +256,7 @@ MapData.create = ({ field, dryRun }) => {
       // if we found no test cycle for this given combination we need to
       // make sure there is no further map building for this test cycle.
       if (!testCycleDoc) {
-        return log('no TestCycle for ', levelDoc.title, dimensionDoc.title)
+        return warn(fieldDoc.title,'has no TestCycle for ', dimensionDoc.title,`(${dimensionDoc._id})` ,levelDoc.title, `(${levelDoc._id})` )
       }
 
       // get unit sets with fallback in case they are undefined on some
@@ -257,7 +265,7 @@ MapData.create = ({ field, dryRun }) => {
 
       checkIntegrity({
         condition: unitSets.length,
-        premise: `Expect at least one unit set for test cycle ${testCycleDoc._id}`
+        premise: `Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
       })
 
       // once we know, if we have any unitSets,
@@ -291,7 +299,7 @@ MapData.create = ({ field, dryRun }) => {
           })
 
           const competencies = countCompetencies(unitSetDoc, log)
-          log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+          log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
 
           const units = unitSetDoc.units || []
           const unitCursor = UnitCollection.find({ _id: { $in: units } })
@@ -300,13 +308,13 @@ MapData.create = ({ field, dryRun }) => {
 
           checkIntegrity({
             condition: expectedUnits > 0,
-            premise: `Expect units for unit set ${unitSetDoc._id} to be above 0 (${JSON.stringify(unitSetDoc)})`
+            premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
           })
 
           // We also require strict integrity of units in a unit set
           checkIntegrity({
             condition: expectedUnits === actualUnits,
-            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc._id}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
+            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
           })
 
           // push new stage to the stage data
@@ -314,6 +322,7 @@ MapData.create = ({ field, dryRun }) => {
             dimension: dimensionIndex,
             _id: unitSetDoc._id,
             progress: unitSetDoc.progress,
+            code: unitSetDoc.shortCode,
             competencies: competencies
           })
 
