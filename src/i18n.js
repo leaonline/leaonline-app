@@ -114,7 +114,7 @@ const resources = {
     },
     TandCScreen: {
       headerTitle: 'Nutzungsbedingungen',
-      text: 'Bitte nimmt dir kurz etwas Zeit für unsere Nutzungsbedingungen.',
+      text: 'Bitte nimm dir kurz etwas Zeit für unsere Nutzungsbedingungen.',
       checkBoxText: 'Ich habe die Nutzungs\u00ADbedingungen verstanden und stimme ihnen zu.',
       agreeResearch: 'Optional: Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu.',
       newUser: 'Ich bin neu',
@@ -159,7 +159,8 @@ const resources = {
       actions: {
         check: 'Überprüfen',
         next: 'Weiter',
-        complete: 'Zur nächsten Aufgabe'
+        complete: 'Zur nächsten Aufgabe',
+        finish: 'Bearbeitung abschließen'
       },
       abort: {
         question: 'Willst du diese Übung wirklich abbrechen?',
