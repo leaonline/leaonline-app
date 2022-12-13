@@ -8,6 +8,7 @@ import { ErrorMessage } from '../../components/ErrorMessage'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { Loading } from '../../components/Loading'
+import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 /**
  * Screen for registering a new user.
@@ -27,7 +28,14 @@ export const RegistrationScreen = () => {
     if (!user) {
       const voice = TTSengine.currentVoice
       const speed = TTSengine.currentSpeed
-      const onError = e => setError(e)
+      const onError = e => {
+        InteractionGraph.problem({
+          target: `${RegistrationScreen.name}.register`,
+          type: 'failed',
+          error: e
+        })
+        setError(e)
+      }
       setTimeout(() => signUp({ voice, speed, onError }), 1000)
     }
   }, [user])

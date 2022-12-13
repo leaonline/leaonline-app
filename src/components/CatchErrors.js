@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { ErrorMessage } from './ErrorMessage'
-import { Log } from '../infrastructure/Log'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 export class CatchErrors extends React.Component {
   constructor (props) {
@@ -15,10 +15,15 @@ export class CatchErrors extends React.Component {
   }
 
   componentDidCatch (err, errInfo) {
-    Log.error(err)
+    const stack = errInfo.componentStack.toString()
+    InteractionGraph.problem({
+      type: 'catched',
+      error: err,
+      details: { ...err.details, stack }
+    })
     this.setState({
       error: true,
-      message: errInfo.componentStack.toString()
+      message: stack
     })
   }
 

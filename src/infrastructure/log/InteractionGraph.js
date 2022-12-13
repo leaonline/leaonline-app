@@ -84,6 +84,10 @@ InteractionGraph.reaction = ({ id, target, type, message, details }) => {
   })
 }
 InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
+  if (error) {
+    Log.error(error)
+  }
+
   queue({
     type: 'problem',
     subtype: type,
@@ -94,6 +98,7 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
       stack: error.stack
     }
   })
+
   send()
 }
 InteractionGraph.goal = ({ type, target, message, details }) => {

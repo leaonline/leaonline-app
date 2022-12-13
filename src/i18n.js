@@ -85,6 +85,13 @@ const resources = {
     }
   },
   de: {
+    promise: {
+      timedOut: 'Konnte Inhalte nicht laden.'
+    },
+    errors: {
+      restart: 'Bitte schließe die App und starte sie neu.',
+      fallback: 'Es ist ein unerwarteter Fehler aufgetreten.'
+    },
     common: {
       yes: 'Ja',
       no: 'Nein',

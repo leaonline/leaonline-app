@@ -60,7 +60,7 @@ export const AccountInfo = (props) => {
   return (
     <>
       <View style={containerStyle}>
-        <Tts text={t('accountInfo.title')} />
+        <Tts align='center'  text={t('accountInfo.title')} />
         <ActionButton icon='lock' text={t('accountInfo.restoreCodes')} onPress={requestRestoreCode} block />
         <ActionButton icon='sign-out-alt' text={t('accountInfo.signOut')} block onPress={handleSignOut} />
         <ActionButton icon='trash' text={t('accountInfo.delete')} onPress={deleteMeteorAccount} block />
@@ -74,7 +74,7 @@ export const AccountInfo = (props) => {
         style={styles.modal}
       >
         <View style={styles.modalBody}>
-          <Tts text={t('accountInfo.whyRestore')} block style={styles.modalInstructions} />
+          <Tts align='center'  text={t('accountInfo.whyRestore')} block style={styles.modalInstructions} />
           <View style={styles.codes}>
             {renderCodes()}
           </View>

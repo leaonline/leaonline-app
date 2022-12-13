@@ -2,6 +2,7 @@ import React from 'react'
 import Svg, { G, Path } from 'react-native-svg'
 
 export const Milestone = props => {
+  const { level } = props
   return (
     <Svg width={100} height={100} viewBox='0 0 51.73 70.49'>
       <G id='Ebene_2' data-name='Ebene 2'>

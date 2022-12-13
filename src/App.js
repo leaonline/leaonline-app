@@ -10,15 +10,9 @@ import { initTTs } from './startup/initTTS'
 import { Connecting } from './components/Connecting'
 import { ViewContainer } from './components/ViewContainer'
 import { MainNavigation } from './navigation/MainNavigation'
-import { AppSession } from './state/AppSession'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { initExceptionHandling } from './startup/initExceptionHandling'
 import { CatchErrors } from './components/CatchErrors'
 import { initSound } from './startup/initSound'
-
-const { AppSessionProvider } = AppSession.init({
-  storage: AsyncStorage
-})
 
 const initFunction = [
   initExceptionHandling,
@@ -64,9 +58,7 @@ export default function App () {
 
   return (
     <CatchErrors>
-      <AppSessionProvider>
         <MainNavigation onLayout={onLayoutRootView} />
-      </AppSessionProvider>
     </CatchErrors>
   )
 }

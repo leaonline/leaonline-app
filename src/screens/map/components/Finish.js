@@ -2,7 +2,7 @@ import React from 'react'
 import Svg, { G, Path } from 'react-native-svg'
 import Colors from '../../../constants/Colors'
 
-export const MapFinish = props => {
+export const MapFinish = () => {
   return (
     <Svg width={100} height={100} viewBox='0 0 220 217'>
       <G>

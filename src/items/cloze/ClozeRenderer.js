@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Text, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -70,6 +70,7 @@ export const ClozeRenderer = props => {
     const update = { ...entered }
     update[index] = text
     setEntered(update)
+
     return props.submitResponse({
       responses: tokenIndexes.map(index => index in update ? update[index] : UndefinedScore),
       data: props
@@ -77,46 +78,59 @@ export const ClozeRenderer = props => {
   }
 
   const renderTokenGroup = (tokenGroup, groupIndex) => {
+    // A token-group contains one or more elements, associated with a token
+    // and which may contain prefix and suffix elements.
+    //
+    // the indexes differ when using table layout vs
+    // default sequencial layout, because in table layout
+    // we habe a [rows[columns]] double array, which makes
+    // use of index unavailable as they could be the same
+    // values for every new row so we use the itemIndex
+    // then
+    const itemIndex = { tokenGroup }
+
     // TODO check if we need multiline in some units
     // const isMultiline = false // !valueToken.tts && valueToken.value.length === 1
-    const compareValue = props.showCorrectResponse && compared[tokenGroup.itemIndex]
+    const compareValue = props.showCorrectResponse && compared[itemIndex]
+    if (props.showCorrectResponse) {
+      debug('showCorrectResponse')
+      debug({tokenGroup, usedIndex: itemIndex, groupIndex  })
+      debug({ compared })
+      debug({ compareValue })
+    }
+
     const groupKey = `token-group-${groupIndex}`
+    const renderTTS = () => tokenGroup.tts
+      ? (<RenderTts text={tokenGroup.tts} color={dimensionColor}/>)
+      : null
+
     return (
       <View style={styles.tokenWrap} key={groupKey}>
-        {tokenGroup.tts
-          ? (<RenderTts text={tokenGroup.tts} color={dimensionColor} />)
-          : null}
+        {renderTTS()}
         {tokenGroup.value.map((token, index) => {
           const key = `token-group-${groupIndex}-token-${index}`
           const { flavor } = token
-
-          // the indexes differ when using table layout vs
-          // default sequencial layout, because in table layout
-          // we habe a [rows[columns]] double array, which makes
-          // use of index unavailable as they could be the same
-          // values for every new row so we use the itemIndex
-          // then
-          const sourceIndex = isTable
-            ? tokenGroup.itemIndex
-            : tokenGroup.index
+          const hasNext = itemIndex < tokenIndexes.length - 1
 
           if (ClozeHelpers.isBlank(flavor)) {
+            const blanksId = `${contentId}-${itemIndex}`
             const blankStyle = isTable
               ? { borderWidth: 0.5 }
               : null
-
             return (
               <ClozeRendererBlank
                 key={key}
+                blanksId={blanksId}
                 compare={compareValue}
                 color={dimensionColor}
                 original={token.value}
-                value={sourceIndex in entered ? entered[sourceIndex] : null}
                 style={blankStyle}
+                hasNext={hasNext}
                 pattern={tokenGroup.pattern}
-                onEndEditing={e => {
-                  const { text } = e.nativeEvent
-                  submitText({ text, index: sourceIndex })
+                onSubmit={text => {
+                  if (text) {
+                    submitText({ text, index: itemIndex })
+                  }
                 }}
               />
             )
@@ -132,12 +146,12 @@ export const ClozeRenderer = props => {
                 key={key}
                 color={dimensionColor}
                 style={styles.token}
-                value={sourceIndex in entered ? entered[sourceIndex] : null}
+                value={itemIndex in entered ? entered[itemIndex] : null}
                 compare={compareValue}
                 options={token.value}
                 onSelect={(option, index) => submitText({
                   text: index,
-                  index: sourceIndex
+                  index: itemIndex
                 })}
               />
             )
@@ -200,7 +214,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break} />)
+            return (<View key={index} style={styles.break}/>)
           }
 
           // token can be blanks, selects, empties and text
@@ -238,7 +252,7 @@ const RenderTts = ({ text, color }) => {
   }
 
   const { Tts } = useTts()
-  return (<Tts color={color} text={text} dontShowText />)
+  return (<Tts color={color} text={text} dontShowText/>)
 }
 
 // TODO add cache-busting when contentId changes
@@ -259,7 +273,7 @@ const tokenize = ({ contentId, value }) => {
     const tokenIndexes = indexInput
       .filter(isInteractiveToken)
       .map(tkn => value.isTable ? tkn.itemIndex : tkn.index)
-    debug('tokens', tokens)
+    debug('tokens', JSON.stringify(tokens))
     debug('indexs', tokenIndexes)
     cache.set(contentId, { tokens, tokenIndexes })
   }
@@ -277,7 +291,7 @@ const createTokens = (value) => {
     let index = 0
 
     const assignIndex = token => {
-      if (Object.hasOwnProperty.call(token, 'flavor')) {
+      if (isInteractiveToken(token)) {
         token.itemIndex = index++
       }
     }
@@ -290,8 +304,7 @@ const createTokens = (value) => {
     }
 
     return tokens
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e)
     return []
   }

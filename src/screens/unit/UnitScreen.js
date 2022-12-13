@@ -4,7 +4,6 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  Keyboard,
   Vibration
 } from 'react-native'
 import { Log } from '../../infrastructure/Log'
@@ -33,6 +32,8 @@ import { InstructionsGraphics } from '../../components/images/InstructionsGraphi
 import { Config } from '../../env/Config'
 import { FadePanel } from '../../components/FadePanel'
 import { Sound } from '../../env/Sound'
+import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
+import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 const log = Log.create('UnitScreen')
 
@@ -64,22 +65,16 @@ const UnitScreen = props => {
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
   const [fadeIn, setFadeIn] = useState(-1)
-  const keyboardDidShow = () => setKeyboardStatus('shown')
-  const keyboardDidHide = () => {
-    setKeyboardStatus('hidden')
-    scrollViewRef.current?.scrollToEnd({ animated: true })
-  }
 
-  useEffect(() => {
-    const didShowSub = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
-    const didHideSub = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-
-    // cleanup function
-    return () => {
-      didShowSub.remove()
-      didHideSub.remove()
+  useKeyboardVisibilityHandler(({ status }) => {
+    if (status === 'shown') {
+      setKeyboardStatus('shown')
     }
-  }, [])
+    if (status === 'hidden') {
+      setKeyboardStatus('hidden')
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+    }
+  })
 
   const responseRef = useRef({})
   const scoreRef = useRef({})
@@ -99,8 +94,13 @@ const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     setFadeIn(0)
-    setTimeout(() => setFadeIn(1), 500)
-    setTimeout(() => setFadeIn(2), 1000)
+    const timer1 = setTimeout(() => setFadeIn(1), 500)
+    const timer2 = setTimeout(() => setFadeIn(2), 1000)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
   }, [session.page])
 
   // ---------------------------------------------------------------------------
@@ -111,6 +111,10 @@ const UnitScreen = props => {
     // and ask if cancelling was intended.
     const cancelUnit = async () => {
       // todo send cancel information silently to server
+      InteractionGraph.goal({
+        type: 'cancel',
+        target: unitDoc?.shortCode
+      })
 
       await sessionActions.multi({
         unit: null,
@@ -168,7 +172,9 @@ const UnitScreen = props => {
     props.navigation.addListener('beforeRemove', beforeGoingBack)
 
     // remove listeners on destroy
-    return () => props.navigation.removeListener('beforeRemove', beforeGoingBack)
+    return () => {
+      props.navigation.removeListener('beforeRemove', beforeGoingBack)
+    }
   }, [props.navigation])
 
   // ---------------------------------------------------------------------------
@@ -411,8 +417,19 @@ const UnitScreen = props => {
 
     // if this page has been scored, we can display a "continue" button
     // which either moves to the next page or completes the unit
-
     const hasNextPage = page < unitDoc.pages.length - 1
+    const isLast = (session.progress ?? 0) === (session.unitSet?.progress ?? 1)
+
+    if (isLast) {
+      return (
+        <ActionButton
+          block
+          tts={t('unitScreen.actions.finish')}
+          color={dimensionColor}
+          onPress={finish}
+        />
+      )
+    }
 
     if (hasNextPage) {
       log('render next page button')
@@ -425,7 +442,6 @@ const UnitScreen = props => {
       )
     }
 
-    log('render complete unit button')
     return (
       <ActionButton
         block

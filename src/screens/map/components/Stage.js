@@ -3,7 +3,7 @@ import Svg, { G } from 'react-native-svg'
 import { StaticCircularProgress } from '../../../components/progress/StaticCircularProgress'
 import { Diamond } from '../../../components/progress/Diamond'
 import { getPositionOnCircle } from '../../../utils/trigonometry/getPositionOnCircle'
-import { Pressable } from 'react-native'
+import { Pressable, Vibration } from 'react-native'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
@@ -34,8 +34,21 @@ export const Stage = props => {
     color: Colors.primary
   }
 
+  const handlePress = () => {
+    Vibration.vibrate(50)
+    if (props.onPress) {
+      return props.onPress()
+    }
+  }
+
   return (
-    <Pressable android_ripple={rippleConfig} style={styles.container} onPress={props.onPress}>
+    <Pressable
+      android_ripple={rippleConfig}
+      android_disableSound={false}
+      style={styles.container}
+      pressRetentionOffset={0}
+      hitSlop={0}
+      onPress={handlePress}>
       <Svg width={width} height={height} viewBox={viewBox}>
         <G x={stageProgress.x} y={stageProgress.y}>
           <StaticCircularProgress
@@ -46,9 +59,9 @@ export const Stage = props => {
             fillColor={Colors.white}
             activeStrokeColor={Colors.secondary}
             inActiveStrokeColor={Colors.white}
-            inActiveStrokeOpacity={0.5}
-            inActiveStrokeWidth={10}
-            activeStrokeWidth={10}
+            inActiveStrokeOpacity={1}
+            inActiveStrokeWidth={5}
+            activeStrokeWidth={5}
             showProgressValue={false}
             valueSuffix='%'
             value={progress}

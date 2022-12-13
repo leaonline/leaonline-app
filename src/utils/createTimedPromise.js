@@ -18,15 +18,15 @@ const defaultMessage = 'promise.timedOut'
  * @param message {string=} optional message to be resolved/rejected on timeour
  * @return {Promise<Awaited<unknown>>}
  */
-export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = false, message } = {}) => {
+export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = false, message, details } = {}) => {
   return Promise.race([
     promise,
     new Promise((resolve, reject) => {
       setTimeout(() => {
         if (throwIfTimedOut) {
-          return reject(
-            new Error(message || defaultMessage)
-          )
+          const error = new Error(message || defaultMessage)
+          error.details = details
+          return reject(error)
         }
         else {
           return resolve(message || defaultMessage)

@@ -75,7 +75,9 @@ const CircularProgress = (props) => {
         onAnimationComplete()
       }
     })
-    return () => animatedValue.removeAllListeners()
+    return () => {
+      animatedValue.removeAllListeners()
+    }
   }, [value])
 
   const renderSecondaryStroke = () => {

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react'
-import { View, FlatList } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { View, FlatList, InteractionManager } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadMapData } from './loadMapData'
@@ -11,10 +11,18 @@ import { ScreenBase } from '../BaseScreen'
 import { useTts } from '../../components/Tts'
 import { BackButton } from '../../components/BackButton'
 import { Stage } from './components/Stage'
+import { MapStart } from './components/Start'
 import { MapFinish } from './components/Finish'
 import { Milestone } from './components/Milestone'
+import { LeaText } from '../../components/LeaText'
+import { mergeStyles } from '../../styles/mergeStyles'
+import { Connector } from './components/Connector'
+import { loadMapIcons } from './loadMapIcons'
 
 const log = Log.create('MapScreen')
+const ITEM_HEIGHT = 100
+
+loadMapIcons() // TODO defer loading these to a much later point as they are not crucial
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -32,6 +40,7 @@ const log = Log.create('MapScreen')
 const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
+  const [listWidth, setListWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = loadDocs(() => loadMapData({
     fieldDoc: session.field,
@@ -41,20 +50,26 @@ const MapScreen = props => {
     runArgs: [session.field, session.loadUserData]
   })
   const mapData = mapDocs.data
+  log('load complete?', !mapDocs.loading)
 
   useEffect(() => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
+      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
+      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
     })
   }, [])
+
+  const onListLayoutDetected = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setListWidth(width)
+  }
 
   /* expected mapData structure:
    *
@@ -85,15 +100,21 @@ const MapScreen = props => {
    */
 
   const selectStage = async stage => {
-    const newStage = { ...stage }
-    newStage.level = mapData.levels[newStage.level]
-    newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
-    newStage.unitSets.forEach(unitSet => {
-      unitSet.dimension = mapData.dimensions[unitSet.dimension]
-    })
+    InteractionManager.runAfterInteractions(async () => {
+      const newStage = { ...stage }
+      newStage.level = mapData.levels[newStage.level]
+      newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
+      newStage.unitSets.forEach(unitSet => {
+        unitSet.dimension = mapData.dimensions[unitSet.dimension]
+      })
 
-    await sessionActions.stage(newStage)
-    props.navigation.navigate('dimension')
+      props.navigation.navigate('dimension')
+      await sessionActions.stage(newStage)
+    })
+  }
+
+  const onEndReached = () => {
+
   }
 
   const renderList = () => {
@@ -104,17 +125,28 @@ const MapScreen = props => {
     return (
       <View style={styles.scrollView}>
         <FlatList
+          onLayout={onListLayoutDetected}
+          inverted={true}
           data={mapData.entries}
-          initialNumToRender={10}
-          removeClippedSubviews
+          onEndReached={onEndReached}
+          initialNumToRender={3}
+          getItemLayout={(data, index) => {
+            const entry = data[index]
+            const length = ['stage', 'milestone'].includes(entry)
+              ? ITEM_HEIGHT
+              : 59
+            return { length, offset: length * index, index }
+          }}
+          removeClippedSubviews={true}
           renderItem={renderListItem}
-          keyExtractor={item => item.key}
+          keyExtractor={(item) => item.entryKey}
         />
       </View>
     )
   }
 
   const renderListItem = ({ index, item: entry }) => {
+
     if (entry.type === 'stage') {
       return renderStage(entry, index)
     }
@@ -123,9 +155,27 @@ const MapScreen = props => {
       return renderMilestone(entry, index)
     }
 
+    const connectorWidth = listWidth
+      ? (listWidth / 2) - ITEM_HEIGHT
+      : listWidth
+
     if (entry.type === 'finish') {
       return (
-        <MapFinish key='finish' />
+        <View style={styles.stage}>
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          <MapFinish/>
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
+        </View>
+      )
+    }
+
+    if (entry.type === 'start') {
+      return (
+        <View style={styles.stage}>
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          <MapStart size={ITEM_HEIGHT / 2}/>
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
+        </View>
       )
     }
 
@@ -136,26 +186,42 @@ const MapScreen = props => {
 
   const renderStage = (stage, index) => {
     const progress = 100 * (stage.userProgress || 0) / stage.progress
-    const key = `stage-${index}`
+    const justifyContent = positionMap[stage.viewPosition.current]
+    const stageStyle = mergeStyles(styles.stage, { justifyContent })
+    const connectorWidth = listWidth
+      ? listWidth - ITEM_HEIGHT - (ITEM_HEIGHT / 2)
+      : listWidth
+
+    const { viewPosition } = stage
+
     return (
-      <View style={styles.stage}>
+      <View style={stageStyle}>
+        {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
         <Stage
-          key={key}
+          width={ITEM_HEIGHT}
+          height={ITEM_HEIGHT}
           onPress={() => selectStage(stage)}
           unitSets={stage.unitSets}
           dimensions={mapData.dimensions}
-          text={index + 1}
+          text={stage.label}
           progress={progress}
         />
+        {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
       </View>
     )
   }
 
-  const renderMilestone = (milestone, index) => {
+  const renderMilestone = (milestone) => {
     const progress = 100 * milestone.userProgress / milestone.maxProgress
-    const key = `milestone-${index}`
+    const connectorWidth = listWidth
+      ? (listWidth / 2) - ITEM_HEIGHT
+      : listWidth
     return (
-      <Milestone key={key} progress={progress} />
+      <View style={styles.stage}>
+        {renderConnector(milestone.viewPosition.left, connectorWidth)}
+        <Milestone progress={progress} level={milestone.level + 1}/>
+        {renderConnector(milestone.viewPosition.right, connectorWidth)}
+      </View>
     )
   }
 
@@ -165,6 +231,26 @@ const MapScreen = props => {
     </ScreenBase>
   )
 }
+
+const renderConnector = (connectorId, listWidth, withIcon = -1) => {
+  if (connectorId === 'fill') {
+    return (
+      <LeaText style={{ width: listWidth ?? '100%' }}></LeaText>
+    )
+  }
+
+  if (connectorId) {
+    const [from, to] = connectorId.split('2')
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
+  }
+  return null
+}
+const positionMap = {
+  center: 'center',
+  left: 'flex-start',
+  right: 'flex-end'
+}
+
 
 /**
  * @private stylesheet
@@ -180,10 +266,12 @@ const styles = createStyleSheet({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    alignContent: 'flex-start',
-    justifyContent: 'space-between',
-    justifyItems: 'flex-start',
-    height: 150
+    justifyContent: 'center',
+    borderColor: '#f0f',
+    height: ITEM_HEIGHT
+  },
+  connector: {
+    flexGrow: 1
   },
   stageButton: {
     width: 150

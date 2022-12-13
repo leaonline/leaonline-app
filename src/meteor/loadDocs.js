@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
+const MAX_ATTEMPTS = 3
+
 /**
  * This method is a common wrapper for data loading on any of our Screens.
  * It wraps a (potentially async) loading function with three states:
@@ -23,25 +25,34 @@ export const loadDocs = (fn, { runArgs = [], debug = false } = {}) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // this is a self-executing async function, which is required
-    // since the last react update to prevent "destroy() is undefined" error
-    ;(async function load () {
+    let attempts = 0
+    const load = async function () {
       try {
         const data = await fn(debug)
         setData(data)
-      }
-      catch (e) {
-        InteractionGraph.problem({
-          type: 'loadFailed',
-          target: loadDocs.name,
-          error: e
-        })
-        setError(e)
-      }
-      finally {
         setLoading(false)
+      } catch (e) {
+        attempts++
+
+        if (attempts >= MAX_ATTEMPTS) {
+          throw e
+        }
+        else {
+          return load()
+        }
       }
-    })()
+    }
+
+    load().catch(e => {
+      InteractionGraph.problem({
+        type: 'loadFailed',
+        target: loadDocs.name,
+        error: e,
+        details: { attempts }
+      })
+      setError(e)
+      setLoading(false)
+    })
   }, runArgs)
 
   return { data, error, loading }

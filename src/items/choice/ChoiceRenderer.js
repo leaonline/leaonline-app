@@ -121,7 +121,7 @@ export const ChoiceRenderer = props => {
         containerStyle={selectedStyle}
         checkedIcon='dot-circle-o'
         uncheckedIcon='circle-o'
-        textColor={Colors.dark}
+        textColor={Colors.secondary}
         textAlign='center'
       />
     )

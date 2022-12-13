@@ -1,5 +1,5 @@
 {
-  "isDevelopment": true,
+  "isDevelopment": false,
   "backend": {
     "url": "ws://192.168.178.49:8080/websocket",
     "maxTimeout": 3000,
@@ -33,10 +33,11 @@
   "log": {
     "level": 0,
     "target": {
-      "active": false,
+      "active": true,
       "transport": "ddp",
       "method": "analytics.methods.send",
       "batchSize": 1,
+      "level": 4,
       "separator": "~"
     }
   },

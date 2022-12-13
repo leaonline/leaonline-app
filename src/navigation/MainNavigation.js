@@ -23,6 +23,12 @@ import { useKeepAwake } from 'expo-keep-awake'
 import { BackButton } from '../components/BackButton'
 import { CurrentProgress } from '../components/progress/CurrentProgress'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
+import { AppSession } from '../state/AppSession'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const { AppSessionProvider } = AppSession.init({
+  storage: AsyncStorage
+})
 
 /**
  * StackNavigator navigates between screens in a push/pop fashion.
@@ -198,11 +204,13 @@ export const MainNavigation = (props) => {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer onReady={props.onLayout}>
-        <Stack.Navigator screenOptions={screenOptions} screenListeners={screenListeners}>
-          {renderScreens()}
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AppSessionProvider>
+        <NavigationContainer onReady={props.onLayout}>
+          <Stack.Navigator screenOptions={screenOptions} screenListeners={screenListeners}>
+            {renderScreens()}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AppSessionProvider>
     </AuthContext.Provider>
   )
 }

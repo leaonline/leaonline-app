@@ -1,5 +1,5 @@
 import { Button, Icon } from 'react-native-elements'
-import React from 'react'
+import React, { useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import Colors from '../constants/Colors'
 import { mergeStyles } from '../styles/mergeStyles'
@@ -32,23 +32,45 @@ import { Vibration } from 'react-native'
  * @returns {JSX.Element}
  */
 export const LeaButton = props => {
+  const [pressed, setPressed] = useState(false)
   const renderIcon = () => {
-    if (!props.icon) { return null }
-    return (
-      <Icon
-        testID={props.iconId || defaults.icon.id}
-        color={props.color || props.iconColor || defaults.icon.color}
-        size={props.iconSize || defaults.icon.size}
-        name={props.icon}
-        type={defaults.icon.type}
-        style={styles.icon}
-      />
-    )
+    if (pressed) {
+      return (
+        <Icon
+          testID={props.iconId || defaults.icon.id}
+          color={props.color || props.iconColor || defaults.icon.color}
+          size={props.iconSize || defaults.icon.size}
+          name={'spinner'}
+          type={defaults.icon.type}
+          style={styles.icon}
+        />
+      )
+    }
+
+    if (props.icon) {
+      return (
+        <Icon
+          testID={props.iconId || defaults.icon.id}
+          color={props.color || props.iconColor || defaults.icon.color}
+          size={props.iconSize || defaults.icon.size}
+          name={props.icon}
+          type={defaults.icon.type}
+          style={styles.icon}
+        />
+      )
+    }
+    return null
   }
 
   const handlePress = () => {
+    setPressed(true)
     Vibration.vibrate(50)
-    if (props.onPress) { props.onPress() }
+    if (props.onPress) {
+      setTimeout(async () => {
+        await props.onPress()
+        setPressed(false)
+      }, 25)
+    }
   }
 
   const textColor = props.color || Colors.primary
@@ -62,7 +84,7 @@ export const LeaButton = props => {
       buttonStyle={buttonStyle}
       disabledStyle={styles.disabled}
       containerStyle={containerStyle}
-      disabled={props.disabled}
+      disabled={props.disabled || pressed}
       type='outline'
       onPress={handlePress}
       icon={renderIcon()}

@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
  * @returns {JSX.Element|null}
  */
 export const ErrorMessage = ({ error, message, label, onConfirm }) => {
-  const { t  } = useTranslation()
+  const { t } = useTranslation()
 
   if (!error && !message) {
     return null
@@ -31,14 +31,13 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const renderConfirm = () => {
     if (!onConfirm) { return null }
     return (
-      <ActionButton text={label} onPress={onConfirm} />
+      <ActionButton text={label} onPress={onConfirm}/>
     )
   }
 
   const { Tts } = useTts()
 
-  let title = error.error || error.name
-  let textBase = message || error.reason || error.message
+  let textBase = message || error.reason || error.message || 'errors.fallback'
 
   if (textBase && textBase.includes('.') && i18n.hasLoadedNamespace(textBase)) {
     textBase = t(textBase)
@@ -46,7 +45,8 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
 
   return (
     <View style={styles.default}>
-      <Tts block={true} iconColor={Colors.danger} color={Colors.danger} text={textBase} />
+      <Tts block={true} iconColor={Colors.danger} color={Colors.secondary} text={textBase}/>
+      <Tts block={true} iconColor={Colors.danger} color={Colors.secondary} text={t('errors.restart')}/>
       {renderConfirm()}
     </View>
   )

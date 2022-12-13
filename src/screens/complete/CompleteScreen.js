@@ -87,11 +87,13 @@ const CompleteScreen = props => {
   return (
     <ScreenBase {...docs} style={styles.container}>
       <Tts
+        align='center'
         text={t('completeScreen.congratulations')}
         color={dimensionColor}
         iconColor={dimensionColor}
       />
       <Tts
+        align='center'
         text={t('completeScreen.correctScores', { count })}
         color={dimensionColor}
         iconColor={dimensionColor}
@@ -101,7 +103,7 @@ const CompleteScreen = props => {
 
       <Celebrate />
 
-      <ActionButton color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
+      <ActionButton block={true} color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>
   )
 }

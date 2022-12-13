@@ -4,12 +4,12 @@ KeyboardTypes.allowedValues = () => [].concat(allowedValues)
 
 // we use this as fallback, since 'default'  offers the microphone
 // which may trigger in some users the urge to avoid typing
-const FALLBACK = 'email-address'
+const DEFAULT = 'default'
 const types = new Map()
 let typesList = []
 const allowedValues = [
-  FALLBACK,
-  'default',
+  DEFAULT,
+  'email-address',
   'number-pad',
   'decimal-pad',
   'numeric',
@@ -27,14 +27,14 @@ KeyboardTypes.register = ({ name, regex, value }) => {
 
 KeyboardTypes.register({
   name: 'numeric',
-  regex: /^\d+$/g,
+  regex: /^\d+$/,
   value: 'numeric'
 })
 
 KeyboardTypes.register({
   name: 'text',
-  regex: /^\w+$/g,
-  value: 'email-address'
+  regex: /^\w+$/,
+  value: DEFAULT
 })
 
 /**
@@ -43,7 +43,7 @@ KeyboardTypes.register({
  * @return {"default"|"numeric"}
  */
 KeyboardTypes.get = (pattern) => {
-  if (!pattern) { return FALLBACK }
+  if (!pattern) { return DEFAULT }
   const found = typesList.find(({ regex }) => regex.test(pattern))
-  return found?.value || FALLBACK
+  return found?.value || DEFAULT
 }

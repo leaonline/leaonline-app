@@ -105,10 +105,12 @@ const call = ({ name, args, prepare, receive }) => {
     })
   })
 
+  const options = { ...timedPromiseOptions, details: { name, args } }
+
   // let the promise race against a timeout to ensure
   // our UI remains responsive in case we didn't get any
   // response from the server
-  return createTimedPromise(promise, timedPromiseOptions)
+  return createTimedPromise(promise, options)
 }
 
 const optionalFunction = { type: Function, optional: true }

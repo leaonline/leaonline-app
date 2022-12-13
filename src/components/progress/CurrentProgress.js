@@ -5,6 +5,7 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { getDimensionColor } from '../../screens/unit/getDimensionColor'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import Colors from '../../constants/Colors'
+import { computeProgress } from './computeProgress'
 
 /**
  * Represents the progress of the current selected stage/dimension
@@ -15,9 +16,9 @@ import Colors from '../../constants/Colors'
  * @component
  */
 export const CurrentProgress = () => {
-  const [value, setValue] = useState(0)
-  const [color, setColor] = useState(Colors.transparent)
   const [session] = useContext(AppSessionContext)
+  const [value, setValue] = useState(session.progress ?? 0)
+  const [color, setColor] = useState(Colors.transparent)
 
   useEffect(() => {
     if (!session.unitSet || !session.dimension || session.progress === undefined) {
@@ -25,15 +26,10 @@ export const CurrentProgress = () => {
     }
 
     const dimensionColor = getDimensionColor(session.dimension)
-    const current = session.progress ?? 0
-    const max = session.unitSet?.progress ?? 1
-    let currentValue = (current + 1) / (max + 1)
-
-    if (currentValue < 0) currentValue = 0
-    if (currentValue > 1) currentValue = 1
-    if (Number.isNaN(currentValue) || !Number.isFinite(currentValue)) {
-      currentValue = 0
-    }
+    const currentValue = computeProgress({
+      current: session.progress ?? 0,
+      max: session.unitSet?.progress ?? 1
+    })
 
     setTimeout(() => {
       setColor(dimensionColor)

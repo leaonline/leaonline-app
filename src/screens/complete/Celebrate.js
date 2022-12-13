@@ -36,9 +36,7 @@ export const Celebrate = () => {
 const styles = createStyleSheet({
   trophy: {
     width: '100%',
-    height: '100%',
-    borderWidth: 1,
-    borderColor: '#00f'
+    height: '100%'
   },
   container: {
     flex: 1,

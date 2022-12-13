@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { KeyboardTypes } from '../utils/KeyboardTypes'
 import { TextInput, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -8,15 +8,16 @@ import { Tooltip } from 'react-native-elements'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { LeaText } from '../../components/LeaText'
+import { useBackHandler } from '../../hooks/useBackHandler'
+import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 
 /**
  * Renders a blanks, which is a free-text input specific to the Cloze item.
  *
  * @param props {object}
  * @param props.color {string} the current color to render
- * @param props.value {string} the entered value
  * @param props.original {string} the original expected value
- * @param props.onEndEditing {function} optional pattern that describes Keyboard
+ * @param props.onSubmit {function} sends text to parent component
  * @param props.style {object=} optional custom styles definitions
  * @param props.isMultiline {boolean=false} indicate that this is a multiline
  *  text, that is used for sentences or long groups of words
@@ -24,6 +25,7 @@ import { LeaText } from '../../components/LeaText'
  *  compared with correct response
  * @param props.compare.score {number=}
  * @param props.compare.color {number=}
+ * @param props.compare.hasNext {boolean=}
  * @param props.pattern {string=} optional pattern that describes Keyboard
  *  behaviour
  * @return {JSX.Element}
@@ -33,17 +35,44 @@ export const ClozeRendererBlank = props => {
   const tooltipRef = useRef(null)
   const { t } = useTranslation()
   const { Tts } = useTts()
+  const [value, setValue] = useState('')
+  const [editActive, setEditActive] = useState(false)
   const inputStyle = { ...styles.input }
   const {
+    blanksId,
     compare,
     color,
     original,
     pattern,
-    value,
     isMultiline = false,
-    onEndEditing,
+    onSubmit,
     style
   } = props
+
+  // if the unique-ish id changes we can assume
+  // this input is now part of a new page or unit
+  // and thus we flush it's internal text state
+  useEffect(() => {
+    setValue(null)
+  }, [blanksId])
+
+  useBackHandler(() => {
+    onSubmit(value)
+    return true
+  })
+
+  const activateEdit = () => setEditActive(true)
+
+  useKeyboardVisibilityHandler(({ status }) => {
+    if (status === 'hidden' && editActive) {
+      console.debug('SUBMIT ON HIDE', value)
+      onSubmit(value)
+      setEditActive(false)
+      return true
+    }
+  })
+
+  const handleSubmit = () => onSubmit(value)
 
   if (compare?.color) {
     inputStyle.backgroundColor = compare.color
@@ -83,11 +112,12 @@ export const ClozeRendererBlank = props => {
       style={inputStyle}
       // selectionColor
       // keyboard
-      returnKeyType='done'
+      returnKeyType={props.hasNext ? 'next' : 'done'}
       keyboardType={keyboardType}
       // events
-      onPressIn={onPressIn}
-      onEndEditing={onEndEditing}
+      onPressIn={onPressIn ?? activateEdit}
+      onChangeText={setValue}
+      onEndEditing={handleSubmit}
     />
   )
 

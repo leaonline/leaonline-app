@@ -11,6 +11,9 @@ import { ScreenBase } from '../BaseScreen'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { BackButton } from '../../components/BackButton'
+import { View } from 'react-native'
+import Colors from '../../constants/Colors'
+import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -31,7 +34,7 @@ const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs(() => loadDimensionData(session.stage))
+  const docs = loadDocs(() => loadDimensionData(session.stage), { runArgs: [session.stage]})
 
   useEffect(() => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
@@ -64,22 +67,38 @@ const DimensionScreen = props => {
         ? unitSet.dimension.title + ' ' + unitSet.code
         : unitSet.dimension.title
       return (
-        <RouteButton
-          key={index}
-          color={color}
-          title={title}
-          titleStyle={{ color }}
-          block
-          icon={unitSet.dimension.icon}
-          handleScreen={() => selectUnitSet(unitSet)}
-        />
+        <View style={styles.dimension}  key={index}>
+          <RouteButton
+            color={color}
+            title={title}
+            block={true}
+            containerStyle={styles.buttonContainer}
+            titleStyle={{ color }}
+            icon={unitSet.dimension.icon}
+            handleScreen={() => selectUnitSet(unitSet)}
+          />
+          <StaticCircularProgress
+            value={unitSet.progressPercent ?? 0}
+            maxValue={100}
+            textColor={color}
+            activeStrokeColor={color}
+            inActiveStrokeColor={Colors.white}
+            fillColor={Colors.transparent}
+            inActiveStrokeOpacity={1}
+            inActiveStrokeWidth={5}
+            activeStrokeWidth={5}
+            showProgressValue={true}
+            fontSize={12}
+            valueSuffix='%'
+            radius={20} />
+        </View>
       )
     })
   }
 
   return (
     <ScreenBase {...docs} style={styles.container}>
-      <Tts text={t('dimensionScreen.instructions')} />
+      <Tts text={t('dimensionScreen.instructions')} block={true} align='center' />
       {renderDimensions()}
     </ScreenBase>
   )
@@ -93,19 +112,16 @@ const styles = createStyleSheet({
   instructions: {
     flex: 1
   },
-  dimensionContainer: {
-    flex: 2,
+  dimension: {
+    flex: 0,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'flex-start'
   },
-  iconNavigation: {
-    paddingBottom: 5,
-    padding: 100
-  },
-  routeButtonContainer: {
-    width: '100%',
+  buttonContainer: {
+    flexGrow: 1,
     flex: 1,
-    alignItems: 'center'
+    marginRight: 5
   }
 })
 

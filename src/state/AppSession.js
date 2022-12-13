@@ -2,6 +2,7 @@ import Meteor from '@meteorrn/core'
 import React, { useEffect, useMemo, useReducer } from 'react'
 import { AppSessionContext } from './AppSessionContext'
 import { Log } from '../infrastructure/Log'
+import nextFrame from 'next-frame'
 
 /**
  * Contains the state for an app's current session.
@@ -16,6 +17,8 @@ const validateKey = key => {
     throw new Error(`Unknown key ${key}, allowed are only ${validKeys.toString()}`)
   }
 }
+
+const debug = Log.create('AppSession', 'debug')
 
 /**
  * Injects a storage and creates all internals that
@@ -34,7 +37,9 @@ AppSession.init = ({ storage }) => {
   const createActions = ({ dispatch }) => {
     const actions = {
       multi: (options, onError = Log.error) => {
+        debug('action (multi)', options)
         const stateKeys = Object.keys(options)
+
         try {
           stateKeys.forEach(key => validateKey(key))
         }
@@ -43,13 +48,13 @@ AppSession.init = ({ storage }) => {
         }
 
         dispatch(options)
-
         updateMulti(options).catch(onError)
       }
     }
 
     validKeys.forEach(key => {
       actions[key] = (value, onError = Log.error) => {
+        debug('action', `(${key})`, value)
         dispatch({ [key]: value })
 
         // update in background
@@ -65,6 +70,7 @@ AppSession.init = ({ storage }) => {
   }
 
   const reducer = (prevState, nextState) => {
+    debug('run reducer', nextState)
     // const stateKeys = Object.keys(nextState)
     // stateKeys.forEach(key => validateKey(key))
     return {
@@ -105,6 +111,7 @@ AppSession.init = ({ storage }) => {
 
 const createStorageApi = ({ storage }) => {
   const restore = async key => {
+    await nextFrame()
     try {
       const value = await storage.getItem(key)
       if (typeof value === 'string') {
@@ -118,13 +125,21 @@ const createStorageApi = ({ storage }) => {
   }
 
   const update = async (key, value) => {
+    await nextFrame()
+    debug('storage update', key, value)
     const strValue = EJSON.stringify(value)
     return storage.setItem(key, strValue)
   }
 
-  const remove = async (key) => storage.removeItem(key)
+  const remove = async (key) => {
+    await nextFrame()
+    debug('storage remove', key)
+    storage.removeItem(key)
+  }
 
   const updateMulti = async (options) => {
+    await nextFrame()
+    debug('storage update multi')
     const entries = Object.entries(options)
     const removePairs = entries.filter(([key, value]) => value === null)
     const updatePairs = entries.filter(([key, value]) => value !== null)
@@ -135,6 +150,7 @@ const createStorageApi = ({ storage }) => {
     if (updatePairs.length > 0) {
       await storage.multiSet(updatePairs.map(toStoragePairs))
     }
+    debug('storage update multi complete')
   }
 
   return { restore, update, remove, updateMulti }
