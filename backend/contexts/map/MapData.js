@@ -134,7 +134,7 @@ MapData.schema = {
    * The relates unit set short-code
    */
   'entries.$.unitSets.$.code': {
-    type: String,
+    type: String
   },
 
   /**
@@ -165,7 +165,7 @@ MapData.schema = {
 }
 
 const log = createLog({ name: MapData.name })
-const warn = createLog({ name: MapData.name, type:'warn' })
+const warn = createLog({ name: MapData.name, type: 'warn' })
 const byLevel = (a, b) => a.level - b.level
 const checkIntegrity = ({ condition, premise }) => {
   if (!condition) {
@@ -181,8 +181,14 @@ const checkIntegrity = ({ condition, premise }) => {
  *
  * Do not call from a regular method that could be invoked by clients.
  * @method
+ *
+ * @param options {object}
+ * @param options.field {string} the field id
+ * @param options.dryRun {boolean} if false will not be saved to db
+ * @param options.dimensionsOrder {[string]} array of short codes to sort dimensions
  */
-MapData.create = ({ field, dryRun }) => {
+MapData.create = (options) => {
+  const { field, dryRun, dimensionsOrder } = options
   const fieldDoc = getCollection('field').findOne(field)
   checkIntegrity({
     condition: fieldDoc,
@@ -190,8 +196,14 @@ MapData.create = ({ field, dryRun }) => {
   })
 
   log('create for field', fieldDoc.title)
-  const dimensions = getCollection('dimension').find().fetch()
-  const levels = getCollection('level').find().fetch().sort(byLevel)
+  const dimensions = getCollection('dimension')
+    .find()
+    .fetch()
+    .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
+  const levels = getCollection('level')
+    .find()
+    .fetch()
+    .sort(byLevel)
 
   checkIntegrity({
     condition: dimensions.length,
@@ -245,7 +257,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // for each dimension
     dimensions.forEach((dimensionDoc, dimensionIndex) => {
-      log('collect dimension', dimensionDoc.title)
+      log('collect dimension', dimensionDoc.shortCode, dimensionDoc.title)
       const dimensionId = dimensionDoc._id
       const testCycleDoc = TestCycleCollection.findOne({
         field: field,
@@ -256,7 +268,7 @@ MapData.create = ({ field, dryRun }) => {
       // if we found no test cycle for this given combination we need to
       // make sure there is no further map building for this test cycle.
       if (!testCycleDoc) {
-        return warn(fieldDoc.title,'has no TestCycle for ', dimensionDoc.title,`(${dimensionDoc._id})` ,levelDoc.title, `(${levelDoc._id})` )
+        return warn(fieldDoc.title, 'has no TestCycle for ', dimensionDoc.title, `(${dimensionDoc._id})`, levelDoc.title, `(${levelDoc._id})`)
       }
 
       // get unit sets with fallback in case they are undefined on some

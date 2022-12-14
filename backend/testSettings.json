@@ -16,8 +16,11 @@
         "testCycle": false
       },
       "remap": {
-        "active": false,
-        "dryRun": false
+        "active": true,
+        "dryRun": false,
+        "dimensions": {
+          "order": ["W", "R", "M", "L"]
+        }
       }
     }
   },

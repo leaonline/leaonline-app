@@ -20,7 +20,10 @@ const settingsSchema = schema({
       }),
       remap: schema({
         active: Boolean,
-        dryRun: Boolean
+        dryRun: Boolean,
+        dimensions: schema({
+          order: [String]
+        })
       })
     })
   }),

@@ -14,7 +14,7 @@ Analytics.schema = {
   message: String,
   details: {
     type: Object,
-    blackbox:  true
+    blackbox: true
   }
 }
 
@@ -36,7 +36,7 @@ Analytics.methods.send = {
     const docs = logs.map(line => {
       const [timestamp, typeAndName, message, ...rest] = line.split(Analytics.separator)
       const [type, nameUncleaned] = typeAndName.split(' ')
-      const name = nameUncleaned.replace(/[\[\]:]+/g, '')
+      const name = nameUncleaned.replace(/[[\]:]+/g, '')
       const _id = Random.id()
       const details = rest.length === 1
         ? { content: rest[0] }

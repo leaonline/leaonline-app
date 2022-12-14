@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 import { Random } from 'meteor/random'
 import { expect } from 'chai'
+import { Meteor } from 'meteor/meteor'
 import { MapData } from '../MapData'
 import { Field } from '../../content/Field'
 import { Dimension } from '../../content/Dimension'
@@ -33,6 +34,8 @@ const allCollections = [
   UnitCollection
 ]
 
+const dimensionsOrder = Meteor.settings.remotes.content.remap.dimensions.order
+
 const mockDocuments = () => {
   allCollections.forEach(c => c.remove({}))
   Object.entries(mapFixtures).forEach(([name, docs]) => {
@@ -59,20 +62,20 @@ describe('MapData', function () {
 
     it('throws if there is no field doc', function () {
       const field = Random.id()
-      expect(() => MapData.create({ field }))
+      expect(() => MapData.create({ field, dimensionsOrder }))
         .to.throw(`Expect field doc by _id "${field}"`)
     })
     it('throws if there are no dimensions', function () {
       const field = Random.id()
       FieldCollection.insert({ _id: field })
-      expect(() => MapData.create({ field }))
+      expect(() => MapData.create({ field, dimensionsOrder }))
         .to.throw('Expect at least one dimension doc')
     })
     it('throws if there are no levels', function () {
       const field = Random.id()
       FieldCollection.insert({ _id: field })
       DimensionCollection.insert({})
-      expect(() => MapData.create({ field }))
+      expect(() => MapData.create({ field, dimensionsOrder }))
         .to.throw('Expect at least one level doc')
     })
 
@@ -83,8 +86,8 @@ describe('MapData', function () {
       TestCycleCollection.update(testCycleDoc._id, { $set: { unitSets: [] } })
 
       const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id }))
-        .to.throw(`Expect at least one unit set for test cycle ${testCycleDoc._id}`)
+      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
+        .to.throw(`Integrity failed: Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`)
     })
 
     it('throws if there is a mismatch between expected and actual unit', function () {
@@ -93,7 +96,7 @@ describe('MapData', function () {
       const testCycleDoc = TestCycleCollection.findOne()
       const expected = testCycleDoc.unitSets.length
       const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id }))
+      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
         .to.throw(`Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`)
     })
 
@@ -104,8 +107,9 @@ describe('MapData', function () {
       UnitSetCollection.update(unitSetId, { $set: { units: [] } })
 
       const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id }))
-        .to.throw(`Expect units for unit set ${unitSetId} to be above 0`)
+      const unitSetDoc = UnitSetCollection.findOne(unitSetId)
+      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
+        .to.throw(`Expect units for unit set ${unitSetDoc.shortCode} to be above 0`)
     })
 
     it('throws if there is a mismatch between expected and actual units', function () {
@@ -117,8 +121,8 @@ describe('MapData', function () {
       UnitCollection.remove({})
 
       const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id }))
-        .to.throw(`Expect ${expectedUnits} units for unit set ${unitSetDoc._id}, got 0`)
+      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
+        .to.throw(`Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got 0`)
     })
 
     it('does not create a map if no test cycle at all is found for given field/level/dimension', function () {
@@ -126,8 +130,8 @@ describe('MapData', function () {
       TestCycleCollection.remove(TestCycleCollection.findOne()._id)
 
       const fieldDoc = FieldCollection.findOne()
-      const data = MapData.create({ field: fieldDoc._id })
-      const mapDoc = MapData.get({ field: fieldDoc._id })
+      const data = MapData.create({ field: fieldDoc._id, dimensionsOrder })
+      const mapDoc = MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(data).to.equal(undefined)
       expect(mapDoc).to.equal(undefined)
@@ -137,10 +141,10 @@ describe('MapData', function () {
       mockDocuments()
 
       const fieldDoc = FieldCollection.findOne()
-      MapData.create({ field: fieldDoc._id })
+      MapData.create({ field: fieldDoc._id, dimensionsOrder })
 
       const toId = doc => doc._id
-      const { dimensions, entries, field, levels } = MapData.get({ field: fieldDoc._id })
+      const { dimensions, entries, field, levels } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(field).to.equal(fieldDoc._id)
       expect(levels).to.deep.equal(LevelCollection.find().fetch().map(toId))
@@ -160,6 +164,7 @@ describe('MapData', function () {
 
         // progress sums up correctly
         let entryProgress = 0
+
         entry.unitSets.forEach(unitSet => {
           entryProgress += unitSet.progress
           competenciesByDimension[unitSet.dimension] += unitSet.competencies
@@ -167,6 +172,8 @@ describe('MapData', function () {
 
         expect(entry.progress).to.equal(entryProgress)
         maxProgress += entryProgress
+
+        // unit sets are sorted by correct dimensions
       })
 
       // ensure the milestone competency count it the correct sum

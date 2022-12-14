@@ -9,8 +9,10 @@ import { SyncState } from '../contexts/sync/SyncState'
  *
  * @param active {boolean} determines, whether the remap should be executed
  * @param dryRun {boolean} determines, whether the remap result should be saved as new Map data
+ * @param dimensions {object} determines dimensions order
+ * @param dimensions.order {[string]}
  */
-export const runRemap = ({ active, dryRun }) => {
+export const runRemap = ({ active, dryRun, dimensions }) => {
   if (active) {
     // after sync we need to recompute the map data
     const fields = getCollection(Field.name).find()
@@ -18,7 +20,7 @@ export const runRemap = ({ active, dryRun }) => {
     if (fields.count() > 0) {
       // create map data for each field
       for (const field of fields) {
-        MapData.create({ field: field._id, dryRun })
+        MapData.create({ field: field._id, dryRun, dimensionsOrder: dimensions.order })
       }
     }
 
