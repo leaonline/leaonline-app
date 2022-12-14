@@ -10,6 +10,13 @@ import { initReactI18next } from 'react-i18next'
  */
 const resources = {
   en: {
+    promise: {
+      timedOut: 'Could not load content in time.'
+    },
+    errors: {
+      restart: 'Please restart the app.',
+      fallback: 'An unknown error occurred.'
+    },
     common: {
       yes: 'Yes',
       no: 'No',
@@ -29,38 +36,53 @@ const resources = {
       approve: 'Ok'
     },
     welcomeScreen: {
-      text: 'Welcome to lea.\u00ADonline'
+      title: 'Welcome',
+      text: 'Welcome to lea.\u00ADonline. First, configure the language, please.',
+      continue: 'Click continue, once the language settings satisfy your needs.',
     },
     registrationScreen: {
       title: 'Create user account',
       creating: 'Your account is created'
     },
     TandCScreen: {
-      headerTitle: 'General terms and conditions',
-      text: 'I hereby agree to the following conditions ...',
-      checkBoxText: 'I have read and agree to the general terms and conditions'
+      headerTitle: 'Terms and conditions',
+      text: 'Please take your time to investigate our terms and conditions.',
+      checkBoxText: 'I understand and agree to the given terms and conditions.',
+      agreeResearch: 'Optional: I agree to participate in anonymous research and send research data',
+      newUser: 'I am a new user',
+      restoreWithCode: 'I have a code'
+    },
+    restoreScreen: {
+      title: 'Sign in with code',
+      instructions: 'Please enter your codes to restore your account.',
+      checkCode: 'Restore account',
+      noCode: 'I have no codes or I lost them'
+    },
+    restore: {
+      failed: 'Restore account failed. Please check your codes.'
     },
     homeScreen: {
-      text: 'Welcome! Please select an area.'
+      title: 'Home',
+      text: 'Welcome! Please select a topic.'
     },
     profileScreen: {
       headerTitle: 'My account',
       progress: 'Overall progress',
-      title: 'My achievements'
+      title: 'My achievements',
     },
     accountInfo: {
-      title: 'Profile Options',
+      title: 'Account options',
       whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.',
       signOut: 'Sign out',
-      delete: 'Delete my account'
+      delete: 'Delete my account',
+      restoreCodes: 'Save my account',
     },
     mapScreen: {
-      title: 'Übersicht',
       stage: 'Stage',
       notAvailable: 'The overview cannot be downloaded currently.'
     },
     dimensionScreen: {
-      instructions: 'Please select a topic'
+      instructions: 'Please select a subject'
     },
     unitScreen: {
       story: {
@@ -69,7 +91,8 @@ const resources = {
       actions: {
         check: 'Check',
         next: 'Continue',
-        complete: 'Go to next task'
+        complete: 'Go to next task',
+        finish: 'Finish'
       },
       abort: {
         question: 'Do you really want to abort this exercise?',
@@ -82,6 +105,19 @@ const resources = {
       congratulations: 'Congratulations!',
       correctScores: 'You have {{count}} correct answers!',
       continue: 'Continue to the overview map'
+    },
+    tts: {
+      settings: 'My voice settings',
+      voice: 'Voice {{value}}',
+      speedText: 'I will speak for you {{value}}',
+      speed: {
+        slow: 'slow',
+        medium: 'normal',
+        fast: 'fast'
+      }
+    },
+    item: {
+      correctResponse: 'The correct answer is: {{value}}'
     }
   },
   de: {
