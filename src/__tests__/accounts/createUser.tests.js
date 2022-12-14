@@ -2,15 +2,10 @@ import { createUser } from '../../meteor/createUser'
 import Meteor from '@meteorrn/core'
 import sinon from 'sinon'
 import { MeteorLoginStorage } from '../../meteor/MeteorLoginStorage'
-
-const stub = (target, prop, fn) => {
-  const stub = sinon.stub(target, prop)
-  stub.callsFake(fn)
-  return stub
-}
+import { stub, restoreAll } from '../../__testHelpers__/stub'
 
 afterEach(() => {
-  sinon.restore()
+  restoreAll()
 })
 
 it('throws on invalid args', async () => {

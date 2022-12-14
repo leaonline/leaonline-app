@@ -18,7 +18,9 @@ const createUserMethodName = Config.methods.createUser
 /**
  * @private
  */
-const debug = Log.create('createUser', 'debug')
+const debug = Config.debug.accounts
+  ? Log.create('createUser', 'debug')
+  : () => {}
 
 /**
  * args schema for the exported {createUser} method

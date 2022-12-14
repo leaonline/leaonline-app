@@ -19,7 +19,7 @@
         "active": true,
         "dryRun": false,
         "dimensions": {
-          "order": ["W", "R", "M", "L"]
+          "order": ["W", "R", "M", "S"]
         }
       }
     }

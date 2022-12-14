@@ -43,7 +43,11 @@
   },
   "debug": {
     "layoutBorders": false,
-    "map": true,
-    "unit": true
+    "map": false,
+    "unit": false,
+    "accounts": false
+  },
+  "dimensions": {
+    "order": ["W", "R", "M", "S"]
   }
 }

@@ -19,10 +19,12 @@ const defaultMessage = 'promise.timedOut'
  * @return {Promise<Awaited<unknown>>}
  */
 export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = false, message, details } = {}) => {
-  return Promise.race([
+  let timeOut = undefined
+
+  const race = Promise.race([
     promise,
     new Promise((resolve, reject) => {
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         if (throwIfTimedOut) {
           const error = new Error(message || defaultMessage)
           error.details = details
@@ -34,4 +36,9 @@ export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = 
       }, timeout)
     })
   ])
+
+  // always clear timeout to prevent weird bullshit
+  race.finally(() => clearTimeout(timeOut))
+
+  return race
 }

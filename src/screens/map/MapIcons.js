@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Colors from '../../constants/Colors'
 export const MapIcons = {}
 
 const icons = []
@@ -30,5 +30,9 @@ MapIcons.render = (index) => {
   }
 
   const Component = icons[index]
-  return (<Component />)
+  return (<Component
+    stroke={Colors.gray}
+    fill={Colors.light}
+    width={60}
+    height={60}/>)
 }

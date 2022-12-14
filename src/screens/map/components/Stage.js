@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Svg, { G } from 'react-native-svg'
 import { StaticCircularProgress } from '../../../components/progress/StaticCircularProgress'
 import { Diamond } from '../../../components/progress/Diamond'
@@ -7,6 +7,7 @@ import { Pressable, Vibration } from 'react-native'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
+import { Config } from '../../../env/Config'
 
 const positions = getPositionOnCircle({ n: 10, radius: 50 })
 const competencies = [
@@ -17,9 +18,40 @@ const competencies = [
 ]
 
 export const Stage = props => {
+  const [diamonds, setDiamonds] = useState([])
   const width = props.width ?? 100
   const height = props.height ?? 100
   const viewBox = `0 0 ${width} ${height}`
+
+  useEffect(() => {
+    if (!props.unitSets || !props.dimensions) {
+      return
+    }
+
+    const diamondData =  Config.dimensions.order.map(shortCode => {
+      const key = `stage-${props.text}-${shortCode}`
+      const unitSet = props.unitSets.find(u => {
+        const dimension = props.dimensions[u.dimension]
+        return dimension.shortCode === shortCode
+      })
+
+      if (unitSet) {
+        return {
+          color: ColorTypeMap.get(props.dimensions[unitSet.dimension].colorType),
+          progress: Math.round(((unitSet.userCompetencies || 0) / unitSet.competencies) * 100),
+          key
+        }
+      }
+
+      return {
+        color: Colors.light,
+        progress: 0,
+        key
+      }
+    })
+
+    setDiamonds(diamondData)
+  }, [props.unitSets, props.dimensions])
 
   // progress circle
   const stageProgress = {}
@@ -69,18 +101,14 @@ export const Stage = props => {
         </G>
         {
         competencies.map(({ x, y }, index) => {
-          const unitSet = props.unitSets[index]
-          const dimensionDoc = props.dimensions[unitSet?.dimension]
-          const key = `stage-${text}-${dimensionDoc ? dimensionDoc.shortCode : index}`
-          const color = dimensionDoc
-            ? ColorTypeMap.get(dimensionDoc.colorType)
-            : Colors.light
-          const progress = unitSet
-            ? Math.round(((unitSet.userCompetencies || 0) / unitSet.competencies) * 100)
-            : 0
+          const { color, progress, key } = diamonds[index] || {
+            color: Colors.light,
+            progress: 0,
+            key: index
+          }
           return (
-            <G key={index} x={x - 7.5} y={y}>
-              <Diamond key={key} width={15} height={30} value={progress} color={color} />
+            <G key={key} x={x - 7.5} y={y}>
+              <Diamond width={15} height={30} value={progress} color={color} />
             </G>
           )
         })

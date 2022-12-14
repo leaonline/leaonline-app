@@ -1,7 +1,7 @@
 /* global __DEV__ */
 import settings from '../settings.json'
 
-const { backend, content, log, debug, isDevelopment } = settings
+const { backend, content, log, debug, isDevelopment, dimensions } = settings
 
 /**
  * These are the unified application globals.
@@ -13,6 +13,8 @@ export const Config = {}
  * We use this expo-internal to determine, whether this is development mode.
  */
 Config.isDevelopment = !!(__DEV__) || !!(isDevelopment)
+
+Config.isTest = () => process.env.JEST_WORKER_ID !== undefined
 
 /**
  * There are multiple debug options.
@@ -86,3 +88,5 @@ Config.content.url = content.url
  * This is dev only, overrides hard-coded URLs with the local ip based url.
  */
 Config.content.replaceUrl = content.replaceUrl
+
+Config.dimensions = dimensions

@@ -55,7 +55,7 @@ export const Connector = props => {
         <Path className="cls-1"
               strokeWidth="1"
               strokeMiterlimit="10"
-              stroke={Colors.secondary}
+              stroke={Colors.gray}
               fill={Colors.transparent}
               d={execution.join(' ')}/>
         {renderIcon()}

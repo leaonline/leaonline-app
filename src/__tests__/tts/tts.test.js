@@ -1,5 +1,5 @@
 import React from 'react'
-import { TTSengine } from '../../components/Tts'
+import { TTSengine, useTts } from '../../components/Tts'
 import { fireEvent, render, act } from '@testing-library/react-native'
 import { asyncTimeout } from '../../utils/asyncTimeout'
 import Colors from '../../constants/Colors'
@@ -8,7 +8,7 @@ it('speaks a given text', async () => {
   let speakCalled = false
   let stopCalled = false
 
-  TTSengine.setSpeech({
+  await TTSengine.setSpeech({
     isSpeakingAsync: async function () {
       return false
     },
@@ -21,8 +21,7 @@ it('speaks a given text', async () => {
     }
   })
 
-  const Tts = TTSengine.component()
-
+  const { Tts } = useTts()
   const { getByTestId } = render(
     <>
       <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
@@ -46,7 +45,7 @@ it('updates global TTSEngine props as side effect', async function () {
     stop: () => {}
   })
 
-  const Tts = TTSengine.component()
+  const { Tts } = useTts()
   const { getByTestId } = render(
     <>
       <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
@@ -57,14 +56,14 @@ it('updates global TTSEngine props as side effect', async function () {
   await asyncTimeout(15)
   expect(TTSengine.isSpeaking).toBe(true)
   expect(TTSengine.speakId).toBe('ttsMock.text')
-  expect(TTSengine.iconColor).toBe(Colors.success)
+  expect(TTSengine.iconColor).toBe(Colors.primary)
 })
 
 it('stops if the action is executed before the tts is done', async function () {
   let speakCalled = false
   let stopCalled = false
   let isSpeakingCalled = false
-  TTSengine.setSpeech({
+  await TTSengine.setSpeech({
     isSpeakingAsync: async function () {
       if (isSpeakingCalled) {
         return false
@@ -81,8 +80,7 @@ it('stops if the action is executed before the tts is done', async function () {
     }
   })
 
-  const Tts = TTSengine.component()
-
+  const { Tts } = useTts()
   const { getByTestId } = render(
     <>
       <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
@@ -100,7 +98,7 @@ it('resolve to a complete state via options.onDone', async () => {
   let speakCalled = false
   let stopCalled = false
 
-  TTSengine.setSpeech({
+  await TTSengine.setSpeech({
     isSpeakingAsync: async function () {
       return false
     },
@@ -121,8 +119,7 @@ it('resolve to a complete state via options.onDone', async () => {
     }
   })
 
-  const Tts = TTSengine.component()
-
+  const { Tts } = useTts()
   const { getByTestId } = render(
     <>
       <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
@@ -136,7 +133,7 @@ it('resolve to a complete state via options.onDone', async () => {
 
   expect(TTSengine.isSpeaking).toBe(true)
   expect(TTSengine.speakId).toBe('ttsMock.text')
-  expect(TTSengine.iconColor).toBe(Colors.success)
+  expect(TTSengine.iconColor).toBe(Colors.primary)
 
   await asyncTimeout(300)
   expect(stopCalled).toBe(true)
@@ -149,7 +146,7 @@ it('start 2 different tts processes successively', async () => {
   let stopCalled = false
   let tts1Speaking = false
 
-  TTSengine.setSpeech({
+  await TTSengine.setSpeech({
     isSpeakingAsync: async function () {
       if (tts1Speaking) {
         tts1Speaking = false
@@ -165,7 +162,7 @@ it('start 2 different tts processes successively', async () => {
     }
   })
 
-  const Tts = TTSengine.component()
+  const { Tts } = useTts()
   const render1 = render(
     <>
       <Tts text='ttsMock.text1' color={Colors.primary} id='ttsMock.text1' />
@@ -185,7 +182,7 @@ it('start 2 different tts processes successively', async () => {
   await asyncTimeout(15)
   expect(TTSengine.isSpeaking).toBe(true)
   expect(TTSengine.speakId).toBe('ttsMock.text1')
-  expect(TTSengine.iconColor).toBe(Colors.success)
+  expect(TTSengine.iconColor).toBe(Colors.primary)
   expect(stopCalled).toBe(false)
   tts1Speaking = true
 
@@ -194,6 +191,6 @@ it('start 2 different tts processes successively', async () => {
 
   expect(TTSengine.isSpeaking).toBe(true)
   expect(TTSengine.speakId).toBe('ttsMock.text2')
-  expect(TTSengine.iconColor).toBe(Colors.success)
+  expect(TTSengine.iconColor).toBe(Colors.primary)
   expect(stopCalled).toBe(true)
 })

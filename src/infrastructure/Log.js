@@ -81,6 +81,11 @@ Log.create = (name, type = 'log', force) => {
   if (typeof force === 'boolean' && force !== true) {
     return () => {} // noOp on conditionals
   }
+
+  if (Config.isTest()) {
+    return () => {}
+  }
+
   if (!Object.hasOwnProperty.call(allLevels, type)) {
     throw new Error(`Unsupported log type: ${type}`)
   }

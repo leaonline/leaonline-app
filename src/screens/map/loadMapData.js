@@ -4,7 +4,7 @@ import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
 import { Config } from '../../env/Config'
 import { MapIcons } from './MapIcons'
-import nextFrame from 'next-frame'
+// import nextFrame from 'next-frame'
 
 const useDebug = Config.debug.map
 const debug = useDebug
@@ -73,7 +73,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // step during startup
   if (!mapData.dimensionsResolved) {
     for (let i = 0; i < mapData.dimensions.length; i++) {
-      await nextFrame()
+      // await nextFrame()
       const dimensionId = mapData.dimensions[i]
       mapData.dimensions[i] = Dimension.collection().findOne(dimensionId)
     }
@@ -91,12 +91,9 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // these two data structures are separate as they are separately
   // updated and while user progress can update often, the map data
   // needs to be loaded only once.
+  // Finally, reset loadUserData until session updates this value again
   if (loadUserData) {
     await addUserData(mapData, fieldId)
-  }
-
-  // reset loadUserData until session updates this value again
-  if (loadUserData) {
     await onUserDataLoaded()
   }
 
@@ -173,20 +170,17 @@ const addUserData = async (mapData, fieldId) => {
   }
 
   for (let index = 0; index < mapData.entries.length; index++) {
-    await nextFrame()
+    // await nextFrame()
     updateEntry(mapData.entries[index], index)
   }
 }
 
 const addViewProperties = async (mapData) => {
-  if (!mapData.entries) {
-    return
-  }
   let count = 1
 
   // 6.1. ensure every stage entry contains a label with the index (counting from 1)
   for (const entry of mapData.entries) {
-    await nextFrame()
+    // await nextFrame()
     if (typeof entry.label !== 'number' && entry.type === 'stage') {
       entry.label = count++
     }
@@ -218,10 +212,9 @@ const addViewProperties = async (mapData) => {
   let useLeft = false
   let index = 0
   for (const entry of mapData.entries) {
-    await nextFrame()
+    // await nextFrame()
 
     const nextEntry = mapData.entries[index + 1]
-    const lastEntry = mapData.entries[index - 1]
     const last = useLeft ? 'right' : 'left'
     const current = useLeft ? 'left' : 'right'
 
@@ -248,7 +241,7 @@ const addViewProperties = async (mapData) => {
         ? `${current}2${next}`
         : null
 
-      if (next !== 'center')  {
+      if (next !== 'center') {
         viewPosition.icon = MapIcons.getIncrementalIconIndex()
       }
 
@@ -268,19 +261,29 @@ const addViewProperties = async (mapData) => {
     else {
       const current = 'center'
       const left = last === 'left'
-        ? lastEntry
-            ? `right2left-down`
-            : 'fill'
+        ? `right2left-down`
         : `right2left-up`
       const right = last === 'right'
-        ? lastEntry
-            ? `left2right-down`
-            : 'fill'
+        ? `left2right-down`
         : `left2right-up`
-      entry.viewPosition =  { current, left, right }
+      entry.viewPosition = { current, left, right }
     }
 
     entry.entryKey = `map-entry-${index++}`
-    debug(entry.entryKey, entry.viewPosition)
+  }
+
+  // on first and last element replace
+  // unused connectors with 'fill'
+  mapData.entries[0].viewPosition.left = 'fill'
+
+  const len = mapData.entries.length
+  const theLast = mapData.entries[len - 1]
+  const preLast = mapData.entries[len - 2]
+
+  if (preLast && preLast.viewPosition.current === 'left') {
+    theLast.viewPosition.right = 'fill'
+  }
+  if (preLast && preLast.viewPosition.current === 'right') {
+    theLast.viewPosition.left = 'fill'
   }
 }
