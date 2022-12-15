@@ -4,12 +4,11 @@ KeyboardTypes.allowedValues = () => [].concat(allowedValues)
 
 // we use this as fallback, since 'default'  offers the microphone
 // which may trigger in some users the urge to avoid typing
-const DEFAULT = 'default'
+const DEFAULT = 'email-address'
 const types = new Map()
 let typesList = []
 const allowedValues = [
   DEFAULT,
-  'email-address',
   'number-pad',
   'decimal-pad',
   'numeric',
@@ -24,6 +23,8 @@ KeyboardTypes.register = ({ name, regex, value }) => {
   types.set(name, { regex, value })
   typesList = [...types.values()]
 }
+
+// TODO move outside this module
 
 KeyboardTypes.register({
   name: 'numeric',

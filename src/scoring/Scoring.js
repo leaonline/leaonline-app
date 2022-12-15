@@ -30,3 +30,13 @@ Scoring.score = async (itemDoc = {}, responseDoc) => {
 
   return fn(itemDoc, responseDoc)
 }
+
+Scoring.validateItemDoc = itemDoc => {
+  if (typeof itemDoc !== 'object') {
+    throw new Error(`Expected itemDoc, got`)
+  }
+
+  if (!itemDoc.scoring?.length) {
+    throw new Error(`Expected scoring definitions on itemDoc.`)
+  }
+}

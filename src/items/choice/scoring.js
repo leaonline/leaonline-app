@@ -3,7 +3,9 @@ import { Scoring } from '../../scoring/Scoring'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 import { toInteger } from '../../utils/toInteger'
 
-export const scoreChoice = function (itemDoc = {}, responseDoc = {}) {
+export const scoreChoice = function (itemDoc, responseDoc = {}) {
+  Scoring.validateItemDoc(itemDoc)
+
   const { scoring, flavor } = itemDoc
 
   return scoring.map(entry => {
@@ -13,7 +15,7 @@ export const scoreChoice = function (itemDoc = {}, responseDoc = {}) {
       case Choice.flavors.multiple.value:
         return scoreMultiple(entry, responseDoc)
       default:
-        throw new Error(`Unexpected undefined choice flavor ${flavor}`)
+        throw new Error(`Unexpected choice flavor: ${flavor}`)
     }
   })
 }
@@ -68,7 +70,7 @@ function scoreMultiple ({ competency, correctResponse, requires }, { responses =
         requires
       }, { responses })
     default:
-      throw new Error(`Unexpected scoring type ${requires}`)
+      throw new Error(`Unexpected scoring type: ${requires}`)
   }
 }
 
@@ -95,20 +97,20 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
   }
 
   // otherwise we assume, that multiple-all is true if the indices exactly match
-  score = correctResponse.sort().every((responseIndex, positionIndex) => {
-    return mappedResponses[positionIndex] === responseIndex
+  score = correctResponse.sort().every((responseValue, positionIndex) => {
+    return mappedResponses[positionIndex] == responseValue
   })
   return {
     competency,
     correctResponse,
-    value: responses,
+    value: mappedResponses,
     score,
     isUndefined: false
   }
 }
 
 function scoreMultipleAny ({ competency, correctResponse, requires }, { responses }) {
-  const score = responses
+  const mappedResponses = responses
     .map(value => {
       if (isUndefinedResponse(value)) return undefined
       // we need to check for value integrity, allowed are strings of integers
@@ -116,12 +118,12 @@ function scoreMultipleAny ({ competency, correctResponse, requires }, { response
       // check(value, Match.Where(isSafeInteger))
       return toInteger(value)
     })
-    .some(value => correctResponse.includes(value))
+  const score = mappedResponses.some(value => correctResponse.includes(value))
 
   return {
     competency,
     correctResponse,
-    value: responses,
+    value: mappedResponses,
     score,
     isUndefined: false
   }

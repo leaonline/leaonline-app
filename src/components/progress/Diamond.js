@@ -1,3 +1,4 @@
+import React from 'react'
 import Svg, {
   Defs,
   G, Mask,
@@ -5,7 +6,7 @@ import Svg, {
   Polygon,
   Polyline, Rect
 } from 'react-native-svg'
-import React from 'react'
+import { correctDiamondProgress } from './correctDiamondProgress'
 
 /**
  * The Diamond visually represents a percent value of
@@ -38,7 +39,7 @@ export const Diamond = props => {
   const borderWidth = 5
   const percent = props.precise
     ? props.value / 100
-    : correctValue(props.value / 100)
+    : correctDiamondProgress(props.value / 100)
   const maskHeight = (innerHeight * percent)
 
   return (
@@ -80,17 +81,3 @@ export const Diamond = props => {
   )
 }
 
-/**
- * Due to the diamond's form we often see
- * very low values (below .25) or high values (> .75)
- * as either not existent or as complete full.
- * With this little correction we make it visually
- * nicer.
- * @param value {number}
- * @return {number}
- */
-const correctValue = (value) => {
-  if (value > 0 && value < 0.25) return 0.25
-  if (value > 0.75 && value < 1.0) return 0.75
-  return value
-}

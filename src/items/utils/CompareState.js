@@ -1,4 +1,5 @@
 import Colors from '../../constants/Colors'
+import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 
 /**
  * This helper is used to determine the current compare state of a
@@ -28,11 +29,13 @@ const colors = {
  * @return {number}
  */
 CompareState.getValue = (score, responseValue) => {
-  if (responseValue === '__undefined__') {
-    return -1
+  if (score) {
+    return 1
   }
 
-  return score ? 1 : 0
+  return isUndefinedResponse(responseValue)
+    ? -1
+    : 0
 }
 
 /**

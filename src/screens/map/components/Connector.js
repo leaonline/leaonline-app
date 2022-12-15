@@ -1,7 +1,6 @@
 import React from 'react'
 import Svg, { G, Path } from 'react-native-svg'
 import Colors from '../../../constants/Colors'
-import { Anchor } from '../icons/Anchor'
 import { MapIcons } from '../MapIcons'
 
 export const Connector = props => {
@@ -9,17 +8,18 @@ export const Connector = props => {
     return null
   }
 
+  // TODO put in effect + state
   const { from, width = 100, height = 100 } = props
   const [to, direction = 'up'] = props.to.split('-')
   const halfHeight = Math.round(height / 2)
-
-  const startX = from === 'left'
+  const fromLeft = from === 'left'
+  const startX = fromLeft
     ? 0
     : width
-  const stopX = from === 'left'
+  const stopX = fromLeft
     ? width - 1
     : 1
-  const endX = from === 'left'
+  const endX = fromLeft
     ? width - 1
     : 1
   const endY = direction === 'up'
@@ -38,7 +38,7 @@ export const Connector = props => {
     }
 
     const part = width / 5
-    const offset = from === 'left'
+    const offset = fromLeft
       ? part
       : part * -1
     const xPos = width / 2 + offset

@@ -6,6 +6,13 @@ const isUndefined = value =>
   value === null ||
   value === ''
 
+/**
+ * Checks, whether a given value is an undefined value.
+ * Respects recursive structures.
+ * @param value
+ * @param recursionCache
+ * @return {boolean|*}
+ */
 export const isUndefinedResponse = (value, recursionCache = new Set()) => {
   if (recursionCache.has(value)) {
     return true
