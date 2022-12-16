@@ -81,7 +81,6 @@ export const CharacterInput = props => {
     }
   }
 
-
   const updateChars = (char, index) => {
     if (!char) { return }
 

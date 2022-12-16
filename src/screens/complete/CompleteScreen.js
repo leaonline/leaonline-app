@@ -103,7 +103,7 @@ const CompleteScreen = props => {
 
       <Celebrate />
 
-      <ActionButton block={true} color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
+      <ActionButton block color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>
   )
 }

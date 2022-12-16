@@ -38,7 +38,7 @@ const resources = {
     welcomeScreen: {
       title: 'Welcome',
       text: 'Welcome to lea.\u00ADonline. First, configure the language, please.',
-      continue: 'Click continue, once the language settings satisfy your needs.',
+      continue: 'Click continue, once the language settings satisfy your needs.'
     },
     registrationScreen: {
       title: 'Create user account',
@@ -68,14 +68,14 @@ const resources = {
     profileScreen: {
       headerTitle: 'My account',
       progress: 'Overall progress',
-      title: 'My achievements',
+      title: 'My achievements'
     },
     accountInfo: {
       title: 'Account options',
       whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.',
       signOut: 'Sign out',
       delete: 'Delete my account',
-      restoreCodes: 'Save my account',
+      restoreCodes: 'Save my account'
     },
     mapScreen: {
       stage: 'Stage',

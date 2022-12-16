@@ -2,7 +2,6 @@ import { Dimension } from '../../contexts/Dimension'
 import nextFrame from 'next-frame'
 
 export const loadDimensionData = async (stage) => {
-  console.debug('loadimensionData', stage)
   if (!stage?.unitSets?.length) { return null }
 
   for (const unitSet of stage.unitSets) {

@@ -30,9 +30,12 @@ MapIcons.render = (index) => {
   }
 
   const Component = icons[index]
-  return (<Component
-    stroke={Colors.gray}
-    fill={Colors.light}
-    width={60}
-    height={60}/>)
+  return (
+    <Component
+      stroke={Colors.gray}
+      fill={Colors.light}
+      width={60}
+      height={60}
+    />
+  )
 }

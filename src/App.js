@@ -58,7 +58,7 @@ export default function App () {
 
   return (
     <CatchErrors>
-        <MainNavigation onLayout={onLayoutRootView} />
+      <MainNavigation onLayout={onLayoutRootView} />
     </CatchErrors>
   )
 }

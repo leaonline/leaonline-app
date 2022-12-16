@@ -34,7 +34,7 @@ const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs(() => loadDimensionData(session.stage), { runArgs: [session.stage]})
+  const docs = loadDocs(() => loadDimensionData(session.stage), { runArgs: [session.stage] })
 
   useEffect(() => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
@@ -67,11 +67,11 @@ const DimensionScreen = props => {
         ? unitSet.dimension.title + ' ' + unitSet.code
         : unitSet.dimension.title
       return (
-        <View style={styles.dimension}  key={index}>
+        <View style={styles.dimension} key={index}>
           <RouteButton
             color={color}
             title={title}
-            block={true}
+            block
             containerStyle={styles.buttonContainer}
             titleStyle={{ color }}
             icon={unitSet.dimension.icon}
@@ -87,10 +87,11 @@ const DimensionScreen = props => {
             inActiveStrokeOpacity={1}
             inActiveStrokeWidth={5}
             activeStrokeWidth={5}
-            showProgressValue={true}
+            showProgressValue
             fontSize={12}
             valueSuffix='%'
-            radius={20} />
+            radius={20}
+          />
         </View>
       )
     })
@@ -98,7 +99,7 @@ const DimensionScreen = props => {
 
   return (
     <ScreenBase {...docs} style={styles.container}>
-      <Tts text={t('dimensionScreen.instructions')} block={true} align='center' />
+      <Tts text={t('dimensionScreen.instructions')} block align='center' />
       {renderDimensions()}
     </ScreenBase>
   )

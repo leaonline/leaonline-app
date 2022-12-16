@@ -80,4 +80,3 @@ export const Diamond = props => {
     </Svg>
   )
 }
-

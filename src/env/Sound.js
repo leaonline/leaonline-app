@@ -35,7 +35,8 @@ Sound.play = async (name) => {
 
     await internal.current.sound.playAsync()
     setTimeout(() => Sound.unload(), playableDurationMillis)
-  } catch (error) {
+  }
+  catch (error) {
     Log.error(error)
   }
 }
@@ -50,7 +51,8 @@ Sound.unload = async () => {
 const unload = async (sound) => {
   try {
     await sound.unloadAsync()
-  } catch (error) {
+  }
+  catch (error) {
     Log.error(error)
   }
 }

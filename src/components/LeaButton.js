@@ -40,7 +40,7 @@ export const LeaButton = props => {
           testID={props.iconId || defaults.icon.id}
           color={props.color || props.iconColor || defaults.icon.color}
           size={props.iconSize || defaults.icon.size}
-          name={'spinner'}
+          name='spinner'
           type={defaults.icon.type}
           style={styles.icon}
         />

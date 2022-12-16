@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -10,7 +10,6 @@ import { useTts } from '../../components/Tts'
 import { CompareState } from '../utils/CompareState'
 import { Log } from '../../infrastructure/Log'
 import { LeaText } from '../../components/LeaText'
-// import { getKeyboardType, KeyboardTypes } from '../utils/KeyboardTypes'
 import { ClozeRendererBlank } from './ClozeRendererBlank'
 import { Layout } from '../../constants/Layout'
 
@@ -94,14 +93,14 @@ export const ClozeRenderer = props => {
     const compareValue = props.showCorrectResponse && compared[itemIndex]
     if (props.showCorrectResponse) {
       debug('showCorrectResponse')
-      debug({tokenGroup, usedIndex: itemIndex, groupIndex  })
+      debug({ tokenGroup, usedIndex: itemIndex, groupIndex })
       debug({ compared })
       debug({ compareValue })
     }
 
     const groupKey = `token-group-${groupIndex}`
     const renderTTS = () => tokenGroup.tts
-      ? (<RenderTts text={tokenGroup.tts} color={dimensionColor}/>)
+      ? (<RenderTts text={tokenGroup.tts} color={dimensionColor} />)
       : null
 
     return (
@@ -214,7 +213,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break}/>)
+            return (<View key={index} style={styles.break} />)
           }
 
           // token can be blanks, selects, empties and text
@@ -252,7 +251,7 @@ const RenderTts = ({ text, color }) => {
   }
 
   const { Tts } = useTts()
-  return (<Tts color={color} text={text} dontShowText/>)
+  return (<Tts color={color} text={text} dontShowText />)
 }
 
 // TODO add cache-busting when contentId changes
@@ -304,7 +303,8 @@ const createTokens = (value) => {
     }
 
     return tokens
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
     return []
   }

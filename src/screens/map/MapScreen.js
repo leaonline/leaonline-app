@@ -56,18 +56,18 @@ const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
+      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
     })
   }, [])
 
   const onListLayoutDetected = (event) => {
-    const { width } = event.nativeEvent.layout;
+    const { width } = event.nativeEvent.layout
     setListWidth(width)
   }
 
@@ -126,7 +126,7 @@ const MapScreen = props => {
       <View style={styles.scrollView}>
         <FlatList
           onLayout={onListLayoutDetected}
-          inverted={true}
+          inverted
           data={mapData.entries}
           onEndReached={onEndReached}
           initialNumToRender={3}
@@ -137,7 +137,7 @@ const MapScreen = props => {
               : 59
             return { length, offset: length * index, index }
           }}
-          removeClippedSubviews={true}
+          removeClippedSubviews
           renderItem={renderListItem}
           keyExtractor={(item) => item.entryKey}
         />
@@ -146,7 +146,6 @@ const MapScreen = props => {
   }
 
   const renderListItem = ({ index, item: entry }) => {
-
     if (entry.type === 'stage') {
       return renderStage(entry, index)
     }
@@ -163,7 +162,7 @@ const MapScreen = props => {
       return (
         <View style={styles.stage}>
           {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapFinish/>
+          <MapFinish />
           {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
@@ -173,7 +172,7 @@ const MapScreen = props => {
       return (
         <View style={styles.stage}>
           {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapStart size={ITEM_HEIGHT / 2}/>
+          <MapStart size={ITEM_HEIGHT / 2} />
           {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
@@ -219,7 +218,7 @@ const MapScreen = props => {
     return (
       <View style={styles.stage}>
         {renderConnector(milestone.viewPosition.left, connectorWidth)}
-        <Milestone progress={progress} level={milestone.level + 1}/>
+        <Milestone progress={progress} level={milestone.level + 1} />
         {renderConnector(milestone.viewPosition.right, connectorWidth)}
       </View>
     )
@@ -235,7 +234,7 @@ const MapScreen = props => {
 const renderConnector = (connectorId, listWidth, withIcon = -1) => {
   if (connectorId === 'fill') {
     return (
-      <LeaText style={{ width: listWidth ?? '100%' }}></LeaText>
+      <LeaText style={{ width: listWidth ?? '100%' }} />
     )
   }
 
@@ -250,7 +249,6 @@ const positionMap = {
   left: 'flex-start',
   right: 'flex-end'
 }
-
 
 /**
  * @private stylesheet

@@ -31,7 +31,8 @@ export const loadDocs = (fn, { runArgs = [], debug = false } = {}) => {
         const data = await fn(debug)
         setData(data)
         setLoading(false)
-      } catch (e) {
+      }
+      catch (e) {
         attempts++
 
         if (attempts >= MAX_ATTEMPTS) {

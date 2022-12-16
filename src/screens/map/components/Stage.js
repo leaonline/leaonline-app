@@ -17,6 +17,23 @@ const competencies = [
   positions[9]
 ]
 
+/**
+ * Represents a selectable stage on the map.
+ * Renders a circular progress for the overall completed
+ * unitSets linked with this stage.
+ * Renders for each linked unitSet (one unitSets per dimension)
+ * a Diamond that represents the achieved competencies as filling gauge.
+ *
+ * @param props {object}
+ * @param props.text {string} the label for this stage
+ * @param props.onPress {function} function to be called when the stage is selected
+ * @param props.unitSets {[object]}
+ * @param props.dimensions {[object]}
+ * @param props.width {number=}
+ * @param props.height {number=}
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const Stage = props => {
   const [diamonds, setDiamonds] = useState([])
   const width = props.width ?? 100
@@ -28,7 +45,7 @@ export const Stage = props => {
       return
     }
 
-    const diamondData =  Config.dimensions.order.map(shortCode => {
+    const diamondData = Config.dimensions.order.map(shortCode => {
       const key = `stage-${props.text}-${shortCode}`
       const unitSet = props.unitSets.find(u => {
         const dimension = props.dimensions[u.dimension]
@@ -80,7 +97,8 @@ export const Stage = props => {
       style={styles.container}
       pressRetentionOffset={0}
       hitSlop={0}
-      onPress={handlePress}>
+      onPress={handlePress}
+    >
       <Svg width={width} height={height} viewBox={viewBox}>
         <G x={stageProgress.x} y={stageProgress.y}>
           <StaticCircularProgress

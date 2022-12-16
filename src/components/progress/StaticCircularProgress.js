@@ -69,7 +69,8 @@ const StaticCircularProgress = (props) => {
     return (
       <Text
         x='50%' y='57%' textAnchor='middle' fontSize={fontSize} fontWeight={fontWeight} fill={textColor}
-        alignmentBaseline='middle'>
+        alignmentBaseline='middle'
+      >
         {textValue}
       </Text>
     )
@@ -79,7 +80,8 @@ const StaticCircularProgress = (props) => {
     <Svg
       width={radius * 2}
       height={radius * 2}
-      viewBox={`0 0 ${half * 2} ${half * 2}`}>
+      viewBox={`0 0 ${half * 2} ${half * 2}`}
+    >
       <Defs>
         <LinearGradient id='grad' x1='0%' y1='0%' x2='0%' y2='100%'>
           <Stop offset='0%' stopColor={activeStrokeColor} />

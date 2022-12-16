@@ -19,7 +19,7 @@ const defaultMessage = 'promise.timedOut'
  * @return {Promise<Awaited<unknown>>}
  */
 export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = false, message, details } = {}) => {
-  let timeOut = undefined
+  let timeOut
 
   const race = Promise.race([
     promise,

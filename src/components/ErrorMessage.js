@@ -31,7 +31,7 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const renderConfirm = () => {
     if (!onConfirm) { return null }
     return (
-      <ActionButton text={label} onPress={onConfirm}/>
+      <ActionButton text={label} onPress={onConfirm} />
     )
   }
 
@@ -45,8 +45,8 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
 
   return (
     <View style={styles.default}>
-      <Tts block={true} iconColor={Colors.danger} color={Colors.secondary} text={textBase}/>
-      <Tts block={true} iconColor={Colors.danger} color={Colors.secondary} text={t('errors.restart')}/>
+      <Tts block iconColor={Colors.danger} color={Colors.secondary} text={textBase} />
+      <Tts block iconColor={Colors.danger} color={Colors.secondary} text={t('errors.restart')} />
       {renderConfirm()}
     </View>
   )

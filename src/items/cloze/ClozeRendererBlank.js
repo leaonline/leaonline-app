@@ -65,7 +65,6 @@ export const ClozeRendererBlank = props => {
 
   useKeyboardVisibilityHandler(({ status }) => {
     if (status === 'hidden' && editActive) {
-      console.debug('SUBMIT ON HIDE', value)
       onSubmit(value)
       setEditActive(false)
       return true

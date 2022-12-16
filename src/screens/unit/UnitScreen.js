@@ -37,8 +37,8 @@ import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 const log = Log.create('UnitScreen')
 
-const RIGHT_ANSWER='rightAnswer'
-const WRONG_ANSWER='wrongAnswer'
+const RIGHT_ANSWER = 'rightAnswer'
+const WRONG_ANSWER = 'wrongAnswer'
 
 Sound.load(RIGHT_ANSWER, () => require('../../assets/audio/right_answer.wav'))
 Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))

@@ -63,7 +63,7 @@ const TermsAndConditionsScreen = props => {
 
   const renderTCText = () => termsAndConditions
     .map((text, index) => (
-      <Tts style={styles.paragraph} text={text} block={true} key={index} align='flex-start' />
+      <Tts style={styles.paragraph} text={text} block key={index} align='flex-start' />
     ))
 
   const handleAction = (route) => {

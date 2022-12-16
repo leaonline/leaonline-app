@@ -42,7 +42,6 @@ describe(Choice.name, () => {
             isUndefined: true
           }])
         })
-
       })
       it('scores a truthy single choice response', () => {
         const itemDoc = createItemDoc()
@@ -73,10 +72,10 @@ describe(Choice.name, () => {
     describe(Choice.flavors.multiple.name, () => {
       it('scores undefined multiple choice response', () => {
         const itemDoc = createItemDoc({
-            flavor: Choice.flavors.multiple.value,
-            correctResponse: [3, 18],
-            requires: Scoring.types.all.value
-          })
+          flavor: Choice.flavors.multiple.value,
+          correctResponse: [3, 18],
+          requires: Scoring.types.all.value
+        })
 
         ;[[], [''], [null], [Scoring.UNDEFINED], undefined, null, '', Scoring.UNDEFINED]
           .forEach(responses => {
@@ -97,16 +96,16 @@ describe(Choice.name, () => {
           correctResponse: [3, 18],
           requires: -99
         })
-        const reponseDoc = { responses: ['3', '18' ]}
+        const reponseDoc = { responses: ['3', '18'] }
         expect(() => scoreChoice(itemDoc, reponseDoc))
-          .toThrow(`Unexpected scoring type: -99`)
+          .toThrow('Unexpected scoring type: -99')
       })
 
       describe(Scoring.types.all.name, () => {
         it('scores a truthy multiple choice response (requires all)', () => {
           const itemDoc = createItemDoc({
             flavor: Choice.flavors.multiple.value,
-            correctResponse: ['3', '18'],
+            correctResponse: [3, 18],
             requires: Scoring.types.all.value
           })
           const responseDoc = { responses: ['3', '18'] }
@@ -121,10 +120,10 @@ describe(Choice.name, () => {
         })
         it('scores a falsy multiple choice response (requires all)', () => {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: ['3', '18'],
-              requires: Scoring.types.all.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [3, 18],
+            requires: Scoring.types.all.value
+          })
 
           ;[['3'], ['18'], ['3', '18', '24'], ['2'], ['2', '20'], ['2', '20', '30']]
             .forEach(responses => {
@@ -140,7 +139,7 @@ describe(Choice.name, () => {
             })
         })
       })
-      
+
       describe(Scoring.types.any.name, () => {
         it('scores a truthy multiple choice response (requires any)', () => {
           const itemDoc = createItemDoc({
@@ -167,10 +166,10 @@ describe(Choice.name, () => {
         })
         it('scores a falsy multiple choice response (requires any)', () => {
           const itemDoc = createItemDoc({
-              flavor: Choice.flavors.multiple.value,
-              correctResponse: [3, 18],
-              requires: Scoring.types.any.value
-            })
+            flavor: Choice.flavors.multiple.value,
+            correctResponse: [3, 18],
+            requires: Scoring.types.any.value
+          })
 
           ;[['1'], ['20', '23']]
             .forEach(responses => {
@@ -185,7 +184,6 @@ describe(Choice.name, () => {
               }])
             })
         })
-
       })
     })
   })

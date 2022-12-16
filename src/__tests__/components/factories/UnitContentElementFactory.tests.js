@@ -16,7 +16,7 @@ describe('UnitContentElementFactory', () => {
       }
       const unknown = {
         type: simpleRandom(),
-        subtype: simpleRandom(),
+        subtype: simpleRandom()
       }
       UnitContentElementFactory.register(options)
       expect(UnitContentElementFactory.isRegistered(options)).toEqual(true)
@@ -29,7 +29,7 @@ describe('UnitContentElementFactory', () => {
     it('renders by given keys', () => {
       const props = { testID: simpleRandom() }
       const text = simpleRandom()
-      const Component = () => (<Text {...props}>{text}</Text> )
+      const Component = () => (<Text {...props}>{text}</Text>)
       const type = simpleRandom()
       const subtype = simpleRandom()
       const options = { type, subtype, component: Component }

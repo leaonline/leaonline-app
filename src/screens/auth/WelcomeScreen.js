@@ -42,7 +42,7 @@ export const WelcomeScreen = props => {
 
         <Tts
           id='welcomeScreen.text'
-          block={true}
+          block
           style={styles.text}
           text={speedTestText}
           align='center'
@@ -50,7 +50,7 @@ export const WelcomeScreen = props => {
 
         <RouteButton
           title={t('common.continue')}
-          block={true}
+          block
           handleScreen={() => props.navigation.navigate('termsAndConditions')}
         />
       </View>

@@ -10,7 +10,7 @@ describe('CompareState', () => {
         { value: -1, color: Colors.missing },
         { value: 1, color: Colors.right },
         { value: 0, color: Colors.wrong },
-        { value: simpleRandom(), color: undefined },
+        { value: simpleRandom(), color: undefined }
       ].forEach(({ value, color }) => {
         expect(CompareState.getColor(value)).toEqual(color)
       })
@@ -32,7 +32,7 @@ describe('CompareState', () => {
         { score: true, value: {}, expected: 1 },
         { score: true, value: undefined, expected: 1 },
         { score: true, value: null, expected: 1 },
-        { score: true, value: Scoring.UNDEFINED, expected: 1 },
+        { score: true, value: Scoring.UNDEFINED, expected: 1 }
       ].forEach(({ score, value, expected }) => {
         expect(CompareState.getValue(score, value)).toEqual(expected)
       })

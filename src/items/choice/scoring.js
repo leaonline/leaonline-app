@@ -98,7 +98,7 @@ function scoreMultipleAll ({ competency, correctResponse, requires }, { response
 
   // otherwise we assume, that multiple-all is true if the indices exactly match
   score = correctResponse.sort().every((responseValue, positionIndex) => {
-    return mappedResponses[positionIndex] == responseValue
+    return mappedResponses[positionIndex] === responseValue
   })
   return {
     competency,

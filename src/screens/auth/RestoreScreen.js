@@ -62,10 +62,10 @@ export const RestoreScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Tts block={true} text={t('restoreScreen.instructions')} style={styles.instructions} />
-      <CharacterInput id='row-1' refs={row1} play={true} length={4} onEnd={newCodes => updateCodes(newCodes, 0)} />
-      <CharacterInput id='row-2' refs={row2} play={true} length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} />
-      <CharacterInput id='row-3' refs={row3} play={true} length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} />
+      <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
+      <CharacterInput id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)} />
+      <CharacterInput id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} />
+      <CharacterInput id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} />
       <ErrorMessage error={error} />
       <ActionButton block disabled={!allCodes} title={t('restoreScreen.checkCode')} onPress={checkCodes} />
     </View>

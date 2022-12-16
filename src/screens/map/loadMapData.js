@@ -261,11 +261,11 @@ const addViewProperties = async (mapData) => {
     else {
       const current = 'center'
       const left = last === 'left'
-        ? `right2left-down`
-        : `right2left-up`
+        ? 'right2left-down'
+        : 'right2left-up'
       const right = last === 'right'
-        ? `left2right-down`
-        : `left2right-up`
+        ? 'left2right-down'
+        : 'left2right-up'
       entry.viewPosition = { current, left, right }
     }
 

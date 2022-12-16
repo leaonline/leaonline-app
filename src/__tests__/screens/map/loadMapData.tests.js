@@ -13,7 +13,6 @@ MapIcons.register(() => null)
 MapIcons.register(() => null)
 
 describe(loadMapData.name, () => {
-
   beforeAll(() => {
     mockCollection(Dimension)
   })
@@ -38,14 +37,14 @@ describe(loadMapData.name, () => {
       { dimensions: [{}] },
       { dimensions: [{}], entries: [{}] },
       { levels: [{}], entries: [{}] },
-      { dimensions: [{}], levels: [{}] },
+      { dimensions: [{}], levels: [{}] }
     ]
 
     let index = 0
     stub(Meteor, 'call', (name, args, cb) => cb(undefined, allData[index++]))
 
     for (const input of allData) {
-      const data = await loadMapData({ fieldDoc })
+      const data = await loadMapData({ fieldDoc, input })
       expect(data).toEqual(null)
     }
   })
@@ -190,7 +189,7 @@ describe(loadMapData.name, () => {
         icon: 0,
         left: 'right2left',
         current: 'right',
-        right: null,
+        right: null
       }
     })
 
@@ -204,7 +203,7 @@ describe(loadMapData.name, () => {
         icon: -1,
         left: null,
         current: 'left',
-        right: null,
+        right: null
       }
     })
 
@@ -215,10 +214,9 @@ describe(loadMapData.name, () => {
       viewPosition: {
         left: 'right2left-down',
         current: 'center',
-        right: 'left2right-up',
+        right: 'left2right-up'
       }
     })
-
 
     // another stage
     expect(entries[4]).toEqual({
@@ -229,7 +227,7 @@ describe(loadMapData.name, () => {
         icon: -1,
         left: null,
         current: 'right',
-        right: null,
+        right: null
       }
     })
 
