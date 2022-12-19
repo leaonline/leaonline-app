@@ -34,7 +34,11 @@ const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs(() => loadDimensionData(session.stage), { runArgs: [session.stage] })
+  const docs = loadDocs({
+    fn: () => loadDimensionData(session.stage),
+    runArgs: [session.stage],
+    allArgsRequired: true
+  })
 
   useEffect(() => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')

@@ -35,7 +35,7 @@ const CompleteScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs(() => loadCompleteData(session))
+  const docs = loadDocs({ fn: () => loadCompleteData(session) })
   const dimensionColor = getDimensionColor(session.dimension)
 
   // ---------------------------------------------------------------------------

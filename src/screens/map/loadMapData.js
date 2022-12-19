@@ -4,7 +4,7 @@ import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
 import { Config } from '../../env/Config'
 import { MapIcons } from './MapIcons'
-// import nextFrame from 'next-frame'
+import nextFrame from 'next-frame'
 
 const useDebug = Config.debug.map
 const debug = useDebug
@@ -31,6 +31,7 @@ const mapCache = new Map()
  * @return {Promise<*>}
  */
 export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) => {
+  debug('load for', fieldDoc?.title, { loadUserData })
   const fieldId = fieldDoc?._id
   if (!fieldId) {
     debug('no field selected, skip with null')
@@ -73,7 +74,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // step during startup
   if (!mapData.dimensionsResolved) {
     for (let i = 0; i < mapData.dimensions.length; i++) {
-      // await nextFrame()
+      await nextFrame()
       const dimensionId = mapData.dimensions[i]
       mapData.dimensions[i] = Dimension.collection().findOne(dimensionId)
     }
@@ -170,7 +171,7 @@ const addUserData = async (mapData, fieldId) => {
   }
 
   for (let index = 0; index < mapData.entries.length; index++) {
-    // await nextFrame()
+    await nextFrame()
     updateEntry(mapData.entries[index], index)
   }
 }
@@ -180,7 +181,7 @@ const addViewProperties = async (mapData) => {
 
   // 6.1. ensure every stage entry contains a label with the index (counting from 1)
   for (const entry of mapData.entries) {
-    // await nextFrame()
+    await nextFrame()
     if (typeof entry.label !== 'number' && entry.type === 'stage') {
       entry.label = count++
     }
@@ -212,7 +213,7 @@ const addViewProperties = async (mapData) => {
   let useLeft = false
   let index = 0
   for (const entry of mapData.entries) {
-    // await nextFrame()
+    await nextFrame()
 
     const nextEntry = mapData.entries[index + 1]
     const last = useLeft ? 'right' : 'left'

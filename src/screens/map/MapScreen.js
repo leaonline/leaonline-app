@@ -42,13 +42,17 @@ const MapScreen = props => {
   const { Tts } = useTts()
   const [listWidth, setListWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
-  const mapDocs = loadDocs(() => loadMapData({
-    fieldDoc: session.field,
-    loadUserData: session.loadUserData,
-    onUserDataLoaded: () => sessionActions.loadUserData(null)
-  }), {
-    runArgs: [session.field, session.loadUserData]
+  log({ loadUserData: session.loadUserData })
+  const mapDocs = loadDocs({
+    runArgs: [session.field, session.loadUserData],
+    allArgsRequired: true,
+    fn: () => loadMapData({
+      fieldDoc: session.field,
+      loadUserData: session.loadUserData,
+      onUserDataLoaded: () => sessionActions.loadUserData(null)
+    })
   })
+
   const mapData = mapDocs.data
   log('load complete?', !mapDocs.loading)
 

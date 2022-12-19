@@ -17,14 +17,19 @@ const MAX_ATTEMPTS = 3
  * @param fn {function} the function to actually load data.
  * @param runArgs {array=} optional run args for the internal useEffect
  * @param debug {boolean=} optional boolean flag for debugging
+ * @param allArgsRequired {boolean=} optional boolean flag to skip loading until all given args are non-null
  * @return {{data: undefined, error: undefined, loading: boolean}}
  */
-export const loadDocs = (fn, { runArgs = [], debug = false } = {}) => {
+export const loadDocs = ({ fn, runArgs = [], debug = false, allArgsRequired = false }) => {
   const [data, setData] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (allArgsRequired && runArgs.some(arg => arg === null)) {
+      return
+    }
+
     let attempts = 0
     const load = async function () {
       try {

@@ -41,7 +41,7 @@ Config.debug.logLevel = log.level
 Config.debug.state = !!debug.state
 Config.debug.sync = !!debug.sync
 Config.debug.home = !!debug.home
-Config.debug.map = !!debug.map
+Config.debug.map = true// !!debug.map
 Config.debug.unit = !!debug.unit
 Config.debug.tts = !!debug.tts
 /**

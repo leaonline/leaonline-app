@@ -83,13 +83,13 @@ const UnitScreen = props => {
   const [allTrue, setAllTrue] = useState()
   const [session, sessionActions] = useContext(AppSessionContext)
   const { unitSet, dimension } = session
-  const docs = loadDocs(() => loadUnitData(unitSet))
+  const docs = loadDocs({ fn: () => loadUnitData(unitSet) })
   const { t } = useTranslation()
   const { Tts } = useTts()
 
   const page = session.page || 0
 
-  // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------r
   // update cards display
   // ---------------------------------------------------------------------------
   useEffect(() => {

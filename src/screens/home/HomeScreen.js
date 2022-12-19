@@ -25,7 +25,7 @@ const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
-  const { data, error, loading } = loadDocs(loadHomeData)
+  const { data, error, loading } = loadDocs({ fn: loadHomeData })
 
   const selectField = async value => {
     const { _id, title } = value
