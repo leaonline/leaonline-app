@@ -82,7 +82,7 @@ export const ClozeRenderer = props => {
   const renderTokenGroup = (tokenGroup, groupIndex) => {
     const groupKey = `token-group-${groupIndex}`
     const renderTTS = () => tokenGroup.tts
-      ? (<RenderTts text={tokenGroup.tts} color={dimensionColor}/>)
+      ? (<RenderTts text={tokenGroup.tts} color={dimensionColor} />)
       : null
 
     return (
@@ -198,7 +198,7 @@ export const ClozeRenderer = props => {
           // newlines can be used to explicitly break
           // using a fully stretched flex box
           if (entry.isNewLine) {
-            return (<View key={index} style={styles.break}/>)
+            return (<View key={index} style={styles.break} />)
           }
 
           // token can be blanks, selects, empties and text
@@ -236,7 +236,7 @@ const RenderTts = ({ text, color }) => {
   }
 
   const { Tts } = useTts()
-  return (<Tts color={color} text={text} dontShowText/>)
+  return (<Tts color={color} text={text} dontShowText />)
 }
 
 const styles = createStyleSheet({

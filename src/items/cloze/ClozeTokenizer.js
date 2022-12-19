@@ -44,15 +44,14 @@ ClozeTokenizer.tokenize = ({ text, isTable }) => {
   }
 
   if (isTable) {
-    const isCell = true
     tokens = text
       .split(newLineRegExp)
       .map(row => {
         const parsed = row
-            .split(tableSeparator)
-            .map(cells => tokenize(cells.trim()).map(toTokens))
-            .flat()
-            .filter(cell => cell.length > 0)
+          .split(tableSeparator)
+          .map(cells => tokenize(cells.trim()).map(toTokens))
+          .flat()
+          .filter(cell => cell.length > 0)
 
         // assigned incremental indexes
         // to flattened list
@@ -61,7 +60,7 @@ ClozeTokenizer.tokenize = ({ text, isTable }) => {
         })
 
         return parsed
-    })
+      })
     tokens.forEach(row => row.forEach(assignIndex))
   }
   else {
