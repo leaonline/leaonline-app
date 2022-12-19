@@ -11,3 +11,10 @@ ClozeHelpers.isEmpty = flavor => flavor === Cloze.flavor.empty.value
 ClozeHelpers.isText = flavor => flavor === Cloze.flavor.text.value
 
 ClozeHelpers.getFlavor = flavor => Cloze.flavor[flavor]?.value
+
+const scorable = [
+  Cloze.flavor.blanks.value,
+  Cloze.flavor.select.value
+]
+
+ClozeHelpers.isScoreableFlavor = flavor => scorable.includes(flavor)

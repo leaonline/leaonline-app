@@ -4,7 +4,7 @@
  *
  * @param openPattern A unique pattern indicate the following content is part if our token
  * @param closePattern A unique pattern indicate the previous content was part of our token
- * @returns {Array<Object>} An array of token-objects
+ * @returns {function(string):Array<Object>} An array of token-objects
  */
 export const createSimpleTokenizer = (openPattern, closePattern) => value => {
   if (typeof value !== 'string' || value.length === 0) {

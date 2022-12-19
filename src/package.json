@@ -7,7 +7,7 @@
     "eject": "expo eject",
     "lint": "standardx --env jest --env mocha | snazzy",
     "lint:fix": "standardx --fix --env jest --env mocha | snazzy",
-    "test": "node_modules/.bin/jest --coverage",
+    "test": "node_modules/.bin/jest \"cloze\" --coverage",
     "docs": "jsdoc -c jsdoc.conf.json"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 import { createSimpleTokenizer } from '../../utils/text/createSimpleTokenizer'
 import { ClozeHelpers } from './ClozeHelpers'
+import { isWord } from '../../utils/isWord'
 
 export const ClozeTokenizer = {}
 
@@ -9,26 +10,67 @@ const closePattern = '}}'
 const newLinePattern = '//'
 const optionsSeparator = '|'
 const tableSeparator = '||'
+const CELL_SKIP = '<<>>'
 const newLineReplacer = `${startPattern}${newLinePattern}${closePattern}`
-const newLineRegExp = /\n/g
+const newLineRegExp = /\n+/g
 const tokenize = createSimpleTokenizer(startPattern, closePattern)
 
 // =============================================================================
 // PUBLIC
 // =============================================================================
 
-ClozeTokenizer.tokenize = ({ text, flavor, isTable }) => {
-  if (isTable) {
-    return text.split(newLineRegExp).map(row => {
-      return row.split(tableSeparator).map(cell => {
-        return tokenize(cell.trim()).map(toTokens, { flavor })
-      }).flat().filter(cell => cell.length > 0)
+/**
+ * Tokenizes a cloze text into a list of objects with rendering and item
+ * information.
+ *
+ * @param text
+ * @param isTable
+ * @return {*}
+ */
+ClozeTokenizer.tokenize = ({ text, isTable }) => {
+  let tokens
+  const tokenIndexes = []
+  let index = 0
+  const assignIndex = token => {
+    if (!Array.isArray(token.value)) {
+      return
+    }
+    token.value.forEach(value => {
+      if ('flavor' in value && ClozeHelpers.isScoreableFlavor(value.flavor)) {
+        tokenIndexes.push(index)
+        value.itemIndex = index++
+      }
     })
+  }
+
+  if (isTable) {
+    const isCell = true
+    tokens = text
+      .split(newLineRegExp)
+      .map(row => {
+        const parsed = row
+            .split(tableSeparator)
+            .map(cells => tokenize(cells.trim()).map(toTokens))
+            .flat()
+            .filter(cell => cell.length > 0)
+
+        // assigned incremental indexes
+        // to flattened list
+        parsed.forEach((cell, cellIndex) => {
+          cell.index = cellIndex
+        })
+
+        return parsed
+    })
+    tokens.forEach(row => row.forEach(assignIndex))
   }
   else {
     const preprocessedValue = text.replace(newLineRegExp, newLineReplacer)
-    return tokenize(preprocessedValue).map(toTokens, { flavor })
+    tokens = tokenize(preprocessedValue).map(toTokens)
+    tokens.forEach(assignIndex)
   }
+
+  return { tokens, tokenIndexes }
 }
 
 // =============================================================================
@@ -75,6 +117,11 @@ const tokenizeText = (flavor, value) => tokenizeValueEntry(value)
   })
 
 const toTokens = entry => {
+  if (entry.value.includes(CELL_SKIP)) {
+    entry.isCellSkip = true
+    return entry
+  }
+
   // we simply indicate newlines within
   // our brackets to avoid complex parsing
   if (entry.value.includes('//')) {
@@ -112,9 +159,11 @@ const toTokens = entry => {
     const configs = split[3].split('&')
     configs.forEach(configPair => {
       const configSplit = configPair.split('=')
-      if (configSplit.length < 2) {
-        return console.warn('Invalid config:', configPair)
+
+      if (configSplit.length < 2 || !configSplit.every(isWord)) {
+        throw new Error(`Invalid options syntax: ${configPair}`)
       }
+
       entry[configSplit[0]] = configSplit[1]
     })
   }
