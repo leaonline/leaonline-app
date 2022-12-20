@@ -79,6 +79,7 @@ const resources = {
     },
     mapScreen: {
       stage: 'Stage',
+      loadData: 'Loading data',
       notAvailable: 'The overview cannot be downloaded currently.'
     },
     dimensionScreen: {
@@ -190,6 +191,7 @@ const resources = {
     },
     mapScreen: {
       stage: 'Level',
+      loadData: 'Daten werden geladen',
       notAvailable: 'Die Übersicht kann derzeit nicht geladen werden.'
     },
     dimensionScreen: {
@@ -206,9 +208,9 @@ const resources = {
         finish: 'Bearbeitung abschließen'
       },
       abort: {
-        question: 'Willst du diese Übung wirklich abbrechen?',
-        abort: 'Übung abbrechen',
-        continue: 'Übung fortsetzen'
+        question: 'Willst du die Übung wirklich abbrechen?',
+        abort: 'Abbrechen',
+        continue: 'Fortsetzen'
       },
       allTrue: 'Super!'
     },

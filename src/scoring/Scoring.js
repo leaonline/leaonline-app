@@ -42,6 +42,9 @@ Scoring.register = (options) => {
  * @returns {Promise<*>}
  */
 Scoring.score = async (itemDoc = {}, responseDoc) => {
+  Scoring.validateItemDoc(itemDoc)
+  Scoring.validateResponseDoc(responseDoc)
+
   log('score', itemDoc.type, itemDoc.subtype)
   const { type, subtype } = itemDoc
   const fn = scoreFns.get(key(type, subtype))
@@ -61,5 +64,17 @@ Scoring.validateItemDoc = itemDoc => {
 
   if (!itemDoc.scoring?.length) {
     throw new Error('Expected itemDoc to have property "scoring"')
+  }
+}
+
+Scoring.validateResponseDoc = responseDoc => {
+  const type = typeof responseDoc
+
+  if (type !== 'object') {
+    throw new Error(`Expected responseDoc, got ${type}`)
+  }
+
+  if (!Array.isArray(responseDoc.responses)) {
+    throw new Error('Expected responses to have Array-like property "responses"')
   }
 }

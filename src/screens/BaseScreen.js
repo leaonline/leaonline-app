@@ -7,7 +7,7 @@ export const ScreenBase = (props) => {
   if (props.loading) {
     return (
       <SafeAreaView style={props.style}>
-        <Loading />
+        <Loading text={props.loadMessage} />
       </SafeAreaView>
     )
   }

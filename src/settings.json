@@ -43,8 +43,12 @@
   },
   "debug": {
     "layoutBorders": false,
-    "map": false,
-    "unit": false,
+    "state": false,
+    "sync": false,
+    "home": false,
+    "map": true,
+    "unit": true,
+    "tts": false,
     "accounts": false
   },
   "dimensions": {

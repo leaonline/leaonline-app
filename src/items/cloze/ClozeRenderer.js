@@ -79,6 +79,13 @@ export const ClozeRenderer = props => {
     })
   }
 
+  const renderText = (token, index) => {
+    return token.value.split(/\s+/).map((word, wordIndex) => {
+      const key = `word-${index}-${wordIndex}`
+      return (<LeaText key={key} style={styles.word}>{word}</LeaText>)
+    })
+  }
+
   const renderTokenGroup = (tokenGroup, groupIndex) => {
     const groupKey = `token-group-${groupIndex}`
     const renderTTS = () => tokenGroup.tts
@@ -110,6 +117,8 @@ export const ClozeRenderer = props => {
                 original={token.value}
                 style={blankStyle}
                 hasNext={hasNext}
+                hasPrefix={token.hasPre}
+                hasSuffix={token.hasSuf}
                 pattern={tokenGroup.pattern}
                 onSubmit={text => {
                   if (text) {
@@ -146,7 +155,7 @@ export const ClozeRenderer = props => {
           }
 
           if (token.value) {
-            return (<LeaText key={index} style={styles.token}>{token.value}</LeaText>)
+            return renderText(token, index)
           }
 
           return null
@@ -213,7 +222,7 @@ export const ClozeRenderer = props => {
 
           // plain text that is not associated to any token
           if (entry.value) {
-            return (<Text key={index} style={styles.token}>{entry.value}</Text>)
+            return renderText(entry, index)
           }
 
           // no value should cause no render
@@ -273,9 +282,17 @@ const styles = createStyleSheet({
   },
   token: {
     ...Layout.defaultFont(),
-    padding: 5,
+    padding: 1,
     backgroundColor: '#fff',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderColor: '#00f',
+  },
+  word: {
+    ...Layout.defaultFont(),
+    padding: 1,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    borderColor: '#0f0',
   },
   selected: {
     backgroundColor: Colors.primary,
@@ -317,4 +334,4 @@ const styles = createStyleSheet({
     alignItems: 'center',
     justifyContent: 'center'
   }
-}, true)
+})

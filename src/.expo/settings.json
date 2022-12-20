@@ -1,10 +1,10 @@
 {
   "hostType": "lan",
   "lanType": "ip",
-  "dev": true,
-  "minify": false,
+  "dev": false,
+  "minify": true,
   "urlRandomness": "mc-y7b",
   "https": false,
-  "scheme": "com.testCompany.leaonline",
-  "devClient": true
+  "scheme": null,
+  "devClient": false
 }

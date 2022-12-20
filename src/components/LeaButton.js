@@ -64,7 +64,7 @@ export const LeaButton = props => {
 
   const handlePress = () => {
     setPressed(true)
-    Vibration.vibrate(50)
+    Vibration.vibrate(100)
     if (props.onPress) {
       setTimeout(async () => {
         await props.onPress()

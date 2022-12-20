@@ -9,7 +9,7 @@ export const BackButton = (props) => {
   const navigation = useNavigation()
   const handleOnPress = async () => {
     if (props.vibrate !== false) {
-      Vibration.vibrate(50)
+      Vibration.vibrate(100)
     }
     if (props.onPress) {
       await props.onPress()

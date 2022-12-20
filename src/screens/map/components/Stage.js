@@ -55,14 +55,14 @@ export const Stage = props => {
       if (unitSet) {
         return {
           color: ColorTypeMap.get(props.dimensions[unitSet.dimension].colorType),
-          progress: Math.round(((unitSet.userCompetencies || 0) / unitSet.competencies) * 100),
+          competencies: Math.round(((unitSet.userCompetencies || 0) / unitSet.competencies) * 100),
           key
         }
       }
 
       return {
         color: Colors.light,
-        progress: 0,
+        competencies: 0,
         key
       }
     })
@@ -84,7 +84,7 @@ export const Stage = props => {
   }
 
   const handlePress = () => {
-    Vibration.vibrate(50)
+    Vibration.vibrate(100)
     if (props.onPress) {
       return props.onPress()
     }
@@ -119,14 +119,14 @@ export const Stage = props => {
         </G>
         {
         competencies.map(({ x, y }, index) => {
-          const { color, progress, key } = diamonds[index] || {
+          const { color, competencies, key } = diamonds[index] || {
             color: Colors.light,
-            progress: 0,
+            competencies: 0,
             key: index
           }
           return (
             <G key={key} x={x - 7.5} y={y}>
-              <Diamond width={15} height={30} value={progress} color={color} />
+              <Diamond width={15} height={30} value={competencies} color={color} />
             </G>
           )
         })

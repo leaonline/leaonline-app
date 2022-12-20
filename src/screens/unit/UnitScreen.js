@@ -517,9 +517,9 @@ const UnitScreen = props => {
         <FadePanel style={{ ...styles.unitCard, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }} visible={fadeIn >= 2}>
           <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
-          {renderContent(unitDoc.pages[page].instructions)}
+          {renderContent(unitDoc.pages[page]?.instructions)}
 
-          {renderContent(unitDoc.pages[page].content)}
+          {renderContent(unitDoc.pages[page]?.content)}
         </FadePanel>
 
         {renderAllTrue()}
@@ -535,7 +535,7 @@ const UnitScreen = props => {
  */
 const styles = createStyleSheet({
   container: {
-    ...Layout.container({ margin: '2%' })
+    ...Layout.container({ margin: '1%' })
   },
   itemContainer: {
     flex: 1,

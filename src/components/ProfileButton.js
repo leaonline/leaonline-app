@@ -8,7 +8,7 @@ export const ProfileButton = props => {
   const navigation = useNavigation()
   const toProfile = () => {
     if (props.vibrate !== false) {
-      Vibration.vibrate(50)
+      Vibration.vibrate(100)
     }
     navigation.navigate(props.route)
   }

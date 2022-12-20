@@ -44,6 +44,8 @@ export const ClozeRendererBlank = props => {
     color,
     original,
     pattern,
+    hasPrefix,
+    hasSuffix,
     isMultiline = false,
     onSubmit,
     style
@@ -60,6 +62,16 @@ export const ClozeRendererBlank = props => {
     onSubmit(value)
     return true
   })
+
+  let textAlign = 'center'
+
+  if (hasPrefix && !hasSuffix) {
+    textAlign = 'left'
+  }
+  if (hasSuffix && !hasPrefix) {
+    textAlign = 'right'
+  }
+
 
   const activateEdit = () => setEditActive(true)
 
@@ -109,6 +121,7 @@ export const ClozeRendererBlank = props => {
       multiline={isMultiline}
       blurOnSubmit
       style={inputStyle}
+      textAlign={textAlign}
       // selectionColor
       // keyboard
       returnKeyType={props.hasNext ? 'next' : 'done'}

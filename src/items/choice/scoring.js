@@ -4,8 +4,6 @@ import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 import { toInteger } from '../../utils/toInteger'
 
 export const scoreChoice = function (itemDoc, responseDoc = {}) {
-  Scoring.validateItemDoc(itemDoc)
-
   const { scoring, flavor } = itemDoc
 
   return scoring.map(entry => {
@@ -20,7 +18,7 @@ export const scoreChoice = function (itemDoc, responseDoc = {}) {
   })
 }
 
-function scoreSingle ({ competency, correctResponse, requires }, { responses = [] }) {
+function scoreSingle ({ competency, correctResponse, requires }, { responses }) {
   // single choice have only one selected value
   let value = responses[0]
   let score = false

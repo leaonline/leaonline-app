@@ -1,13 +1,7 @@
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 
-export const scoreCloze = function scoreCloze (itemDoc = {}, responseDoc = {}) {
-  // check(itemDoc.scoring, [{
-  //   competency: [String],
-  //   correctResponse: RegExp,
-  //   target: Number
-  // }])
-
-  const { scoring } = itemDoc
+export const scoreCloze = function scoreCloze (itemDoc, responseDoc) {
+const { scoring } = itemDoc
 
   // checks all entries for undefined so we skip further
   // expensive computations and set all to false + undefined flag
@@ -18,7 +12,7 @@ export const scoreCloze = function scoreCloze (itemDoc = {}, responseDoc = {}) {
       return {
         competency: entry.competency,
         correctResponse: entry.correctResponse,
-        value: responseDoc.responses,
+        value: responseDoc.responses[entry.target],
         score: false,
         isUndefined: true
       }
@@ -28,11 +22,7 @@ export const scoreCloze = function scoreCloze (itemDoc = {}, responseDoc = {}) {
   })
 }
 
-function scoreBlanks (entry, { responses = [] }) {
-  if (!Array.isArray(responses)) {
-    throw new Error('Match error: Failed Match.Where validation')
-  }
-
+function scoreBlanks (entry, { responses }) {
   let score = false
   const { correctResponse, competency, target } = entry
   const value = responses[target]
