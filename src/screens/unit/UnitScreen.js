@@ -93,14 +93,18 @@ const UnitScreen = props => {
   // update cards display
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    setFadeIn(0)
-    const timer1 = setTimeout(() => setFadeIn(1), 500)
-    const timer2 = setTimeout(() => setFadeIn(2), 1000)
+    if (page === 0) {
+      setFadeIn(0)
+      const timer1 = setTimeout(() => setFadeIn(1), 500)
+      const timer2 = setTimeout(() => setFadeIn(2), 1000)
 
-    return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
+      return () => {
+        clearTimeout(timer1)
+        clearTimeout(timer2)
+      }
     }
+
+    setFadeIn(2)
   }, [session.page])
 
   // ---------------------------------------------------------------------------
@@ -386,10 +390,15 @@ const UnitScreen = props => {
     }
   }
 
-  const nextPage = () => sessionActions.multi({
-    page: page + 1,
-    progress: session.progress + 1
-  })
+  const nextPage = () => {
+    setFadeIn(1) // fade out content
+    setTimeout(() => {
+      sessionActions.multi({
+        page: page + 1,
+        progress: session.progress + 1
+      })
+    }, 500)
+  }
 
   const renderFooter = () => {
     if (keyboardStatus === 'shown') {
