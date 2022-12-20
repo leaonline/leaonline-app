@@ -18,6 +18,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  * @param {boolean=} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
  * @param {boolean=} props.block Display in block mode, where the button stretches over full h-space
  * @param {object=} props.containerStyle Applies / overrides additional container styles
+ * @param {object=} props.titleStyle Applies / overrides additional title/label styles
  * @param {object=} props.buttonContainerStyle Applies / overrides additional button container styles
  * @augments LeaButton
  * @returns {JSX.Element}
@@ -44,7 +45,7 @@ export const ActionButton = props => {
     ...props,
     title: props.title || props.text || props.tts,
     buttonStyle: mergeStyles({}, props.buttonStyle, activeStyle),
-    titleStyle: activeStyle,
+    titleStyle: mergeStyles(activeStyle, props.titleStyle),
     color: props.color,
     containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }

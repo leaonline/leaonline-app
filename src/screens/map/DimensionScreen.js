@@ -14,6 +14,7 @@ import { BackButton } from '../../components/BackButton'
 import { View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
+import { Fill } from '../../components/layout/Fill'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -77,7 +78,7 @@ const DimensionScreen = props => {
             title={title}
             block
             containerStyle={styles.buttonContainer}
-            titleStyle={{ color }}
+            titleStyle={{ color, fontWeight: 'bold' }}
             icon={unitSet.dimension.icon}
             handleScreen={() => selectUnitSet(unitSet)}
           />
@@ -87,7 +88,7 @@ const DimensionScreen = props => {
             textColor={color}
             activeStrokeColor={color}
             inActiveStrokeColor={Colors.white}
-            fillColor={Colors.transparent}
+            fillColor={Colors.white}
             inActiveStrokeOpacity={1}
             inActiveStrokeWidth={5}
             activeStrokeWidth={5}
@@ -104,7 +105,9 @@ const DimensionScreen = props => {
   return (
     <ScreenBase {...docs} style={styles.container}>
       <Tts text={t('dimensionScreen.instructions')} block align='center' />
+      <Fill />
       {renderDimensions()}
+      <Fill />
     </ScreenBase>
   )
 }
@@ -121,7 +124,9 @@ const styles = createStyleSheet({
     flex: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    marginBottom: 10
   },
   buttonContainer: {
     flexGrow: 1,

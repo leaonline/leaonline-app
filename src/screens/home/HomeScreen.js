@@ -9,6 +9,7 @@ import { ScreenBase } from '../BaseScreen'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { Layout } from '../../constants/Layout'
 import { ActionButton } from '../../components/ActionButton'
+import { Fill } from '../../components/layout/Fill'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -46,7 +47,10 @@ const HomeScreen = props => {
           key={key}
           title={item.title}
           icon={item.icon}
-          block
+          iconColor={Colors.primary}
+          block={true}
+          containerStyle={styles.buttonContainer}
+          titleStyle={styles.buttonLabel}
           onPress={() => selectField(item)}
         />
       )
@@ -59,9 +63,11 @@ const HomeScreen = props => {
         id='homeScreen.text'
         text={t('homeScreen.text')}
         color={Colors.secondary}
-        block
+        block={true}
       />
+      <Fill />
       {renderButtons()}
+      <Fill />
     </ScreenBase>
   )
 }
@@ -69,5 +75,13 @@ const HomeScreen = props => {
 export default HomeScreen
 
 const styles = createStyleSheet({
-  container: Layout.container()
+  container: Layout.container(),
+  buttonContainer: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  buttonLabel: {
+    color: '#890',
+    fontWeight: 'bold'
+  }
 })
