@@ -16,11 +16,11 @@ describe(Scoring.name, function () {
     })
     it('throws if an invalid responseDoc is given', () => {
       expectThrowAsync({
-        fn: () => Scoring.score({ scoring: [{}]}),
+        fn: () => Scoring.score({ scoring: [{}] }),
         message: 'Expected responseDoc, got undefined'
       })
       expectThrowAsync({
-        fn: () => Scoring.score({ scoring: [{}]}, {}),
+        fn: () => Scoring.score({ scoring: [{}] }, {}),
         message: 'Expected responseDoc to have Array-like property "responses"'
       })
     })
@@ -30,7 +30,7 @@ describe(Scoring.name, function () {
       const options = { type, subtype, scoring: [{}] }
 
       await expectThrowAsync({
-        fn: () => Scoring.score(options, { responses: ['']}),
+        fn: () => Scoring.score(options, { responses: [''] }),
         message: `Expected scoring fn by ${type} / ${subtype}`
       })
     })
@@ -41,7 +41,7 @@ describe(Scoring.name, function () {
       const scoreFn = () => expectedResult
       const options = { type, subtype, scoring: [{}] }
       Scoring.register({ type, subtype, scoreFn })
-      const result = await Scoring.score(options, { responses: []})
+      const result = await Scoring.score(options, { responses: [] })
       expect(result).toEqual(expectedResult)
     })
   })

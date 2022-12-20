@@ -7,11 +7,11 @@ const createItemDoc = ({ competency, correctResponse } = {}) => {
     scoring: [{
       target: 0,
       competency: competency ?? [simpleRandom(), simpleRandom()],
-      correctResponse: correctResponse ?? new RegExp('.*'),
+      correctResponse: correctResponse ?? /.*/
     }, {
       target: 1,
       competency: competency ?? [simpleRandom(), simpleRandom()],
-      correctResponse: correctResponse ?? new RegExp('.*'),
+      correctResponse: correctResponse ?? /.*/
     }]
   }
 }
@@ -76,7 +76,7 @@ describe(scoreCloze.name, function () {
       scoring: [{
         target: 0,
         competency: [simpleRandom(), simpleRandom()],
-        correctResponse: /^F.*$/,
+        correctResponse: /^F.*$/
       }, {
         target: 0,
         competency: [simpleRandom(), simpleRandom()],
@@ -87,7 +87,7 @@ describe(scoreCloze.name, function () {
         correctResponse: /^bar$/
       }]
     }
-    expect(scoreCloze(itemDoc, { responses: ['foo', 'bar']}))
+    expect(scoreCloze(itemDoc, { responses: ['foo', 'bar'] }))
       .toEqual([{
         competency: itemDoc.scoring[0].competency,
         correctResponse: itemDoc.scoring[0].correctResponse,

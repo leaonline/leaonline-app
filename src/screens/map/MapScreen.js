@@ -54,7 +54,6 @@ const MapScreen = props => {
     })
   })
 
-
   useEffect(() => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
@@ -154,8 +153,8 @@ const MapScreen = props => {
               : 59
             return { length, offset: length * index, index }
           }}
-          removeClippedSubviews={true}
-          persistentScrollbar={true}
+          removeClippedSubviews
+          persistentScrollbar
           renderItem={renderListItem}
           keyExtractor={(item) => item.entryKey}
         />

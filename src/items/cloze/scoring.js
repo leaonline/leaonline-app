@@ -1,7 +1,7 @@
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 
 export const scoreCloze = function scoreCloze (itemDoc, responseDoc) {
-const { scoring } = itemDoc
+  const { scoring } = itemDoc
 
   // checks all entries for undefined so we skip further
   // expensive computations and set all to false + undefined flag

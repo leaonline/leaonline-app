@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 
 export const Fill = () => {
-  return (<Text style={styles.fill}></Text>)
+  return (<Text style={styles.fill} />)
 }
 
 const styles = createStyleSheet({

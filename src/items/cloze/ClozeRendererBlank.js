@@ -72,7 +72,6 @@ export const ClozeRendererBlank = props => {
     textAlign = 'right'
   }
 
-
   const activateEdit = () => setEditActive(true)
 
   useKeyboardVisibilityHandler(({ status }) => {

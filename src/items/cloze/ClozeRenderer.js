@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ClozeTokenizer } from './ClozeTokenizer'
@@ -285,14 +285,14 @@ const styles = createStyleSheet({
     padding: 1,
     backgroundColor: '#fff',
     alignSelf: 'center',
-    borderColor: '#00f',
+    borderColor: '#00f'
   },
   word: {
     ...Layout.defaultFont(),
     padding: 1,
     backgroundColor: '#fff',
     alignSelf: 'center',
-    borderColor: '#0f0',
+    borderColor: '#0f0'
   },
   selected: {
     backgroundColor: Colors.primary,

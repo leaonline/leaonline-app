@@ -48,7 +48,7 @@ const HomeScreen = props => {
           title={item.title}
           icon={item.icon}
           iconColor={Colors.primary}
-          block={true}
+          block
           containerStyle={styles.buttonContainer}
           titleStyle={styles.buttonLabel}
           onPress={() => selectField(item)}
@@ -63,7 +63,7 @@ const HomeScreen = props => {
         id='homeScreen.text'
         text={t('homeScreen.text')}
         color={Colors.secondary}
-        block={true}
+        block
       />
       <Fill />
       {renderButtons()}
