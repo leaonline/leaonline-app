@@ -41,7 +41,6 @@ loadMapIcons() // TODO defer loading these to a much later point as they are not
 const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const [renderConnections, setRenderConnections] = useState(false)
   const [listWidth, setListWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = loadDocs({
@@ -67,17 +66,6 @@ const MapScreen = props => {
       headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
     })
   }, [])
-
-  const loading = mapDocs
-    ? mapDocs.loading
-    : true
-
-  useEffect(() => {
-    if (renderConnections) { return }
-    setTimeout(() => {
-      setRenderConnections(true)
-    }, 0)
-  }, [loading])
 
   const onListLayoutDetected = (event) => {
     const { width } = event.nativeEvent.layout
@@ -175,22 +163,22 @@ const MapScreen = props => {
       ? (listWidth / 2) - ITEM_HEIGHT
       : listWidth
 
-    if (renderConnections && entry.type === 'finish') {
+    if (entry.type === 'finish') {
       return (
         <View style={styles.stage}>
-          {renderConnections && renderConnector(entry.viewPosition.left, connectorWidth)}
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
           <MapFinish />
-          {renderConnections && renderConnector(entry.viewPosition.right, connectorWidth)}
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
     }
 
-    if (renderConnections && entry.type === 'start') {
+    if (entry.type === 'start') {
       return (
         <View style={styles.stage}>
-          {renderConnections && renderConnector(entry.viewPosition.left, connectorWidth)}
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
           <MapStart size={ITEM_HEIGHT / 2} />
-          {renderConnections && renderConnector(entry.viewPosition.right, connectorWidth)}
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
     }
@@ -212,7 +200,7 @@ const MapScreen = props => {
 
     return (
       <View style={stageStyle}>
-        {renderConnections && renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
+        {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
         <Stage
           width={ITEM_HEIGHT}
           height={ITEM_HEIGHT}
@@ -222,7 +210,7 @@ const MapScreen = props => {
           text={stage.label}
           progress={progress}
         />
-        {renderConnections && renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
+        {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
       </View>
     )
   }
@@ -234,9 +222,9 @@ const MapScreen = props => {
       : listWidth
     return (
       <View style={styles.stage}>
-        {renderConnections && renderConnector(milestone.viewPosition.left, connectorWidth)}
+        {renderConnector(milestone.viewPosition.left, connectorWidth)}
         <Milestone progress={progress} level={milestone.level + 1} />
-        {renderConnections && renderConnector(milestone.viewPosition.right, connectorWidth)}
+        {renderConnector(milestone.viewPosition.right, connectorWidth)}
       </View>
     )
   }

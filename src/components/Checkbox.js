@@ -27,6 +27,8 @@ import { LeaText } from './LeaText'
  * @param props.uncheckedColor {string=}
  * @param props.checkedIcon {string=}
  * @param props.uncheckedIcon {string=}
+ * @param props.textColor {string=}
+ * @param props.textStyle {object=}
  * @returns {JSX.Element}
  */
 export const Checkbox = props => {
@@ -35,7 +37,7 @@ export const Checkbox = props => {
   const containerStyle = mergeStyles(styles.checkBoxContainer, props.containerStyle, highlightStyle)
   const checkedColor = props.checkedColor ?? Colors.secondary
   const uncheckedColor = props.uncheckedColor ?? Colors.gray
-  const textColor = props.textColor ?? Colors.dark
+  const textColor = props.textColor ?? Colors.secondary
   const iconColor = props.iconColor ?? checkedColor
   const ttsText = props.ttsText ?? props.text
 
@@ -51,7 +53,7 @@ export const Checkbox = props => {
   )
 
   const renderText = () => (
-    <LeaText>{props.text}</LeaText>
+    <LeaText style={props.textStyle}>{props.text}</LeaText>
   )
 
   return (
@@ -64,6 +66,7 @@ export const Checkbox = props => {
         uncheckedColor={uncheckedColor}
         checkedIcon={props.checkedIcon}
         uncheckedIcon={props.uncheckedIcon}
+        textStyle={props.textStyle}
       />
       <Pressable style={{ flex: 1 }} onPress={props.onPress}>
         {props.hideTts ? renderText() : renderTts()}

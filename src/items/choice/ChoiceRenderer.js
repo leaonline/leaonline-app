@@ -102,9 +102,6 @@ export const ChoiceRenderer = props => {
   const toChoiceButton = (choice, index) => {
     const isSelected = !!(selected[index])
     const key = `choice-${index}`
-    const selectedStyle = isSelected
-      ? { borderWidth: 1, borderColor: dimensionColor }
-      : undefined
     const onPress = () => selectChoice(index)
 
     return (
@@ -115,13 +112,12 @@ export const ChoiceRenderer = props => {
         hideTts={!choice.tts}
         onPress={onPress}
         checked={isSelected}
-        checkedColor={dimensionColor}
+        checkedColor={Colors.secondary}
         uncheckedColor={Colors.gray}
         iconColor={dimensionColor}
-        containerStyle={selectedStyle}
         checkedIcon='dot-circle-o'
         uncheckedIcon='circle-o'
-        textColor={Colors.secondary}
+        textStyle={styles.checkboxText}
         textAlign='center'
       />
     )
@@ -132,10 +128,6 @@ export const ChoiceRenderer = props => {
     const scoredColor = CompareState.getColor(compareState)
     const isSelected = scoredColor !== undefined
     const key = `choice-${index}`
-    const selectedStyle = isSelected
-      ? { borderWidth: 1, borderColor: scoredColor }
-      : undefined
-
     return (
       <Checkbox
         key={key}
@@ -144,13 +136,12 @@ export const ChoiceRenderer = props => {
         hideTts={!choice.tts}
         onPress={() => {}}
         checked={isSelected}
-        checkedColor={scoredColor ?? dimensionColor}
+        checkedColor={scoredColor ?? Colors.secondary}
         uncheckedColor={Colors.gray}
-        containerStyle={selectedStyle}
         iconColor={scoredColor ?? dimensionColor}
         checkedIcon='dot-circle-o'
         uncheckedIcon='circle-o'
-        textColor={scoredColor ?? Colors.dark}
+        textStyle={styles.checkboxText}
         textAlign='center'
       />
     )
@@ -170,8 +161,13 @@ const styles = createStyleSheet({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  text: {
-
+  selected: {
+    borderWidth: 1,
+    borderColor: Colors.secondary
+  },
+  checkboxText: {
+    color: Colors.secondary,
+    fontWeight: 'bold'
   }
 })
 

@@ -60,7 +60,6 @@ export const ClozeRendererBlank = props => {
 
   useBackHandler(() => {
     onSubmit(value)
-    return true
   })
 
   let textAlign = 'center'
@@ -78,7 +77,6 @@ export const ClozeRendererBlank = props => {
     if (status === 'hidden' && editActive) {
       onSubmit(value)
       setEditActive(false)
-      return true
     }
   })
 

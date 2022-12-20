@@ -164,20 +164,18 @@ const UnitScreen = props => {
   // hitting the back-button should only be executed, when the modal has been
   // confirmed. Otherwise we first trigger the modal.
   useEffect(() => {
-    const beforeGoingBack = (e) => {
+    const unsubscribeBeforeRemove = props.navigation.addListener('beforeRemove', (e) => {
       // GO_BACK is the action type from the device's back button
       // where we launch the modal and prevent the event from firing
       if (e.data.action.type === 'GO_BACK') {
         e.preventDefault()
         // trigger modal
       }
-    }
-
-    props.navigation.addListener('beforeRemove', beforeGoingBack)
+    })
 
     // remove listeners on destroy
     return () => {
-      props.navigation.removeListener('beforeRemove', beforeGoingBack)
+      unsubscribeBeforeRemove()
     }
   }, [props.navigation])
 
@@ -560,8 +558,6 @@ const styles = createStyleSheet({
   },
   navigationButtons: {
     paddingTop: 7,
-    borderTopWidth: 0.5,
-    borderTop: Colors.gray,
     alignItems: 'stretch'
   },
   routeButtonContainer: {
