@@ -120,7 +120,7 @@ dist
 *.woff2
 
 # Font directory
-src/assets/fonts/
+src/lib/assets/fonts/
 
 # deployment folders
 src/.deploy

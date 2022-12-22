@@ -1,8 +1,8 @@
 import React from 'react'
 import { fireEvent, render, act } from '@testing-library/react-native'
-import { TTSengine, useTts } from '../../components/Tts'
-import { asyncTimeout } from '../../utils/asyncTimeout'
-import Colors from '../../constants/Colors'
+import { TTSengine, useTts } from '../../lib/components/Tts'
+import { asyncTimeout } from '../../lib/utils/asyncTimeout'
+import Colors from '../../lib/constants/Colors'
 
 it('speaks a given text', async () => {
   let speakCalled = false

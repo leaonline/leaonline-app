@@ -1,4 +1,4 @@
-import { correctDiamondProgress } from '../../../components/progress/correctDiamondProgress'
+import { correctDiamondProgress } from '../../../lib/components/progress/correctDiamondProgress'
 
 describe(correctDiamondProgress.name, () => {
   it('falls back to 0 if no valid number is given', () => {

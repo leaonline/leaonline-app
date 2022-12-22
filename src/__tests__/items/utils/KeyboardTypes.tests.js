@@ -1,4 +1,4 @@
-import { KeyboardTypes } from '../../../items/utils/KeyboardTypes'
+import { KeyboardTypes } from '../../../lib/items/utils/KeyboardTypes'
 
 describe('KeyboardTypes', function () {
   describe(KeyboardTypes.get.name, function () {

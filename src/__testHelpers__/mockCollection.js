@@ -1,4 +1,4 @@
-import { createCollection } from '../infrastructure/createCollection'
+import { createCollection } from '../lib/infrastructure/createCollection'
 
 const map = new Map()
 

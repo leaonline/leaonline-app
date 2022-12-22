@@ -1,4 +1,4 @@
-import i18n from '../../i18n'
+import i18n from '../../lib/i18n'
 
 const translationEN = i18n.getDataByLanguage('en')
 const translationDE = i18n.getDataByLanguage('de')

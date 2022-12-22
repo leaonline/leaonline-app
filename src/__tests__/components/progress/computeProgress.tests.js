@@ -1,4 +1,4 @@
-import { computeProgress } from '../../../components/progress/computeProgress'
+import { computeProgress } from '../../../lib/components/progress/computeProgress'
 
 describe(computeProgress.name, () => {
   it('always returns a valid progress', () => {

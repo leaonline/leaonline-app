@@ -1,5 +1,5 @@
-import { scoreCloze } from '../../../items/cloze/scoring'
-import { Scoring } from '../../../scoring/Scoring'
+import { scoreCloze } from '../../../lib/items/cloze/scoring'
+import { Scoring } from '../../../lib/scoring/Scoring'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
 
 const createItemDoc = ({ competency, correctResponse } = {}) => {

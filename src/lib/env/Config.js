@@ -1,5 +1,5 @@
 /* global __DEV__ */
-import settings from '../settings.json'
+import settings from '../../settings.json'
 
 const { backend, content, log, debug, isDevelopment, dimensions } = settings
 

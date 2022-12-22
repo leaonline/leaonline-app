@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react-native'
-import { UnitContentElementFactory, useContentElementFactory } from '../../../components/factories/UnitContentElementFactory'
+import { UnitContentElementFactory, useContentElementFactory } from '../../../lib/components/factories/UnitContentElementFactory'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
 import { Text } from 'react-native'
 

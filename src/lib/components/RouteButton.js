@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert } from 'react-native'
-import { TTSengine } from '../components/Tts'
+import { TTSengine } from './Tts'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from './ActionButton'
 

@@ -1,6 +1,6 @@
-import { createSchema } from '../../schema/createSchema'
-import { isSchemaInstance } from '../../schema/isSchemaInstance'
-import { check } from '../../schema/check'
+import { createSchema } from '../../lib/schema/createSchema'
+import { isSchemaInstance } from '../../lib/schema/isSchemaInstance'
+import { check } from '../../lib/schema/check'
 
 it('creates a new schema instance', function () {
   const schema = createSchema({ foo: String })

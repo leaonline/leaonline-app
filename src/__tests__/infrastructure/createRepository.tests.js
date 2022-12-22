@@ -1,4 +1,4 @@
-import { createRepository } from '../../infrastructure/createRepository'
+import { createRepository } from '../../lib/infrastructure/createRepository'
 import { simpleRandom } from '../../__testHelpers__/simpleRandom'
 
 describe(createRepository.name, function () {

@@ -1,9 +1,9 @@
-import { Choice } from '../../../items/choice/Choice'
-import { scoreChoice } from '../../../items/choice/scoring'
+import { Choice } from '../../../lib/items/choice/Choice'
+import { scoreChoice } from '../../../lib/items/choice/scoring'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
-import { Scoring } from '../../../scoring/Scoring'
-import { toInteger } from '../../../utils/toInteger'
-import { isUndefinedResponse } from '../../../scoring/isUndefinedResponse'
+import { Scoring } from '../../../lib/scoring/Scoring'
+import { toInteger } from '../../../lib/utils/toInteger'
+import { isUndefinedResponse } from '../../../lib/scoring/isUndefinedResponse'
 
 const createItemDoc = ({ flavor, competency, correctResponse, requires } = {}) => {
   return {

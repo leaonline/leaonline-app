@@ -4,9 +4,9 @@
     "slug": "leaonline",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/favicon-1024.png",
+    "icon": "./lib/assets/icons/favicon-1024.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./lib/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,21 +22,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "foregroundImage": "./lib/assets/icons/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.testCompany.leaonline"
-    },
-    "extra": {
-      "backend": {
-        "url": "ws://192.168.178.49:8080/websocket",
-        "maxTimeout": 10000,
-        "interval": 250
-      },
-      "content": {
-        "url": "http://192.168.178.49:3030",
-        "replaceUrl": "https://content.lealernen.de"
-      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Scoring } from '../../scoring/Scoring'
+import { Scoring } from '../../lib/scoring/Scoring'
 import { simpleRandom } from '../../__testHelpers__/simpleRandom'
 import { expectThrowAsync } from '../../__testHelpers__/expectThrowAsync'
 

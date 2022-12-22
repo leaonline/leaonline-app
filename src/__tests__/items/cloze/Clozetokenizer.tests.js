@@ -5,8 +5,8 @@ import {
   tokenizeText,
   toTokens,
   getTokenValueForFlavor
-} from '../../../items/cloze/ClozeTokenizer'
-import { Cloze } from '../../../items/cloze/Cloze'
+} from '../../../lib/items/cloze/ClozeTokenizer'
+import { Cloze } from '../../../lib/items/cloze/Cloze'
 
 describe('ClozeTokenizer', function () {
   describe(getTokenValueForFlavor.name, function () {

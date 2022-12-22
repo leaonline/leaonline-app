@@ -1,12 +1,12 @@
 import Meteor from '@meteorrn/core'
-import { Dimension } from '../../../contexts/Dimension'
+import { Dimension } from '../../../lib/contexts/Dimension'
 import { stub, restoreAll } from '../../../__testHelpers__/stub'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
-import { loadMapData } from '../../../screens/map/loadMapData'
-import { toDocId } from '../../../utils/toDocId'
+import { loadMapData } from '../../../lib/screens/map/loadMapData'
+import { toDocId } from '../../../lib/utils/toDocId'
 import { mockCollection, resetCollection, restoreCollection } from '../../../__testHelpers__/mockCollection'
-import { byDocId } from '../../../utils/byDocId'
-import { MapIcons } from '../../../screens/map/MapIcons'
+import { byDocId } from '../../../lib/utils/byDocId'
+import { MapIcons } from '../../../lib/screens/map/MapIcons'
 
 MapIcons.register(() => null)
 MapIcons.register(() => null)

@@ -1,7 +1,7 @@
-import { createUser } from '../../meteor/createUser'
+import { createUser } from '../../lib/meteor/createUser'
 import Meteor from '@meteorrn/core'
 import sinon from 'sinon'
-import { MeteorLoginStorage } from '../../meteor/MeteorLoginStorage'
+import { MeteorLoginStorage } from '../../lib/meteor/MeteorLoginStorage'
 import { stub, restoreAll } from '../../__testHelpers__/stub'
 
 afterEach(() => {

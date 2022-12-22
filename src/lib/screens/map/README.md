@@ -11,7 +11,7 @@ The Map, in reality, consists of **two screens**:
 The map screen structures `TestCycles` along **Milestones** (large diamonds), each
 prefixed by a sequence of **Stages** (numbered circles).
 
-![map screen](../../../arch/screens/03-map-screen-01-overview.png)
+![map screen](../../../../arch/screens/03-map-screen-01-overview.png)
 
 
 
@@ -24,7 +24,7 @@ It is represented by a large diamond that contains up to four fields that are
 coloured by the four dimensions and represents a `TestCycle` for the respective
 dimension.
 
-![milestone image](../../../arch/images/milestone.png)
+![milestone image](../../../../arch/images/milestone.png)
 
 The color is by default grey-tinted until 80% of the`Competencies`, 
 corresponding to this TestCycle, are fulfilled.
@@ -80,7 +80,7 @@ Expected Result:
 A stage is a presentation of solve-able UnitSets, represented by a circle and an
 ordered number, surrounded by a set of diamonds.
 
-![stage image](../../../arch/images/stage.png)
+![stage image](../../../../arch/images/stage.png)
 
 Stages are always prefixed to a **Milestone** and represent the same level (in 
 fact they are linked by the Milestone's`TestCycle` lists). 

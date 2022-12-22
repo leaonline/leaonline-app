@@ -1,7 +1,7 @@
-import { CompareState } from '../../../items/utils/CompareState'
-import Colors from '../../../constants/Colors'
+import { CompareState } from '../../../lib/items/utils/CompareState'
+import Colors from '../../../lib/constants/Colors'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
-import { Scoring } from '../../../scoring/Scoring'
+import { Scoring } from '../../../lib/scoring/Scoring'
 
 describe('CompareState', () => {
   describe(CompareState.getColor.name, () => {
