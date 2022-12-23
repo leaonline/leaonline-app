@@ -1,6 +1,6 @@
 import { createMethod } from '../infrastructure/factories/createMethod'
 import { createCollection } from '../infrastructure/factories/createCollection'
-
+import { Meteor } from 'meteor/meteor'
 import { Users } from '../contexts/users/Users'
 import { Content } from '../contexts/content/Content'
 import { ContentServer } from '../api/remotes/content/ContentServer'
@@ -48,7 +48,7 @@ ServiceRegistry.init({
 
 const { defaultLang } = Meteor.settings
 ServiceRegistry.addLang(defaultLang, getServiceLang(defaultLang))
-//ServiceRegistry.register(Analytics)
+// ServiceRegistry.register(Analytics)
 ServiceRegistry.register(Session)
 ServiceRegistry.register(MapData)
 ServiceRegistry.register(Progress)

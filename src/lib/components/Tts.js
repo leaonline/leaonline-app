@@ -303,7 +303,7 @@ const loadVoices = (counter, onComplete) => {
     }
     else {
       if (!counter || counter < 10) {
-        loadVoices((counter ?? 0) + 1)
+        loadVoices((counter ?? 0) + 1, onComplete)
       }
       else {
         onComplete([])

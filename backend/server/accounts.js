@@ -1,3 +1,4 @@
+/* global ServiceConfiguration */
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
 import { HTTP } from 'meteor/jkuester:http'
@@ -6,7 +7,6 @@ import {
   getOAuthDDPLoginHandler
 } from 'meteor/leaonline:ddp-login-handler'
 import { rateLimitAccounts } from '../infrastructure/factories/rateLimit'
-
 
 //  //////////////////////////////////////////////////////////
 //  RATE LIMIT BUILTIN ACCOUNTS

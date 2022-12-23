@@ -2,11 +2,12 @@ import { createMethodFactory } from 'meteor/leaonline:method-factory'
 import { createSchema } from './createSchema'
 import { createLog } from '../log/createLog'
 import { environmentExtensionMixin } from '../mixins/environmentExtensionMixin'
+import { checkPermissions } from '../mixins/checkPermissions'
 
 const log = createLog({ name: 'createMethod' })
 const methodFactory = createMethodFactory({
   schemaFactory: createSchema,
-  mixins: [environmentExtensionMixin]
+  mixins: [environmentExtensionMixin, checkPermissions]
 })
 
 export const createMethod = method => {

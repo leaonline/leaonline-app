@@ -3,6 +3,7 @@ import { Accounts } from 'meteor/accounts-base'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { RestoreCodes } from '../../api/accounts/RestoreCodes'
 import { updateUserProfile } from './updateUserProfile'
+import { removeUser } from './removeUser'
 
 /**
  * Representation of users in the database.
@@ -83,10 +84,10 @@ Users.schema = {
   speed: {
     type: Number,
     optional: true
-  },
+  }
 
   // adding Email schema from UserEmail
-  //...UserEmail.schema()
+  // ...UserEmail.schema()
 }
 
 /**
@@ -272,13 +273,7 @@ Users.methods.delete = {
   run: onServerExec(function () {
     return function () {
       const { userId } = this
-
-      if (!userId) {
-        throw new Meteor.Error('permissionDenied', 'delete.failed', { userId })
-      }
-
-      // TODO delete all associated data here, too
-      return !!Meteor.users.remove({ _id: userId })
+      return removeUser(userId, userId)
     }
   })
 }
@@ -319,7 +314,9 @@ Users.methods.remove = {
   },
   backend: true,
   run: function ({ _id }) {
-    return removeUser(_id, this.userId, this.debug)
+    const calledBy = this.userId
+    const userId = _id
+    return removeUser(userId, calledBy)
   }
 }
 
