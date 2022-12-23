@@ -78,6 +78,10 @@ Log.setLevel = level => {
  * @return {(function())|*|(function(...[*]): void)}
  */
 Log.create = (name, type = 'log', force) => {
+  if (name in Config.debug && !Config.debug.name) {
+    return () => {}
+  }
+
   if (typeof force === 'boolean' && force !== true) {
     return () => {} // noOp on conditionals
   }

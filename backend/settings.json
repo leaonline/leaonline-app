@@ -1,4 +1,14 @@
 {
+  "defaultLang": "de",
+  "oauth": {
+    "clientId": "Lb5soRv7RH2g8inRc",
+    "secret": "Y4yNeHM3bniSogeWacRcYZ3S5yz3TCuW",
+    "dialogUrl": "http://localhost:9090/oauth/authorize",
+    "accessTokenUrl": "http://localhost:9090/oauth/token",
+    "authorizeUrl": "http://localhost:9090/oauth/authorize",
+    "identityUrl": "http://localhost:9090/oauth/ident",
+    "redirectUrl": "http://localhost:8080/_oauth/lea"
+  },
   "useFixtures": false,
   "remotes": {
     "content": {
@@ -8,15 +18,15 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": true,
-        "unit": true,
-        "unitSet": true,
-        "dimension": true,
-        "level": true,
-        "testCycle": true
+        "field": false,
+        "unit": false,
+        "unitSet": false,
+        "dimension": false,
+        "level": false,
+        "testCycle": false
       },
       "remap": {
-        "active": true,
+        "active": false,
         "dryRun": false,
         "dimensions": {
           "order": ["W", "R", "M", "S"]

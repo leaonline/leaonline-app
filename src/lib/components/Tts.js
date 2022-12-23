@@ -7,7 +7,6 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
 import { promiseWithTimeout } from '../utils/promiseWithTimeout'
-import { Config } from '../env/Config'
 
 /** @private **/
 let Speech = null
@@ -24,7 +23,7 @@ const styles = createStyleSheet({
   icon: { padding: 5 }
 })
 
-const globalDebug = Log.create('TTS', 'debug', Config.debug.tts)
+const globalDebug = Log.create('tts', 'debug')
 const handlers = {}
 const runHandlers = name => {
   if (!handlers[name]) { return }

@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { RestoreCodes } from '../../api/accounts/RestoreCodes'
-import { UserEmail } from '../../api/accounts/UserEmail'
 import { updateUserProfile } from './updateUserProfile'
 
 /**
@@ -14,7 +13,10 @@ const Users = {
   /**
    * Name, to be used as collection name.
    */
-  name: 'users'
+  name: 'users',
+  label: 'users.title',
+  icon: 'users',
+  representative: '_id'
 }
 
 /**
@@ -84,7 +86,7 @@ Users.schema = {
   },
 
   // adding Email schema from UserEmail
-  ...UserEmail.schema()
+  //...UserEmail.schema()
 }
 
 /**
@@ -279,6 +281,46 @@ Users.methods.delete = {
       return !!Meteor.users.remove({ _id: userId })
     }
   })
+}
+
+Users.methods.getAll = {
+  name: 'users.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  backend: true,
+  run: function () {
+    const users = Meteor.users.find({}, {
+      fields: {
+        services: 0,
+        agents: 0
+      },
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+
+    return { users }
+  }
+}
+
+Users.methods.remove = {
+  name: 'users.methods.remove',
+  schema: {
+    _id: 1
+  },
+  backend: true,
+  run: function ({ _id }) {
+    return removeUser(_id, this.userId, this.debug)
+  }
 }
 
 export { Users }

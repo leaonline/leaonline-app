@@ -9,13 +9,21 @@ import { createLog } from '../../infrastructure/log/createLog'
  * @namespace
  */
 export const Progress = {
-  name: 'progress'
+  name: 'progress',
+  label: 'progress.title',
+  icon: 'spinner',
+  representative: 'userId',
+  useHistory: true
 }
 const log = createLog(Progress)
 
 Progress.schema = {
-  userId: String,
-  fieldId: String,
+  userId: {
+    type: String
+  },
+  fieldId: {
+    type: String
+  },
 
   /**
    * [
@@ -101,4 +109,28 @@ Progress.methods.get = {
       return getCollection(Progress.name).findOne({ userId, fieldId })
     }
   })
+}
+
+Progress.methods.getAll = {
+  name: 'progress.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  backend: true,
+  run: function () {
+    const docs = getCollection(Progress.name).find({}, {
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+    return { [Progress.name]: docs }
+  }
 }

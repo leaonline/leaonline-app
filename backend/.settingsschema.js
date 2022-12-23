@@ -2,6 +2,16 @@ const SimpleSchema = require('simpl-schema')
 const schema = def => new SimpleSchema(def)
 
 const settingsSchema = schema({
+  defaultLang: String,
+  oauth: schema({
+    clientId: String,
+    secret: String,
+    dialogUrl: String,
+    accessTokenUrl: String,
+    authorizeUrl: String,
+    identityUrl: String,
+    redirectUrl: String
+  }),
   useFixtures: Boolean,
   remotes: schema({
     content: schema({

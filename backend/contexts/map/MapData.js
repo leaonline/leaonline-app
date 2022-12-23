@@ -13,6 +13,8 @@ import { cursorToMap } from '../../api/utils/cursorToMap'
  */
 export const MapData = {
   name: 'mapData',
+  label: 'mapData.title',
+  icon: 'map',
   methods: {}
 }
 
@@ -448,3 +450,29 @@ const countCompetencies = (unitSet, log) => {
 }
 
 MapData.get = ({ field }) => getCollection(MapData.name).findOne({ field })
+
+MapData.methods = {}
+
+MapData.methods.getAll = {
+  name: 'mapData.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  backend: true,
+  run: function () {
+    const docs = getCollection(MapData.name).find({}, {
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+    return { [MapData.name]: docs }
+  }
+}

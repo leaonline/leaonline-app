@@ -14,7 +14,10 @@ import { Progress } from '../progress/Progress'
  * @namespace
  */
 export const Session = {
-  name: 'session'
+  name: 'session',
+  label: 'session.title',
+  icon: 'project-diagram',
+  representative: 'userId'
 }
 
 const log = createLog({ name: Session.name })
@@ -25,9 +28,15 @@ const log = createLog({ name: Session.name })
  * @memberOf Session
  */
 Session.schema = {
-  userId: String,
-  unitSet: String,
-  fieldId: String,
+  userId: {
+    type: String
+  },
+  unitSet: {
+    type: String
+  },
+  fieldId: {
+    type: String
+  },
   progress: {
     type: Number,
     defaultValue: 0
@@ -264,7 +273,9 @@ Session.methods = {}
 Session.methods.update = {
   name: 'session.methods.update',
   schema: {
-    sessionId: String
+    sessionId: {
+      type: String
+    }
   },
   run: onServerExec(function () {
     return function ({ sessionId }) {
@@ -285,4 +296,28 @@ Session.methods.update = {
       return nextUnitId
     }
   })
+}
+
+Session.methods.getAll = {
+  name: 'session.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  backend: true,
+  run: function () {
+    const docs = getCollection(Session.name).find({}, {
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+    return { [Session.name]: docs }
+  }
 }

@@ -1,0 +1,24 @@
+{
+  "apps": {
+    "app": {
+      "title": "lea.app",
+      "description": "Mobile App (Backend)"
+    }
+  },
+  "users": {
+    "title": "Accounts",
+    "username": "Username",
+    "createdAt": "Registriert",
+    "restore": "Code",
+    "voice": "Voice",
+    "speed": "Voice-speed"
+  },
+  "session": {
+    "title": "Durchlauf"
+  },
+  "progress": {
+    "title": "Fortschritt",
+    "userId": "User",
+    "fieldId": "Berufsfeld"
+  }
+}
