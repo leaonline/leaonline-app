@@ -93,9 +93,9 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
     subtype: type,
     id,
     target,
-    message: message || error.reason || error.message,
-    details: {
-      stack: error.stack
+    message: message || error?.reason || error?.message,
+    details: error && {
+      stack: error?.stack
     }
   })
 

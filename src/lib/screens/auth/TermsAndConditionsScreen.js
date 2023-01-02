@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, Vibration, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
@@ -12,21 +12,18 @@ import { Layout } from '../../constants/Layout'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 
 const initialState = {
-  termsAndConditionsIsChecked: false,
-  highlightCheckbox: false
+  termsAndConditionsIsChecked: false, highlightCheckbox: false
 }
 
 const reducer = (prevState, nextState) => {
   switch (nextState.type) {
     case 'terms':
       return {
-        ...prevState,
-        termsAndConditionsIsChecked: nextState.terms
+        ...prevState, termsAndConditionsIsChecked: nextState.terms
       }
     case 'highlight':
       return {
-        ...prevState,
-        highlightCheckbox: nextState.highlight
+        ...prevState, highlightCheckbox: nextState.highlight
       }
   }
 }
@@ -47,11 +44,10 @@ const TermsAndConditionsScreen = props => {
   const { termsAndConditions } = useLegal('terms')
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
   const { termsAndConditionsIsChecked, highlightCheckbox } = state
+
   const checkboxHandler = (type, currentValue) => {
     InteractionGraph.action({
-      type: 'select',
-      target: checkboxHandler.name,
-      details: { type, value: currentValue }
+      type: 'select', target: checkboxHandler.name, details: { type, value: currentValue }
     })
     const options = { type, [type]: !currentValue }
     dispatch(options)
@@ -61,11 +57,6 @@ const TermsAndConditionsScreen = props => {
     }
   }
 
-  const renderTCText = () => termsAndConditions
-    .map((text, index) => (
-      <Tts style={styles.paragraph} text={text} block key={index} align='flex-start' />
-    ))
-
   const handleAction = (route) => {
     if (!termsAndConditionsIsChecked) {
       InteractionGraph.problem({
@@ -73,67 +64,76 @@ const TermsAndConditionsScreen = props => {
         target: 'TandCScreen.checkBoxText',
         message: 'tried to continue without agreeing to terms'
       })
-      return dispatch({ type: 'highlight', highlight: true })
+
+      dispatch({ type: 'highlight', highlight: false })
+      setTimeout(() => {
+        dispatch({ type: 'highlight', highlight: true })
+        Vibration.vibrate(150)
+      }, 300)
     }
-    return props.navigation.navigate(route)
+    else {
+      props.navigation.navigate(route)
+    }
   }
 
-  const renderCheckbox = () => {
+  const renderTermsAndConditionsText = () => termsAndConditions.map((text, index) => {
     return (
-      <View style={styles.checkBoxes}>
-        <Checkbox
-          id='TandCScreen.checkBoxText'
-          text={t('TandCScreen.checkBoxText')}
-          highlight={highlightCheckbox && Colors.danger}
-          checked={termsAndConditionsIsChecked}
-          checkedColor={Colors.secondary}
-          uncheckedColor={Colors.gray}
-          onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
-        />
-      </View>
+      <Tts
+        style={styles.paragraph}
+        text={text}
+        block
+        key={index}
+        align='flex-start'
+      />
     )
-  }
-
-  const renderDecision = () => {
-    return (
-      <View style={styles.decisionContainer}>
-        <RouteButton
-          title={t('TandCScreen.newUser')}
-          align='center'
-          block
-          containerStyle={{ flex: 1 }}
-          handleScreen={() => handleAction('registration')}
-        />
-        <RouteButton
-          title={t('TandCScreen.restoreWithCode')}
-          align='center'
-          block
-          containerStyle={{ flex: 1 }}
-          handleScreen={() => handleAction('restore')}
-        />
-      </View>
-    )
-  }
+  })
 
   return (
     <>
-      <LeaLogo style={styles.logo} />
 
       <View style={styles.container}>
-        <Tts
-          style={styles.paragraph}
-          text={t('TandCScreen.text')}
-          id='TandCScreen.text'
-          block
-          align='center'
-        />
+        <LeaLogo style={styles.logo} />
 
         <ScrollView contentContainerStyle={styles.tcContainer}>
-          {renderTCText()}
-        </ScrollView>
+          <Tts
+            style={styles.introduction}
+            text={t('TandCScreen.text')}
+            id='TandCScreen.text'
+            block
+            align='center'
+          />
 
-        {renderCheckbox()}
-        {renderDecision()}
+          {renderTermsAndConditionsText()}
+
+          <Checkbox
+            id='TandCScreen.checkBoxText'
+            text={t('TandCScreen.checkBoxText')}
+            highlight={highlightCheckbox && Colors.danger}
+            checked={termsAndConditionsIsChecked}
+            checkedColor={Colors.secondary}
+            uncheckedColor={Colors.gray}
+            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
+            containerStyle={styles.checkbox}
+          />
+
+          <View style={styles.decisionContainer}>
+            <RouteButton
+              title={t('TandCScreen.newUser')}
+              align='center'
+              block
+              style={styles.decisionButton}
+              containerStyle={styles.decisionButton}
+              handleScreen={() => handleAction('registration')}
+            />
+            <RouteButton
+              title={t('TandCScreen.restoreWithCode')}
+              align='center'
+              block
+              containerStyle={styles.decisionButton}
+              handleScreen={() => handleAction('restore')}
+            />
+          </View>
+        </ScrollView>
       </View>
     </>
   )
@@ -144,32 +144,41 @@ const TermsAndConditionsScreen = props => {
  */
 const styles = createStyleSheet({
   container: {
-    ...Layout.container(),
-    alignItems: 'stretch',
-    justifyContent: 'space-between'
+    ...Layout.container(), alignItems: 'stretch', justifyContent: 'space-between'
   },
   tcContainer: {
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     flexWrap: 'wrap'
   },
+  introduction: {
+    paddingBottom: 20,
+    borderBottomWidth: 0.5,
+    marginBottom: 20,
+    borderColor: Colors.gray
+  },
   paragraph: {
     marginBottom: 10
   },
   logo: {
-    height: 100,
-    width: '100%'
+    height: 100, width: '100%'
   },
-  checkBoxes: {
-    borderTopWidth: Layout.lineWidth(0.5),
-    borderColor: Colors.dark,
-    paddingTop: 10
+  checkbox: {
+    borderWidth: 0.5,
+    borderColor: Colors.gray
   },
   decisionContainer: {
     height: 100,
     flex: 0
   },
-  highlight: { borderColor: Colors.danger, borderWidth: 1 }
+  decisionButton: {
+    flex: 1,
+    marginBottom: 10
+  },
+  highlight: {
+    borderColor: Colors.danger,
+    borderWidth: 1
+  }
 })
 
 export default TermsAndConditionsScreen
