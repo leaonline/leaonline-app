@@ -10,6 +10,7 @@ import { AppSessionContext } from '../../state/AppSessionContext'
 import { Layout } from '../../constants/Layout'
 import { ActionButton } from '../../components/ActionButton'
 import { Fill } from '../../components/layout/Fill'
+import { ScrollView } from 'react-native'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -59,15 +60,17 @@ const HomeScreen = props => {
 
   return (
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
-      <Tts
-        id='homeScreen.text'
-        text={t('homeScreen.text')}
-        color={Colors.secondary}
-        block
-      />
-      <Fill />
-      {renderButtons()}
-      <Fill />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Tts
+          id="homeScreen.text"
+          text={t('homeScreen.text')}
+          color={Colors.secondary}
+          block={true}
+          align="flex-start"
+        />
+        {renderButtons()}
+        <Fill/>
+      </ScrollView>
     </ScreenBase>
   )
 }
@@ -75,13 +78,18 @@ const HomeScreen = props => {
 export default HomeScreen
 
 const styles = createStyleSheet({
-  container: Layout.container(),
+  container: {
+    flex: 1
+  },
+  scrollContainer: {
+    ...Layout.container(),
+    flex: 0
+  },
   buttonContainer: {
     marginTop: 10,
     marginBottom: 10
   },
   buttonLabel: {
-    color: '#890',
     fontWeight: 'bold'
   }
-})
+}, true)
