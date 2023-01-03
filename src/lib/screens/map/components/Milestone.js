@@ -8,7 +8,7 @@ import Svg, { G, Path } from 'react-native-svg'
  * @component
  * @returns {JSX.Element}
  */
-export const Milestone = () => {
+export const Milestone = (props) => {
   return (
     <Svg width={100} height={100} viewBox='0 0 51.73 70.49'>
       <G id='Ebene_2' data-name='Ebene 2'>

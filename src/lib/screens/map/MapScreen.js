@@ -24,6 +24,7 @@ const log = Log.create('MapScreen')
 const ITEM_HEIGHT = 100
 
 loadMapIcons() // TODO defer loading these to a much later point as they are not crucial
+const MemoConnector = React.memo(Connector)
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -124,7 +125,6 @@ const MapScreen = props => {
     if (!mapData?.entries?.length) {
       return null
     }
-
     return (
       <View style={styles.scrollView}>
         <FlatList
@@ -141,10 +141,17 @@ const MapScreen = props => {
               : 59
             return { length, offset: length * index, index }
           }}
-          removeClippedSubviews
-          persistentScrollbar
+          initialScrollIndex={mapData.progressIndex ?? 0}
+          removeClippedSubviews={true}
+          persistentScrollbar={true}
+          updateCellsBatchingPeriod={500}
           renderItem={renderListItem}
           keyExtractor={(item) => item.entryKey}
+          viewabilityConfig={{
+            minimumViewTime: 250,
+            viewAreaCoveragePercentThreshold: 100,
+            waitForInteraction: true
+          }}
         />
       </View>
     )
@@ -245,7 +252,7 @@ const renderConnector = (connectorId, listWidth, withIcon = -1) => {
 
   if (connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
+    return (<MemoConnector from={from} to={to} width={listWidth} icon={withIcon} />)
   }
   return null
 }

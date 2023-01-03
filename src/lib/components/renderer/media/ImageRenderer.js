@@ -63,4 +63,4 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     alignItems: 'flex-start'
   }
-}, true)
+})

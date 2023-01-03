@@ -9,6 +9,7 @@ import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { Config } from '../../../env/Config'
 
+const MemoDiamond = React.memo(Diamond)
 const positions = getPositionOnCircle({ n: 10, radius: 50 })
 const competencies = [
   positions[6],
@@ -126,7 +127,7 @@ export const Stage = props => {
           }
           return (
             <G key={key} x={x - 7.5} y={y}>
-              <Diamond width={15} height={30} value={competencies} color={color} />
+              <MemoDiamond width={15} height={30} value={competencies} color={color} />
             </G>
           )
         })

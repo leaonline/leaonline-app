@@ -501,6 +501,7 @@ const UnitScreen = props => {
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollView}
+        persistentScrollbar={true}
         keyboardShouldPersistTaps='always'
       >
         {renderUnitTitle()}
@@ -618,6 +619,6 @@ const styles = createStyleSheet({
     borderWidth: 1,
     borderColor: Colors.dark
   }
-}, true)
+})
 
 export default UnitScreen
