@@ -132,7 +132,7 @@ const MapScreen = props => {
           inverted
           data={mapData.entries}
           onEndReached={onEndReached}
-          initialNumToRender={10}
+          initialNumToRender={50}
           maxToRenderPerBatch={3}
           getItemLayout={(data, index) => {
             const entry = data[index]
@@ -144,7 +144,7 @@ const MapScreen = props => {
           initialScrollIndex={mapData.progressIndex ?? 0}
           removeClippedSubviews={true}
           persistentScrollbar={true}
-          updateCellsBatchingPeriod={500}
+          updateCellsBatchingPeriod={1000}
           renderItem={renderListItem}
           keyExtractor={(item) => item.entryKey}
           viewabilityConfig={{

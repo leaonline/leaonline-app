@@ -184,7 +184,7 @@ export const ClozeRenderer = props => {
     if (entry.isToken && Array.isArray(entry.value)) {
       return renderTokenGroup(entry, `${rowIndex}${colIndex}`)
     }
-    else if (!ClozeHelpers.isEmptyCell(entry.value)) {
+    else if (!entry.isCellSkip) {
       return (
         <LeaText>{entry.value}</LeaText>
       )
@@ -194,9 +194,7 @@ export const ClozeRenderer = props => {
   }
 
   if (isTable) {
-    const cellStyle = hasTableBorder
-      ? mergeStyles(styles.cell, styles.cellBorder)
-      : styles.cell
+
     return (
       <View style={styles.container}>
         {tokens.map((row, rowIndex) => {
@@ -204,7 +202,8 @@ export const ClozeRenderer = props => {
             <View style={styles.row} key={`row-${rowIndex}`}>
               {row.map((entry, colIndex) => {
                 return (
-                  <View style={cellStyle} key={`row-${rowIndex}-col-${colIndex}`}>
+                  <View style={getCellStyle(hasTableBorder, entry.cellBorder)}
+                        key={`row-${rowIndex}-col-${colIndex}`}>
                     {renderCell(entry, rowIndex, colIndex)}
                   </View>
                 )
@@ -264,6 +263,20 @@ const RenderTts = ({ text, color }) => {
 
   const { Tts } = useTts()
   return (<Tts color={color} text={text} dontShowText />)
+}
+
+const getCellStyle = (hasTableBorder, cellBorder) => {
+  if (hasTableBorder) {
+    return mergeStyles(styles.cell, styles.cellBorder)
+  }
+  if (cellBorder === 'top') {
+    return mergeStyles(styles.cell, styles.cellBorderTop)
+  }
+  if (cellBorder === 'bottom') {
+    return mergeStyles(styles.cell, styles.cellBorderBottom)
+  }
+
+  return styles.cell
 }
 
 const styles = createStyleSheet({
@@ -348,10 +361,18 @@ const styles = createStyleSheet({
     flex: 1,
     flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   cellBorder: {
     borderWidth: 1,
     borderColor: Colors.light,
+  },
+  cellBorderTop: {
+    borderTopWidth: 1,
+    borderTopColor: Colors.gray,
+  },
+  cellBorderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray,
   }
 })
