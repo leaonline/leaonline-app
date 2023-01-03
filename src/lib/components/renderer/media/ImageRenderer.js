@@ -4,21 +4,33 @@ import { Log } from '../../../infrastructure/Log'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
 import { ContentServer } from '../../../remotes/ContentServer'
+import { mergeStyles } from '../../../styles/mergeStyles'
 
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug', true)
 
 export const ImageRenderer = props => {
+  console.debug(props)
+  const widthRatio = props.width
+    ? Number.parseInt(props.width) / 12
+    : 1
   const [loadComplete, setLoadComplete] = useState(false)
+  const [error, setError] = useState(null)
+  const [imageSize, setImageSize] = useState({})
   const urlReplaced = ContentServer.cleanUrl(props.value)
   const imageProps = {
     source: { uri: urlReplaced },
-    onError: (event) => {
+    onError: ({ nativeEvent: { error }}) => {
       debug('load failed from', urlReplaced)
-      debug(event.message || event.nativeEvent || event.error)
+      Log.error(error)
+      setLoadComplete(true)
+      setError(error)
     },
     onLoadStart: () => debug('load image from', urlReplaced),
-    onLoad: () => debug('load successful from', urlReplaced),
+    onLoad: ({nativeEvent: {source: {width, height}}}) => {
+      debug('load successful from', urlReplaced)
+      setImageSize({ width, height })
+    },
     onLoadEnd: event => {
       debug('load end from', urlReplaced)
       setTimeout(() => setLoadComplete(true), 300)
@@ -28,7 +40,7 @@ export const ImageRenderer = props => {
     // onLayout: event => console.debug('layout', event.nativeEvent),
     // onProgress:event => console.debug('progress', event.nativeEvent),
 
-    style: styles.image,
+    style: mergeStyles(styles.image , { width: win.width * widthRatio }),
     resizeMethod: 'auto'
   }
 
@@ -37,21 +49,18 @@ export const ImageRenderer = props => {
   return (
     <View style={styles.imageContainer}>
       {loader()}
-      <Image {...imageProps} resizeMode='cover' />
+      <Image {...imageProps} resizeMode='center' />
     </View>
   )
 }
 
 const styles = createStyleSheet({
   image: {
-    flex: 1,
-    width: win.width,
-    height: win.width / 2,
-    alignSelf: 'stretch',
-    resizeMode: 'cover',
-    marginLeft: 40
+    resizeMode: 'center',
+    height: 250
   },
   imageContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'flex-start'
   }
-})
+}, true)

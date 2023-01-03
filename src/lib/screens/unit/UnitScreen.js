@@ -34,6 +34,7 @@ import { FadePanel } from '../../components/FadePanel'
 import { Sound } from '../../env/Sound'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
+import { mergeStyles } from '../../styles/mergeStyles'
 
 const log = Log.create('UnitScreen')
 
@@ -275,7 +276,7 @@ const UnitScreen = props => {
     return (
       <ScreenBase {...docs} style={styles.container}>
         <ScrollView ref={scrollViewRef} style={styles.scrollView} keyboardShouldPersistTaps='always'>
-          <View style={styles.unitCard}>
+          <View style={mergeStyles(styles.unitCard, dropShadow)}>
             {renderContent(unitSetDoc.story)}
           </View>
         </ScrollView>
@@ -390,6 +391,7 @@ const UnitScreen = props => {
 
   const nextPage = () => {
     setFadeIn(1) // fade out content
+    setAllTrue(-1)
     setTimeout(() => {
       sessionActions.multi({
         page: page + 1,
@@ -403,9 +405,9 @@ const UnitScreen = props => {
       return null
     }
     return (
-      <View style={styles.navigationButtons}>
+      <FadePanel style={styles.navigationButtons} visible={fadeIn >= 2}>
         {renderTaskPageAction()}
-      </View>
+      </FadePanel>
     )
   }
 
@@ -414,7 +416,8 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       return (
         <ActionButton
-          block
+          block={true}
+          align='center'
           tts={t('unitScreen.actions.check')}
           color={dimensionColor}
           onPress={checkScore}
@@ -430,7 +433,8 @@ const UnitScreen = props => {
     if (isLast) {
       return (
         <ActionButton
-          block
+          block={true}
+          align='center'
           tts={t('unitScreen.actions.finish')}
           color={dimensionColor}
           onPress={finish}
@@ -442,7 +446,8 @@ const UnitScreen = props => {
       log('render next page button')
       return (
         <ActionButton
-          block
+          block={true}
+          align='center'
           tts={t('unitScreen.actions.next')} color={dimensionColor}
           onPress={nextPage}
         />
@@ -495,18 +500,18 @@ const UnitScreen = props => {
     <ScreenBase {...docs} style={styles.container}>
       <ScrollView
         ref={scrollViewRef}
-        style={styles.scrollView}
+        contentContainerStyle={styles.scrollView}
         keyboardShouldPersistTaps='always'
       >
         {renderUnitTitle()}
 
         {/* 1. PART STIMULI */}
-        <FadePanel style={styles.unitCard} visible={fadeIn >= 0}>
+        <FadePanel style={mergeStyles(styles.unitCard, dropShadow)} visible={fadeIn >= 0}>
           {renderContent(unitDoc.stimuli)}
         </FadePanel>
 
         {/* 2. PART INSTRUCTIONS */}
-        <FadePanel style={{ ...styles.unitCard, paddingTop: 0 }} visible={fadeIn >= 1}>
+        <FadePanel style={{ ...styles.unitCard, ...dropShadow, paddingTop: 0 }} visible={fadeIn >= 1}>
           <LeaText style={styles.pageText}>
             <Icon
               testID='info-icon'
@@ -531,11 +536,13 @@ const UnitScreen = props => {
 
         {renderAllTrue()}
 
+        {renderFooter()}
       </ScrollView>
-      {renderFooter()}
     </ScreenBase>
   )
 }
+
+const dropShadow = Layout.dropShadow()
 
 /**
  * @private stylesheet
@@ -550,7 +557,7 @@ const styles = createStyleSheet({
     marginBottom: 10
   },
   scrollView: {
-    width: '100%'
+    flexGrow: 1
   },
   element: {
     flex: 1,
@@ -558,6 +565,9 @@ const styles = createStyleSheet({
   },
   navigationButtons: {
     paddingTop: 7,
+    marginBottom: 15,
+    marginLeft: 4,
+    marginRight: 4,
     alignItems: 'stretch'
   },
   routeButtonContainer: {
@@ -572,23 +582,24 @@ const styles = createStyleSheet({
     borderRadius: 10,
     padding: 5,
     borderColor: Colors.white,
-    ...Layout.dropShadow(),
     overflow: 'visible',
     marginTop: 2,
     marginBottom: 10,
-    marginLeft: 8,
-    marginRight: 8
+    marginLeft: 4,
+    marginRight: 4
   },
   pageText: {
     alignSelf: 'center',
     backgroundColor: Colors.gray,
     color: Colors.white,
-    paddingLeft: 3,
-    paddingRight: 3,
+    paddingLeft: 2,
+    paddingRight: 2,
     paddingTop: 0,
     paddingBottom: 0,
-    marginBottom: 6,
+    marginTop: 0,
+    marginBottom: 4,
     fontSize: 16,
+    borderWidth: 0.5,
     borderColor: Colors.gray
   },
   allTrue: {
@@ -607,6 +618,6 @@ const styles = createStyleSheet({
     borderWidth: 1,
     borderColor: Colors.dark
   }
-})
+}, true)
 
 export default UnitScreen

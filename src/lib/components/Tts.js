@@ -113,19 +113,22 @@ const ttsComponent = props => {
       rate: props.speed || TTSengine.currentSpeed,
       voice: props.voice || TTSengine.currentVoice,
       onStart: () => {
-        debug('onStart')
+        debug('speak', props.text)
         startSpeak()
       },
       onStopped: () => {
-        debug('onStopped')
+        debug('stopped', props.text)
         stopSpeak()
       },
       onDone: () => {
-        debug('onDone')
+        debug('finished', props.text)
         // TODO call stopSpeak and update tests to fix state bug
         stopSpeak()
         setIsDone(true)
-      }
+      },
+      onBoundary: e => console.debug('boundary', e.nativeEvent),
+      onMark: e => console.debug('onMark', e.nativeEvent),
+      onError: e => console.error(e)
     })
   }
   /**

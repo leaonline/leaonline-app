@@ -47,6 +47,7 @@ export const ActionButton = props => {
     buttonStyle: mergeStyles({}, props.buttonStyle, activeStyle),
     titleStyle: mergeStyles(activeStyle, props.titleStyle),
     color: props.color,
+    block: props.block,
     containerStyle: mergeStyles(styles.buttonContainer, props.buttonContainerStyle, blockStyle)
   }
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
@@ -64,6 +65,7 @@ const styles = createStyleSheet({
     alignItems: 'center'
   },
   buttonContainer: {
-    marginLeft: 10
+    marginLeft: 6,
+    flex: 1
   }
 })

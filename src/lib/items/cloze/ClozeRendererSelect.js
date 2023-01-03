@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+﻿import React, { useRef } from 'react'
 import { Pressable, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
@@ -9,6 +9,7 @@ import { makeTransparent } from '../../styles/makeTransparent'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { Layout } from '../../constants/Layout'
 
 /**
  * Renders a pressable element that triggers a Modal dialog with
@@ -81,7 +82,9 @@ export const ClozeRendererSelect = props => {
         key={index}
         text={option}
         color={color}
-        block
+        block={true}
+        align='center'
+        containerStyle={styles.actionButton}
         onPress={() => onSelect(option, index)}
       />
     ))
@@ -89,16 +92,17 @@ export const ClozeRendererSelect = props => {
 
   const compareStyles = props.compare?.color ? { backgroundColor: props.compare.color } : undefined
   const pressStyles = mergeStyles(styles.select, compareStyles)
-
+  const longest = props.options.reduce((a, b) => a + b.length, 0)
   return (
     <Tooltip
       ref={tooltipRef}
-      height={props.options.length * 50}
+      height={props.options.length * 60}
+      width={150 + longest * 5}
       popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-      withOverlay
-      withPointer
+      withOverlay={true}
+      withPointer={true}
       backgroundColor={Colors.dark}
-      overlayColor={makeTransparent(Colors.white, 0.3)}
+      overlayColor={makeTransparent(Colors.white, 0.6)}
     >
       <Pressable style={pressStyles} onPress={onActivate}>
         <LeaText style={styles.label}>{label}</LeaText>
@@ -130,12 +134,11 @@ const styles = createStyleSheet({
     elevation: 5
   },
   select: {
-    paddingLeft: 10,
-    paddingRight: 10,
     minWidth: 50,
     minHeight: 36,
     backgroundColor: Colors.light,
     alignItems: 'center',
+    borderColor: Colors.dark,
     borderWidth: 0.5,
     borderRadius: 5
   },
@@ -143,6 +146,9 @@ const styles = createStyleSheet({
     borderRadius: 20,
     padding: 10,
     elevation: 2
+  },
+  actionButton: {
+    minWidth: 120
   },
   buttonOpen: {
     backgroundColor: '#F194FF'

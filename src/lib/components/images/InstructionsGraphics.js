@@ -5,6 +5,6 @@ export const InstructionsGraphics = (props) => {
   const { Tts } = useTts()
 
   return (
-    <Tts text={props.source.value} />
+    <Tts text={props.source.value} dontShowText={true} />
   )
 }

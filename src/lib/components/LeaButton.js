@@ -86,6 +86,7 @@ export const LeaButton = props => {
       containerStyle={containerStyle}
       disabled={props.disabled || pressed}
       type='outline'
+      titleProps={{ lineBreakMode: 'middle', textBreakStrategy: 'highQuality' }}
       onPress={handlePress}
       icon={renderIcon()}
       iconPosition={props.iconPosition || defaults.icon.position}

@@ -120,15 +120,14 @@ const TermsAndConditionsScreen = props => {
             <RouteButton
               title={t('TandCScreen.newUser')}
               align='center'
-              block
-              style={styles.decisionButton}
+              block={true}
               containerStyle={styles.decisionButton}
               handleScreen={() => handleAction('registration')}
             />
             <RouteButton
               title={t('TandCScreen.restoreWithCode')}
               align='center'
-              block
+              block={true}
               containerStyle={styles.decisionButton}
               handleScreen={() => handleAction('restore')}
             />
@@ -144,12 +143,16 @@ const TermsAndConditionsScreen = props => {
  */
 const styles = createStyleSheet({
   container: {
-    ...Layout.container(), alignItems: 'stretch', justifyContent: 'space-between'
+    ...Layout.container(),
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    overflow: 'visible'
   },
   tcContainer: {
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    overflow: 'visible'
   },
   introduction: {
     paddingBottom: 20,
@@ -161,19 +164,26 @@ const styles = createStyleSheet({
     marginBottom: 10
   },
   logo: {
-    height: 100, width: '100%'
+    height: 100,
+    width: '100%'
   },
   checkbox: {
     borderWidth: 0.5,
-    borderColor: Colors.gray
+    borderColor: Colors.gray,
+    marginTop: 15,
+    marginRight: 5
   },
   decisionContainer: {
-    height: 100,
-    flex: 0
+    flex: 0,
+    alignItems: 'center',
+    overflow: 'visible',
+    marginTop: 0,
+    marginBottom: 10,
+    paddingRight: 5
   },
   decisionButton: {
-    flex: 1,
-    marginBottom: 10
+    marginTop: 5,
+    marginBottom: 5
   },
   highlight: {
     borderColor: Colors.danger,

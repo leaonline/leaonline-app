@@ -7,6 +7,8 @@ const isLarge = width * ratio > 1300
 
 export const Layout = {}
 
+Layout.width = () => width * ratio
+
 Layout.isLarge = () => isLarge
 
 Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
@@ -59,7 +61,7 @@ Layout.dropShadow = ({ ios = true, android = true } = {}) => {
     styles.shadowRadius = 12
   }
   if (android) {
-    styles.elevation = 5
+    styles.elevation = 2
   }
 
   return styles
