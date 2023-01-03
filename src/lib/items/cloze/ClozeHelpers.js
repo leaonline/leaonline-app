@@ -12,6 +12,8 @@ ClozeHelpers.isText = flavor => flavor === Cloze.flavor.text.value
 
 ClozeHelpers.getFlavor = flavor => Cloze.flavor[flavor]?.value
 
+ClozeHelpers.isEmptyCell = value => value === '<<>>'
+
 const scorable = [
   Cloze.flavor.blanks.value,
   Cloze.flavor.select.value

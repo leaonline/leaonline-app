@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 import {
   View,
   ScrollView,
-  Platform,
-  KeyboardAvoidingView,
   Vibration
 } from 'react-native'
 import { Log } from '../../infrastructure/Log'
@@ -249,13 +247,7 @@ const UnitScreen = props => {
         elementData.showCorrectResponse = showCorrectResponse
         elementData.scoreResult = showCorrectResponse && scoreRef.current[page]
         return (
-          <KeyboardAvoidingView
-            key={index}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.itemContainer}
-          >
-            <Renderer {...elementData} />
-          </KeyboardAvoidingView>
+          <Renderer {...elementData} />
         )
       }
 

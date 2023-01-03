@@ -13,6 +13,7 @@ import { LeaText } from '../../components/LeaText'
 import { ClozeRendererBlank } from './ClozeRendererBlank'
 import { Layout } from '../../constants/Layout'
 import { isDefined } from '../../utils/isDefined'
+import { mergeStyles } from '../../styles/mergeStyles'
 
 const debug = Log.create('ClozeRenderer', 'debug', true)
 
@@ -20,7 +21,7 @@ export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
   const [compared, setCompared] = useState({})
-  const { isTable /*, hasTableBorder = true, scoring */ } = value
+  const { isTable, hasTableBorder, /* scoring */ } = value
   const { tokens, tokenIndexes } = useMemo(() => {
     return ClozeTokenizer.tokenize(props.value)
   }, [props.contentId])
@@ -103,11 +104,12 @@ export const ClozeRenderer = props => {
             isDefined(itemIndex) &&
             compared[itemIndex]
 
+          const blanksId = `${contentId}-${itemIndex}`
+          const blankStyle = isTable
+            ? { borderWidth: 0.5 }
+            : null
+
           if (ClozeHelpers.isBlank(flavor)) {
-            const blanksId = `${contentId}-${itemIndex}`
-            const blankStyle = isTable
-              ? { borderWidth: 0.5 }
-              : null
             return (
               <ClozeRendererBlank
                 key={key}
@@ -130,7 +132,21 @@ export const ClozeRenderer = props => {
           }
 
           if (ClozeHelpers.isEmpty(flavor)) {
-            return (<LeaText key={key} style={styles.token}>Render EMPTY</LeaText>)
+            return (
+              <ClozeRendererBlank
+                key={key}
+                blanksId={blanksId}
+                compare={undefined}
+                color={dimensionColor}
+                original={token.value}
+                style={blankStyle}
+                hasNext={hasNext}
+                hasPrefix={token.hasPre}
+                hasSuffix={token.hasSuf}
+                pattern={tokenGroup.pattern}
+                onSubmit={() => {}}
+              />
+            )
           }
 
           if (ClozeHelpers.isSelect(flavor)) {
@@ -165,20 +181,22 @@ export const ClozeRenderer = props => {
   }
 
   const renderCell = (entry, rowIndex, colIndex) => {
-    if (entry.isEmpty) {
-      return null
-    }
-    else if (entry.isToken && Array.isArray(entry.value)) {
+    if (entry.isToken && Array.isArray(entry.value)) {
       return renderTokenGroup(entry, `${rowIndex}${colIndex}`)
     }
-    else {
+    else if (!ClozeHelpers.isEmptyCell(entry.value)) {
       return (
         <LeaText>{entry.value}</LeaText>
       )
+    } else {
+      return (<LeaText>{""}</LeaText>)
     }
   }
 
   if (isTable) {
+    const cellStyle = hasTableBorder
+      ? mergeStyles(styles.cell, styles.cellBorder)
+      : styles.cell
     return (
       <View style={styles.container}>
         {tokens.map((row, rowIndex) => {
@@ -186,7 +204,7 @@ export const ClozeRenderer = props => {
             <View style={styles.row} key={`row-${rowIndex}`}>
               {row.map((entry, colIndex) => {
                 return (
-                  <View style={styles.cell} key={`row-${rowIndex}-col-${colIndex}`}>
+                  <View style={cellStyle} key={`row-${rowIndex}-col-${colIndex}`}>
                     {renderCell(entry, rowIndex, colIndex)}
                   </View>
                 )
@@ -327,11 +345,13 @@ const styles = createStyleSheet({
   },
   cell: {
     padding: 5,
-    borderWidth: 1,
-    borderColor: Colors.light,
     flex: 1,
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  cellBorder: {
+    borderWidth: 1,
+    borderColor: Colors.light,
   }
 })
