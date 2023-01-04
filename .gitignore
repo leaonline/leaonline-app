@@ -119,8 +119,11 @@ dist
 *.woff
 *.woff2
 
-# Font directory
+# specific assets that may not comply
+# with license or bloat the repo
 src/lib/assets/fonts/
+src/lib/assets/linked/
 
 # deployment folders
 src/.deploy
+
