@@ -68,7 +68,7 @@ export const Confirm = props => {
       )
     }
 
-    return (<ActionButton {...fordwardedProps} onPress={onPress} />)
+    return (<ActionButton {...props.buttonProps} onPress={onPress} />)
   }
 
   const renderApprove = () => {

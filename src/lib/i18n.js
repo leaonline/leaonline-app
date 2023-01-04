@@ -27,7 +27,8 @@ const resources = {
     },
     actions: {
       back: 'Back',
-      close: 'Close'
+      close: 'Close',
+      cancel: 'Cancel'
     },
     alert: {
       title: 'Stop',
@@ -72,10 +73,18 @@ const resources = {
     },
     accountInfo: {
       title: 'Account options',
-      whyRestore: 'Use these codes to restore your account. If you lose access to your device you can continue with them.',
-      signOut: 'Sign out',
-      delete: 'Delete my account',
-      restoreCodes: 'Save my account'
+      restore: {
+        title: 'Save my account',
+        instructions: 'Use these codes to restore your account. If you lose access to your device you can continue with them.'
+      },
+      signOut: {
+        title: 'Sign out',
+        instructions: 'Signs you out. Make sure you have obtained your restore codes via "Save my account", before you continue.'
+      },
+      deleteAccount: {
+        title: 'Delete my account',
+        instructions: 'This deletes your account and all files you have produced. Once complete, you will not be able to restore it. Are you sure to delete your account?'
+      },
     },
     mapScreen: {
       stage: 'Stage',
@@ -139,7 +148,8 @@ const resources = {
     },
     actions: {
       back: 'Zurück',
-      close: 'Schließen'
+      close: 'Schließen',
+      cancel: 'Abbrechen'
     },
     alert: {
       title: 'Stop',
@@ -157,8 +167,8 @@ const resources = {
       creating: 'Dein Profil wird jetzt angelegt'
     },
     TandCScreen: {
-      headerTitle: 'Nutzungsbedingungen',
-      text: 'Bitte nimm dir kurz etwas Zeit für unsere Nutzungsbedingungen.',
+      headerTitle: 'Nutzungs\u00ADbedingungen',
+      text: 'Bitte nimm dir kurz etwas Zeit für unsere Nutzungs\u00ADbedingungen.',
       checkBoxText: 'Ich habe die Nutzungs\u00ADbedingungen verstanden und stimme ihnen zu.',
       agreeResearch: 'Optional: Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu.',
       newUser: 'Ich bin neu',
@@ -166,15 +176,15 @@ const resources = {
     },
     restoreScreen: {
       title: 'Mit Code anmelden',
-      instructions: 'Bitte gib hier deine Codes ein, um dein Nutzerkonto wiederherzustellen.',
-      checkCode: 'Nutzerkonto wiederherstellen',
+      instructions: 'Bitte gib hier deine Codes ein, um dein Nutzer\u00ADkonto wiederher\u00ADzustellen.',
+      checkCode: 'Nutzer\u00ADkonto wiederher\u00ADstellen',
       noCode: 'Ich habe keinen Code oder habe ihn vergessen'
     },
     restore: {
-      failed: 'Wiederherstellung fehlgeschlagen. Bitte prüfe, ob dein code richtig geschrieben ist.'
+      failed: 'Wiederher\u00ADstellung fehlge\u00ADschlagen. Bitte prüfe, ob dein code richtig geschrieben ist.'
     },
     homeScreen: {
-      title: 'Startseite',
+      title: 'Start\u00ADseite',
       text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
     },
     profileScreen: {
@@ -184,10 +194,18 @@ const resources = {
     },
     accountInfo: {
       title: 'Profil Optionen',
-      restoreCodes: 'Profil sichern',
-      whyRestore: 'Mit diesen Codes kannst du dein Profil sichern. Notiere sie dir oder mache ein Foto.',
-      signOut: 'Profil abmelden',
-      delete: 'Profil endgültig löschen'
+      restore: {
+        title: 'Profil sichern',
+        instructions: 'Mit diesen Codes kannst du dein Profil sichern und auf diesem oder einem anderen Gerät wiederher\u00ADstellen. Notiere sie dir oder mache ein Foto.'
+      },
+      signOut: {
+        title: 'Abmelden',
+        instructions: 'Meldet dich als aktiver Nutzer ab. Du benötigst zum wieder anmelden drei codes. Diese bekommst du über die Funktion "Profil sichern". Möchtest du dich jetzt abmelden?'
+      },
+      deleteAccount: {
+        title: 'Profil löschen',
+        instructions: 'Dein Profil wird zusammen mit deinen Antworten und deinem Fortschritt endgültig gelöscht. Sie können danach nicht wiederher\u00ADgestellt werden. Möchtest diese Daten jetzt löschen?'
+      }
     },
     mapScreen: {
       stage: 'Level',
@@ -217,10 +235,10 @@ const resources = {
     completeScreen: {
       congratulations: 'Du hast es geschafft!',
       correctScores: 'Du hast {{count}} richtige Lösungen!',
-      continue: 'Weiter zur Aufgabenübersicht'
+      continue: 'Weiter zur Aufgaben\u00ADübersicht'
     },
     tts: {
-      settings: 'Meine Spracheinstellungen',
+      settings: 'Meine Sprach\u00ADeinstellungen',
       voice: 'Stimme {{value}}',
       speedText: 'Ich spreche den text für dich {{value}}',
       speed: {

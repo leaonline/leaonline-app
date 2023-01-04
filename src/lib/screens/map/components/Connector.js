@@ -18,7 +18,7 @@ import { MapIcons } from '../MapIcons'
  * @returns {JSX.Element|null}
  * @component
  */
-export const Connector = props => {
+const ConnectorComponent = props => {
   if (props.width === null) {
     return null
   }
@@ -80,3 +80,5 @@ export const Connector = props => {
     </Svg>
   )
 }
+
+export const Connector = React.memo(ConnectorComponent)

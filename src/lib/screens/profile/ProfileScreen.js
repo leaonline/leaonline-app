@@ -1,6 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ScrollView } from 'react-native'
-import { AccountInfo } from './AccountInfo'
+import { AccountInfo } from './account/AccountInfo'
 import { Achievements } from './Achievements'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'

@@ -38,7 +38,7 @@ export const TTSSettings = (props) => {
 
   return (
     <View style={containerStyle}>
-      <Tts align='center' text={t('tts.settings')} block />
+      <Tts align='flex-start' text={t('tts.settings')} block />
       <TTSVoiceConfig onChange={voice => updateConfig({ voice })} />
       <TTSSpeedConfig onChange={speed => updateConfig({ speed })} />
       <ErrorMessage error={error} />

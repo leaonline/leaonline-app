@@ -16,6 +16,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "packagerOpts": {
+      "assetExts": ["md"]
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.testCompany.leaonline"

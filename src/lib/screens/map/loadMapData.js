@@ -63,6 +63,8 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
     return null
   }
 
+  await nextFrame()
+
   // 3. resolve dimension ids to their respective documents
   // this is required, since we aim to keep the data footprint
   // low and thus only send the ids of the dimensions.
@@ -74,7 +76,6 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // step during startup
   if (!mapData.dimensionsResolved) {
     for (let i = 0; i < mapData.dimensions.length; i++) {
-      await nextFrame()
       const dimensionId = mapData.dimensions[i]
       mapData.dimensions[i] = Dimension.collection().findOne(dimensionId)
     }
@@ -107,6 +108,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   }
 
   mapCache.set(fieldId, mapData)
+  console.debug('mapdata complete')
   return mapData
 }
 
@@ -171,7 +173,6 @@ const addUserData = async (mapData, fieldId) => {
   }
 
   for (let index = 0; index < mapData.entries.length; index++) {
-    await nextFrame()
     updateEntry(mapData.entries[index], index)
   }
 }
@@ -181,7 +182,6 @@ const addViewProperties = async (mapData) => {
 
   // 6.1. ensure every stage entry contains a label with the index (counting from 1)
   for (const entry of mapData.entries) {
-    await nextFrame()
     if (typeof entry.label !== 'number' && entry.type === 'stage') {
       entry.label = count++
     }
@@ -213,8 +213,6 @@ const addViewProperties = async (mapData) => {
   let useLeft = false
   let index = 0
   for (const entry of mapData.entries) {
-    await nextFrame()
-
     const nextEntry = mapData.entries[index + 1]
     const last = useLeft ? 'right' : 'left'
     const current = useLeft ? 'left' : 'right'

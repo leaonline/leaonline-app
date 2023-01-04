@@ -4,7 +4,7 @@ import Colors from '../../../constants/Colors'
 
 const STROKE_WIDTH = '1'
 
-export const MapStart = props => {
+const MapStartComponent = props => {
   const { size = 50 } = props
   return (
     <Svg xmlns='http://www.w3.org/2000/svg' width={size} height={size} viewBox='0 0 124.59 124.62'>
@@ -64,3 +64,5 @@ export const MapStart = props => {
     </Svg>
   )
 }
+
+export const MapStart = React.memo(MapStartComponent)

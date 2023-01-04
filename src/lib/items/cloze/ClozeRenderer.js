@@ -313,7 +313,7 @@ const styles = createStyleSheet({
   },
   token: {
     ...Layout.defaultFont(),
-    padding: 1,
+    padding: 2,
     backgroundColor: '#fff',
     alignSelf: 'center',
     borderColor: '#00f'

@@ -24,7 +24,6 @@ const log = Log.create('MapScreen')
 const ITEM_HEIGHT = 100
 
 loadMapIcons() // TODO defer loading these to a much later point as they are not crucial
-const MemoConnector = React.memo(Connector)
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -122,9 +121,13 @@ const MapScreen = props => {
   }
 
   const renderList = () => {
+    console.debug('render list', mapData?.entries?.length)
     if (!mapData?.entries?.length) {
       return null
     }
+
+    //return mapData.entries.map((item, index) => renderListItem({ index, item }))
+
     return (
       <View style={styles.scrollView}>
         <FlatList
@@ -132,21 +135,23 @@ const MapScreen = props => {
           inverted
           data={mapData.entries}
           onEndReached={onEndReached}
-          initialNumToRender={50}
-          maxToRenderPerBatch={3}
+          decelerationRate='fast'
+          disableIntervalMomentum={true}
+          initialScrollIndex={mapData.progressIndex ?? 0}
+          removeClippedSubviews={false}
+          persistentScrollbar={true}
+          renderItem={renderListItem}
+          keyExtractor={(item) => item.entryKey}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          updateCellsBatchingPeriod={1000}
           getItemLayout={(data, index) => {
             const entry = data[index]
-            const length = ['stage', 'milestone'].includes(entry)
-              ? ITEM_HEIGHT
+            const length = entry && ['stage', 'milestone'].includes(entry.type)
+              ? ITEM_HEIGHT + 10
               : 59
             return { length, offset: length * index, index }
           }}
-          initialScrollIndex={mapData.progressIndex ?? 0}
-          removeClippedSubviews={true}
-          persistentScrollbar={true}
-          updateCellsBatchingPeriod={1000}
-          renderItem={renderListItem}
-          keyExtractor={(item) => item.entryKey}
           viewabilityConfig={{
             minimumViewTime: 250,
             viewAreaCoveragePercentThreshold: 100,
@@ -211,7 +216,9 @@ const MapScreen = props => {
         <Stage
           width={ITEM_HEIGHT}
           height={ITEM_HEIGHT}
-          onPress={() => selectStage(stage)}
+          onPress={() => {
+            requestAnimationFrame(() => selectStage(stage))
+          }}
           unitSets={stage.unitSets}
           dimensions={mapData.dimensions}
           text={stage.label}
@@ -236,6 +243,7 @@ const MapScreen = props => {
     )
   }
 
+  console.debug('render', !!mapDocs.data, mapDocs.loading, mapDocs.error)
   return (
     <ScreenBase {...mapDocs} loadMessage={t('mapScreen.loadData')} style={styles.container}>
       {renderList()}
@@ -252,7 +260,7 @@ const renderConnector = (connectorId, listWidth, withIcon = -1) => {
 
   if (connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<MemoConnector from={from} to={to} width={listWidth} icon={withIcon} />)
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
   }
   return null
 }
