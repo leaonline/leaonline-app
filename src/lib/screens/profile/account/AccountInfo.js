@@ -57,6 +57,7 @@ export const AccountInfo = (props) => {
      * Will contain a warning to note restore codes!
      */
     actions.signOut = {
+      key: 'signOut',
       icon: 'sign-out-alt',
       label: () => t('accountInfo.signOut.title'),
       onPress: () => setModalContent(actions.signOut.modal),
@@ -76,6 +77,7 @@ export const AccountInfo = (props) => {
     }
     actions.deleteAccount = {
       icon: 'trash',
+      key: 'deleteAccount',
       label: () => t('accountInfo.deleteAccount.title'),
       onPress: () => setModalContent(actions.deleteAccount.modal),
       modal: {
@@ -170,9 +172,16 @@ const styles = createStyleSheet({
     borderColor: Colors.danger
   },
   modalInstructions: {},
-  modal: {},
+  modal: {
+    backgroundColor: Colors.danger
+  },
   modalBody: {
-    ...Layout.container()
+    ...Layout.container({ margin: 0 }),
+    padding: 20,
+    alignItems: 'stretch',
+    justifyItems: 'stretch',
+    justifyContent: 'space-around',
+    backgroundColor: Colors.light
   },
   modalContent: {
     flex: 1,
