@@ -159,13 +159,10 @@ export const useLogin = () => {
           return onError(deleteError)
         }
 
-        Meteor.logout(logoutError => {
-          if (logoutError) {
-            return onError(logoutError)
-          }
-
-          dispatch({ type: 'DELETE' })
-        })
+        // instead of calling Meteor.logout we
+        // directly invoke the logout handler
+        Meteor.handleLogout()
+        dispatch({ type: 'DELETE' })
       })
     }
   }), [])
