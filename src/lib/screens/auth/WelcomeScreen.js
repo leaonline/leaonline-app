@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -32,20 +32,23 @@ export const WelcomeScreen = props => {
     continueStyle.opacity = 0
   }
   return (
-    <View style={styles.container}>
+    <ScrollView persistentScrollbar={true}>
+      <View style={styles.container}>
       <LeaLogo style={styles.logo} />
 
       <Tts
         id='welcomeScreen.text'
         block
-        style={styles.text}
+        style={styles.panel}
         text={welcomeText}
       />
 
-      <TTSVoiceConfig />
-      <TTSSpeedConfig onChange={() => setContinueAvailable(true)} />
+      <TTSVoiceConfig style={styles.panel} />
+      <TTSSpeedConfig
+        style={styles.panel}
+        onChange={() => setContinueAvailable(true)} />
 
-      <FadePanel visible={continueAvailable}>
+      <FadePanel visible={continueAvailable} style={styles.panel}>
         <Tts
           id='welcomeScreen.text'
           block
@@ -54,14 +57,15 @@ export const WelcomeScreen = props => {
           align='center'
         />
       </FadePanel>
-      <FadePanel visible={continueAvailable}>
+      <FadePanel visible={continueAvailable} style={styles.panel}>
         <RouteButton
           title={t('common.continue')}
           block
           handleScreen={() => props.navigation.navigate('termsAndConditions')}
         />
       </FadePanel>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -77,5 +81,9 @@ const styles = createStyleSheet({
     ...Layout.container(),
     alignItems: 'stretch',
     justifyContent: 'space-between'
+  },
+  panel: {
+    marginTop: 15,
+    marginBottom: 15
   }
 })

@@ -92,9 +92,9 @@ const TermsAndConditionsScreen = props => {
     <>
 
       <View style={styles.container}>
-        <LeaLogo style={styles.logo} />
-
         <ScrollView contentContainerStyle={styles.tcContainer}>
+          <LeaLogo style={styles.logo} />
+
           <Tts
             style={styles.introduction}
             text={t('TandCScreen.text')}
@@ -121,6 +121,7 @@ const TermsAndConditionsScreen = props => {
               title={t('TandCScreen.newUser')}
               align='center'
               block={true}
+              icon='user'
               containerStyle={styles.decisionButton}
               handleScreen={() => handleAction('registration')}
             />
@@ -128,6 +129,7 @@ const TermsAndConditionsScreen = props => {
               title={t('TandCScreen.restoreWithCode')}
               align='center'
               block={true}
+              icon='lock'
               containerStyle={styles.decisionButton}
               handleScreen={() => handleAction('restore')}
             />

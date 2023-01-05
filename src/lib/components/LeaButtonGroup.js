@@ -8,6 +8,7 @@ import { mergeStyles } from '../styles/mergeStyles'
 /**
  *
  * @param props {object}
+ * @param props.style {object=}
  * @param props.data {Array<React.component|string>}
  * @param props.active {number=}
  * @param props.onPress {function|undefined}
@@ -44,6 +45,10 @@ export const LeaButtonGroup = props => {
     ? [props.active]
     : undefined
 
+  const containerStyle = props.style
+    ? mergeStyles(styles.container, props.style)
+    : styles.container
+
   return (
     <ButtonGroup
       selectedIndexes={selectedIndexes}
@@ -51,7 +56,7 @@ export const LeaButtonGroup = props => {
       selectedIndex={index}
       buttons={props.data}
       textStyle={styles.textStyle}
-      containerStyle={styles.container}
+      containerStyle={containerStyle}
       selectedButtonStyle={mergeStyles(styles.selectedButtonStyle, selectedButtonStyle)}
     />
   )

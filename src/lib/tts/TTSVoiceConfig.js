@@ -26,6 +26,7 @@ const setNewVoice = (voice, index) => {
 /**
  * Allows to set the voice for tts.
  * @param props {object}
+ * @param props.style {object=} optional styles
  * @param props.onChange {function(voice:string):void} onChange handler, triggered when voice changed
  * @return {JSX.Element|null}
  * @component
@@ -82,6 +83,7 @@ export const TTSVoiceConfig = props => {
     <LeaButtonGroup
       active={activeIndex}
       data={groupData}
+      style={props.style}
       onPress={handleChange}
     />
   )
