@@ -47,10 +47,10 @@ export const MainNavigation = (props) => {
   const { t } = useTranslation()
   const { state, authContext } = useLogin()
   const { Tts } = useTts()
-  const { userToken } = state
+  const { userToken, isSignout, isDeleted } = state
 
   const renderScreens = () => {
-    if (userToken) {
+    if (userToken && !isSignout && !isDeleted) {
       const headerRight = () => (<ProfileButton route='profile' />)
       const mapScreenTitle = t('mapScreen.title')
       const profileScreenTitle = t('profileScreen.headerTitle')
