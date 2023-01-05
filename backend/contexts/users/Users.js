@@ -42,6 +42,14 @@ Users.schema = {
   createdAt: Date,
 
   /**
+   * Set when user successfully logs in
+   */
+  lastLogin: {
+    type: Date,
+    optional: true
+  },
+
+  /**
    * services schema can be a bit complex at times, since Meteor uses it
    * for multiple authentication and verification scenarios
    */

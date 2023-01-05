@@ -62,6 +62,13 @@ Accounts.config({
   }
 })
 
+Accounts.onLogin(function ({ allowed, user }) {
+  if (!allowed) { return }
+  const userId = user._id
+  const lastLogin = new Date()
+  Meteor.users.update(userId, { $set: { lastLogin }})
+})
+
 // //////////////////////////////////////////////////////////
 // default publish fields override
 // //////////////////////////////////////////////////////////
