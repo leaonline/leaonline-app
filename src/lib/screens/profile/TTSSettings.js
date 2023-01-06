@@ -11,8 +11,6 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 
 export const TTSSettings = (props) => {
-  const { t } = useTranslation()
-  const { Tts } = useTts()
   const [error, setError] = useState(null)
   const updateConfig = async ({ voice, speed }) => {
     const onError = err => setError(err)
@@ -38,14 +36,21 @@ export const TTSSettings = (props) => {
 
   return (
     <View style={containerStyle}>
-      <Tts align='flex-start' text={t('tts.settings')} block />
-      <TTSVoiceConfig onChange={voice => updateConfig({ voice })} />
-      <TTSSpeedConfig onChange={speed => updateConfig({ speed })} />
+      <TTSVoiceConfig
+        style={styles.panel}
+        onChange={voice => updateConfig({ voice })} />
+      <TTSSpeedConfig
+        style={styles.panel}
+        onChange={speed => updateConfig({ speed })} />
       <ErrorMessage error={error} />
     </View>
   )
 }
 
 const styles = createStyleSheet({
-  container: Layout.container({ margin: 0 })
+  container: Layout.container({ margin: 0 }),
+  panel: {
+    marginTop: 25,
+    marginBottom: 25
+  }
 })

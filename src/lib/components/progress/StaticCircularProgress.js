@@ -78,6 +78,7 @@ const StaticCircularProgress = (props) => {
 
   return (
     <Svg
+      style={props.style}
       width={radius * 2}
       height={radius * 2}
       viewBox={`0 0 ${half * 2} ${half * 2}`}

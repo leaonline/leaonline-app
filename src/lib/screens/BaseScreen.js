@@ -3,7 +3,7 @@ import { Loading } from '../components/Loading'
 import { SafeAreaView } from 'react-native'
 import { ErrorMessage } from '../components/ErrorMessage'
 
-export const ScreenBase = (props) => {
+const RenderScreenBase = (props) => {
   if (props.loading) {
     return (
       <SafeAreaView style={props.style}>
@@ -33,3 +33,5 @@ export const ScreenBase = (props) => {
 
   return (<SafeAreaView style={props.style}>{props.children}</SafeAreaView>)
 }
+
+export const ScreenBase = React.memo(RenderScreenBase)

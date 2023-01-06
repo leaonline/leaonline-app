@@ -142,7 +142,6 @@ export const AccountInfo = (props) => {
   return (
     <>
       <View style={containerStyle}>
-        <Tts align="center" style={styles.title} text={t('accountInfo.title')}/>
         {buttons && buttons.map(definitions => {
           return (
             <ActionButton
@@ -163,10 +162,6 @@ export const AccountInfo = (props) => {
 
 const styles = createStyleSheet({
   container: Layout.container({ margin: 0 }),
-  title: {
-    borderBottomColor: Colors.gray,
-    borderBottomWidth: 0.5
-  },
   center: {
     borderWidth: 1,
     borderColor: Colors.danger
@@ -190,6 +185,7 @@ const styles = createStyleSheet({
   },
   actions: {},
   actionButton: {
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: 10
   }
 })

@@ -190,7 +190,9 @@ const resources = {
     profileScreen: {
       headerTitle: 'Mein Profil',
       progress: 'Gesamter Fortschritt',
-      title: 'Meine Erfolge'
+      achievements: {
+        title: 'Meine Erfolge'
+      }
     },
     accountInfo: {
       title: 'Profil Optionen',
