@@ -83,60 +83,57 @@ const TermsAndConditionsScreen = props => {
         text={text}
         block
         key={index}
-        align='flex-start'
+        align="flex-start"
       />
     )
   })
 
   return (
-    <>
-
+    <ScrollView contentContainerStyle={styles.tcContainer}>
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.tcContainer}>
-          <LeaLogo style={styles.logo} />
+        <LeaLogo style={styles.logo}/>
 
-          <Tts
-            style={styles.introduction}
-            text={t('TandCScreen.text')}
-            id='TandCScreen.text'
-            block
-            align='center'
+        <Tts
+          style={styles.introduction}
+          text={t('TandCScreen.text')}
+          id="TandCScreen.text"
+          block
+          align="center"
+        />
+
+        {renderTermsAndConditionsText()}
+
+        <Checkbox
+          id="TandCScreen.checkBoxText"
+          text={t('TandCScreen.checkBoxText')}
+          highlight={highlightCheckbox && Colors.danger}
+          checked={termsAndConditionsIsChecked}
+          checkedColor={Colors.secondary}
+          uncheckedColor={Colors.gray}
+          onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
+          containerStyle={styles.checkbox}
+        />
+
+        <View style={styles.decisionContainer}>
+          <RouteButton
+            title={t('TandCScreen.newUser')}
+            align="center"
+            block={true}
+            icon="user"
+            containerStyle={styles.decisionButton}
+            handleScreen={() => handleAction('registration')}
           />
-
-          {renderTermsAndConditionsText()}
-
-          <Checkbox
-            id='TandCScreen.checkBoxText'
-            text={t('TandCScreen.checkBoxText')}
-            highlight={highlightCheckbox && Colors.danger}
-            checked={termsAndConditionsIsChecked}
-            checkedColor={Colors.secondary}
-            uncheckedColor={Colors.gray}
-            onPress={() => checkboxHandler('terms', termsAndConditionsIsChecked)}
-            containerStyle={styles.checkbox}
+          <RouteButton
+            title={t('TandCScreen.restoreWithCode')}
+            align="center"
+            block={true}
+            icon="lock"
+            containerStyle={styles.decisionButton}
+            handleScreen={() => handleAction('restore')}
           />
-
-          <View style={styles.decisionContainer}>
-            <RouteButton
-              title={t('TandCScreen.newUser')}
-              align='center'
-              block={true}
-              icon='user'
-              containerStyle={styles.decisionButton}
-              handleScreen={() => handleAction('registration')}
-            />
-            <RouteButton
-              title={t('TandCScreen.restoreWithCode')}
-              align='center'
-              block={true}
-              icon='lock'
-              containerStyle={styles.decisionButton}
-              handleScreen={() => handleAction('restore')}
-            />
-          </View>
-        </ScrollView>
+        </View>
       </View>
-    </>
+    </ScrollView>
   )
 }
 
@@ -151,10 +148,7 @@ const styles = createStyleSheet({
     overflow: 'visible'
   },
   tcContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    overflow: 'visible'
+
   },
   introduction: {
     paddingBottom: 20,

@@ -19,10 +19,6 @@ import { MapIcons } from '../MapIcons'
  * @component
  */
 const ConnectorComponent = props => {
-  if (props.width === null) {
-    return null
-  }
-
   // TODO put in effect + state
   const { from, width = 100, height = 100 } = props
   const [/* to */, direction = 'up'] = props.to.split('-')

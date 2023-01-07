@@ -8,6 +8,9 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { Config } from '../../../env/Config'
+import { useTimeout } from '../../../hooks/useTimeout'
+import { Loading } from '../../../components/Loading'
+import nextFrame from 'next-frame'
 
 const MemoDiamond = React.memo(Diamond)
 const positions = getPositionOnCircle({ n: 10, radius: 50 })
@@ -37,6 +40,7 @@ const competencies = [
  */
 export const Stage = props => {
   const [diamonds, setDiamonds] = useState([])
+  const [pressed, setPressed] = useState(false)
   const width = props.width ?? 100
   const height = props.height ?? 100
   const viewBox = `0 0 ${width} ${height}`
@@ -69,7 +73,12 @@ export const Stage = props => {
     })
 
     setDiamonds(diamondData)
+    setPressed(false)
   }, [props.unitSets, props.dimensions])
+
+  if (pressed) {
+    return (<Loading style={{ width, height }} />)
+  }
 
   // progress circle
   const stageProgress = {}
@@ -84,10 +93,12 @@ export const Stage = props => {
     color: Colors.primary
   }
 
-  const handlePress = () => {
+  const handlePress = async () => {
+    setPressed(true)
     Vibration.vibrate(100)
     if (props.onPress) {
-      return props.onPress()
+      await props.onPress()
+      setPressed(false)
     }
   }
 
@@ -100,42 +111,55 @@ export const Stage = props => {
       hitSlop={0}
       onPress={handlePress}
     >
-      <Svg width={width} height={height} viewBox={viewBox}>
-        <G x={stageProgress.x} y={stageProgress.y}>
-          <StaticCircularProgress
-            text={text}
-            radius={stageProgress.radius}
-            maxValue={100}
-            textColor={Colors.secondary}
-            fillColor={Colors.white}
-            activeStrokeColor={Colors.secondary}
-            inActiveStrokeColor={Colors.white}
-            inActiveStrokeOpacity={1}
-            inActiveStrokeWidth={5}
-            activeStrokeWidth={5}
-            showProgressValue={false}
-            valueSuffix='%'
-            value={progress}
-          />
-        </G>
-        {
-        competencies.map(({ x, y }, index) => {
-          const { color, competencies, key } = diamonds[index] || {
-            color: Colors.light,
-            competencies: 0,
-            key: index
-          }
-          return (
-            <G key={key} x={x - 7.5} y={y}>
-              <MemoDiamond width={15} height={30} value={competencies} color={color} />
-            </G>
-          )
-        })
-      }
-      </Svg>
+      <StageContent
+          width={width}
+          height={height}
+          viewBox={viewBox}
+          stageProgress={stageProgress}
+          text={text}
+          progress={progress}
+          competencies={competencies}
+          diamonds={diamonds} />
     </Pressable>
   )
 }
+
+const RenderStageContent = ({ width, height, viewBox, stageProgress, text, progress, competencies, diamonds }) => (
+  <Svg width={width} height={height} viewBox={viewBox}>
+    <G x={stageProgress.x} y={stageProgress.y}>
+      <StaticCircularProgress
+        text={text}
+        radius={stageProgress.radius}
+        maxValue={100}
+        textColor={Colors.secondary}
+        fillColor={Colors.white}
+        activeStrokeColor={Colors.secondary}
+        inActiveStrokeColor={Colors.white}
+        inActiveStrokeOpacity={1}
+        inActiveStrokeWidth={5}
+        activeStrokeWidth={5}
+        showProgressValue={false}
+        valueSuffix='%'
+        value={progress}
+      />
+    </G>
+    {
+      competencies.map(({ x, y }, index) => {
+        const { color, competencies, key } = diamonds[index] || {
+          color: Colors.light,
+          competencies: 0,
+          key: index
+        }
+        return (
+          <G key={key} x={x - 7.5} y={y}>
+            <MemoDiamond width={15} height={30} value={competencies} color={color} />
+          </G>
+        )
+      })
+    }
+  </Svg>
+)
+const StageContent = React.memo(RenderStageContent)
 
 const styles = createStyleSheet({
   container: {}

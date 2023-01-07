@@ -1,12 +1,13 @@
 import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
-import { TTSengine } from './Tts'
+import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { mergeStyles } from '../styles/mergeStyles'
 
-const Tts = TTSengine.component()
 
-export const Loading = ({ text, color }) => {
+export const Loading = ({ text, color, style }) => {
+  const { Tts } = useTts()
   const renderText = () => {
     if (!text) return null
 
@@ -14,8 +15,13 @@ export const Loading = ({ text, color }) => {
       <Tts text={text} />
     )
   }
+
+  const containerStyle = style
+    ? mergeStyles(styles.container, style)
+    : styles.container
+
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <ActivityIndicator size='large' color={color ?? Colors.secondary} />
       {renderText()}
     </View>

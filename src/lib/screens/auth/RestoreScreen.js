@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TTSengine, useTts } from '../../components/Tts'
 import { CharacterInput } from '../../components/CharacterInput'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { View } from 'react-native'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 import { ActionButton } from '../../components/ActionButton'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { AuthContext } from '../../contexts/AuthContext'
@@ -61,14 +61,16 @@ export const RestoreScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
+    <SafeAreaView style={styles.container}>
       <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
       <CharacterInput id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)} />
       <CharacterInput id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} />
       <CharacterInput id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} />
       <ErrorMessage error={error} />
       <ActionButton block disabled={!allCodes} title={t('restoreScreen.checkCode')} onPress={checkCodes} />
-    </View>
+    </SafeAreaView>
+    </ScrollView>
   )
 }
 

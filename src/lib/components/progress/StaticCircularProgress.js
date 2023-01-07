@@ -34,7 +34,7 @@ import Colors from '../../constants/Colors'
  * @return {JSX.Element}
  * @component
  */
-const StaticCircularProgress = (props) => {
+const CircularProgress = (props) => {
   const {
     value = 0,
     maxValue = 100,
@@ -116,4 +116,5 @@ const StaticCircularProgress = (props) => {
   )
 }
 
-export { StaticCircularProgress }
+export const StaticCircularProgress = React.memo(CircularProgress)
+

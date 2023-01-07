@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { View, FlatList, InteractionManager } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
@@ -41,7 +41,8 @@ loadMapIcons() // TODO defer loading these to a much later point as they are not
 const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const [listWidth, setListWidth] = useState(null)
+  const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
+  const [connectorWidth, setConnectorWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = loadDocs({
     runArgs: [session.field, session.loadUserData],
@@ -57,20 +58,73 @@ const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
+      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
+      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
     })
   }, [])
 
   const onListLayoutDetected = (event) => {
     const { width } = event.nativeEvent.layout
-    setListWidth(width)
+    setStageConnectorWidth(width - ITEM_HEIGHT - (ITEM_HEIGHT / 2))
+    setConnectorWidth((width / 2) - ITEM_HEIGHT)
   }
+
+  const selectStage = useCallback(async stage => {
+    await nextFrame()
+    const newStage = { ...stage }
+    newStage.level = mapData.levels[newStage.level]
+    newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
+    newStage.unitSets.forEach(unitSet => {
+      unitSet.dimension = mapData.dimensions[unitSet.dimension]
+    })
+
+    await sessionActions.stage(newStage)
+    props.navigation.navigate('dimension')
+  }, [mapDocs])
+
+  const renderListItem = useCallback(({ index, item: entry }) => {
+    if (entry.type === 'stage') {
+      return renderStage({
+        stage: entry,
+        connectorWidth: stageConnectorWidth,
+        selectStage,
+        dimensions: mapData?.dimensions
+      })
+    }
+
+    if (entry.type === 'milestone') {
+      return renderMilestone({ milestone: entry, connectorWidth })
+    }
+
+    if (entry.type === 'finish') {
+      return (
+        <View style={styles.stage}>
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          <MapFinish/>
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
+        </View>
+      )
+    }
+
+    if (entry.type === 'start') {
+      return (
+        <View style={styles.stage}>
+          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          <MapStart size={ITEM_HEIGHT / 2}/>
+          {renderConnector(entry.viewPosition.right, connectorWidth)}
+        </View>
+      )
+    }
+
+    // at this point we need to be fail-resistant
+    log('unexpected entry type', entry.type)
+    return null
+  }, [connectorWidth, mapDocs])
 
   /* expected mapData structure:
    *
@@ -101,27 +155,7 @@ const MapScreen = props => {
    */
   const mapData = mapDocs.data
 
-  const selectStage = async stage => {
-    await nextFrame()
-    InteractionManager.runAfterInteractions(async () => {
-      const newStage = { ...stage }
-      newStage.level = mapData.levels[newStage.level]
-      newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
-      newStage.unitSets.forEach(unitSet => {
-        unitSet.dimension = mapData.dimensions[unitSet.dimension]
-      })
-      props.navigation.navigate('dimension')
-      await nextFrame()
-      await sessionActions.stage(newStage)
-    })
-  }
-
-  const onEndReached = () => {
-
-  }
-
   const renderList = () => {
-    console.debug('render list', mapData?.entries?.length)
     if (!mapData?.entries?.length) {
       return null
     }
@@ -131,119 +165,25 @@ const MapScreen = props => {
     return (
       <View style={styles.scrollView}>
         <FlatList
-          onLayout={onListLayoutDetected}
-          inverted
           data={mapData.entries}
-          onEndReached={onEndReached}
-          decelerationRate='fast'
+          renderItem={renderListItem}
+          onLayout={onListLayoutDetected}
+          inverted={true}
+          decelerationRate="fast"
           disableIntervalMomentum={true}
           initialScrollIndex={mapData.progressIndex ?? 0}
           removeClippedSubviews={false}
           persistentScrollbar={true}
-          renderItem={renderListItem}
-          keyExtractor={(item) => item.entryKey}
-          initialNumToRender={5}
-          maxToRenderPerBatch={5}
-          updateCellsBatchingPeriod={1000}
-          getItemLayout={(data, index) => {
-            const entry = data[index]
-            const length = entry && ['stage', 'milestone'].includes(entry.type)
-              ? ITEM_HEIGHT + 10
-              : 59
-            return { length, offset: length * index, index }
-          }}
-          viewabilityConfig={{
-            minimumViewTime: 250,
-            viewAreaCoveragePercentThreshold: 100,
-            waitForInteraction: true
-          }}
+          keyExtractor={flatListKeyExtractor}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          getItemLayout={flatListGetItemLayout}
         />
       </View>
     )
   }
 
-  const renderListItem = ({ index, item: entry }) => {
-    if (entry.type === 'stage') {
-      return renderStage(entry, index)
-    }
-
-    if (entry.type === 'milestone') {
-      return renderMilestone(entry, index)
-    }
-
-    const connectorWidth = listWidth
-      ? (listWidth / 2) - ITEM_HEIGHT
-      : listWidth
-
-    if (entry.type === 'finish') {
-      return (
-        <View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapFinish />
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
-        </View>
-      )
-    }
-
-    if (entry.type === 'start') {
-      return (
-        <View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapStart size={ITEM_HEIGHT / 2} />
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
-        </View>
-      )
-    }
-
-    // at this point we need to be fail-resistant
-    log('unexpected entry type', entry.type)
-    return null
-  }
-
-  const renderStage = (stage, index) => {
-    const progress = 100 * (stage.userProgress || 0) / stage.progress
-    const justifyContent = positionMap[stage.viewPosition.current]
-    const stageStyle = mergeStyles(styles.stage, { justifyContent })
-    const connectorWidth = listWidth
-      ? listWidth - ITEM_HEIGHT - (ITEM_HEIGHT / 2)
-      : listWidth
-
-    const { viewPosition } = stage
-
-    return (
-      <View style={stageStyle}>
-        {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
-        <Stage
-          width={ITEM_HEIGHT}
-          height={ITEM_HEIGHT}
-          onPress={() => {
-            requestAnimationFrame(() => selectStage(stage))
-          }}
-          unitSets={stage.unitSets}
-          dimensions={mapData.dimensions}
-          text={stage.label}
-          progress={progress}
-        />
-        {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
-      </View>
-    )
-  }
-
-  const renderMilestone = (milestone) => {
-    const progress = 100 * milestone.userProgress / milestone.maxProgress
-    const connectorWidth = listWidth
-      ? (listWidth / 2) - ITEM_HEIGHT
-      : listWidth
-    return (
-      <View style={styles.stage}>
-        {renderConnector(milestone.viewPosition.left, connectorWidth)}
-        <Milestone progress={progress} level={milestone.level + 1} />
-        {renderConnector(milestone.viewPosition.right, connectorWidth)}
-      </View>
-    )
-  }
-
-  console.debug('render', !!mapDocs.data, mapDocs.loading, mapDocs.error)
   return (
     <ScreenBase {...mapDocs} loadMessage={t('mapScreen.loadData')} style={styles.container}>
       {renderList()}
@@ -251,17 +191,60 @@ const MapScreen = props => {
   )
 }
 
+const flatListGetItemLayout = (data, index) => {
+  const entry = data[index]
+  const length = entry && ['stage', 'milestone'].includes(entry.type)
+    ? ITEM_HEIGHT + 10
+    : 59
+  return { length, offset: length * index, index }
+}
+const flatListKeyExtractor = (item) => item.entryKey
+
+const renderStage = ({ stage, selectStage, connectorWidth, dimensions }) => {
+  const progress = 100 * (stage.userProgress || 0) / stage.progress
+  const justifyContent = positionMap[stage.viewPosition.current]
+  const stageStyle = mergeStyles(styles.stage, { justifyContent })
+  const { viewPosition } = stage
+  return (
+    <View style={stageStyle}>
+      {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
+      <Stage
+        width={ITEM_HEIGHT}
+        height={ITEM_HEIGHT}
+        onPress={() => selectStage(stage)}
+        unitSets={stage.unitSets}
+        dimensions={dimensions}
+        text={stage.label}
+        progress={progress}
+      />
+      {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
+    </View>
+  )
+}
+
+const renderMilestone = ({ milestone, connectorWidth }) => {
+  const progress = 100 * milestone.userProgress / milestone.maxProgress
+  return (
+    <View style={styles.stage}>
+      {renderConnector(milestone.viewPosition.left, connectorWidth)}
+      <Milestone progress={progress} level={milestone.level + 1}/>
+      {renderConnector(milestone.viewPosition.right, connectorWidth)}
+    </View>
+  )
+}
+
 const renderConnector = (connectorId, listWidth, withIcon = -1) => {
   if (connectorId === 'fill') {
     return (
-      <LeaText style={{ width: listWidth ?? '100%' }} />
+      <LeaText style={{ width: listWidth ?? '100%' }}/>
     )
   }
 
-  if (connectorId) {
+  if (listWidth !== null && connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon}/>)
   }
+
   return null
 }
 const positionMap = {
@@ -275,7 +258,7 @@ const positionMap = {
  */
 const styles = createStyleSheet({
   container: {
-    ...Layout.container()
+    //...Layout.container()
   },
   scrollView: {
     width: '100%'
@@ -285,7 +268,6 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: '#f0f',
     height: ITEM_HEIGHT
   },
   connector: {
