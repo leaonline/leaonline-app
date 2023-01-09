@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import './i18n'
 import useSplashScreen from './hooks/useSplashScreen'
 import { useConnection } from './hooks/useConnection'
@@ -32,6 +32,12 @@ const initFunction = [
 export default function App () {
   const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
   const { connected } = useConnection()
+  const renderConnectionStatus = useCallback(() => {
+    if (connected) {
+      return null
+    }
+    return (<Connecting />)
+  }, [connected])
 
   // splashscreen is still active...
   if (!appIsReady) { return null }
@@ -46,19 +52,10 @@ export default function App () {
     )
   }
 
-  if (!connected) {
-    return (
-      <CatchErrors>
-        <ViewContainer onLayout={onLayoutRootView}>
-          <Connecting />
-        </ViewContainer>
-      </CatchErrors>
-    )
-  }
-
   return (
     <CatchErrors>
       <MainNavigation onLayout={onLayoutRootView} />
+      {renderConnectionStatus()}
     </CatchErrors>
   )
 }

@@ -1,5 +1,6 @@
 import { simpleRandomHex } from '../../utils/simpleRandomHex'
 import { Log } from '../Log'
+import { Config } from '../../env/Config'
 
 /**
  * This id is generated when the module is loaded and allows
@@ -84,7 +85,7 @@ InteractionGraph.reaction = ({ id, target, type, message, details }) => {
   })
 }
 InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
-  if (error) {
+  if (Config.isDevelopment && error) {
     Log.error(error)
   }
 

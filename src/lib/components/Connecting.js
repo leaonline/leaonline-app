@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Modal, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { useTranslation } from 'react-i18next'
@@ -15,10 +15,20 @@ export const Connecting = () => {
   const { Tts } = useTts()
 
   return (
-    <View style={styles.container}>
-      <ActivityIndicator style={styles.indicator} size='large' />
-      <Tts text={t('connecting.title')} align='center' />
-    </View>
+    <Modal
+      animationType='slide'
+      transparent={false}
+      visible={true}
+    >
+      <View style={styles.background}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <ActivityIndicator style={styles.indicator} size='large' />
+            <Tts text={t('connecting.title')} align='center' />
+          </View>
+        </View>
+      </View>
+    </Modal>
   )
 }
 

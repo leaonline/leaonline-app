@@ -4,6 +4,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { ErrorMessage } from './ErrorMessage'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
+import i18n from '../i18n'
 
 export class CatchErrors extends React.Component {
   constructor (props) {
@@ -21,9 +22,11 @@ export class CatchErrors extends React.Component {
       error: err,
       details: { ...err.details, stack }
     })
+    const message = err.reason ?? err.message
     this.setState({
       error: true,
-      message: stack
+      message,
+      stack
     })
   }
 
@@ -32,7 +35,6 @@ export class CatchErrors extends React.Component {
       return (
         <View style={styles.container}>
           <ErrorMessage error={this.state.error} />
-          <ErrorMessage message={this.state.message} />
         </View>
       )
     }
