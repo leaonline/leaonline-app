@@ -138,8 +138,6 @@ export const HighlightRenderer = props => {
   )
 }
 
-
-
 const getResponses = (selection) => {
   const responses = []
   Object.keys(selection).forEach(index => {

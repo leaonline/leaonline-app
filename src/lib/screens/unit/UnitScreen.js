@@ -408,7 +408,7 @@ const UnitScreen = props => {
     if (!showCorrectResponse) {
       return (
         <ActionButton
-          block={true}
+          block
           align='center'
           tts={t('unitScreen.actions.check')}
           color={dimensionColor}
@@ -425,7 +425,7 @@ const UnitScreen = props => {
     if (isLast) {
       return (
         <ActionButton
-          block={true}
+          block
           align='center'
           tts={t('unitScreen.actions.finish')}
           color={dimensionColor}
@@ -438,7 +438,7 @@ const UnitScreen = props => {
       log('render next page button')
       return (
         <ActionButton
-          block={true}
+          block
           align='center'
           tts={t('unitScreen.actions.next')} color={dimensionColor}
           onPress={nextPage}
@@ -493,7 +493,7 @@ const UnitScreen = props => {
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollView}
-        persistentScrollbar={true}
+        persistentScrollbar
         keyboardShouldPersistTaps='always'
       >
         {renderUnitTitle()}

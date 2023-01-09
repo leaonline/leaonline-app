@@ -125,10 +125,7 @@ const ttsComponent = props => {
         // TODO call stopSpeak and update tests to fix state bug
         stopSpeak()
         setIsDone(true)
-      },
-      onBoundary: e => console.debug('boundary', e.nativeEvent),
-      onMark: e => console.debug('onMark', e.nativeEvent),
-      onError: e => console.error(e)
+      }
     })
   }
   /**

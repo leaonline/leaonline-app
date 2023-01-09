@@ -35,7 +35,8 @@ const ProfileScreen = () => {
             color={Colors.secondary}
             align='center'
             fontStyle={styles.headlineText}
-            id="profileScreen.achievements.title"/>
+            id='profileScreen.achievements.title'
+          />
         </View>
         <Achievements containerStyle={styles.achievements} />
         <View style={styles.headline}>
@@ -44,7 +45,8 @@ const ProfileScreen = () => {
             color={Colors.secondary}
             align='center'
             fontStyle={styles.headlineText}
-            id="profileScreen.tts.settings"/>
+            id='profileScreen.tts.settings'
+          />
         </View>
         <TTSSettings containerStyle={styles.tts} />
         <View style={styles.headline}>
@@ -53,7 +55,8 @@ const ProfileScreen = () => {
             color={Colors.secondary}
             align='center'
             fontStyle={styles.headlineText}
-            id="profileScreen.accountInfo.title"/>
+            id='profileScreen.accountInfo.title'
+          />
         </View>
         <AccountInfo containerStyle={styles.accounts} />
       </SafeAreaView>
@@ -61,9 +64,9 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView persistentScrollbar={true}>
+    <ScrollView persistentScrollbar>
       {renderContent()}
-      </ScrollView>
+    </ScrollView>
   )
 }
 

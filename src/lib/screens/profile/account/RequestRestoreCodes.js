@@ -29,7 +29,7 @@ export const RequestRestoreCodes = props => {
   }
   return codes.map((code, index) => {
     const text = code.split('').join(' ')
-    return (<Tts key={code} align="center" block fontStyle={styles.code} text={text}/>)
+    return (<Tts key={code} align='center' block fontStyle={styles.code} text={text} />)
   })
 }
 

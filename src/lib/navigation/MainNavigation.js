@@ -206,7 +206,7 @@ export const MainNavigation = (props) => {
     <AuthContext.Provider value={authContext}>
       <AppSessionProvider>
         <NavigationContainer onReady={props.onLayout}>
-          <Stack.Navigator  screenOptions={screenOptions} screenListeners={screenListeners}>
+          <Stack.Navigator screenOptions={screenOptions} screenListeners={screenListeners}>
             {renderScreens()}
           </Stack.Navigator>
         </NavigationContainer>

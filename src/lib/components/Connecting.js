@@ -18,7 +18,7 @@ export const Connecting = () => {
     <Modal
       animationType='slide'
       transparent={false}
-      visible={true}
+      visible
     >
       <View style={styles.background}>
         <View style={styles.centeredView}>

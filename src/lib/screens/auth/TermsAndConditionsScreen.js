@@ -83,7 +83,7 @@ const TermsAndConditionsScreen = props => {
         text={text}
         block
         key={index}
-        align="flex-start"
+        align='flex-start'
       />
     )
   })
@@ -91,20 +91,20 @@ const TermsAndConditionsScreen = props => {
   return (
     <ScrollView contentContainerStyle={styles.tcContainer}>
       <View style={styles.container}>
-        <LeaLogo style={styles.logo}/>
+        <LeaLogo style={styles.logo} />
 
         <Tts
           style={styles.introduction}
           text={t('TandCScreen.text')}
-          id="TandCScreen.text"
+          id='TandCScreen.text'
           block
-          align="center"
+          align='center'
         />
 
         {renderTermsAndConditionsText()}
 
         <Checkbox
-          id="TandCScreen.checkBoxText"
+          id='TandCScreen.checkBoxText'
           text={t('TandCScreen.checkBoxText')}
           highlight={highlightCheckbox && Colors.danger}
           checked={termsAndConditionsIsChecked}
@@ -117,17 +117,17 @@ const TermsAndConditionsScreen = props => {
         <View style={styles.decisionContainer}>
           <RouteButton
             title={t('TandCScreen.newUser')}
-            align="center"
-            block={true}
-            icon="user"
+            align='center'
+            block
+            icon='user'
             containerStyle={styles.decisionButton}
             handleScreen={() => handleAction('registration')}
           />
           <RouteButton
             title={t('TandCScreen.restoreWithCode')}
-            align="center"
-            block={true}
-            icon="lock"
+            align='center'
+            block
+            icon='lock'
             containerStyle={styles.decisionButton}
             handleScreen={() => handleAction('restore')}
           />

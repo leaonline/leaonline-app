@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { TTSVoiceConfig } from '../../tts/TTSVoiceConfig'
 import { ErrorMessage } from '../../components/ErrorMessage'
-import { useTranslation } from 'react-i18next'
-import { useTts } from '../../components/Tts'
 import { updateUserProfile } from '../../meteor/updateUserProfile'
 import { TTSSpeedConfig } from '../../tts/TTSSpeedConfig'
 import { View } from 'react-native'
@@ -38,10 +36,12 @@ export const TTSSettings = (props) => {
     <View style={containerStyle}>
       <TTSVoiceConfig
         style={styles.panel}
-        onChange={voice => updateConfig({ voice })} />
+        onChange={voice => updateConfig({ voice })}
+      />
       <TTSSpeedConfig
         style={styles.panel}
-        onChange={speed => updateConfig({ speed })} />
+        onChange={speed => updateConfig({ speed })}
+      />
       <ErrorMessage error={error} />
     </View>
   )

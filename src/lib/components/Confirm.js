@@ -26,7 +26,7 @@ import { makeTransparent } from '../styles/makeTransparent'
 export const Confirm = props => {
   const { Tts } = useTts()
   const [modalOpen, setModalOpen] = useState(false)
-  const { onApprove, onDeny, open, ...fordwardedProps } = props
+  const { onApprove, onDeny, open /* ...fordwardedProps */ } = props
 
   const getModalOpen = () => {
     if (typeof open === 'boolean') {

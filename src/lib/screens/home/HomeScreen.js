@@ -62,14 +62,14 @@ const HomeScreen = props => {
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Tts
-          id="homeScreen.text"
+          id='homeScreen.text'
           text={t('homeScreen.text')}
           color={Colors.secondary}
-          block={true}
-          align="flex-start"
+          block
+          align='flex-start'
         />
         {renderButtons()}
-        <Fill/>
+        <Fill />
       </ScrollView>
     </ScreenBase>
   )

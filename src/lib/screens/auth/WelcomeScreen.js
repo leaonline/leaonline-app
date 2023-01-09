@@ -32,38 +32,39 @@ export const WelcomeScreen = props => {
     continueStyle.opacity = 0
   }
   return (
-    <ScrollView persistentScrollbar={true}>
+    <ScrollView persistentScrollbar>
       <View style={styles.container}>
-      <LeaLogo style={styles.logo} />
+        <LeaLogo style={styles.logo} />
 
-      <Tts
-        id='welcomeScreen.text'
-        block
-        style={styles.panel}
-        text={welcomeText}
-      />
-
-      <TTSVoiceConfig style={styles.panel} />
-      <TTSSpeedConfig
-        style={styles.panel}
-        onChange={() => setContinueAvailable(true)} />
-
-      <FadePanel visible={continueAvailable} style={styles.panel}>
         <Tts
           id='welcomeScreen.text'
           block
-          style={styles.text}
-          text={speedTestText}
-          align='center'
+          style={styles.panel}
+          text={welcomeText}
         />
-      </FadePanel>
-      <FadePanel visible={continueAvailable} style={styles.panel}>
-        <RouteButton
-          title={t('common.continue')}
-          block
-          handleScreen={() => props.navigation.navigate('termsAndConditions')}
+
+        <TTSVoiceConfig style={styles.panel} />
+        <TTSSpeedConfig
+          style={styles.panel}
+          onChange={() => setContinueAvailable(true)}
         />
-      </FadePanel>
+
+        <FadePanel visible={continueAvailable} style={styles.panel}>
+          <Tts
+            id='welcomeScreen.text'
+            block
+            style={styles.text}
+            text={speedTestText}
+            align='center'
+          />
+        </FadePanel>
+        <FadePanel visible={continueAvailable} style={styles.panel}>
+          <RouteButton
+            title={t('common.continue')}
+            block
+            handleScreen={() => props.navigation.navigate('termsAndConditions')}
+          />
+        </FadePanel>
       </View>
     </ScrollView>
   )

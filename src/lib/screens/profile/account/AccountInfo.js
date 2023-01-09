@@ -85,7 +85,7 @@ export const AccountInfo = (props) => {
         approve: {
           icon: 'sign-out-alt',
           label: () => t('accountInfo.deleteAccount.title'),
-          handler:  () => deleteAccount({ onError })
+          handler: () => deleteAccount({ onError })
         },
         deny: {
           icon: 'times',
@@ -98,14 +98,15 @@ export const AccountInfo = (props) => {
     return Object.values(actions)
   }, [])
 
+  const handlePress = (fn) => () => fn()
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
   const renderModal = () => {
-    let visible = !!modalContent
+    const visible = !!modalContent
     const content = modalContent ?? {}
 
     return (
       <Modal
-        animationType="slide"
+        animationType='slide'
         transparent={false}
         visible={visible}
         onRequestClose={() => setModalContent(null)}
@@ -113,7 +114,7 @@ export const AccountInfo = (props) => {
       >
         <View style={styles.modalBody}>
           <View style={styles.modalContent}>
-            {content.instructions && (<Tts align="flex-start" text={content.instructions()} block style={styles.modalInstructions}/>)}
+            {content.instructions && (<Tts align='flex-start' text={content.instructions()} block style={styles.modalInstructions} />)}
             {content.body ? content.body() : null}
           </View>
           <View style={styles.actions}>
@@ -121,17 +122,19 @@ export const AccountInfo = (props) => {
               <ActionButton
                 icon={content.approve.icon}
                 containerStyle={styles.actionButton}
-                block={true}
+                block
                 text={content.approve.label()}
-                onPress={modalContent.approve.handler} />
+                onPress={handlePress(modalContent.approve.handler)}
+              />
             )}
             {content.deny && (
               <ActionButton
                 icon={content.deny.icon}
                 containerStyle={styles.actionButton}
-                block={true}
+                block
                 text={content.deny.label()}
-                onPress={modalContent.deny.handler} />
+                onPress={handlePress(modalContent.deny.handler)}
+              />
             )}
           </View>
         </View>
@@ -148,12 +151,13 @@ export const AccountInfo = (props) => {
               key={definitions.key}
               icon={definitions.icon}
               text={definitions.label()}
-              onPress={definitions.onPress}
+              onPress={handlePress(definitions.onPress)}
               containerStyle={styles.actionButton}
-              block={true} />
+              block
+            />
           )
         })}
-        <ErrorMessage error={error}/>
+        <ErrorMessage error={error} />
       </View>
       {renderModal()}
     </>

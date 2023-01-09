@@ -20,7 +20,7 @@ const RenderDimensionAchievements = props => {
         key={dimensionDoc._id}
         style={styles.listItem}
         containerStyle={styles.listItemContainer}
-        noIcon={true}
+        noIcon
         isExpanded={isSelected}
         onPress={() => isSelected
           ? setOpened(null)
@@ -29,21 +29,25 @@ const RenderDimensionAchievements = props => {
           <>
             <Tts
               color={dimensionDoc.color}
-              dontShowText={true}
-              text={dimensionDoc.title}/>
+              dontShowText
+              text={dimensionDoc.title}
+            />
             <View style={styles.listIconButton}>
               <Icon
                 name={dimensionDoc.icon}
-                type="font-awesome-5"
+                type='font-awesome-5'
                 color={dimensionDoc.color}
                 style={styles.listItemIcon}
-                size={20}/>
+                size={20}
+              />
               <ListItem.Content>
                 <LeaText style={{
                   color: dimensionDoc.color,
                   alignSelf: 'center',
                   fontWeight: 'bold'
-                }}>{dimensionDoc.title}</LeaText>
+                }}
+                >{dimensionDoc.title}
+                </LeaText>
               </ListItem.Content>
               <StaticCircularProgress
                 radius={16}
@@ -53,7 +57,7 @@ const RenderDimensionAchievements = props => {
                 activeStrokeColor={dimensionDoc.color}
                 textColor={dimensionDoc.color}
                 inActiveStrokeWidth={3}
-                valueSuffix={'%'}
+                valueSuffix='%'
               />
             </View>
           </>
@@ -73,9 +77,10 @@ const RenderDimensionAchievements = props => {
             <ListItem
               bottomDivider={false}
               key={`${dimensionDoc._id}-${fieldDoc._id}`}
-              containerStyle={styles.listItemSubContainer}>
+              containerStyle={styles.listItemSubContainer}
+            >
               <ListItem.Content style={styles.listItemRow}>
-                <Tts color={Colors.secondary} text={fieldDoc.title} dontShowText={true} />
+                <Tts color={Colors.secondary} text={fieldDoc.title} dontShowText />
                 <View style={styles.listItemRowContent}>
                   <LeaText>{fieldDoc.title}</LeaText>
                   <View style={styles.diamondsRow}>
@@ -85,7 +90,8 @@ const RenderDimensionAchievements = props => {
                         color={dimensionDoc.color}
                         value={diamond}
                         width={20}
-                        height={40}/>
+                        height={40}
+                      />
                     ))}
                   </View>
                 </View>
@@ -111,7 +117,7 @@ const styles = createStyleSheet({
   },
   listItemSubContainer: {
     backgroundColor: Colors.transparent,
-    padding: 0,
+    padding: 0
   },
   listIconButton: {
     marginLeft: 3,
@@ -152,6 +158,6 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginLeft: '30%',
-    marginRight: '30%',
+    marginRight: '30%'
   }
 })

@@ -108,7 +108,6 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   }
 
   mapCache.set(fieldId, mapData)
-  console.debug('mapdata complete')
   return mapData
 }
 

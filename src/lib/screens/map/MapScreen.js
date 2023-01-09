@@ -1,10 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { View, FlatList, InteractionManager } from 'react-native'
+import { View, FlatList } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadMapData } from './loadMapData'
 import { Log } from '../../infrastructure/Log'
-import { Layout } from '../../constants/Layout'
 import { useTranslation } from 'react-i18next'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
@@ -58,13 +57,13 @@ const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
+      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
     })
   }, [session.field])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.field(null)}/>)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
     })
   }, [])
 
@@ -105,7 +104,7 @@ const MapScreen = props => {
       return (
         <View style={styles.stage}>
           {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapFinish/>
+          <MapFinish />
           {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
@@ -115,7 +114,7 @@ const MapScreen = props => {
       return (
         <View style={styles.stage}>
           {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapStart size={ITEM_HEIGHT / 2}/>
+          <MapStart size={ITEM_HEIGHT / 2} />
           {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
@@ -160,7 +159,7 @@ const MapScreen = props => {
       return null
     }
 
-    //return mapData.entries.map((item, index) => renderListItem({ index, item }))
+    // return mapData.entries.map((item, index) => renderListItem({ index, item }))
 
     return (
       <View style={styles.scrollView}>
@@ -168,12 +167,12 @@ const MapScreen = props => {
           data={mapData.entries}
           renderItem={renderListItem}
           onLayout={onListLayoutDetected}
-          inverted={true}
-          decelerationRate="fast"
-          disableIntervalMomentum={true}
+          inverted
+          decelerationRate='fast'
+          disableIntervalMomentum
           initialScrollIndex={mapData.progressIndex ?? 0}
           removeClippedSubviews={false}
-          persistentScrollbar={true}
+          persistentScrollbar
           keyExtractor={flatListKeyExtractor}
           initialNumToRender={10}
           maxToRenderPerBatch={10}
@@ -227,7 +226,7 @@ const renderMilestone = ({ milestone, connectorWidth }) => {
   return (
     <View style={styles.stage}>
       {renderConnector(milestone.viewPosition.left, connectorWidth)}
-      <Milestone progress={progress} level={milestone.level + 1}/>
+      <Milestone progress={progress} level={milestone.level + 1} />
       {renderConnector(milestone.viewPosition.right, connectorWidth)}
     </View>
   )
@@ -236,13 +235,13 @@ const renderMilestone = ({ milestone, connectorWidth }) => {
 const renderConnector = (connectorId, listWidth, withIcon = -1) => {
   if (connectorId === 'fill') {
     return (
-      <LeaText style={{ width: listWidth ?? '100%' }}/>
+      <LeaText style={{ width: listWidth ?? '100%' }} />
     )
   }
 
   if (listWidth !== null && connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<Connector from={from} to={to} width={listWidth} icon={withIcon}/>)
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
   }
 
   return null
@@ -258,7 +257,7 @@ const positionMap = {
  */
 const styles = createStyleSheet({
   container: {
-    //...Layout.container()
+    // ...Layout.container()
   },
   scrollView: {
     width: '100%'

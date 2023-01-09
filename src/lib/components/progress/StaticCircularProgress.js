@@ -117,4 +117,3 @@ const CircularProgress = (props) => {
 }
 
 export const StaticCircularProgress = React.memo(CircularProgress)
-

@@ -21,7 +21,7 @@ export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
   const [compared, setCompared] = useState({})
-  const { isTable, hasTableBorder, /* scoring */ } = value
+  const { isTable, hasTableBorder /* scoring */ } = value
 
   // on contentId changed, do:
   //
@@ -189,13 +189,13 @@ export const ClozeRenderer = props => {
       return (
         <LeaText>{entry.value}</LeaText>
       )
-    } else {
-      return (<LeaText>{""}</LeaText>)
+    }
+    else {
+      return (<LeaText />)
     }
   }
 
   if (isTable) {
-
     return (
       <View style={styles.container}>
         {tokens.map((row, rowIndex) => {
@@ -203,8 +203,10 @@ export const ClozeRenderer = props => {
             <View style={styles.row} key={`row-${rowIndex}`}>
               {row.map((entry, colIndex) => {
                 return (
-                  <View style={getCellStyle(hasTableBorder, entry.cellBorder)}
-                        key={`row-${rowIndex}-col-${colIndex}`}>
+                  <View
+                    style={getCellStyle(hasTableBorder, entry.cellBorder)}
+                    key={`row-${rowIndex}-col-${colIndex}`}
+                  >
                     {renderCell(entry, rowIndex, colIndex)}
                   </View>
                 )
@@ -362,18 +364,18 @@ const styles = createStyleSheet({
     flex: 1,
     flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   cellBorder: {
     borderWidth: 1,
-    borderColor: Colors.light,
+    borderColor: Colors.light
   },
   cellBorderTop: {
     borderTopWidth: 1,
-    borderTopColor: Colors.gray,
+    borderTopColor: Colors.gray
   },
   cellBorderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: Colors.gray,
+    borderBottomColor: Colors.gray
   }
 })

@@ -8,15 +8,15 @@ export const loadAchievementsData = async () => {
     .find()
     .fetch()
     .map(element => {
-    const copy = { ...element}
-    copy.progress = Math.floor(Math.random() * 100),
-    copy.color = ColorTypeMap.get(element.colorType)
-    copy.competencies = {}
-    fields.forEach(fieldDoc => {
-      copy.competencies[fieldDoc._id] = { value: Math.floor(Math.random() * 5) }
+      const copy = { ...element }
+      copy.progress = Math.floor(Math.random() * 100)
+      copy.color = ColorTypeMap.get(element.colorType)
+      copy.competencies = {}
+      fields.forEach(fieldDoc => {
+        copy.competencies[fieldDoc._id] = { value: Math.floor(Math.random() * 5) }
+      })
+      return copy
     })
-    return copy
-  })
 
   return {
     dimensions,

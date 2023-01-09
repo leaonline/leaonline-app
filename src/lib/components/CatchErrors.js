@@ -4,7 +4,6 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { ErrorMessage } from './ErrorMessage'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
-import i18n from '../i18n'
 
 export class CatchErrors extends React.Component {
   constructor (props) {

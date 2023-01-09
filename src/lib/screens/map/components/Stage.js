@@ -8,9 +8,7 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { Config } from '../../../env/Config'
-import { useTimeout } from '../../../hooks/useTimeout'
 import { Loading } from '../../../components/Loading'
-import nextFrame from 'next-frame'
 
 const MemoDiamond = React.memo(Diamond)
 const positions = getPositionOnCircle({ n: 10, radius: 50 })
@@ -112,14 +110,15 @@ export const Stage = props => {
       onPress={handlePress}
     >
       <StageContent
-          width={width}
-          height={height}
-          viewBox={viewBox}
-          stageProgress={stageProgress}
-          text={text}
-          progress={progress}
-          competencies={competencies}
-          diamonds={diamonds} />
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        stageProgress={stageProgress}
+        text={text}
+        progress={progress}
+        competencies={competencies}
+        diamonds={diamonds}
+      />
     </Pressable>
   )
 }

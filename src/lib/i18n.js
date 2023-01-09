@@ -84,7 +84,7 @@ const resources = {
       deleteAccount: {
         title: 'Delete my account',
         instructions: 'This deletes your account and all files you have produced. Once complete, you will not be able to restore it. Are you sure to delete your account?'
-      },
+      }
     },
     mapScreen: {
       stage: 'Stage',

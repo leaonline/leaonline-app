@@ -5,7 +5,6 @@ import Colors from '../constants/Colors'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'
 
-
 export const Loading = ({ text, color, style }) => {
   const { Tts } = useTts()
   const renderText = () => {
