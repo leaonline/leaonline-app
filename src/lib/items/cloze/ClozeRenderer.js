@@ -22,9 +22,6 @@ export const ClozeRenderer = props => {
   const [entered, setEntered] = useState({})
   const [compared, setCompared] = useState({})
   const { isTable, hasTableBorder, /* scoring */ } = value
-  const { tokens, tokenIndexes } = useMemo(() => {
-    return ClozeTokenizer.tokenize(props.value)
-  }, [props.contentId])
 
   // on contentId changed, do:
   //
@@ -68,6 +65,10 @@ export const ClozeRenderer = props => {
     debug({ compareValues })
     setCompared(compareValues)
   }, [props.showCorrectResponse])
+
+  const { tokens, tokenIndexes } = useMemo(() => {
+    return ClozeTokenizer.tokenize(props.value)
+  }, [props.contentId])
 
   const submitText = ({ text, index }) => {
     const update = { ...entered }

@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { View, TouchableHighlight } from 'react-native'
-import { TTSengine } from '../../components/Tts'
+import { useTts } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
 import { LeaText } from '../../components/LeaText'
 import { CompareState } from '../utils/CompareState'
-
-const pattern = /\w+|{{[^{]+}}|\S|\s{2,}/g
-const separatorChars = /[.,;:?!]+/g
-const groupPattern = /[{}]+/g
-const whiteSpace = /^\s+$/
-
-const Tts = TTSengine.component()
-const tokenCache = new Map()
+import { HighlightTokenizer } from './HighlightTokenizer'
 
 export const HighlightRenderer = props => {
   const { dimensionColor } = props
+  const { Tts } = useTts()
   const [selected, setSelected] = useState({})
   const [compared, setCompared] = useState({})
 
@@ -59,12 +53,13 @@ export const HighlightRenderer = props => {
   }, [props.showCorrectResponse])
 
   // tokenize the text to processable elements
-  const { contentId, value } = props
+  const { value } = props
   const { text, tts } = value
-  const { tokens, readableText } = tokenize({ contentId, text })
+  const { tokens, readableText } = useMemo(() => {
+    return HighlightTokenizer.tokenize({ text })
+  }, [props.contentId])
 
-  if (!tokens) {
-    console.warn('no tokens available')
+  if (!tokens?.length) {
     return null
   }
 
@@ -143,35 +138,7 @@ export const HighlightRenderer = props => {
   )
 }
 
-const tokenize = ({ contentId, text }) => {
-  if (tokenCache.has(contentId)) {
-    return tokenCache.get(contentId)
-  }
 
-  if (!text) return []
-
-  const matches = text.match(pattern)
-  const tokens = matches
-    .map(token => token.replace(groupPattern, ''))
-    .map(token => {
-      const obj = { value: token }
-
-      if (whiteSpace.test(token)) {
-        obj.isSpace = true
-      }
-
-      if (separatorChars.test(token)) {
-        obj.isSeparator = true
-      }
-
-      return obj
-    })
-
-  const readableText = tokens.map(({ value }) => value).join(' ')
-
-  tokenCache.set(contentId, { tokens, readableText })
-  return { tokens, readableText }
-}
 
 const getResponses = (selection) => {
   const responses = []
