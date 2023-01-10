@@ -125,8 +125,18 @@ export const ChoiceRenderer = props => {
 
   const toDisabledChoiceButton = (choice, index) => {
     const compareState = compared[index]
-    const scoredColor = CompareState.getColor(compareState)
-    const isSelected = scoredColor !== undefined
+    const isSelected = !!(selected[index])
+    const isCompared = typeof compareState === 'number'
+    let scoredColor
+
+    if (isSelected && compareState === 1) {
+      scoredColor = CompareState.getColor(compareState)
+    }
+
+    if (!isSelected && isCompared) {
+      scoredColor = CompareState.getColor(compareState)
+    }
+
     const key = `choice-${index}`
     return (
       <Checkbox
@@ -135,7 +145,7 @@ export const ChoiceRenderer = props => {
         text={choice.text}
         hideTts={!choice.tts}
         onPress={() => {}}
-        checked={isSelected}
+        checked={isSelected || isCompared}
         checkedColor={scoredColor ?? Colors.secondary}
         uncheckedColor={Colors.gray}
         iconColor={scoredColor ?? dimensionColor}
