@@ -316,17 +316,19 @@ const styles = createStyleSheet({
   },
   token: {
     ...Layout.defaultFont(),
-    padding: 2,
     backgroundColor: '#fff',
     alignSelf: 'center',
-    borderColor: '#00f'
+    borderColor: '#00f',
+    padding: 1
   },
   word: {
     ...Layout.defaultFont(),
     padding: 1,
     backgroundColor: '#fff',
     alignSelf: 'center',
-    borderColor: '#0f0'
+    borderColor: '#0f0',
+    paddingLeft: 4,
+    paddingRight: 4,
   },
   selected: {
     backgroundColor: Colors.primary,
