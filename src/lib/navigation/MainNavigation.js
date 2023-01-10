@@ -25,6 +25,7 @@ import { CurrentProgress } from '../components/progress/CurrentProgress'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 import { AppSession } from '../state/AppSession'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { createStyleSheet } from '../styles/createStyleSheet'
 
 const { AppSessionProvider } = AppSession.init({
   storage: AsyncStorage
@@ -48,6 +49,10 @@ export const MainNavigation = (props) => {
   const { state, authContext } = useLogin()
   const { Tts } = useTts()
   const { userToken, isSignout, isDeleted } = state
+  const renderTitleTts = text => (
+    <Tts align='center' fontStyle={styles.titleFont} text={text} />
+  )
+
 
   const renderScreens = () => {
     if (userToken && !isSignout && !isDeleted) {
@@ -122,7 +127,7 @@ export const MainNavigation = (props) => {
               headerBackVisible: false,
               headerTitleAlign: 'center',
               headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerTitle: () => (<Tts align='center' text={profileScreenTitle} />),
+              headerTitle: () => renderTitleTts(profileScreenTitle),
               headerRight: () => (<></>)
             }}
           />
@@ -140,7 +145,12 @@ export const MainNavigation = (props) => {
         <Stack.Screen
           name='authDecision'
           component={WelcomeScreen}
-          options={{ title: welcomeTitle, headerStyle, headerTitle: () => (<Tts text={welcomeTitle} />) }}
+          options={{
+            title: welcomeTitle,
+            headerStyle,
+            headerTitleAlign: 'center',
+            headerTitle: () => renderTitleTts(welcomeTitle)
+          }}
         />
         <Stack.Screen
           name='termsAndConditions'
@@ -148,8 +158,9 @@ export const MainNavigation = (props) => {
           options={{
             title: tcTitle,
             headerStyle,
+            headerTitleAlign: 'center',
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts align='center' text={tcTitle} />)
+            headerTitle: () => renderTitleTts(tcTitle)
           }}
         />
         <Stack.Screen
@@ -158,8 +169,9 @@ export const MainNavigation = (props) => {
           options={{
             title: registerTitle,
             headerStyle,
+            headerTitleAlign: 'center',
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts align='center' text={registerTitle} />)
+            headerTitle: () => renderTitleTts(registerTitle)
           }}
         />
         <Stack.Screen
@@ -168,8 +180,9 @@ export const MainNavigation = (props) => {
           options={{
             title: registerTitle,
             headerStyle,
+            headerTitleAlign: 'center',
             headerBackTitleVisible: false,
-            headerTitle: () => (<Tts align='center' text={restoreTitle} />)
+            headerTitle: () => renderTitleTts(restoreTitle)
           }}
         />
       </>
@@ -214,3 +227,9 @@ export const MainNavigation = (props) => {
     </AuthContext.Provider>
   )
 }
+
+const styles = createStyleSheet({
+  titleFont: {
+    fontWeight: 'bold'
+  }
+})

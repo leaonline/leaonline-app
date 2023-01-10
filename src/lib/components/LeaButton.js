@@ -28,6 +28,7 @@ import { Vibration } from 'react-native'
  * @param props.iconSize {number=} Optional icon size
  * @param props.iconId {string=} Optional icon id for test purposes
  * @param props.iconPosition {string=} Optional icon position for test purposes
+ * @param props.autoScale {boolean=} Optional if set to false will prevent automatic font scaling
  * @component
  * @returns {JSX.Element}
  */
@@ -86,7 +87,13 @@ export const LeaButton = props => {
       containerStyle={containerStyle}
       disabled={props.disabled || pressed}
       type='outline'
-      titleProps={{ lineBreakMode: 'middle', textBreakStrategy: 'highQuality' }}
+      titleProps={{
+        lineBreakMode: 'middle',
+        textBreakStrategy: 'balanced',
+        android_hyphenationFrequency: 'normal',
+        adjustsFontSizeToFit: true,
+        allowFontScaling: props.autoScale
+      }}
       onPress={handlePress}
       icon={renderIcon()}
       iconPosition={props.iconPosition || defaults.icon.position}

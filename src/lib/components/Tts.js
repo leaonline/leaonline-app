@@ -170,7 +170,7 @@ const ttsComponent = props => {
       Object.assign(styleProps, props.fontStyle)
     }
 
-    return (<LeaText style={styleProps}>{props.text}</LeaText>)
+    return (<LeaText style={styleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
   }
 
   const ttsContainerStyle = { ...styles.body }

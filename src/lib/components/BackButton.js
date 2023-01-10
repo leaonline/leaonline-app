@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { mergeStyles } from '../styles/mergeStyles'
 
 export const BackButton = (props) => {
   const navigation = useNavigation()
@@ -17,12 +18,12 @@ export const BackButton = (props) => {
     return navigation.goBack()
   }
 
+  const containerStyle = mergeStyles(styles.buttonContainer, props.style)
+
   return (
-    <Pressable style={styles.buttonContainer} onPress={handleOnPress} hitSlop={10} android_ripple={rippleConfig}>
+    <Pressable style={containerStyle} onPress={handleOnPress} hitSlop={10} android_ripple={rippleConfig}>
       <Icon
-        name={props.icon} type='font-awesome-5' color={Colors.secondary}
-        style
-        size={18}
+        name={props.icon} type='font-awesome-5' color={Colors.secondary} size={18}
       />
     </Pressable>
   )
@@ -30,18 +31,14 @@ export const BackButton = (props) => {
 
 const styles = createStyleSheet({
   buttonContainer: {
-    display: 'flex',
-    marginLeft: 'auto',
-    borderWidth: 1,
-    borderColor: Colors.secondary,
+    borderWidth: 0,
     padding: 10,
-    borderRadius: 3,
     overflow: 'hidden'
   }
 })
 
 const rippleConfig = {
   color: Colors.secondary,
-  borderless: false,
-  radius: 40
+  borderless: true,
+  radius: 20
 }

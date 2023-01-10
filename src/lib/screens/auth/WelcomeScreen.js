@@ -38,8 +38,8 @@ export const WelcomeScreen = props => {
 
         <Tts
           id='welcomeScreen.text'
-          block
-          style={styles.panel}
+          style={styles.intro}
+          fontStyle={styles.introText}
           text={welcomeText}
         />
 
@@ -86,5 +86,16 @@ const styles = createStyleSheet({
   panel: {
     marginTop: 15,
     marginBottom: 15
+  },
+  intro: {
+    marginTop: 15,
+    marginBottom: 15,
+    alignItems: 'flex-start'
+  },
+  introText: {
+    flex: 1,
+    flexGrow: 1,
+    borderColor: '#0f0',
+    justifyContent: 'flex-end'
   }
 })
