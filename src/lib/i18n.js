@@ -51,7 +51,9 @@ const resources = {
       checkBoxText: 'I understand and agree to the given terms and conditions.',
       agreeResearch: 'Optional: I agree to participate in anonymous research and send research data',
       newUser: 'I am a new user',
-      restoreWithCode: 'I have a code'
+      restoreWithCode: 'I have a code',
+      showTerms: 'Show terms and conditions',
+      hideTerms: 'Hide terms and conditions'
     },
     restoreScreen: {
       title: 'Sign in with code',
@@ -172,7 +174,9 @@ const resources = {
       checkBoxText: 'Ich habe die Nutzungs\u00ADbedingungen verstanden und stimme ihnen zu.',
       agreeResearch: 'Optional: Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu.',
       newUser: 'Ich bin neu',
-      restoreWithCode: 'Ich habe einen Anmelde\u00ADcode'
+      restoreWithCode: 'Ich habe einen Anmelde\u00ADcode',
+      showTerms: 'Nutzungs\u00ADbedingungen anzeigen',
+      hideTerms: 'Nutzungs\u00ADbedingungen schließen'
     },
     restoreScreen: {
       title: 'Mit Code anmelden',

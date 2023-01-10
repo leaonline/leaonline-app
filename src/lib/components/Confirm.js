@@ -6,6 +6,7 @@ import { useTts } from './Tts'
 import Colors from '../constants/Colors'
 import { Icon } from 'react-native-elements'
 import { makeTransparent } from '../styles/makeTransparent'
+import { Layout } from '../constants/Layout'
 
 /**
  * A base-modal with confirm actions and respective state and callbacks.
@@ -150,14 +151,7 @@ const styles = createStyleSheet({
     borderRadius: 20,
     padding: '5%',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+    ...Layout.dropShadow()
   },
   modalText: {
     marginBottom: 15,

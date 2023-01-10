@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { ScrollView, Vibration, View } from 'react-native'
+import { Modal, ScrollView, Vibration, View } from 'react-native'
 import Colors from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
@@ -10,13 +10,23 @@ import { LeaLogo } from '../../components/images/LeaLogo'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
+import { Confirm } from '../../components/Confirm'
+import { ActionButton } from '../../components/ActionButton'
+import { makeTransparent } from '../../styles/makeTransparent'
 
 const initialState = {
-  termsAndConditionsIsChecked: false, highlightCheckbox: false
+  termsAndConditionsIsChecked: false,
+  highlightCheckbox: false,
+  modalOpen: false
 }
 
 const reducer = (prevState, nextState) => {
   switch (nextState.type) {
+    case 'modal':
+      return {
+        ...prevState,
+        modalOpen: nextState.modalOpen
+      }
     case 'terms':
       return {
         ...prevState, termsAndConditionsIsChecked: nextState.terms
@@ -76,18 +86,6 @@ const TermsAndConditionsScreen = props => {
     }
   }
 
-  const renderTermsAndConditionsText = () => termsAndConditions.map((text, index) => {
-    return (
-      <Tts
-        style={styles.paragraph}
-        text={text}
-        block
-        key={index}
-        align='flex-start'
-      />
-    )
-  })
-
   return (
     <ScrollView contentContainerStyle={styles.tcContainer}>
       <View style={styles.container}>
@@ -101,7 +99,43 @@ const TermsAndConditionsScreen = props => {
           align='center'
         />
 
-        {renderTermsAndConditionsText()}
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={state.modalOpen}
+          onRequestClose={() => dispatch({ type: 'modal', modalOpen: false })}>
+          <ScrollView
+            contentContainerStyle={styles.modalBackground}
+            persistentScrollbar={true}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalTerms}>
+                {termsAndConditions.map((text, index) => {
+                  return (
+                    <Tts
+                      style={styles.paragraph}
+                      text={text}
+                      block
+                      key={index}
+                      align='flex-start'
+                    />
+                  )
+                })}
+
+                <View style={styles.modalFooter}>
+                  <ActionButton
+                    title={t('TandCScreen.hideTerms')}
+                    onPress={() => dispatch({ type: 'modal', modalOpen: false })}
+                    block={true} />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </Modal>
+
+        <ActionButton
+          title={t('TandCScreen.showTerms')}
+          onPress={() => dispatch({ type: 'modal', modalOpen: true })}
+          block={true} />
 
         <Checkbox
           id='TandCScreen.checkBoxText'
@@ -184,6 +218,35 @@ const styles = createStyleSheet({
   highlight: {
     borderColor: Colors.danger,
     borderWidth: 1
+  },
+  modalBackground: {
+    flexGrow: 1,
+    backgroundColor: makeTransparent(Colors.dark, 0.4)
+  },
+  modalContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22
+  },
+  modalTerms: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: '5%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalFooter: {
+    flex: 0,
+    alignItems: 'flex-start'
   }
 })
 
