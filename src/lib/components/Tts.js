@@ -182,11 +182,17 @@ const ttsComponent = props => {
   }
   const iconSize = props.smallButton ? 20 : 30
   const onPress = () => ((speakingId === props.id) && isSpeaking) ? stopSpeak() : speak()
+  const rippleConfig = {
+    color: iconColor,
+    borderless: true,
+    radius: iconSize
+  }
 
   return (
     <View style={ttsContainerStyle}>
       <Pressable
         disabled={props.disabled}
+        android_ripple={rippleConfig}
         onPress={onPress}
       >
         <Icon
