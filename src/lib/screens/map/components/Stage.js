@@ -9,6 +9,7 @@ import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { Config } from '../../../env/Config'
 import { Loading } from '../../../components/Loading'
+import { Layout } from '../../../constants/Layout'
 
 const MemoDiamond = React.memo(Diamond)
 const positions = getPositionOnCircle({ n: 10, radius: 50 })
@@ -33,6 +34,7 @@ const competencies = [
  * @param props.dimensions {[object]}
  * @param props.width {number=}
  * @param props.height {number=}
+ * @param props.isActive {boolean=}
  * @returns {JSX.Element}
  * @constructor
  */
@@ -115,6 +117,7 @@ export const Stage = props => {
         viewBox={viewBox}
         stageProgress={stageProgress}
         text={text}
+        inverted={props.isActive}
         progress={progress}
         competencies={competencies}
         diamonds={diamonds}
@@ -123,41 +126,48 @@ export const Stage = props => {
   )
 }
 
-const RenderStageContent = ({ width, height, viewBox, stageProgress, text, progress, competencies, diamonds }) => (
-  <Svg width={width} height={height} viewBox={viewBox}>
-    <G x={stageProgress.x} y={stageProgress.y}>
-      <StaticCircularProgress
-        text={text}
-        radius={stageProgress.radius}
-        maxValue={100}
-        textColor={Colors.secondary}
-        fillColor={Colors.white}
-        activeStrokeColor={Colors.secondary}
-        inActiveStrokeColor={Colors.white}
-        inActiveStrokeOpacity={1}
-        inActiveStrokeWidth={5}
-        activeStrokeWidth={5}
-        showProgressValue={false}
-        valueSuffix='%'
-        value={progress}
-      />
-    </G>
-    {
-      competencies.map(({ x, y }, index) => {
-        const { color, competencies, key } = diamonds[index] || {
-          color: Colors.light,
-          competencies: 0,
-          key: index
-        }
-        return (
-          <G key={key} x={x - 7.5} y={y}>
-            <MemoDiamond width={15} height={30} value={competencies} color={color} />
-          </G>
-        )
-      })
-    }
-  </Svg>
-)
+const RenderStageContent = ({ width, height, viewBox, stageProgress, text, progress, competencies, diamonds, inverted }) => {
+  const textColor = inverted ? Colors.white : Colors.secondary
+  const fillColor = inverted ? Colors.secondary : Colors.white
+  const activeStrokeColor = inverted ? Colors.white : Colors.secondary
+  const inActiveStrokeColor = inverted ? Colors.secondary : Colors.white
+
+  return (
+    <Svg width={width} height={height} viewBox={viewBox}>
+      <G x={stageProgress.x} y={stageProgress.y}>
+        <StaticCircularProgress
+          text={text}
+          radius={stageProgress.radius}
+          maxValue={100}
+          textColor={textColor}
+          fillColor={fillColor}
+          activeStrokeColor={activeStrokeColor}
+          inActiveStrokeColor={inActiveStrokeColor}
+          inActiveStrokeOpacity={1}
+          inActiveStrokeWidth={4}
+          activeStrokeWidth={4}
+          showProgressValue={false}
+          valueSuffix='%'
+          value={progress}
+        />
+      </G>
+      {
+        competencies.map(({ x, y }, index) => {
+          const { color, competencies, key } = diamonds[index] || {
+            color: Colors.light,
+            competencies: 0,
+            key: index
+          }
+          return (
+            <G key={key} x={x - 7.5} y={y}>
+              <MemoDiamond width={15} height={30} value={competencies} color={color} />
+            </G>
+          )
+        })
+      }
+    </Svg>
+  )
+}
 const StageContent = React.memo(RenderStageContent)
 
 const styles = createStyleSheet({

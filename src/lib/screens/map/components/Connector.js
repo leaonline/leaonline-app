@@ -48,7 +48,7 @@ const ConnectorComponent = props => {
       return null
     }
 
-    const part = width / 5
+    const part = width / 7
     const offset = fromLeft
       ? part
       : part * -1
@@ -65,7 +65,7 @@ const ConnectorComponent = props => {
       <G id='Ebene_1-2' data-name='Ebene 1'>
         <Path
           className='cls-1'
-          strokeWidth='1'
+          strokeWidth='2'
           strokeMiterlimit='10'
           stroke={Colors.gray}
           fill={Colors.transparent}

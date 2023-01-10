@@ -41,6 +41,7 @@ const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
+  const [activeStage, setActiveStage] = useState(-1)
   const [connectorWidth, setConnectorWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = loadDocs({
@@ -73,7 +74,8 @@ const MapScreen = props => {
     setConnectorWidth((width / 2) - ITEM_HEIGHT)
   }
 
-  const selectStage = useCallback(async stage => {
+  const selectStage = useCallback(async (stage, index) => {
+    setActiveStage(index)
     await nextFrame()
     const newStage = { ...stage }
     newStage.level = mapData.levels[newStage.level]
@@ -81,17 +83,19 @@ const MapScreen = props => {
     newStage.unitSets.forEach(unitSet => {
       unitSet.dimension = mapData.dimensions[unitSet.dimension]
     })
-
     await sessionActions.stage(newStage)
     props.navigation.navigate('dimension')
   }, [mapDocs])
 
   const renderListItem = useCallback(({ index, item: entry }) => {
     if (entry.type === 'stage') {
+      const isActive = activeStage === index
       return renderStage({
+        index,
         stage: entry,
         connectorWidth: stageConnectorWidth,
         selectStage,
+        isActive,
         dimensions: mapData?.dimensions
       })
     }
@@ -199,7 +203,7 @@ const flatListGetItemLayout = (data, index) => {
 }
 const flatListKeyExtractor = (item) => item.entryKey
 
-const renderStage = ({ stage, selectStage, connectorWidth, dimensions }) => {
+const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, isActive }) => {
   const progress = 100 * (stage.userProgress || 0) / stage.progress
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
@@ -210,11 +214,12 @@ const renderStage = ({ stage, selectStage, connectorWidth, dimensions }) => {
       <Stage
         width={ITEM_HEIGHT}
         height={ITEM_HEIGHT}
-        onPress={() => selectStage(stage)}
+        onPress={() => selectStage(stage, index)}
         unitSets={stage.unitSets}
         dimensions={dimensions}
         text={stage.label}
         progress={progress}
+        isActive={isActive}
       />
       {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
     </View>

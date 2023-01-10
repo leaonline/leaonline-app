@@ -68,7 +68,7 @@ const CircularProgress = (props) => {
 
     return (
       <Text
-        x='50%' y='57%' textAnchor='middle' fontSize={fontSize} fontWeight={fontWeight} fill={textColor}
+        x='49%' y='52%' textAnchor='middle' fontSize={fontSize} fontWeight={fontWeight} fill={textColor}
         alignmentBaseline='middle'
       >
         {textValue}
@@ -93,8 +93,8 @@ const CircularProgress = (props) => {
         <Circle
           cx='50%'
           cy='50%'
-          stroke={inActiveStrokeColor}
-          strokeWidth={inActiveStrokeWidth}
+          stroke={Colors.gray}
+          strokeWidth={0.5}
           r={radius}
           fill={fillColor}
           strokeOpacity={inActiveStrokeOpacity}
@@ -104,7 +104,7 @@ const CircularProgress = (props) => {
           cy='50%'
           stroke={activeStrokeColor}
           strokeWidth={activeStrokeWidth}
-          r={radius}
+          r={radius - activeStrokeWidth / 2 }
           fill='transparent'
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
