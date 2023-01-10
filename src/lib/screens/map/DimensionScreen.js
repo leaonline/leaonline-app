@@ -105,7 +105,6 @@ const DimensionScreen = props => {
   return (
     <ScreenBase {...docs} style={styles.container}>
       <Tts text={t('dimensionScreen.instructions')} block align='center' />
-      <Fill />
       {renderDimensions()}
       <Fill />
     </ScreenBase>
