@@ -53,7 +53,6 @@ export const MainNavigation = (props) => {
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
   )
 
-
   const renderScreens = () => {
     if (userToken && !isSignout && !isDeleted) {
       const headerRight = () => (<ProfileButton route='profile' />)
