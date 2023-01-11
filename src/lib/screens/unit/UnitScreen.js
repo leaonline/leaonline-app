@@ -246,9 +246,6 @@ const UnitScreen = props => {
         elementData.submitResponse = submitResponse
         elementData.showCorrectResponse = showCorrectResponse
         elementData.scoreResult = showCorrectResponse && scoreRef.current[page]
-        return (
-          <Renderer {...elementData} />
-        )
       }
 
       // all other elements are simply "display" elements
