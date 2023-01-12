@@ -25,7 +25,6 @@ import { useTts } from '../../components/Tts'
 import { LeaText } from '../../components/LeaText'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
-import './registerComponents'
 import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
 import { Config } from '../../env/Config'
 import { FadePanel } from '../../components/FadePanel'
@@ -33,6 +32,8 @@ import { Sound } from '../../env/Sound'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { mergeStyles } from '../../styles/mergeStyles'
+import './registerComponents'
+import './registerInstructions'
 
 const log = Log.create('UnitScreen')
 

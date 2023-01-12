@@ -12,6 +12,8 @@ Layout.statusBarHeight = () => Constants.statusBarHeight
 
 Layout.width = () => width * ratio
 
+Layout.withRatio = value => value * ratio
+
 Layout.isLarge = () => isLarge
 
 Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
