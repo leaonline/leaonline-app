@@ -158,7 +158,7 @@ export const ChoiceRenderer = props => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       {choices.map(props.showCorrectResponse ? toDisabledChoiceButton : toChoiceButton)}
     </View>
   )

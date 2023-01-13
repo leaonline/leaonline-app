@@ -197,7 +197,7 @@ export const ClozeRenderer = props => {
 
   if (isTable) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, props.style]}>
         {tokens.map((row, rowIndex) => {
           return (
             <View style={styles.row} key={`row-${rowIndex}`}>
@@ -219,7 +219,7 @@ export const ClozeRenderer = props => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <View style={styles.tokenContainer}>
         {tokens.map((entry, index) => {
           if (entry.isEmpty) { return null }

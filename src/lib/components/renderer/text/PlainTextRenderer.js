@@ -11,5 +11,12 @@ import Colors from '../../../constants/Colors'
 export const PlainTextRenderer = props => {
   const { Tts } = useTts()
 
-  return (<Tts block iconColor={props.dimensionColor} color={Colors.secondary} text={props.value} dontShowText={!!props.hidden} />)
+  return (
+    <Tts
+      block={true}
+      style={props.style}
+      iconColor={props.dimensionColor}
+      color={Colors.secondary}
+      asButton={props.hidden}
+      text={props.value} />)
 }

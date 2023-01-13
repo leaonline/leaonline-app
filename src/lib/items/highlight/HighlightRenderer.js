@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { View, TouchableHighlight } from 'react-native'
+import { View, Pressable } from 'react-native'
 import { useTts } from '../../components/Tts'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import Colors from '../../constants/Colors'
@@ -113,9 +113,9 @@ export const HighlightRenderer = props => {
       }
 
       return (
-        <TouchableHighlight onPress={onElementPress} key={index}>
+        <Pressable onPress={onElementPress} key={index}>
           <LeaText style={tokenStyle}>{value}</LeaText>
-        </TouchableHighlight>
+        </Pressable>
       )
     })
   }
@@ -129,7 +129,7 @@ export const HighlightRenderer = props => {
     : null
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       {renderTts()}
       <View style={styles.tokenContainer}>
         {renderTokens()}
@@ -197,4 +197,4 @@ const styles = createStyleSheet({
     backgroundColor: Colors.warning,
     color: Colors.light
   }
-})
+}, true)
