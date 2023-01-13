@@ -10,7 +10,6 @@ import { LeaLogo } from '../../components/images/LeaLogo'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
-import { Confirm } from '../../components/Confirm'
 import { ActionButton } from '../../components/ActionButton'
 import { makeTransparent } from '../../styles/makeTransparent'
 
@@ -101,12 +100,14 @@ const TermsAndConditionsScreen = props => {
 
         <Modal
           animationType='slide'
-          transparent={true}
+          transparent
           visible={state.modalOpen}
-          onRequestClose={() => dispatch({ type: 'modal', modalOpen: false })}>
+          onRequestClose={() => dispatch({ type: 'modal', modalOpen: false })}
+        >
           <ScrollView
             contentContainerStyle={styles.modalBackground}
-            persistentScrollbar={true}>
+            persistentScrollbar
+          >
             <View style={styles.modalContent}>
               <View style={styles.modalTerms}>
                 {termsAndConditions.map((text, index) => {
@@ -125,7 +126,8 @@ const TermsAndConditionsScreen = props => {
                   <ActionButton
                     title={t('TandCScreen.hideTerms')}
                     onPress={() => dispatch({ type: 'modal', modalOpen: false })}
-                    block={true} />
+                    block
+                  />
                 </View>
               </View>
             </View>
@@ -135,7 +137,8 @@ const TermsAndConditionsScreen = props => {
         <ActionButton
           title={t('TandCScreen.showTerms')}
           onPress={() => dispatch({ type: 'modal', modalOpen: true })}
-          block={true} />
+          block
+        />
 
         <Checkbox
           id='TandCScreen.checkBoxText'

@@ -13,10 +13,12 @@ export const PlainTextRenderer = props => {
 
   return (
     <Tts
-      block={true}
+      block
       style={props.style}
       iconColor={props.dimensionColor}
       color={Colors.secondary}
       asButton={props.hidden}
-      text={props.value} />)
+      text={props.value}
+    />
+  )
 }

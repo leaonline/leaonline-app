@@ -9,7 +9,6 @@ import Colors from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { Config } from '../../../env/Config'
 import { Loading } from '../../../components/Loading'
-import { Layout } from '../../../constants/Layout'
 
 const MemoDiamond = React.memo(Diamond)
 const positions = getPositionOnCircle({ n: 10, radius: 50 })

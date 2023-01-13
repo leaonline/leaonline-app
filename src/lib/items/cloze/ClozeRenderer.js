@@ -328,7 +328,7 @@ const styles = createStyleSheet({
     alignSelf: 'center',
     borderColor: '#0f0',
     paddingLeft: 4,
-    paddingRight: 4,
+    paddingRight: 4
   },
   selected: {
     backgroundColor: Colors.primary,

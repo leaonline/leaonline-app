@@ -24,7 +24,8 @@ export const LeaText = props => {
       android_hyphenationFrequency='full'
       adjustsFontSizeToFit={props.fitSize}
       allowFontScaling={props.autoScale}
-      style={style}>
+      style={style}
+    >
       {props.children}
     </Text>
   )

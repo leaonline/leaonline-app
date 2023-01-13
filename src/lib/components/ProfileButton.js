@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, Vibration, View } from 'react-native'
+import { Pressable, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
@@ -15,7 +15,7 @@ export const ProfileButton = props => {
     navigation.navigate(props.route)
   }
   return (
-    <Pressable android_ripple={rippleConfig}  onPress={toProfile} style={{ display: 'flex', marginLeft: 'auto' }}>
+    <Pressable android_ripple={rippleConfig} onPress={toProfile} style={{ display: 'flex', marginLeft: 'auto' }}>
       <Icon
         name='user' type='font-awesome-5' color={Colors.gray} reverse
         style size={18}

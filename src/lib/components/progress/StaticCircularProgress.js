@@ -27,7 +27,6 @@ import Colors from '../../constants/Colors'
  * @param props.activeStrokeColor {string=Colors.primary}
  * @param props.activeStrokeSecondaryColor {string=Colors.secondary}
  * @param props.activeStrokeWidth {number=10}
- * @param props.inActiveStrokeColor {string='rgba(0,0,0,0.3)'}
  * @param props.inActiveStrokeWidth {number=10}
  * @param props.inActiveStrokeOpacity {number=1}
  * @param props.showProgressValue {boolean=false}
@@ -48,9 +47,7 @@ const CircularProgress = (props) => {
     valueSuffix = '',
     fillColor = Colors.transparent,
     activeStrokeColor = Colors.primary,
-    // activeStrokeSecondaryColor = Colors.secondary,
     activeStrokeWidth = 10,
-    inActiveStrokeColor = Colors.light,
     inActiveStrokeWidth = 10,
     inActiveStrokeOpacity = 1,
     showProgressValue = false
@@ -104,7 +101,7 @@ const CircularProgress = (props) => {
           cy='50%'
           stroke={activeStrokeColor}
           strokeWidth={activeStrokeWidth}
-          r={radius - activeStrokeWidth / 2 }
+          r={radius - activeStrokeWidth / 2}
           fill='transparent'
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}

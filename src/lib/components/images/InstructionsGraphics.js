@@ -20,7 +20,7 @@ export const InstructionsGraphics = (props) => {
 
   return (
     <View style={styles.container}>
-      <Tts text={props.source.value} color={props.color} dontShowText={true} />
+      <Tts text={props.source.value} color={props.color} dontShowText />
       <Instruction onPress={readText} width={200} />
     </View>
   )

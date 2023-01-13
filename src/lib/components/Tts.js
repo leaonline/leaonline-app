@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Pressable } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
@@ -205,17 +205,6 @@ const ttsComponent = props => {
         color={currentIconColor}
         size={iconSize}
         style={styles.icon}
-        />
-    )
-
-    return (
-      <Icon
-        testID={props.id}
-        color={currentIconColor}
-        size={iconSize}
-        style={styles.icon}
-        name='volume-up'
-        type='font-awesome-5'
       />
     )
   }
@@ -230,14 +219,15 @@ const ttsComponent = props => {
       buttonStyle.flexGrow = 1
     }
     return (
-        <Button
-          containerStyle={ttsContainerStyle}
-          buttonStyle={[styles.ttsButton, buttonStyle]}
-          onPress={onPress}
-          type='solid'
-          raised={true}
-          disabled={props.disabled}
-          title={renderIcon()} />
+      <Button
+        containerStyle={ttsContainerStyle}
+        buttonStyle={[styles.ttsButton, buttonStyle]}
+        onPress={onPress}
+        type='solid'
+        raised
+        disabled={props.disabled}
+        title={renderIcon()}
+      />
     )
   }
 
