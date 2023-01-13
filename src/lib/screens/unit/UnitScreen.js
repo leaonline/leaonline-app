@@ -250,7 +250,7 @@ const UnitScreen = props => {
       }
 
       // all other elements are simply "display" elements
-      return (<Renderer key={index} {...elementData} />)
+      return (<Renderer key={index} style={styles.contentElement} {...elementData} />)
     })
   }
 
@@ -602,6 +602,9 @@ const styles = createStyleSheet({
     borderColor: Colors.success,
     backgroundColor: '#eaffee',
     borderWidth: 4
+  },
+  contentElement: {
+    margin: 5
   },
   // navbar
   confirm: {

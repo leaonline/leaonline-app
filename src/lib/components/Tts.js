@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { View, Pressable } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 import Colors from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
 import { promiseWithTimeout } from '../utils/promiseWithTimeout'
+import { SoundIcon } from './SoundIcon'
 
 /** @private **/
 let Speech = null
 
 /** @private **/
 const styles = createStyleSheet({
-  body: {
+  container: {
     flex: 0,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-start'
+  },
+  ttsButton: {
+    borderColor: '#0f0'
   },
   text: {},
   icon: { padding: 5 }
@@ -47,6 +51,7 @@ const runHandlers = name => {
  * @param {number} props.shrink: The parameter to shrink the text. Default: 1
  * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
  * @param {string} props.fontStyle: The parameter to change the font style of the text. Default: 'normal' ('italic')
+ * @param {object=} props.style: The parameter to change the font style of the text. Default: 'normal' ('italic')
  * @param {string} props.align Defines the vertical alignment of the button and text
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
@@ -173,7 +178,7 @@ const ttsComponent = props => {
     return (<LeaText style={styleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
   }
 
-  const ttsContainerStyle = { ...styles.body }
+  const ttsContainerStyle = { ...styles.container }
   if (props.align) {
     ttsContainerStyle.alignItems = props.align
   }
@@ -188,6 +193,54 @@ const ttsComponent = props => {
     radius: iconSize
   }
 
+  const renderIcon = () => {
+    const currentIconColor = props.asButton && !isSpeaking
+      ? Colors.white
+      : props.disabled
+        ? Colors.gray
+        : iconColor
+    return (
+      <SoundIcon
+        animated={isSpeaking}
+        color={currentIconColor}
+        size={iconSize}
+        style={styles.icon}
+        />
+    )
+
+    return (
+      <Icon
+        testID={props.id}
+        color={currentIconColor}
+        size={iconSize}
+        style={styles.icon}
+        name='volume-up'
+        type='font-awesome-5'
+      />
+    )
+  }
+
+  if (props.asButton) {
+    const buttonStyle = {
+      backgroundColor: isSpeaking
+        ? Colors.white
+        : iconColor
+    }
+    if (props.block) {
+      buttonStyle.flexGrow = 1
+    }
+    return (
+        <Button
+          containerStyle={ttsContainerStyle}
+          buttonStyle={[styles.ttsButton, buttonStyle]}
+          onPress={onPress}
+          type='solid'
+          raised={true}
+          disabled={props.disabled}
+          title={renderIcon()} />
+    )
+  }
+
   return (
     <View style={ttsContainerStyle}>
       <Pressable
@@ -195,14 +248,7 @@ const ttsComponent = props => {
         android_ripple={rippleConfig}
         onPress={onPress}
       >
-        <Icon
-          testID={props.id}
-          color={props.disabled ? Colors.gray : iconColor}
-          size={iconSize}
-          style={styles.icon}
-          name='volume-up'
-          type='font-awesome-5'
-        />
+        {renderIcon()}
       </Pressable>
       {displayedText()}
     </View>
