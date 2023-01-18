@@ -10,6 +10,7 @@ import { Layout } from '../../../constants/Layout'
 import { ErrorMessage } from '../../../components/ErrorMessage'
 import { mergeStyles } from '../../../styles/mergeStyles'
 import { RequestRestoreCodes } from './RequestRestoreCodes'
+import { InteractionGraph } from '../../../infrastructure/log/InteractionGraph'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -40,14 +41,26 @@ export const AccountInfo = (props) => {
       key: 'restore',
       icon: 'lock',
       label: () => t('accountInfo.restore.title'),
-      onPress: () => setModalContent(actions.restore.modal),
+      onPress: () => {
+        InteractionGraph.action({
+          target: `${AccountInfo.name}:restoreModal`,
+          type: 'opened'
+        })
+        setModalContent(actions.restore.modal)
+      },
       modal: {
         instructions: () => t('accountInfo.restore.instructions'),
         body: () => (<RequestRestoreCodes onError={onError} />),
         deny: {
           icon: 'times',
           label: () => t('actions.close'),
-          handler: () => setModalContent(null)
+          handler: () => {
+            InteractionGraph.action({
+              target: `${AccountInfo.name}:restoreModal`,
+              type: 'closed'
+            })
+            setModalContent(null)
+          }
         }
       }
     }

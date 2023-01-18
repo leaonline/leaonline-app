@@ -36,22 +36,27 @@ export const RegistrationScreen = () => {
         })
         setError(e)
       }
-      setTimeout(() => signUp({ voice, speed, onError }), 1000)
+      const onSuccess = () => InteractionGraph.goal({
+        target: `${RegistrationScreen.name}.register`,
+        type: 'registered'
+      })
+
+      setTimeout(() => signUp({ voice, speed, onError, onSuccess }), 1000)
     }
   }, [user])
 
   if (error) {
     return (
       <View style={styles.container}>
-        <ErrorMessage error={error} />
+        <ErrorMessage error={error}/>
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <Loading />
-      <Tts text={t('registrationScreen.creating')} />
+      <Loading/>
+      <Tts text={t('registrationScreen.creating')}/>
     </View>
   )
 }

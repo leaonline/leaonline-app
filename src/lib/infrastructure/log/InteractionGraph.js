@@ -1,6 +1,7 @@
 import { simpleRandomHex } from '../../utils/simpleRandomHex'
 import { Log } from '../Log'
 import { Config } from '../../env/Config'
+import { callMeteor } from '../../meteor/call'
 
 /**
  * This id is generated when the module is loaded and allows
@@ -21,11 +22,12 @@ const debug = Log.create('InterActionGraph', 'debug')
 export const InteractionGraph = {}
 
 const internal = {
+
   stack: []
 }
 const queue = ({ type, subtype, id, target, message, details }) => {
-  const timeStamp = new Date()
-  const data = { sessionId, type, subtype, timeStamp }
+  const timestamp = new Date()
+  const data = { sessionId, type, subtype, timestamp }
 
   if (id) { data.id = id }
   if (target) { data.target = target }
@@ -38,6 +40,20 @@ const queue = ({ type, subtype, id, target, message, details }) => {
 
 const send = () => {
   debug('send', internal.stack.length, 'graph-items')
+  const user = Meteor.user()
+
+  // the data is only sent to the server,
+  // if the user has actively participated
+  // in our research programme
+  if (!user?.research) { return }
+
+  callMeteor({
+    name: 'interactionGraph.methods.send',
+    args:  { data: [].concat(internal.stack) },
+    failure: e => Log.error(e)
+  })
+
+  internal.stack.length = 0
 }
 
 InteractionGraph.enterApp = () => {
@@ -95,9 +111,7 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
     id,
     target,
     message: message || error?.reason || error?.message,
-    details: error && {
-      stack: error?.stack
-    }
+    details: error?.details
   })
 
   send()

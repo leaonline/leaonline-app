@@ -39,6 +39,7 @@ const runHandlers = name => {
  *
  * @category Components
  * @param {string} props.text: The displayed and spoken text
+ * @param {string} props.ttsText: The spoken text, use this if it differs from written text
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {boolean=} props.block: Makes the container flexGrow. If this causes problems, use style instead.
@@ -112,21 +113,23 @@ const ttsComponent = props => {
       return await speak()
     }
 
-    Speech.speak(props.text, {
+    const textToSpeak = props.ttsText ?? props.text
+
+    Speech.speak(textToSpeak, {
       language: 'ger',
       pitch: 1,
       rate: props.speed || TTSengine.currentSpeed,
       voice: props.voice || TTSengine.currentVoice,
       onStart: () => {
-        debug('speak', props.text)
+        debug('speak', textToSpeak)
         startSpeak()
       },
       onStopped: () => {
-        debug('stopped', props.text)
+        debug('stopped', textToSpeak)
         stopSpeak()
       },
       onDone: () => {
-        debug('finished', props.text)
+        debug('finished', textToSpeak)
         // TODO call stopSpeak and update tests to fix state bug
         stopSpeak()
         setIsDone(true)
@@ -295,7 +298,6 @@ export const TTSengine = {
   defaultSpeed: 1,
   currentSpeed: 1,
   currentVoice: undefined,
-  /** @deprecated use `useTts` hook from this module instead */
   component: () => ttsComponent,
   updateSpeed: newSpeed => {
     globalDebug('set new speed', newSpeed)

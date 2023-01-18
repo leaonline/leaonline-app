@@ -69,6 +69,7 @@ Config.methods.getUnitData = backend.methods.content.unit
 Config.methods.getProgress = backend.methods.progress.get
 Config.methods.updateSession = backend.methods.session.update
 Config.methods.submitResponse = backend.methods.response.submit
+Config.methods.getTerms = backend.methods.terms.get
 
 /**
  * This configures the connection behaviour with the backend server.

@@ -23,6 +23,14 @@
       },
       "response": {
         "submit": "response.methods.submit"
+      },
+      "terms": {
+        "get": {
+          "name": "legal.methods.get",
+          "args": {
+            "name": "terms"
+          }
+        }
       }
     }
   },

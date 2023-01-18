@@ -56,7 +56,11 @@ export const RestoreScreen = () => {
           error: err
         })
         setError(err)
-      }
+      },
+      onSuccess: () => InteractionGraph.goal({
+        target: `${RestoreScreen.name}`,
+        type: 'restored'
+      })
     })
   }
 

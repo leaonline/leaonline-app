@@ -5,13 +5,15 @@ import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
-import { useLegal } from '../../hooks/useLegal'
 import { LeaLogo } from '../../components/images/LeaLogo'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { ActionButton } from '../../components/ActionButton'
 import { makeTransparent } from '../../styles/makeTransparent'
+import { loadDocs } from '../../meteor/loadDocs'
+import { loadTerms } from './loadTerms'
+import { Markdown } from '../../components/MarkdownWithTTS'
 
 const initialState = {
   termsAndConditionsIsChecked: false,
@@ -50,7 +52,9 @@ const reducer = (prevState, nextState) => {
 const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const { termsAndConditions } = useLegal('terms')
+  const termsDocs = loadDocs({
+    fn: loadTerms
+  })
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
   const { termsAndConditionsIsChecked, highlightCheckbox } = state
 
@@ -85,6 +89,19 @@ const TermsAndConditionsScreen = props => {
     }
   }
 
+  const onModalOpen = () => {
+    InteractionGraph.action({
+      type: 'select', target: 'termsModal', details: { action: 'open' }
+    })
+    dispatch({ type: 'modal', modalOpen: true })
+  }
+  const onModalClose = () => {
+    InteractionGraph.action({
+      type: 'select', target: 'termsModal', details: { action: 'close' }
+    })
+    dispatch({ type: 'modal', modalOpen: false })
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.tcContainer}>
       <View style={styles.container}>
@@ -102,7 +119,7 @@ const TermsAndConditionsScreen = props => {
           animationType='slide'
           transparent
           visible={state.modalOpen}
-          onRequestClose={() => dispatch({ type: 'modal', modalOpen: false })}
+          onRequestClose={onModalClose}
         >
           <ScrollView
             contentContainerStyle={styles.modalBackground}
@@ -110,22 +127,11 @@ const TermsAndConditionsScreen = props => {
           >
             <View style={styles.modalContent}>
               <View style={styles.modalTerms}>
-                {termsAndConditions.map((text, index) => {
-                  return (
-                    <Tts
-                      style={styles.paragraph}
-                      text={text}
-                      block
-                      key={index}
-                      align='flex-start'
-                    />
-                  )
-                })}
-
+                {termsDocs?.data && (<Markdown value={termsDocs.data} style={styles.markdown} />)}
                 <View style={styles.modalFooter}>
                   <ActionButton
                     title={t('TandCScreen.hideTerms')}
-                    onPress={() => dispatch({ type: 'modal', modalOpen: false })}
+                    onPress={onModalClose}
                     block
                   />
                 </View>
@@ -136,7 +142,9 @@ const TermsAndConditionsScreen = props => {
 
         <ActionButton
           title={t('TandCScreen.showTerms')}
-          onPress={() => dispatch({ type: 'modal', modalOpen: true })}
+          icon='file-alt'
+          iconColor={Colors.primary}
+          onPress={onModalOpen}
           block
         />
 
@@ -157,6 +165,7 @@ const TermsAndConditionsScreen = props => {
             align='center'
             block
             icon='user'
+            iconColor={Colors.primary}
             containerStyle={styles.decisionButton}
             handleScreen={() => handleAction('registration')}
           />
@@ -165,6 +174,7 @@ const TermsAndConditionsScreen = props => {
             align='center'
             block
             icon='lock'
+            iconColor={Colors.primary}
             containerStyle={styles.decisionButton}
             handleScreen={() => handleAction('restore')}
           />

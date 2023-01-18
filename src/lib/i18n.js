@@ -255,6 +255,10 @@ const resources = {
     },
     item: {
       correctResponse: 'Die richtige Antwort lautet: {{value}}'
+    },
+    legal: {
+      paragraph: 'Paragraph',
+      paragraphen: 'Paragraphen'
     }
   }
 }

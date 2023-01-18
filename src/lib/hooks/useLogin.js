@@ -121,7 +121,7 @@ export const useLogin = () => {
         dispatch({ type: 'SIGN_OUT' })
       })
     },
-    signUp: ({ voice, speed, onError }) => {
+    signUp: ({ voice, speed, onError, onSuccess }) => {
       Meteor.call('users.methods.create', { voice, speed }, (err, res) => {
         if (err) {
           return onError(err)
@@ -132,12 +132,13 @@ export const useLogin = () => {
         // in order to use it for auto-login when we open
         // the app next time
         Meteor._handleLoginCallback(err, res)
+        onSuccess()
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
         dispatch({ type, token })
       })
     },
-    restore: ({ codes, voice, speed, onError }) => {
+    restore: ({ codes, voice, speed, onError, onSuccess }) => {
       Meteor.call('users.methods.restore', { codes, voice, speed }, (err, res) => {
         if (err) {
           return onError(err)
@@ -148,6 +149,7 @@ export const useLogin = () => {
         // in order to use it for auto-login when we open
         // the app next time
         Meteor._handleLoginCallback(err, res)
+        onSuccess()
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
         dispatch({ type, token })
