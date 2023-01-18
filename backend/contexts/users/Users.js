@@ -85,12 +85,28 @@ Users.schema = {
    */
   restore: String,
 
+  /**
+   * The selected tts voice
+   */
   voice: {
     type: String,
     optional: true
   },
+
+  /**
+   * The selected tts voice speed
+   */
   speed: {
     type: Number,
+    optional: true
+  },
+
+  /**
+   * True if 2xoptin for research
+   * has been completed
+   */
+  research: {
+    type: Boolean,
     optional: true
   }
 

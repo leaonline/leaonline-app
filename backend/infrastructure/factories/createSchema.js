@@ -14,7 +14,7 @@ SimpleSchema.extendOptions(schemaOptions)
  * @param options
  * @return {SimpleSchema}
  */
-export const createSchema = (schema, options) => {
+export const createSchema = (schema, options = undefined) => {
   return new SimpleSchema(schema, options)
 }
 

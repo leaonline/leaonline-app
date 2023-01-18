@@ -6,6 +6,7 @@ import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
 import { Response } from '../response/Response'
 import { Progress } from '../progress/Progress'
+import { Field } from '../content/Field'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -16,7 +17,7 @@ import { Progress } from '../progress/Progress'
 export const Session = {
   name: 'session',
   label: 'session.title',
-  icon: 'project-diagram',
+  icon: 'edit',
   representative: 'userId'
 }
 
@@ -35,7 +36,11 @@ Session.schema = {
     type: String
   },
   fieldId: {
-    type: String
+    type: String,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
   },
   progress: {
     type: Number,
@@ -312,12 +317,25 @@ Session.methods.getAll = {
     }
   },
   backend: true,
-  run: function () {
+  run: function ({ dependencies }) {
     const docs = getCollection(Session.name).find({}, {
       hint: {
         $natural: -1
       }
     }).fetch()
-    return { [Session.name]: docs }
+
+    const data = { [Session.name]: docs }
+
+
+    if (dependencies) {
+      Object.values(dependencies).forEach(dep => {
+        console.debug(dep)
+        const { name } = dep
+        const collection = getCollection(name)
+        data[name] = collection.find().fetch()
+      })
+    }
+
+    return data
   }
 }

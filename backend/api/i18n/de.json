@@ -11,14 +11,36 @@
     "createdAt": "Registriert",
     "restore": "Code",
     "voice": "Voice",
-    "speed": "Voice-speed"
+    "speed": "Voice-speed",
+    "lastLogin": "Zuletzt on"
   },
   "session": {
-    "title": "Durchlauf"
+    "title": "Durchlauf",
+    "userId": "User",
+    "unitSet": "Unit-Set",
+    "fieldId": "B.Feld",
+    "progress": "Fortschritt",
+    "competencies": "KBs",
+    "unit": "Aktuelle Unit",
+    "nextUnit": "Nächste Unit",
+    "startedAt": "Gestarted",
+    "completedAt": "Fertig",
+    "cancelledAt": "Abgebrochen",
+    "continuedAt": "Fortgesetzt"
   },
   "progress": {
     "title": "Fortschritt",
     "userId": "User",
     "fieldId": "Berufsfeld"
+  },
+  "mapData": {
+    "title": "Maps"
+  },
+  "legal": {
+    "title": "Rechtliches",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "contact": "Kontakt"
   }
 }

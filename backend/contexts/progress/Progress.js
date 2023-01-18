@@ -1,6 +1,7 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
+import { Field } from '../content/Field'
 
 /**
  * Progress represents a user's progress for a given field.
@@ -22,7 +23,11 @@ Progress.schema = {
     type: String
   },
   fieldId: {
-    type: String
+    type: String,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
   },
 
   /**
@@ -125,12 +130,19 @@ Progress.methods.getAll = {
     }
   },
   backend: true,
-  run: function () {
+  run: function ({ dependencies } = {}) {
     const docs = getCollection(Progress.name).find({}, {
       hint: {
         $natural: -1
       }
     }).fetch()
-    return { [Progress.name]: docs }
+
+    const data = { [Progress.name]: docs }
+
+    if (dependencies) {
+      data[Field.name] = getCollection(Field.name).find().fetch()
+    }
+
+    return data
   }
 }

@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { getUsersCollection } from '../../api/collections/getUsersCollection'
 
 export const checkPermissions = function (options) {
   const { isPublic, backend } = options
@@ -21,7 +22,7 @@ export const checkPermissions = function (options) {
     }
 
     if (backend) {
-      const user = Meteor.users.findOne(userId)
+      const user = getUsersCollection().findOne(userId)
       if (!user?.services?.lea) {
         throw new Meteor.Error('errors.permissionDenied', 'errors.backendOnly', userId)
       }

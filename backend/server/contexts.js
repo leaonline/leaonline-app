@@ -12,8 +12,10 @@ import { Session } from '../contexts/session/Session'
 import { Response } from '../contexts/response/Response'
 import { Analytics } from '../contexts/analytics/Analytics'
 import { ServiceRegistry } from '../api/remotes/ServiceRegistry'
+import { Legal } from '../contexts/legal/Legal'
 import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
+import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -28,13 +30,13 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })
 
 // create methods for backend ctx
-;[MapData, Users, Content, SyncState, Session, Response, Progress, Analytics].forEach(ctx => {
+;[MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph].forEach(ctx => {
   const methods = Object.values(ctx.methods)
   methods.forEach(method => createMethod(method))
   register(ctx)
@@ -53,6 +55,7 @@ ServiceRegistry.register(Session)
 ServiceRegistry.register(MapData)
 ServiceRegistry.register(Progress)
 ServiceRegistry.register(Users)
+ServiceRegistry.register(Legal)
 
 const methods = Object.values(ServiceRegistry.methods)
 methods.forEach(method => createMethod(method))
