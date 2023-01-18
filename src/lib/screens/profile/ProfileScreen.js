@@ -1,7 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
 import { AccountInfo } from './account/AccountInfo'
-import { Achievements } from './achievements/Achievements'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { TTSSettings } from './TTSSettings'
@@ -10,6 +9,7 @@ import { Loading } from '../../components/Loading'
 import Colors from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { ActionButton } from '../../components/ActionButton'
 
 /**
  *  TODO
@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
  * @returns {JSX.Element}
  * @constructor
  */
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
   const screenReady = useTimeout({ timeout: 300 })
   const { Tts } = useTts()
   const { t } = useTranslation()
@@ -29,16 +29,13 @@ const ProfileScreen = () => {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.headline}>
-          <Tts
-            text={t('profileScreen.achievements.title')}
-            color={Colors.secondary}
-            align='center'
-            fontStyle={styles.headlineText}
-            id='profileScreen.achievements.title'
-          />
-        </View>
-        <Achievements containerStyle={styles.achievements} />
+        <ActionButton
+            buttonStyle={styles.achievementsButton}
+            titleStyle={styles.achievementButtonTitle}
+            iconColor={Colors.secondary}
+            color={Colors.white}
+            onPress={() => props.navigation.navigate('achievements')}
+            title={t('profileScreen.achievements.title')} />
         <View style={styles.headline}>
           <Tts
             text={t('tts.settings')}
@@ -75,25 +72,27 @@ const styles = createStyleSheet({
     ...Layout.container()
   },
   scroll: {
-  },
-  achievements: {
-    flex: 1,
-    marginBottom: 55
-  },
+
+    },
   tts: {
-    flex: 1,
-    marginBottom: 55
+    flex: 1
   },
   accounts: {
-    flex: 1,
-    marginBottom: 55
+    flex: 1
   },
   headline: {
     alignItems: 'center',
+    marginTop: 55,
     marginBottom: 5
   },
   headlineText: {
     fontWeight: 'bold'
+  },
+  achievementsButton: {
+    backgroundColor: Colors.secondary
+  },
+  achievementButtonTitle: {
+    color: Colors.white
   }
 })
 

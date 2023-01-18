@@ -11,6 +11,7 @@ import MapScreen from '../screens/map/MapScreen'
 import DimensionScreen from '../screens/map/DimensionScreen'
 import UnitScreen from '../screens/unit/UnitScreen'
 import ProfileScreen from '../screens/profile/ProfileScreen'
+import { AchievementsScreen } from '../screens/profile/achievements/AchievementsScreen'
 import CompleteScreen from '../screens/complete/CompleteScreen'
 import { useTranslation } from 'react-i18next'
 import { useLogin } from '../hooks/useLogin'
@@ -58,6 +59,7 @@ export const MainNavigation = (props) => {
       const headerRight = () => (<ProfileButton route='profile' />)
       const mapScreenTitle = t('mapScreen.title')
       const profileScreenTitle = t('profileScreen.headerTitle')
+      const achievementScreenTitle = t('profileScreen.achievements.title')
       return (
         <>
           <Stack.Screen
@@ -127,6 +129,19 @@ export const MainNavigation = (props) => {
               headerTitleAlign: 'center',
               headerLeft: () => (<BackButton icon='arrow-left' />),
               headerTitle: () => renderTitleTts(profileScreenTitle),
+              headerRight: () => (<></>)
+            }}
+          />
+          <Stack.Screen
+            name='achievements'
+            component={AchievementsScreen}
+            options={{
+              headerStyle,
+              title: achievementScreenTitle,
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerLeft: () => (<BackButton icon='arrow-left' />),
+              headerTitle: () => renderTitleTts(achievementScreenTitle),
               headerRight: () => (<></>)
             }}
           />

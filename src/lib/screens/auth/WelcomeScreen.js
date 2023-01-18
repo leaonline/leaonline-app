@@ -52,10 +52,9 @@ export const WelcomeScreen = props => {
         <FadePanel visible={continueAvailable} style={styles.panel}>
           <Tts
             id='welcomeScreen.text'
-            block
+            block={true}
             style={styles.text}
             text={speedTestText}
-            align='center'
           />
         </FadePanel>
         <FadePanel visible={continueAvailable} style={styles.panel}>

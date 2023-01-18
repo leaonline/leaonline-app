@@ -68,6 +68,7 @@ const HomeScreen = props => {
           block
           align='flex-start'
         />
+        <Fill />
         {renderButtons()}
         <Fill />
       </ScrollView>
@@ -79,10 +80,12 @@ export default HomeScreen
 
 const styles = createStyleSheet({
   container: {
-    flex: 1
+    flex: 1,
+    alignItems: 'stretch'
   },
   scrollContainer: {
     ...Layout.container(),
+    flexGrow: 1,
     flex: 0
   },
   buttonContainer: {
@@ -92,4 +95,4 @@ const styles = createStyleSheet({
   buttonLabel: {
     fontWeight: 'bold'
   }
-})
+}, true)

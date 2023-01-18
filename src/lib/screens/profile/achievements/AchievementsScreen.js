@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { LinearProgress } from 'react-native-elements'
 import Colors from '../../../constants/Colors'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +21,7 @@ import { DimensionAchievements } from './DimensionAchievements'
  * @return {*}
  * @constructor
  */
-export const Achievements = (props) => {
+export const AchievementsScreen = (props) => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const docs = loadDocs({
@@ -29,9 +29,9 @@ export const Achievements = (props) => {
   })
 
   const ready = docs?.data?.dimensions?.length && docs?.data?.fields?.length
-  const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
-    <ScreenBase {...docs} style={containerStyle}>
+    <ScreenBase {...docs} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
       {ready && (<DimensionAchievements {...docs?.data} />)}
       <View style={styles.headline}>
         <Tts
@@ -49,6 +49,7 @@ export const Achievements = (props) => {
           style={styles.globalProgress}
         />
       </View>
+      </ScrollView>
     </ScreenBase>
   )
 }
@@ -58,9 +59,13 @@ export const Achievements = (props) => {
  */
 const styles = createStyleSheet({
   container: {
-    ...Layout.container({ margin: 0 }),
-    flex: 0,
-    justifyContent: 'flex-start'
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  scrollContainer: {
+    ...Layout.container(),
+    flexGrow: 1,
+    flex: 0
   },
   headline: {
     alignItems: 'center',
@@ -72,4 +77,4 @@ const styles = createStyleSheet({
     height: 15,
     width: '65%'
   }
-})
+}, true)

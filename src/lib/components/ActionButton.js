@@ -14,6 +14,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
  * @component
  * @param {string} props.title: The displayed and spoken title
  * @param {string} props.icon: The icon for the button
+ * @param {string} props.iconColor: The icon color for the button
  * @param {function} props.handleScreen The screen to be navigated
  * @param {boolean=} props.onlyIcon Determine whether only one icon is displayed (Default 'false')
  * @param {boolean=} props.block Display in block mode, where the button stretches over full h-space

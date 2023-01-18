@@ -107,25 +107,19 @@ const TermsAndConditionsScreen = props => {
     <ScrollView contentContainerStyle={styles.tcContainer}>
       <View style={styles.container}>
         <LeaLogo style={styles.logo} />
-
         <Tts
           style={styles.introduction}
           text={t('TandCScreen.text')}
           id='TandCScreen.text'
-          block
-          align='center'
-        />
-
+          block={true}/>
         <Modal
           animationType='slide'
-          transparent
+          transparent={true}
           visible={state.modalOpen}
-          onRequestClose={onModalClose}
-        >
+          onRequestClose={onModalClose}>
           <ScrollView
             contentContainerStyle={styles.modalBackground}
-            persistentScrollbar
-          >
+            persistentScrollbar>
             <View style={styles.modalContent}>
               <View style={styles.modalTerms}>
                 {termsDocs?.data && (<Markdown value={termsDocs.data} style={styles.markdown} />)}
@@ -146,8 +140,7 @@ const TermsAndConditionsScreen = props => {
           icon='file-alt'
           iconColor={Colors.primary}
           onPress={onModalOpen}
-          block
-        />
+          block />
 
         <Checkbox
           id='TandCScreen.checkBoxText'
