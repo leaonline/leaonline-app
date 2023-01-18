@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 import { Modal, ScrollView, Vibration, View } from 'react-native'
 import Colors from '../../constants/Colors'
-import { useTts } from '../../components/Tts'
+import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import RouteButton from '../../components/RouteButton'
@@ -96,6 +96,7 @@ const TermsAndConditionsScreen = props => {
     dispatch({ type: 'modal', modalOpen: true })
   }
   const onModalClose = () => {
+    TTSengine.stop()
     InteractionGraph.action({
       type: 'select', target: 'termsModal', details: { action: 'close' }
     })
@@ -246,16 +247,9 @@ const styles = createStyleSheet({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: '5%',
+    padding: 10,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+    ...Layout.dropShadow()
   },
   modalFooter: {
     flex: 0,

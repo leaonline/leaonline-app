@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TTSengine, useTts } from '../../components/Tts'
 import { CharacterInput } from '../../components/CharacterInput'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { SafeAreaView, ScrollView } from 'react-native'
+import { SafeAreaView, ScrollView, View } from 'react-native'
 import { ActionButton } from '../../components/ActionButton'
 import { ErrorMessage } from '../../components/ErrorMessage'
 import { AuthContext } from '../../contexts/AuthContext'
@@ -80,30 +80,35 @@ export const RestoreScreen = () => {
     if (!error && !checkingCode) { return }
 
     if (checkingCode) {
-      return (<Loading />)
+      return (<Loading/>)
     }
 
     // in case we get any weird 500 errors etc.
     if (!error.error.includes('permissionDenied')) {
-      return (<ErrorMessage error={error} />)
+      return (<ErrorMessage error={error}/>)
     }
 
     return (
-      <Tts
-        block={true}
-        iconColor={Colors.danger}
-        text={t(error.reason)}
-        style={styles.errorMessage} />
+      <View style={styles.errorMessage}>
+        <Tts
+          block={true}
+          iconColor={Colors.white}
+          color={Colors.white}
+          text={t(error.reason)}/>
+      </View>
     )
   }
 
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
-        <CharacterInput id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)} disabled={checkingCode} />
-        <CharacterInput id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} disabled={checkingCode} />
-        <CharacterInput id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} disabled={checkingCode} />
+        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions}/>
+        <CharacterInput id="row-1" refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)}
+                        disabled={checkingCode}/>
+        <CharacterInput id="row-2" refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)}
+                        onNegativeEnd={() => jumpBack(1)} disabled={checkingCode}/>
+        <CharacterInput id="row-3" refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)}
+                        onNegativeEnd={() => jumpBack(2)} disabled={checkingCode}/>
         {renderFailure()}
         <ActionButton
           block={true}
@@ -111,7 +116,7 @@ export const RestoreScreen = () => {
           waiting={checkingCode}
           title={t('restoreScreen.checkCode')}
           style={styles.checkButton}
-          onPress={checkCodes} />
+          onPress={checkCodes}/>
       </SafeAreaView>
     </ScrollView>
   )
@@ -126,7 +131,10 @@ const styles = createStyleSheet({
   },
   errorMessage: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 15
   },
   checkButton: {
     marginTop: 10

@@ -4,6 +4,7 @@ import { TTSengine } from './Tts'
 import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import MarkdownRenderer from 'react-native-markdown-display'
+import { LeaText } from './LeaText'
 
 const Tts = TTSengine.component()
 
@@ -44,8 +45,9 @@ const rules = {
         key={node.key}
         style={styles.text}
         text={text}
-        block={true}
+        dontShowText={false}
         ttsText={transformed}
+        fontStyle={styles.textTitle}
         align='flex-start'  />
     )
   },
@@ -53,19 +55,33 @@ const rules = {
 
 const styles = createStyleSheet({
   container: {
+    alignSelf: 'stretch',
+    borderColor: '#00f',
     flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center'
   },
   paragraph: {
+    alignSelf: 'stretch',
+    borderColor: '#0ff',
     flex: 1
   },
   textGroup: {
+    alignSelf: 'stretch',
+    borderColor: '#f0f',
     flex: 1,
     marginBottom: 15
   },
   text: {
+    alignSelf: 'stretch',
+    borderColor: '#f00',
     flex: 1
+  },
+  textTitle: {
+    alignSelf: 'stretch',
+    borderColor: '#ff0',
+    flex: 1,
+    flexGrow: 1
   }
 })
 
