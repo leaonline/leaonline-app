@@ -1,7 +1,7 @@
 import { simpleRandomHex } from '../../utils/simpleRandomHex'
-import { Log } from '../Log'
-import { Config } from '../../env/Config'
 import { callMeteor } from '../../meteor/call'
+import Meteor from '@meteorrn/core'
+import { Log } from '../Log'
 
 /**
  * This id is generated when the module is loaded and allows
@@ -39,21 +39,21 @@ const queue = ({ type, subtype, id, target, message, details }) => {
 }
 
 const send = () => {
-  debug('send', internal.stack.length, 'graph-items')
   const user = Meteor.user()
 
   // the data is only sent to the server,
   // if the user has actively participated
   // in our research programme
-  if (!user?.research) { return }
-
-  callMeteor({
-    name: 'interactionGraph.methods.send',
-    args:  { data: [].concat(internal.stack) },
-    failure: e => Log.error(e)
-  })
-
-  internal.stack.length = 0
+  if (user?.research === true) {
+    const data = [].concat(internal.stack)
+    debug('send', data, 'graph-items')
+    internal.stack.length = 0
+    callMeteor({
+      name: 'interactionGraph.methods.send',
+      args:  { data },
+      failure: e => Log.error(e)
+    }).catch(e => Log.error(e))
+  }
 }
 
 InteractionGraph.enterApp = () => {
@@ -101,10 +101,6 @@ InteractionGraph.reaction = ({ id, target, type, message, details }) => {
   })
 }
 InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
-  if (Config.isDevelopment && error) {
-    Log.error(error)
-  }
-
   queue({
     type: 'problem',
     subtype: type,
@@ -114,7 +110,7 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
     details: error?.details
   })
 
-  send()
+  //send()
 }
 InteractionGraph.goal = ({ type, target, message, details }) => {
   queue({

@@ -36,6 +36,23 @@ Layout.content = () => {
   }
 }
 
+/**
+ * Default styles for (Text-) input
+ * components.
+ */
+Layout.input = () => ({
+  padding: 5,
+  fontSize: 18,
+  fontFamily: 'semicolon',
+  color: Colors.secondary,
+  backgroundColor: '#fff',
+  borderWidth: 1,
+  borderTopLeftRadius: 4,
+  borderTopRightRadius: 4,
+  borderBottomRightRadius: 4,
+  borderBottomLeftRadius: 4
+})
+
 Layout.defaultFont = () => ({
   color: Colors.secondary,
   fontFamily: 'semicolon',

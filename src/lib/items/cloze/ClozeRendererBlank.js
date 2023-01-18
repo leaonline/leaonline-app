@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { LeaText } from '../../components/LeaText'
 import { useBackHandler } from '../../hooks/useBackHandler'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
+import { Layout } from '../../constants/Layout'
 
 /**
  * Renders a blanks, which is a free-text input specific to the Cloze item.
@@ -165,16 +166,7 @@ export const ClozeRendererBlank = props => {
 
 const styles = createStyleSheet({
   input: {
-    padding: 5,
-    fontSize: 18,
-    fontFamily: 'semicolon',
-    color: Colors.secondary,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-    borderBottomLeftRadius: 4
+    ...Layout.input()
   },
   correctResponse: {
     flex: 1,

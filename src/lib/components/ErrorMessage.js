@@ -55,10 +55,11 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
 /** @private */
 const styles = createStyleSheet({
   default: {
-    borderWidth: 0.5,
-    padding: 10,
+    padding: 15,
     borderColor: Colors.danger,
-    backgroundColor: Colors.white,
+    borderWidth: 0.5,
+    borderRadius: 15,
+    backgroundColor: Colors.light,
     ...Layout.dropShadow()
   }
 })

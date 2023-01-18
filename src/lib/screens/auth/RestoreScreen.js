@@ -9,11 +9,15 @@ import { ErrorMessage } from '../../components/ErrorMessage'
 import { AuthContext } from '../../contexts/AuthContext'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { Layout } from '../../constants/Layout'
+import Colors from '../../constants/Colors'
+import { asyncTimeout } from '../../utils/asyncTimeout'
+import { Loading } from '../../components/Loading'
 
 export const RestoreScreen = () => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [allCodes, setAllCodes] = useState(false)
+  const [checkingCode, setCheckingCode] = useState(false)
   const [error, setError] = useState(null)
   const codes = useRef([[], [], []])
   const row1 = useRef([null, null])
@@ -44,12 +48,16 @@ export const RestoreScreen = () => {
       row3.current[0].focus()
     }
   }
-  const checkCodes = () => {
+  const checkCodes = async () => {
+    setCheckingCode(true)
+    await asyncTimeout(300)
     restore({
       codes: codes.current.map(entry => entry.join('')),
       voice: TTSengine.currentVoice,
       speed: TTSengine.currentSpeed,
       onError: err => {
+        console.debug('get error', err?.message)
+        setCheckingCode(false)
         InteractionGraph.problem({
           type: 'rejected',
           target: InteractionGraph.toTargetGraph(RestoreScreen.name, checkCodes.name),
@@ -57,22 +65,53 @@ export const RestoreScreen = () => {
         })
         setError(err)
       },
-      onSuccess: () => InteractionGraph.goal({
-        target: `${RestoreScreen.name}`,
-        type: 'restored'
-      })
+      onSuccess: () => {
+        setCheckingCode(false)
+        setError(null)
+        InteractionGraph.goal({
+          target: `${RestoreScreen.name}`,
+          type: 'restored'
+        })
+      }
     })
+  }
+
+  const renderFailure = () => {
+    if (!error && !checkingCode) { return }
+
+    if (checkingCode) {
+      return (<Loading />)
+    }
+
+    // in case we get any weird 500 errors etc.
+    if (!error.error.includes('permissionDenied')) {
+      return (<ErrorMessage error={error} />)
+    }
+
+    return (
+      <Tts
+        block={true}
+        iconColor={Colors.danger}
+        text={t(error.reason)}
+        style={styles.errorMessage} />
+    )
   }
 
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
         <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
-        <CharacterInput id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)} />
-        <CharacterInput id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} />
-        <CharacterInput id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} />
-        <ErrorMessage error={error} />
-        <ActionButton block disabled={!allCodes} title={t('restoreScreen.checkCode')} onPress={checkCodes} />
+        <CharacterInput id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)} disabled={checkingCode} />
+        <CharacterInput id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)} onNegativeEnd={() => jumpBack(1)} disabled={checkingCode} />
+        <CharacterInput id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)} onNegativeEnd={() => jumpBack(2)} disabled={checkingCode} />
+        {renderFailure()}
+        <ActionButton
+          block={true}
+          disabled={!allCodes}
+          waiting={checkingCode}
+          title={t('restoreScreen.checkCode')}
+          style={styles.checkButton}
+          onPress={checkCodes} />
       </SafeAreaView>
     </ScrollView>
   )
@@ -83,6 +122,13 @@ const styles = createStyleSheet({
     ...Layout.container()
   },
   instructions: {
-
+    marginBottom: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  checkButton: {
+    marginTop: 10
   }
 })

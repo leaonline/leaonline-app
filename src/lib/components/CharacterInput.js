@@ -20,6 +20,7 @@ const alphaChars = /^[A-Za-z\d]/i
  * @component
  * @param props {object}
  * @param props.length {number} the amount of cells to be rendered
+ * @param props.disabled {boolean=} optional disabled state
  * @param props.onEnd {function=} called when the last field received and input
  * @param props.onNegativeEnd {function=} called when the first field received a backspace input
  * @returns {JSX.Element}
@@ -48,11 +49,27 @@ export const CharacterInput = props => {
 
   const handleKeyPress = (e, index) => {
     const { nativeEvent } = e
+    const abort = () => {
+      e.preventDefault()
+      return false
+    }
 
     if (nativeEvent.key === 'Backspace') {
       const newChars = [].concat(chars)
+      const hasChar = !!newChars[index]
+
+      // in any case we clear the current field
+      // and update the chars list
       newChars[index] = ''
       setChars(newChars)
+
+      // however, we don't jump back, if the current
+      // char was deleted, because this indicates, that
+      // the user may want to edit the current char
+      if (hasChar) {
+        return abort()
+      }
+
       const nextRef = refs.current.get(index - 1)
 
       // if we habe a previous cell we jump into it
@@ -71,13 +88,11 @@ export const CharacterInput = props => {
         }
       }
 
-      e.preventDefault()
-      return false
+      return abort()
     }
 
     if (!alphaChars.test(nativeEvent.key)) {
-      e.preventDefault()
-      return false
+      return abort()
     }
   }
 
@@ -114,6 +129,7 @@ export const CharacterInput = props => {
           onKeyPress={e => handleKeyPress(e, index)}
           style={styles.input}
           key={key}
+          editable={!props.disabled}
           value={chars[index]}
           onChangeText={char => updateChars(char, index)}
           maxLength={1}
@@ -126,8 +142,14 @@ export const CharacterInput = props => {
   const hasChars = ttsText.replace(/\s+/g, '').length > 0
   return (
     <View style={styles.container}>
-      <Tts text={ttsText} disabled={!hasChars} dontShowText />
-      {renderCells()}
+      <Tts
+        text={ttsText}
+        disabled={!hasChars}
+        dontShowText={true}
+      style={styles.tts}/>
+      <View style={styles.inputContainer}>
+        {renderCells()}
+      </View>
     </View>
   )
 }
@@ -135,16 +157,25 @@ export const CharacterInput = props => {
 const styles = createStyleSheet({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   },
   input: {
+    ...Layout.input(),
     width: 50,
     height: 50,
-    marginRight: 10,
     borderWidth: 1,
     borderColor: Colors.dark,
     textAlign: 'center',
     ...Layout.defaultFont()
+  },
+  inputContainer: {
+    flexGrow: 1,
+    marginLeft: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 5,
+    marginBottom: 5
   }
 })
