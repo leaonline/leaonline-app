@@ -16,6 +16,7 @@ import { Legal } from '../contexts/legal/Legal'
 import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
+import { MapIcons } from '../contexts/map/MapIcons'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -30,13 +31,13 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })
 
 // create methods for backend ctx
-;[MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph].forEach(ctx => {
+;[MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons].forEach(ctx => {
   const methods = Object.values(ctx.methods)
   methods.forEach(method => createMethod(method))
   register(ctx)
@@ -53,6 +54,7 @@ ServiceRegistry.addLang(defaultLang, getServiceLang(defaultLang))
 // ServiceRegistry.register(Analytics)
 ServiceRegistry.register(Session)
 ServiceRegistry.register(MapData)
+ServiceRegistry.register(MapIcons)
 ServiceRegistry.register(Progress)
 ServiceRegistry.register(Users)
 ServiceRegistry.register(Legal)
