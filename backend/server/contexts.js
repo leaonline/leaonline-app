@@ -17,6 +17,7 @@ import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
 import { MapIcons } from '../contexts/map/MapIcons'
+import { DevData } from '../contexts/dev/DevData'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -37,7 +38,15 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create methods for backend ctx
-;[MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons].forEach(ctx => {
+// where in staging mode we add additional contexts
+// that make methods only accessible in this mode
+const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons]
+
+if (Meteor.settings.isStaging) {
+  methodContexts.push(DevData)
+}
+
+methodContexts.forEach(ctx => {
   const methods = Object.values(ctx.methods)
   methods.forEach(method => createMethod(method))
   register(ctx)

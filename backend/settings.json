@@ -1,5 +1,6 @@
 {
   "defaultLang": "de",
+  "isStaging": true,
   "oauth": {
     "clientId": "Lb5soRv7RH2g8inRc",
     "secret": "Y4yNeHM3bniSogeWacRcYZ3S5yz3TCuW",
@@ -18,15 +19,15 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": false,
-        "unit": false,
-        "unitSet": false,
-        "dimension": false,
-        "level": false,
-        "testCycle": false
+        "field": true,
+        "unit": true,
+        "unitSet": true,
+        "dimension": true,
+        "level": true,
+        "testCycle": true
       },
       "remap": {
-        "active": false,
+        "active": true,
         "dryRun": false,
         "dimensions": {
           "order": ["W", "R", "M", "S"]

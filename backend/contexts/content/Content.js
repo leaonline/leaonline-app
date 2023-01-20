@@ -1,4 +1,5 @@
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
+import { getCollection } from '../../api/utils/getCollection'
 
 /**
  * This is a context, providing methods that simply delegate code to the
@@ -73,10 +74,10 @@ Content.methods.map = {
 }
 
 /**
- * Returns all relevant data for a unit
+ * Returns all relevant data for a current session to load a unit
  */
-Content.methods.unit = {
-  name: 'content.methods.unit',
+Content.methods.session = {
+  name: 'content.methods.session',
   schema: {
     unitSetId: String
   },
@@ -86,6 +87,23 @@ Content.methods.unit = {
     return function ({ unitSetId }) {
       const { userId } = this
       return Session.get({ unitSet: unitSetId, userId })
+    }
+  })
+}
+
+/**
+ * Loads a raw unit without further data
+ */
+Content.methods.unit = {
+  name: 'content.methods.unit',
+  schema: {
+    unitId: String
+  },
+  run: onServerExec(function ( ) {
+    import { Unit } from '../content/Unit'
+
+    return function ({ unitId }) {
+      return getCollection(Unit.name).findOne({ _id: unitId })
     }
   })
 }

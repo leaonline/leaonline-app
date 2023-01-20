@@ -2,6 +2,7 @@ const SimpleSchema = require('simpl-schema')
 const schema = def => new SimpleSchema(def)
 
 const settingsSchema = schema({
+  isStaging: Boolean,
   defaultLang: String,
   oauth: schema({
     clientId: String,
