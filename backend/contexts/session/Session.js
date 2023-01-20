@@ -326,7 +326,6 @@ Session.methods.getAll = {
 
     const data = { [Session.name]: docs }
 
-
     if (dependencies) {
       Object.values(dependencies).forEach(dep => {
         console.debug(dep)

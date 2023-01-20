@@ -38,7 +38,6 @@ Content.methods.home = {
     import { Field } from './Field'
     import { Dimension } from './Dimension'
     import { Level } from './Level'
-    import { getCollection } from '../../api/utils/getCollection'
 
     return function ({ field, dimension, level }) {
       return {
@@ -99,7 +98,7 @@ Content.methods.unit = {
   schema: {
     unitId: String
   },
-  run: onServerExec(function ( ) {
+  run: onServerExec(function () {
     import { Unit } from '../content/Unit'
 
     return function ({ unitId }) {

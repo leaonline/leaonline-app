@@ -14,15 +14,15 @@ InteractionGraph.schema = {
   sessionId: String,
   type: String,
   subtype: {
-    type:String,
+    type: String,
     optional: true
   },
   target: {
-    type:String,
+    type: String,
     optional: true
   },
   message: {
-    type:String,
+    type: String,
     optional: true
   },
   details: {
@@ -31,7 +31,7 @@ InteractionGraph.schema = {
     blackbox: true
   },
   id: {
-    type:String,
+    type: String,
     optional: true
   },
   timestamp: Date
@@ -46,7 +46,7 @@ InteractionGraph.methods.send = {
     'data.$': {
       type: Object,
       blackbox: true
-    },
+    }
   },
   run: (function () {
     import { getUsersCollection } from '../../api/collections/getUsersCollection'

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { Legal } from '../contexts/legal/Legal'
 import { getCollection } from '../api/utils/getCollection'
 
