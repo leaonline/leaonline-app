@@ -1,5 +1,6 @@
 {
   "isDevelopment": false,
+  "isDeveloperRelease": true,
   "backend": {
     "url": "ws://192.168.178.49:8080/websocket",
     "maxTimeout": 3000,
@@ -13,7 +14,8 @@
       "content": {
         "home": "content.methods.home",
         "map": "content.methods.map",
-        "unit": "content.methods.unit"
+        "unit": "content.methods.unit",
+        "session": "content.methods.session"
       },
       "progress": {
         "get": "progress.methods.get"
@@ -31,6 +33,9 @@
             "name": "terms"
           }
         }
+      },
+      "dev": {
+        "get": "devData.methods.get"
       }
     }
   },

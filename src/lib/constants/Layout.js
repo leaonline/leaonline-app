@@ -19,6 +19,8 @@ Layout.isLarge = () => isLarge
 
 Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
 
+Layout.fontScale = () => fontScale
+
 const defaultContainerMargin = isLarge
   ? '8%'
   : '3%'
@@ -57,7 +59,7 @@ Layout.input = () => ({
 Layout.defaultFont = () => ({
   color: Colors.secondary,
   fontFamily: 'semicolon',
-  fontSize: 22,
+  fontSize: 22 / Layout.fontScale(),
   lineHeight: 28,
   fontStyle: 'normal',
   fontWeight: 'normal',

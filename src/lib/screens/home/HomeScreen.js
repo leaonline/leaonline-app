@@ -95,4 +95,4 @@ const styles = createStyleSheet({
   buttonLabel: {
     fontWeight: 'bold'
   }
-}, true)
+})

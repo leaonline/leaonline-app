@@ -11,7 +11,7 @@ import nextFrame from 'next-frame'
 export const AppSession = {}
 
 const { EJSON } = Meteor
-const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies', 'loadUserData']
+const validKeys = ['screen', 'field', 'stage', 'dimension', 'unitSet', 'unit', 'page', 'progress', 'response', 'competencies', 'loadUserData', 'unitId']
 const validateKey = key => {
   if (!validKeys.includes(key)) {
     throw new Error(`Unknown key ${key}, allowed are only ${validKeys.toString()}`)

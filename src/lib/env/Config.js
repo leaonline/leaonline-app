@@ -1,7 +1,7 @@
 /* global __DEV__ */
 import settings from '../settings.json'
 
-const { backend, content, log, debug, isDevelopment, dimensions } = settings
+const { backend, content, log, debug, isDevelopment, isDeveloperRelease, dimensions } = settings
 
 /**
  * These are the unified application globals.
@@ -13,7 +13,7 @@ export const Config = {}
  * We use this expo-internal to determine, whether this is development mode.
  */
 Config.isDevelopment = !!(__DEV__) || !!(isDevelopment)
-
+Config.isDeveloperRelease = () => isDeveloperRelease
 Config.isTest = () => process.env.JEST_WORKER_ID !== undefined
 
 /**
@@ -65,11 +65,13 @@ Config.methods.createUser = backend.methods.users.create
 Config.methods.deleteUser = backend.methods.users.delete
 Config.methods.getHomeData = backend.methods.content.home
 Config.methods.getMapData = backend.methods.content.map
-Config.methods.getUnitData = backend.methods.content.unit
+Config.methods.getUnitData = backend.methods.content.session
+Config.methods.getUnitDev = backend.methods.content.unit
 Config.methods.getProgress = backend.methods.progress.get
 Config.methods.updateSession = backend.methods.session.update
 Config.methods.submitResponse = backend.methods.response.submit
 Config.methods.getTerms = backend.methods.terms.get
+Config.methods.getDevData = backend.methods.dev.get
 
 /**
  * This configures the connection behaviour with the backend server.
@@ -91,3 +93,6 @@ Config.content.url = content.url
 Config.content.replaceUrl = content.replaceUrl
 
 Config.dimensions = dimensions
+
+Config.pattern = {}
+Config.pattern.unitSetCode = /\w\w_\w\d{4}/

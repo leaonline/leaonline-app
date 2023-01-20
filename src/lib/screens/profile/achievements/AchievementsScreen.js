@@ -77,4 +77,4 @@ const styles = createStyleSheet({
     height: 15,
     width: '65%'
   }
-}, true)
+})

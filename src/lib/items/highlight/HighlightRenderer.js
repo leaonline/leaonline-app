@@ -197,4 +197,4 @@ const styles = createStyleSheet({
     backgroundColor: Colors.warning,
     color: Colors.light
   }
-}, true)
+})

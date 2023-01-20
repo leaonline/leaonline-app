@@ -27,6 +27,9 @@ import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 import { AppSession } from '../state/AppSession'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createStyleSheet } from '../styles/createStyleSheet'
+import { createDevelopmentButton } from '../dev/createDevelopmentButton'
+import { DeveloperScreen } from '../dev/DeveloperScreen'
+import { UnitDevScreen } from '../dev/UnitDevScreen'
 
 const { AppSessionProvider } = AppSession.init({
   storage: AsyncStorage
@@ -43,6 +46,7 @@ const { AppSessionProvider } = AppSession.init({
  */
 const Stack = createNativeStackNavigator()
 const headerStyle = { backgroundColor: Colors.light }
+const DevelopmentButton = createDevelopmentButton({ route: 'development' })
 
 export const MainNavigation = (props) => {
   useKeepAwake()
@@ -69,6 +73,7 @@ export const MainNavigation = (props) => {
               headerStyle,
               headerBackVisible: false,
               headerTitleAlign: 'center',
+              headerLeft: () => (<DevelopmentButton />),
               headerTitle: () => (<></>),
               headerRight
             }}
@@ -143,6 +148,31 @@ export const MainNavigation = (props) => {
               headerLeft: () => (<BackButton icon='arrow-left' />),
               headerTitle: () => renderTitleTts(achievementScreenTitle),
               headerRight: () => (<></>)
+            }}
+          />
+          <Stack.Screen
+            name='development'
+            component={DeveloperScreen}
+            options={{
+              title: 'Dev',
+              headerStyle,
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerLeft: () => (<BackButton icon='arrow-left' />),
+              headerRight
+            }}
+          />
+          <Stack.Screen
+            name='unitDev'
+            component={UnitDevScreen}
+            options={{
+              headerStyle,
+              title: t('unitScreen.title'),
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerLeft: () => (<BackButton icon='arrow-left' />),
+              headerRight,
+              headerTitle: CurrentProgress
             }}
           />
         </>

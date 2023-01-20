@@ -229,7 +229,8 @@ const resources = {
         check: 'Überprüfen',
         next: 'Weiter',
         complete: 'Zur nächsten Aufgabe',
-        finish: 'Bearbeitung abschließen'
+        finish: 'Bearbeitung abschließen',
+        retry: 'Erneut bearbeiten'
       },
       abort: {
         question: 'Willst du die Übung wirklich abbrechen?',
