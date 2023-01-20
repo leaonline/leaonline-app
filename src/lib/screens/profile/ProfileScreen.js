@@ -30,12 +30,13 @@ const ProfileScreen = (props) => {
     return (
       <SafeAreaView style={styles.container}>
         <ActionButton
-            buttonStyle={styles.achievementsButton}
-            titleStyle={styles.achievementButtonTitle}
-            iconColor={Colors.secondary}
-            color={Colors.white}
-            onPress={() => props.navigation.navigate('achievements')}
-            title={t('profileScreen.achievements.title')} />
+          buttonStyle={styles.achievementsButton}
+          titleStyle={styles.achievementButtonTitle}
+          iconColor={Colors.secondary}
+          color={Colors.white}
+          onPress={() => props.navigation.navigate('achievements')}
+          title={t('profileScreen.achievements.title')}
+        />
         <View style={styles.headline}>
           <Tts
             text={t('tts.settings')}
@@ -73,7 +74,7 @@ const styles = createStyleSheet({
   },
   scroll: {
 
-    },
+  },
   tts: {
     flex: 1
   },

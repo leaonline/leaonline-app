@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import profileData from '../../../resources/profileData'
 import { useTts } from '../../../components/Tts'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { mergeStyles } from '../../../styles/mergeStyles'
 import { loadDocs } from '../../../meteor/loadDocs'
 import { loadAchievementsData } from './loadAchievementsData'
 import { ScreenBase } from '../../BaseScreen'
@@ -32,23 +31,23 @@ export const AchievementsScreen = (props) => {
   return (
     <ScreenBase {...docs} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {ready && (<DimensionAchievements {...docs?.data} />)}
-      <View style={styles.headline}>
-        <Tts
-          text={t('profileScreen.progress')}
-          color={Colors.primary}
-          fontStyle={styles.headlineText}
-          id='profileScreen.progress'
-        />
-      </View>
-      <View style={styles.headline}>
-        <LinearProgress
-          color={Colors.primary}
-          variant='determinate'
-          value={profileData.progress.global}
-          style={styles.globalProgress}
-        />
-      </View>
+        {ready && (<DimensionAchievements {...docs?.data} />)}
+        <View style={styles.headline}>
+          <Tts
+            text={t('profileScreen.progress')}
+            color={Colors.primary}
+            fontStyle={styles.headlineText}
+            id='profileScreen.progress'
+          />
+        </View>
+        <View style={styles.headline}>
+          <LinearProgress
+            color={Colors.primary}
+            variant='determinate'
+            value={profileData.progress.global}
+            style={styles.globalProgress}
+          />
+        </View>
       </ScrollView>
     </ScreenBase>
   )

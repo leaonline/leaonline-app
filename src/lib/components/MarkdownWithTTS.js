@@ -4,7 +4,6 @@ import { TTSengine } from './Tts'
 import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import MarkdownRenderer from 'react-native-markdown-display'
-import { LeaText } from './LeaText'
 
 const Tts = TTSengine.component()
 
@@ -48,9 +47,10 @@ const rules = {
         dontShowText={false}
         ttsText={transformed}
         fontStyle={styles.textTitle}
-        align='flex-start'  />
+        align='flex-start'
+      />
     )
-  },
+  }
 }
 
 const styles = createStyleSheet({

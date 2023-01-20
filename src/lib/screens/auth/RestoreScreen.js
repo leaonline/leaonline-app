@@ -56,7 +56,6 @@ export const RestoreScreen = () => {
       voice: TTSengine.currentVoice,
       speed: TTSengine.currentSpeed,
       onError: err => {
-        console.debug('get error', err?.message)
         setCheckingCode(false)
         InteractionGraph.problem({
           type: 'rejected',
@@ -80,21 +79,22 @@ export const RestoreScreen = () => {
     if (!error && !checkingCode) { return }
 
     if (checkingCode) {
-      return (<Loading/>)
+      return (<Loading />)
     }
 
     // in case we get any weird 500 errors etc.
     if (!error.error.includes('permissionDenied')) {
-      return (<ErrorMessage error={error}/>)
+      return (<ErrorMessage error={error} />)
     }
 
     return (
       <View style={styles.errorMessage}>
         <Tts
-          block={true}
+          block
           iconColor={Colors.white}
           color={Colors.white}
-          text={t(error.reason)}/>
+          text={t(error.reason)}
+        />
       </View>
     )
   }
@@ -102,21 +102,28 @@ export const RestoreScreen = () => {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions}/>
-        <CharacterInput id="row-1" refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)}
-                        disabled={checkingCode}/>
-        <CharacterInput id="row-2" refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)}
-                        onNegativeEnd={() => jumpBack(1)} disabled={checkingCode}/>
-        <CharacterInput id="row-3" refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)}
-                        onNegativeEnd={() => jumpBack(2)} disabled={checkingCode}/>
+        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
+        <CharacterInput
+          id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)}
+          disabled={checkingCode}
+        />
+        <CharacterInput
+          id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)}
+          onNegativeEnd={() => jumpBack(1)} disabled={checkingCode}
+        />
+        <CharacterInput
+          id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)}
+          onNegativeEnd={() => jumpBack(2)} disabled={checkingCode}
+        />
         {renderFailure()}
         <ActionButton
-          block={true}
+          block
           disabled={!allCodes}
           waiting={checkingCode}
           title={t('restoreScreen.checkCode')}
           style={styles.checkButton}
-          onPress={checkCodes}/>
+          onPress={checkCodes}
+        />
       </SafeAreaView>
     </ScrollView>
   )

@@ -34,7 +34,7 @@ export const loadDevData = async () => {
   const unitSetCodes = new Map()
 
   const withDimension = unitDoc => {
-    const [field,unitSetShortCode] = unitDoc.shortCode.split('_')
+    const [field, unitSetShortCode] = unitDoc.shortCode.split('_')
 
     if (!unitSetCodes.has(field)) {
       unitSetCodes.set(field, new Set())

@@ -145,8 +145,9 @@ export const CharacterInput = props => {
       <Tts
         text={ttsText}
         disabled={!hasChars}
-        dontShowText={true}
-      style={styles.tts}/>
+        dontShowText
+        style={styles.tts}
+      />
       <View style={styles.inputContainer}>
         {renderCells()}
       </View>

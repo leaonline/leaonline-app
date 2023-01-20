@@ -18,7 +18,7 @@ export const UnitDevScreen = props => {
   const [show, setShow] = useState(true)
   const [scored, setScored] = useState(-1)
   const [allTrue, setAllTrue] = useState(-1)
-  const [session, sessionActions] = useContext(AppSessionContext)
+  const [session] = useContext(AppSessionContext)
   const { unitId, dimension } = session
   const unitDocs = loadDocs({
     fn: () => loadDevUnit(unitId)
@@ -64,7 +64,7 @@ export const UnitDevScreen = props => {
           color={Colors.primary}
           icon='edit'
           onPress={checkScore}
-        />}
+                                 />}
         {showCorrectResponse && <ActionButton
           block
           align='center'
@@ -72,15 +72,15 @@ export const UnitDevScreen = props => {
           color={Colors.primary}
           icon='edit'
           onPress={retry}
-        />}
+                                />}
         {hasNextPage && <ActionButton
           block
-          align="center"
+          align='center'
           tts={t('unitScreen.actions.next')}
           icon='arrow-right'
           color={Colors.primary}
           onPress={nextPage}
-        />}
+                        />}
         <ActionButton
           block
           align='center'
@@ -93,7 +93,6 @@ export const UnitDevScreen = props => {
     )
   }
 
-
   return (
     <ScreenBase {...unitDocs}>
       {show && <UnitRenderer
@@ -104,7 +103,8 @@ export const UnitDevScreen = props => {
         allTrue={allTrue}
         taskPageAction={renderTaskPageActions}
         scoreResult={scoreResult}
-        dimension={dimension} />}
+        dimension={dimension}
+               />}
     </ScreenBase>
   )
 }

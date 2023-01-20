@@ -74,7 +74,8 @@ export const UnitRenderer = props => {
           Vibration.vibrate(500)
           scrollViewRef.current?.scrollToEnd({ animated: true })
           await Sound.play(RIGHT_ANSWER)
-        } else {
+        }
+        else {
           Vibration.vibrate(100)
           await Sound.play(WRONG_ANSWER)
         }
@@ -114,7 +115,7 @@ export const UnitRenderer = props => {
     if (!list?.length) { return null }
 
     return (
-      <InstructionsGraphics source={list[0]} color={dimensionColor}/>
+      <InstructionsGraphics source={list[0]} color={dimensionColor} />
     )
   }
 
@@ -125,14 +126,14 @@ export const UnitRenderer = props => {
 
     return (
       <View style={{ ...styles.unitCard, ...styles.allTrue }}>
-        <Tts color={Colors.success} align="center" iconColor={Colors.success} text={t('unitScreen.allTrue')}/>
+        <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
         <Icon
-          testID="alltrue-icon"
+          testID='alltrue-icon'
           reverse
           color={Colors.success}
           size={20}
-          name="thumbs-up"
-          type="font-awesome-5"
+          name='thumbs-up'
+          type='font-awesome-5'
         />
       </View>
     )
@@ -154,7 +155,7 @@ export const UnitRenderer = props => {
       ref={scrollViewRef}
       contentContainerStyle={styles.scrollView}
       persistentScrollbar
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps='always'
     >
       {/* 1. PART STIMULI */}
       <FadePanel style={mergeStyles(styles.unitCard, dropShadow)} visible={fadeIn >= 0}>
@@ -165,12 +166,12 @@ export const UnitRenderer = props => {
       <FadePanel style={{ ...styles.unitCard, ...dropShadow, paddingTop: 0 }} visible={fadeIn >= 1}>
         <LeaText style={styles.pageText}>
           <Icon
-            testID="info-icon"
+            testID='info-icon'
             reverse
             color={Colors.gray}
             size={10}
-            name="info"
-            type="font-awesome-5"
+            name='info'
+            type='font-awesome-5'
           />
         </LeaText>
         {renderInstructions(unitDoc.instructions)}
@@ -179,7 +180,8 @@ export const UnitRenderer = props => {
       {/* 3. PART TASK PAGE CONTENT */}
       <FadePanel
         style={{ ...styles.unitCard, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
-        visible={fadeIn >= 2}>
+        visible={fadeIn >= 2}
+      >
         <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
         {renderContent(unitDoc.pages[page]?.instructions)}
@@ -199,7 +201,6 @@ const WRONG_ANSWER = 'wrongAnswer'
 
 Sound.load(RIGHT_ANSWER, () => require('../../assets/audio/right_answer.wav'))
 Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))
-
 
 const styles = createStyleSheet({
   contentElement: {
@@ -251,7 +252,7 @@ const styles = createStyleSheet({
     marginLeft: 4,
     marginRight: 4,
     alignItems: 'stretch'
-  },
+  }
 })
 
 const dropShadow = Layout.dropShadow()

@@ -22,7 +22,7 @@ export const DeveloperScreen = props => {
   const [unitSetCode, setUnitSetCode] = useState(null)
   const [unitSets, setUnitSets] = useState(null)
   const [selectedUnit, setSelectedUnit] = useState(null)
-  const [session, sessionActions] = useContext(AppSessionContext)
+  const [/* session */, sessionActions] = useContext(AppSessionContext)
   const devDocs = loadDocs({
     fn: loadDevData
   })
@@ -70,7 +70,8 @@ export const DeveloperScreen = props => {
               key={index}
               bottomDivider
               containerStyle={[styles.list, name === fieldName ? styles.active : undefined]}
-              onPress={() => selectField(name)}>
+              onPress={() => selectField(name)}
+            >
               <ListItem.Content style={styles.listItem}>
                 <ListItem.Title style={styles.title}>{name}</ListItem.Title>
               </ListItem.Content>
@@ -90,8 +91,9 @@ export const DeveloperScreen = props => {
             <ListItem
               key={index}
               bottomDivider
-              containerStyle={[styles.list, dimensionDoc.shortNum == dimensionNum ? styles.active : undefined]}
-              onPress={() => selectDimension(dimensionDoc)}>
+              containerStyle={[styles.list, String(dimensionDoc.shortNum) === String(dimensionNum) ? styles.active : undefined]}
+              onPress={() => selectDimension(dimensionDoc)}
+            >
               <ListItem.Content style={styles.listItem}>
                 <ListItem.Title style={styles.title}>{dimensionDoc.shortCode}</ListItem.Title>
               </ListItem.Content>
@@ -113,7 +115,8 @@ export const DeveloperScreen = props => {
               key={index}
               bottomDivider
               containerStyle={[styles.list, shortCode === unitSetCode ? styles.active : undefined]}
-              onPress={() => selectUnitSet(shortCode)}>
+              onPress={() => selectUnitSet(shortCode)}
+            >
               <ListItem.Content style={styles.listItem}>
                 <ListItem.Title style={styles.title}>{shortCode}</ListItem.Title>
               </ListItem.Content>
@@ -131,10 +134,11 @@ export const DeveloperScreen = props => {
         {
           filteredUnits.map((unitDoc, index) => (
             <ListItem
-              ke={index}
+              key={index}
               bottomDivider
               containerStyle={[styles.list, selectedUnit === unitDoc.shortCode ? styles.active : undefined]}
-              onPress={()=> selectUnit(unitDoc)}>
+              onPress={() => selectUnit(unitDoc)}
+            >
               <ListItem.Content style={styles.listItem}>
                 <ListItem.Title style={styles.title}>{unitDoc.shortCode.replace(`${fieldName}_${unitSetCode}_`, '')}</ListItem.Title>
               </ListItem.Content>
@@ -147,10 +151,10 @@ export const DeveloperScreen = props => {
 
   return (
     <ScreenBase {...devDocs} style={styles.container}>
-        {renderFieldList()}
-        {renderDimensionList()}
-        {renderUnitSetList()}
-        {renderUnitList()}
+      {renderFieldList()}
+      {renderDimensionList()}
+      {renderUnitSetList()}
+      {renderUnitList()}
     </ScreenBase>
   )
 }
@@ -168,7 +172,7 @@ const styles = createStyleSheet({
   },
   list: {
     padding: 0,
-    margin: 0,
+    margin: 0
   },
   fieldList: {
     flexGrow: 1,

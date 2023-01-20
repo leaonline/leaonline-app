@@ -48,15 +48,15 @@ export const RegistrationScreen = () => {
   if (error) {
     return (
       <View style={styles.container}>
-        <ErrorMessage error={error}/>
+        <ErrorMessage error={error} />
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <Loading/>
-      <Tts text={t('registrationScreen.creating')}/>
+      <Loading />
+      <Tts text={t('registrationScreen.creating')} />
     </View>
   )
 }

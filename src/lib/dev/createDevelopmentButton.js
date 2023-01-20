@@ -24,7 +24,7 @@ export const createDevelopmentButton = ({ route }) => {
         name='keyboard'
         type='font-awesome-5'
         color={Colors.gray}
-        reverse={true}
+        reverse
         size={18}
       />
     </Pressable>

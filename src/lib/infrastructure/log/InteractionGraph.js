@@ -50,7 +50,7 @@ const send = () => {
     internal.stack.length = 0
     callMeteor({
       name: 'interactionGraph.methods.send',
-      args:  { data },
+      args: { data },
       failure: e => Log.error(e)
     }).catch(e => Log.error(e))
   }
@@ -110,7 +110,7 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
     details: error?.details
   })
 
-  //send()
+  // send()
 }
 InteractionGraph.goal = ({ type, target, message, details }) => {
   queue({
