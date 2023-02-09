@@ -31,6 +31,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: responseDoc.responses[0],
             score: false,
+            target: 0,
             isUndefined: true
           },
           {
@@ -38,6 +39,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[1].correctResponse,
             value: responseDoc.responses[1],
             score: false,
+            target: 1,
             isUndefined: true
           }
         ])
@@ -59,6 +61,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: responseDoc.responses[0],
             score: true,
+            target: 0,
             isUndefined: false
           },
           {
@@ -66,6 +69,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[1].correctResponse,
             value: responseDoc.responses[1],
             score: true,
+            target: 1,
             isUndefined: false
           }
         ])
@@ -93,18 +97,21 @@ describe(scoreCloze.name, function () {
         correctResponse: itemDoc.scoring[0].correctResponse,
         value: 'foo',
         score: false,
+        target: 0,
         isUndefined: false
       }, {
         competency: itemDoc.scoring[1].competency,
         correctResponse: itemDoc.scoring[1].correctResponse,
         value: 'foo',
         score: true,
+        target: 0,
         isUndefined: false
       }, {
         competency: itemDoc.scoring[2].competency,
         correctResponse: itemDoc.scoring[2].correctResponse,
         value: 'bar',
         score: true,
+        target: 1,
         isUndefined: false
       }])
   })
@@ -113,7 +120,7 @@ describe(scoreCloze.name, function () {
     const allResponses = [
       ['a'], ['foo', ''], ['moo', undefined], ['bar', null], ['baz', Scoring.UNDEFINED]
     ]
-    allResponses.forEach(responses => {
+    allResponses.forEach((responses) => {
       const responseDoc = { responses }
       expect(scoreCloze(itemDoc, responseDoc))
         .toEqual([
@@ -122,6 +129,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[0].correctResponse,
             value: responseDoc.responses[0],
             score: true,
+            target: 0,
             isUndefined: false
           },
           {
@@ -129,6 +137,7 @@ describe(scoreCloze.name, function () {
             correctResponse: itemDoc.scoring[1].correctResponse,
             value: responseDoc.responses[1],
             score: false,
+            target: 1,
             isUndefined: true
           }
         ])

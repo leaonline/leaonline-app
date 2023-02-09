@@ -12,7 +12,13 @@ import { average } from '../../utils/math/average'
  * @param itemIndex
  * @param responses
  * @param entries
- * @return {{score: number, actual: string|number, entries: *[], color: string, index: number }}
+ * @return {{
+ *  score: number,
+ *  actual: string|number,
+ *  entries: *[],
+ *  color: string,
+ *  index: number
+ *  }}
  */
 export const createScoringSummaryForInput = ({ itemIndex, actual, entries }) => {
   const summary = {
@@ -31,16 +37,13 @@ export const createScoringSummaryForInput = ({ itemIndex, actual, entries }) => 
   // converting true/false scores to integer values
   // and adding up the sum
   entries.forEach(entry => {
-    const answerValue = Array.isArray(entry.value)
-      ? entry.value[0]
-      : entry.value
-    sum += CompareState.getValue(entry.score, answerValue)
+    sum += entry.score ? 1 : 0
   })
 
   // finally, computing average of all scores
   // and decide, which color to assign
-  summary.avg = average(sum, max)
-  summary.color = CompareState.getColor(Math.floor(summary.avg))
+  summary.score = average(sum, max)
+  summary.color = CompareState.getColor(Math.floor(summary.score))
   summary.entries = entries
 
   return summary

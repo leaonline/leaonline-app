@@ -14,6 +14,7 @@ export const scoreCloze = function scoreCloze (itemDoc, responseDoc) {
         correctResponse: entry.correctResponse,
         value: responseDoc.responses[entry.target],
         score: false,
+        target: entry.target,
         isUndefined: true
       }
     }
@@ -32,7 +33,7 @@ function scoreBlanks (entry, { responses }) {
   const isUndefined = !correctResponse.source.includes('__undefined__') && isUndefinedResponse(value)
 
   if (isUndefined) {
-    return { competency, correctResponse, value, score, isUndefined }
+    return { competency, correctResponse, value, target, score, isUndefined }
   }
 
   // check(value, Match.Where(isSafeTextString))
