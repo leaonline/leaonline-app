@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useReducer, useRef } from 'react'
 import { loadDocs } from '../meteor/loadDocs'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { loadDevUnit } from './loadDevUnit'
@@ -10,14 +10,48 @@ import Colors from '../constants/Colors'
 import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
+const initialState = {
+  page: 0,
+  scored: -1,
+  show: true,
+  allTrue: false
+}
+
+const reducer = (prevState, nextState) => {
+  switch (nextState.type) {
+    case 'to-page':
+      return {
+        ...prevState,
+        page: nextState.page,
+        allTrue: false
+      }
+    case 'scored':
+      return {
+        ...prevState,
+        allTrue: nextState.allTrue,
+        scored: nextState.scored
+      }
+    case 'reset':
+      return {
+        ...prevState,
+        show: false,
+        scored: nextState.scored,
+        allTrue: false
+      }
+    case 'show':
+      return {
+        ...prevState,
+        show: true
+      }
+  }
+}
+
 export const UnitDevScreen = props => {
   const { t } = useTranslation()
   const responseRef = useRef({})
   const scoreRef = useRef({})
-  const [page, setPage] = useState(0)
-  const [show, setShow] = useState(true)
-  const [scored, setScored] = useState(-1)
-  const [allTrue, setAllTrue] = useState(-1)
+  const [state, dispatch] = useReducer(reducer, initialState, undefined)
+  const { page, show, scored, allTrue } = state
   const [session] = useContext(AppSessionContext)
   const { unitId, dimension } = session
   const unitDocs = loadDocs({
@@ -34,23 +68,23 @@ export const UnitDevScreen = props => {
     const currentResponse = responseRef.current[page]
     const checked = await checkResponse({ currentResponse })
     scoreRef.current[page] = checked.scoreResult
-    setAllTrue(checked.allTrue)
-    setScored(page)
+    dispatch({
+      type: 'scored',
+      allTrue: checked.allTrue,
+      scored: page
+    })
   }
 
   const showCorrectResponse = scored === page
   const scoreResult = showCorrectResponse && scoreRef.current[page]
-  const nextPage = () => {
-    setAllTrue(false)
-    setPage(page + 1)
-  }
+  const nextPage = () => dispatch({ type: 'to-page', page: page + 1 })
   const retry = () => {
-    setShow(false)
-    setAllTrue(false)
-    setScored(-1)
-    delete scoreRef.current[page]
-    delete responseRef.current[page]
-    setTimeout(() => setShow(true), 300)
+    dispatch({ type: 'reset' })
+    setTimeout(() => {
+      delete scoreRef.current[page]
+      delete responseRef.current[page]
+      dispatch({ type: 'show' })
+    }, 300)
   }
 
   const renderTaskPageActions = () => {

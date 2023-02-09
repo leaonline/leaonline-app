@@ -32,9 +32,8 @@ Sound.play = async (name) => {
     const soundRef = loadFn()
     internal.current = await Audio.Sound.createAsync(soundRef)
     const { playableDurationMillis } = internal.current.status
-
     await internal.current.sound.playAsync()
-    setTimeout(() => Sound.unload(), playableDurationMillis)
+    setTimeout(() => Sound.unload(), playableDurationMillis + 1000)
   }
   catch (error) {
     Log.error(error)

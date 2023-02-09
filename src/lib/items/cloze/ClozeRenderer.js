@@ -5,15 +5,15 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ClozeTokenizer } from './ClozeTokenizer'
 import { ClozeHelpers } from './ClozeHelpers'
 import { UndefinedScore } from '../../scoring/UndefinedScore'
+import { Layout } from '../../constants/Layout'
+import { Log } from '../../infrastructure/Log'
 import { ClozeRendererSelect } from './ClozeRendererSelect'
 import { useTts } from '../../components/Tts'
-import { CompareState } from '../utils/CompareState'
-import { Log } from '../../infrastructure/Log'
 import { LeaText } from '../../components/LeaText'
 import { ClozeRendererBlank } from './ClozeRendererBlank'
-import { Layout } from '../../constants/Layout'
 import { isDefined } from '../../utils/isDefined'
 import { mergeStyles } from '../../styles/mergeStyles'
+import { createScoringSummaryForInput } from './createScoringSummaryForInput'
 
 const debug = Log.create('ClozeRenderer', 'debug', true)
 
@@ -43,29 +43,42 @@ export const ClozeRenderer = props => {
   // compare responses with the correct responses when
   // the parent decided to activate {showCorrectResponse}
   useEffect(() => {
-    if (!props.showCorrectResponse) {
+    if (!props.showCorrectResponse || !props.scoreResult) {
       return
     }
 
     const compareValues = {}
+    /*
 
-    props.scoreResult.forEach((entry, index) => {
-      const answerValue = Array.isArray(entry.value)
-        ? entry.value[0]
-        : entry.value
-      const compareValue = CompareState.getValue(entry.score, answerValue)
-      compareValues[index] = {
-        score: compareValue,
-        expected: entry.correctResponse,
-        actual: answerValue,
-        color: CompareState.getColor(compareValue)
-      }
+    {
+      index: 0,
+      score: {
+        sum: 0, // sum of all scores, where 0 = false, 1 = true
+        max: 0, // sum of all possible true-scores
+        avg: 0  // computed average
+      },
+      color:  "#5BB984",      // CompareState.getColor
+      actual: 'moo',
+      entries: [
+        {"actual": "moo", "color": "#5BB984", "expected": /^moo$/, "score": 1}
+      ]
+    }
+     */
+    tokenIndexes.forEach(itemIndex => {
+      compareValues[itemIndex] = createScoringSummaryForInput({
+        itemIndex,
+        actual: entered[itemIndex],
+        entries: props.scoreResult.filter(entry => entry.target === itemIndex)
+      })
     })
 
-    debug({ compareValues })
+    debug('compareValues:')
+    Object.entries(compareValues).forEach(([key, value]) => debug(key, value))
     setCompared(compareValues)
   }, [props.showCorrectResponse])
 
+  // tokenization and parsing is an expensive process;
+  // we only need it once, for every new content to render
   const { tokens, tokenIndexes } = useMemo(() => {
     return ClozeTokenizer.tokenize(props.value)
   }, [props.contentId])
@@ -75,8 +88,10 @@ export const ClozeRenderer = props => {
     update[index] = text
     setEntered(update)
 
+    const responses = tokenIndexes.map(index => index in update ? update[index] : UndefinedScore)
+
     return props.submitResponse({
-      responses: tokenIndexes.map(index => index in update ? update[index] : UndefinedScore),
+      responses,
       data: props
     })
   }
@@ -101,9 +116,11 @@ export const ClozeRenderer = props => {
           const key = `token-group-${groupIndex}-token-${index}`
           const { flavor, itemIndex } = token
           const hasNext = itemIndex < tokenIndexes.length - 1
-          const compareValue = props.showCorrectResponse &&
+          const compareValue = (
+            props.showCorrectResponse &&
             isDefined(itemIndex) &&
             compared[itemIndex]
+          )
 
           const blanksId = `${contentId}-${itemIndex}`
           const blankStyle = isTable

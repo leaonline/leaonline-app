@@ -40,5 +40,5 @@ function scoreBlanks (entry, { responses }) {
   // texts are scored against a RegExp pattern
   score = correctResponse.test(value)
 
-  return { competency, correctResponse, value, score, isUndefined: false }
+  return { competency, correctResponse, value, target, score, isUndefined: false }
 }

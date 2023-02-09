@@ -24,8 +24,9 @@ import { useTranslation } from 'react-i18next'
  *
  * @param props {object}
  * @param props.compare {object} compare state
+ * @param props.compare.score {object}
  * @param props.compare.score {number}
- * @param props.compare.expected {string}
+ * @param props.compare.entries {[object]}
  * @param props.compare.actual {string}
  * @param props.compare.color {string}
  * @constructor
@@ -35,6 +36,7 @@ export const ClozeRendererSelect = props => {
   const { Tts } = useTts()
   const { t } = useTranslation()
   const tooltipRef = useRef(null)
+  const showCompare = !!props.compare
 
   const onSelect = (option, index) => {
     tooltipRef.current.toggleTooltip()
@@ -43,28 +45,24 @@ export const ClozeRendererSelect = props => {
     }, 250)
   }
 
-  const onActivate = () => {
-    if (props.compare && props.compare.score === 1) {
-      return // skip if result was correct
-    }
-    tooltipRef.current.toggleTooltip()
-  }
+  const onActivate = () => tooltipRef.current.toggleTooltip()
 
   const label = props.value !== undefined && props.value !== null
     ? props.options[props.value]
     : ''
 
-  const renderTooltipContent = () => {
-    if (props.compare && props.compare.score !== 1) {
-      return renderCorrectResponse()
-    }
-    else {
-      return renderActions()
-    }
-  }
+  const renderTooltipContent = () => showCompare
+    ? renderScoreResult()
+    : renderActions()
 
-  const renderCorrectResponse = () => {
-    const regExpBody = props.compare.expected.source
+  const renderScoreResult = () => {
+    const expected = props.compare.entries[0]?.correctResponse
+
+    if (!expected) {
+      return null // TODO how can we handle this situation?
+    }
+
+    const regExpBody = expected.source.replace(/\D+/g, '')
     const index = Number.parseInt(regExpBody, 10)
     const correct = props.options[index]
     return (

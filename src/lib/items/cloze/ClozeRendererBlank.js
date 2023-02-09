@@ -131,7 +131,7 @@ export const ClozeRendererBlank = props => {
     />
   )
 
-  if (compare && compare.score !== 1) {
+  if (compare) {
     const openTooltip = () => {
       tooltipRef.current.toggleTooltip()
     }
@@ -149,10 +149,12 @@ export const ClozeRendererBlank = props => {
       <Tooltip
         ref={tooltipRef}
         height={100}
+        width={original.length * 10}
         popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
         withOverlay
         withPointer
         backgroundColor={Colors.dark}
+        containerStyle={styles.tooltip}
         overlayColor={makeTransparent(Colors.white, 0.3)}
       >
         {renderInput({ onPressIn: openTooltip })}
@@ -175,6 +177,8 @@ const styles = createStyleSheet({
   },
   text: {
     fontWeight: 'bold',
-    color: Colors.secondary
-  }
+    color: Colors.light
+  },
+  actionsContainer: {},
+  tooltip: {}
 })
