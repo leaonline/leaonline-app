@@ -14,6 +14,9 @@ import { useTts } from '../../components/Tts'
 import { Layout } from '../../constants/Layout'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 import { Sound } from '../../env/Sound'
+import { Log } from '../../infrastructure/Log'
+
+const debug = Log.create('UnitRenderer')
 
 /**
  * Renders the Unit, independent of the surrounding
@@ -29,6 +32,7 @@ import { Sound } from '../../env/Sound'
  * @component
  */
 export const UnitRenderer = props => {
+  debug(props)
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
   const [fadeIn, setFadeIn] = useState(-1)
   const { t } = useTranslation()
@@ -37,6 +41,7 @@ export const UnitRenderer = props => {
   const scrollViewRef = useRef()
 
   const { unitDoc, dimension, page, submitResponse, showCorrectResponse, scoreResult, allTrue, taskPageAction } = props
+  const unitId = unitDoc?._id
   const dimensionColor = getDimensionColor(dimension)
 
   // We need to know the Keyboard state in order to show or hide elements.
@@ -53,18 +58,19 @@ export const UnitRenderer = props => {
 
   // we want to have our cards appearing in intervals
   useEffect(() => {
+    let timer1
+    let timer2
+
     if (page === 0) {
       setFadeIn(0)
-      const timer1 = setTimeout(() => setFadeIn(1), 500)
-      const timer2 = setTimeout(() => setFadeIn(2), 1000)
-
-      return () => {
-        clearTimeout(timer1)
-        clearTimeout(timer2)
-      }
+      timer1 = setTimeout(() => setFadeIn(1), 500)
+      timer2 = setTimeout(() => setFadeIn(2), 1000)
     }
 
-    setFadeIn(2)
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
   }, [page])
 
   useEffect(() => {
@@ -95,8 +101,10 @@ export const UnitRenderer = props => {
     if (!list?.length) { return null }
 
     return list.map((element, index) => {
+      const key = `${unitId}-${page}-${index}`
       const elementData = { ...element }
       elementData.dimensionColor = dimensionColor
+      elementData.uid = key
 
       // item elements are "interactive" beyond tts
       // and require their own view and handlers
@@ -107,7 +115,13 @@ export const UnitRenderer = props => {
       }
 
       // all other elements are simply "display" elements
-      return (<Renderer key={index} style={styles.contentElement} {...elementData} />)
+      return (
+        <Renderer
+          key={elementData.uid}
+          style={styles.contentElement}
+          {...elementData}
+        />
+      )
     })
   }
 

@@ -52,9 +52,9 @@ UnitContentElementFactory.isRegistered = (options) => components.has(toKey(optio
  * @component
  */
 UnitContentElementFactory.Renderer = props => {
-  const key = toKey(props)
-  const component = components.get(key)
-  debug('render', key, !!component)
+  const accessKey = toKey(props)
+  const component = components.get(accessKey)
+  debug('render', props.uid, accessKey, component)
 
   if (component) {
     return component(props)
