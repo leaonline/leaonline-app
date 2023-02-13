@@ -71,7 +71,9 @@ const resources = {
     profileScreen: {
       headerTitle: 'My account',
       progress: 'Overall progress',
-      title: 'My achievements'
+      achievements: {
+        title: 'My achievements'
+      }
     },
     accountInfo: {
       title: 'Account options',
@@ -104,7 +106,8 @@ const resources = {
         check: 'Check',
         next: 'Continue',
         complete: 'Go to next task',
-        finish: 'Finish'
+        finish: 'Finish',
+        retry: 'retry'
       },
       abort: {
         question: 'Do you really want to abort this exercise?',
@@ -130,6 +133,10 @@ const resources = {
     },
     item: {
       correctResponse: 'The correct answer is: {{value}}'
+    },
+    legal: {
+      paragraph: 'Paragraph',
+      paragraphen: 'Paragraphs'
     }
   },
   de: {
