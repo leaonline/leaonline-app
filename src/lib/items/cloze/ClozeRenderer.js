@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { View } from 'react-native'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ClozeTokenizer } from './ClozeTokenizer'
 import { ClozeHelpers } from './ClozeHelpers'

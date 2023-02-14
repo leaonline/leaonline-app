@@ -1,7 +1,7 @@
 import { Button, Icon } from 'react-native-elements'
 import React, { useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { mergeStyles } from '../styles/mergeStyles'
 import { Layout } from '../constants/Layout'
 import { Vibration } from 'react-native'

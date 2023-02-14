@@ -6,7 +6,7 @@ import { loadDevData } from './loadDevData'
 import { ScreenBase } from '../screens/BaseScreen'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { AppSessionContext } from '../state/AppSessionContext'
 
 /**

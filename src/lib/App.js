@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import './i18n'
-import useSplashScreen from './hooks/useSplashScreen'
+import { useSplashScreen } from './hooks/useSplashScreen'
 import { useConnection } from './hooks/useConnection'
 import { ErrorMessage } from './components/ErrorMessage'
 import { initContexts } from './startup/initContexts'
@@ -29,7 +29,7 @@ const initFunction = [
  * @component
  * @returns {JSX.Element}
  */
-export default function App () {
+export const App = function App () {
   const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
   const { connected } = useConnection()
   const renderConnectionStatus = useCallback(() => {

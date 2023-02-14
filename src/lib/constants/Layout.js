@@ -1,4 +1,4 @@
-import Colors from './Colors'
+import { Colors } from './Colors'
 import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
 

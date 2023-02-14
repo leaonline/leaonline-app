@@ -3,7 +3,7 @@ import { LinearProgress } from 'react-native-elements'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { getDimensionColor } from '../../screens/unit/getDimensionColor'
 import { AppSessionContext } from '../../state/AppSessionContext'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { computeProgress } from './computeProgress'
 
 /**

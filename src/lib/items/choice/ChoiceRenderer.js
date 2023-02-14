@@ -4,7 +4,7 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Choice } from './Choice'
 import { CompareState } from '../utils/CompareState'
 import { Checkbox } from '../../components/Checkbox'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { Log } from '../../infrastructure/Log'
 
 const debug = Log.create('ChoiceRenderer', 'debug', true)

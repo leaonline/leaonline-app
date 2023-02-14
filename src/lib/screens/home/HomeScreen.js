@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadHomeData } from './loadHomeData'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { ScreenBase } from '../BaseScreen'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { Layout } from '../../constants/Layout'
@@ -23,7 +23,7 @@ import { ScrollView } from 'react-native'
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const HomeScreen = props => {
+export const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
@@ -75,8 +75,6 @@ const HomeScreen = props => {
     </ScreenBase>
   )
 }
-
-export default HomeScreen
 
 const styles = createStyleSheet({
   container: {

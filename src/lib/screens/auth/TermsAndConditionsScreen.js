@@ -1,10 +1,10 @@
 import React, { useReducer } from 'react'
 import { Modal, ScrollView, Vibration, View } from 'react-native'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import RouteButton from '../../components/RouteButton'
+import { RouteButton } from '../../components/RouteButton'
 import { LeaLogo } from '../../components/images/LeaLogo'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
@@ -49,7 +49,7 @@ const reducer = (prevState, nextState) => {
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const TermsAndConditionsScreen = props => {
+export const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const termsDocs = loadDocs({
@@ -253,5 +253,3 @@ const styles = createStyleSheet({
     alignItems: 'flex-start'
   }
 })
-
-export default TermsAndConditionsScreen

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import { useTts } from './Tts'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'
 

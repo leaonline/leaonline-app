@@ -3,7 +3,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { START_UP_DELAY } from '../constants/App'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
-const useSplashScreen = (initFunctions) => {
+export const useSplashScreen = (initFunctions) => {
   const [appIsReady, setAppIsReady] = useState(false)
   const [error, setError] = useState(null)
 
@@ -54,5 +54,3 @@ const useSplashScreen = (initFunctions) => {
     appIsReady, onLayoutRootView, error
   }
 }
-
-export default useSplashScreen

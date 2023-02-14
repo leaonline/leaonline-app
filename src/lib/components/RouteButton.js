@@ -17,7 +17,7 @@ import { ActionButton } from './ActionButton'
  * @component
  * @returns {JSX.Element}
  */
-const RouteButton = props => {
+export const RouteButton = props => {
   const { t } = useTranslation()
 
   const navigationHandler = () => {
@@ -34,5 +34,3 @@ const RouteButton = props => {
 
   return (<ActionButton {...props} onPress={navigationHandler} />)
 }
-
-export default RouteButton

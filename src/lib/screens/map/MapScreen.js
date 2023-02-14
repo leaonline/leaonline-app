@@ -37,7 +37,7 @@ loadMapIcons() // TODO defer loading these to a much later point as they are not
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const MapScreen = props => {
+export const MapScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
@@ -284,5 +284,3 @@ const styles = createStyleSheet({
     fontSize: 32
   }
 })
-
-export default MapScreen

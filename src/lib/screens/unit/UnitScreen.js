@@ -8,7 +8,7 @@ import { Log } from '../../infrastructure/Log'
 import { Layout } from '../../constants/Layout'
 import { useContentElementFactory } from '../../components/factories/UnitContentElementFactory'
 import { Icon } from 'react-native-elements'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadUnitData } from './loadUnitData'
@@ -60,7 +60,7 @@ Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const UnitScreen = props => {
+export const UnitScreen = props => {
   // We need to know the Keyboard state in order to show or hide elements.
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
@@ -613,5 +613,3 @@ const styles = createStyleSheet({
     borderColor: Colors.dark
   }
 })
-
-export default UnitScreen

@@ -1,6 +1,6 @@
 import React from 'react'
 import Svg, { G, Circle, Defs, LinearGradient, Stop, Text } from 'react-native-svg'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 
 /**
  * Renders a circular progress, where the value determines the

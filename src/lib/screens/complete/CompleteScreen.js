@@ -31,7 +31,7 @@ Sound.load(COMPLETE, () => require('../../assets/audio/trophy_animation.mp3'))
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const CompleteScreen = props => {
+export const CompleteScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
@@ -134,5 +134,3 @@ const styles = createStyleSheet({
     alignItems: 'center'
   }
 })
-
-export default CompleteScreen

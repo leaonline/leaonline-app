@@ -1,4 +1,4 @@
-export default {
+export const profileData = {
   progress: {
     global: 0.65,
     dimensions: [

@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render, act } from '@testing-library/react-native'
 import { TTSengine, useTts } from '../../lib/components/Tts'
-import Colors from '../../lib/constants/Colors'
+import { Colors } from '../../lib/constants/Colors'
 
 const setSpeechOptions = { timeout: 25 }
 

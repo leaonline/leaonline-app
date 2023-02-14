@@ -1,7 +1,7 @@
 import { ButtonGroup } from 'react-native-elements'
 import React, { useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
 import { mergeStyles } from '../styles/mergeStyles'
 

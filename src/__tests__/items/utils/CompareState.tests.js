@@ -1,5 +1,5 @@
 import { CompareState } from '../../../lib/items/utils/CompareState'
-import Colors from '../../../lib/constants/Colors'
+import { Colors } from '../../../lib/constants/Colors'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
 import { Scoring } from '../../../lib/scoring/Scoring'
 

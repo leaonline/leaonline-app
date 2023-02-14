@@ -6,7 +6,7 @@ import { ScreenBase } from '../screens/BaseScreen'
 import { UnitRenderer } from '../screens/unit/UnitRenderer'
 import { ActionButton } from '../components/ActionButton'
 import { checkResponse } from '../screens/unit/createResponseDoc'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pressable, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { useNavigation } from '@react-navigation/native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'

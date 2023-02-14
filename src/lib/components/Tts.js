@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { View, Pressable } from 'react-native'
 import { Button } from 'react-native-elements'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'

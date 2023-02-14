@@ -1,6 +1,6 @@
 import { Dimension } from '../../contexts/Dimension'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 
 /**
  * Gets a color by dimension id. Falls back to primary if no dimension doc

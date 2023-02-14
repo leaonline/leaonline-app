@@ -1,4 +1,4 @@
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 
 /**

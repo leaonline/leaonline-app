@@ -1,6 +1,6 @@
 import React from 'react'
 import { CheckBox } from 'react-native-elements'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { Pressable, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'

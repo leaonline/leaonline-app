@@ -6,7 +6,7 @@ import { Layout } from '../../constants/Layout'
 import { TTSSettings } from './TTSSettings'
 import { useTimeout } from '../../hooks/useTimeout'
 import { Loading } from '../../components/Loading'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from '../../components/ActionButton'
@@ -17,7 +17,7 @@ import { ActionButton } from '../../components/ActionButton'
  * @returns {JSX.Element}
  * @constructor
  */
-const ProfileScreen = (props) => {
+export const ProfileScreen = (props) => {
   const screenReady = useTimeout({ timeout: 300 })
   const { Tts } = useTts()
   const { t } = useTranslation()
@@ -96,5 +96,3 @@ const styles = createStyleSheet({
     color: Colors.white
   }
 })
-
-export default ProfileScreen

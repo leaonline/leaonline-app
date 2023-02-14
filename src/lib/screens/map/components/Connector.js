@@ -1,6 +1,6 @@
 import React from 'react'
 import Svg, { G, Path } from 'react-native-svg'
-import Colors from '../../../constants/Colors'
+import { Colors } from '../../../constants/Colors'
 import { MapIcons } from '../MapIcons'
 
 /**

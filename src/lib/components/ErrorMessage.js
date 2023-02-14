@@ -3,9 +3,9 @@ import { useTts } from './Tts'
 import { ActionButton } from './ActionButton'
 import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
-import i18n from '../i18n'
+import { i18n } from '../i18n'
 import { useTranslation } from 'react-i18next'
 
 /**

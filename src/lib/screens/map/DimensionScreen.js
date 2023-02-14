@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import RouteButton from '../../components/RouteButton'
+import { RouteButton } from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { loadDocs } from '../../meteor/loadDocs'
 import { loadDimensionData } from './loadDimensionData'
@@ -12,7 +12,7 @@ import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { BackButton } from '../../components/BackButton'
 import { View } from 'react-native'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
 import { Fill } from '../../components/layout/Fill'
 
@@ -31,7 +31,7 @@ import { Fill } from '../../components/layout/Fill'
  * @param props.navigation {object} navigation API
  * @returns {JSX.Element}
  */
-const DimensionScreen = props => {
+export const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
@@ -133,5 +133,3 @@ const styles = createStyleSheet({
     marginRight: 5
   }
 })
-
-export default DimensionScreen

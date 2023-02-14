@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Icon, ListItem } from 'react-native-elements'
-import Colors from '../../../constants/Colors'
+import { Colors } from '../../../constants/Colors'
 import { View } from 'react-native'
 import { LeaText } from '../../../components/LeaText'
 import { StaticCircularProgress } from '../../../components/progress/StaticCircularProgress'

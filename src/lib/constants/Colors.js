@@ -3,7 +3,7 @@
  *
  * @category Constants
  */
-export default {
+export const Colors = {
   primary: '#f59d1d',
   secondary: '#193b5e',
   light: '#f3f3f3',

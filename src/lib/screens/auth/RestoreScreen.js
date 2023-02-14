@@ -9,7 +9,7 @@ import { ErrorMessage } from '../../components/ErrorMessage'
 import { AuthContext } from '../../contexts/AuthContext'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { Layout } from '../../constants/Layout'
-import Colors from '../../constants/Colors'
+import { Colors } from '../../constants/Colors'
 import { asyncTimeout } from '../../utils/asyncTimeout'
 import { Loading } from '../../components/Loading'
 

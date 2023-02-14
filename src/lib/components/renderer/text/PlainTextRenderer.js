@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTts } from '../../Tts'
-import Colors from '../../../constants/Colors'
+import { Colors } from '../../../constants/Colors'
 
 /**
  * Use it to render plain text in units.

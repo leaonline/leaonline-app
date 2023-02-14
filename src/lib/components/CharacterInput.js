@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { TextInput, View } from 'react-native'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
 import { TTSengine, useTts } from './Tts'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pressable } from 'react-native'
 import { Icon } from 'react-native-elements'
-import Colors from '../constants/Colors'
+import { Colors } from '../constants/Colors'
 import { Config } from '../env/Config'
 import { NullComponent } from '../components/NullComponent'
 import { createRoutableComponent } from '../components/factories/createRoutableComponent'
