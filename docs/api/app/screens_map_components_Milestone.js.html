@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> screens/map/components/Milestone.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">React components</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AccountInfo.html">AccountInfo</a></li><li><a href="AchievementsScreen.html">AchievementsScreen</a></li><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRendererBlank.html">ClozeRendererBlank</a></li><li><a href="ClozeRendererSelect.html">ClozeRendererSelect</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="DeveloperScreen.html">DeveloperScreen</a></li><li><a href="Diamond.html">Diamond</a></li><li><a href="LeaButtonGroup.html">LeaButtonGroup</a></li><li><a href="MarkdownRenderer.html">MarkdownRenderer</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="PlainTextRenderer.html">PlainTextRenderer</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li><li><a href="SoundIcon.html">SoundIcon</a></li><li><a href="Stage.html">Stage</a></li><li><a href="UnitContentElementFactory.Renderer.html">Renderer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#AppState">AppState</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadDocs">loadDocs</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MemoryStorage">MemoryStorage</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#promiseWithTimeout">promiseWithTimeout</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useLogin">useLogin</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="LeaLogo.html">LeaLogo</a></li><li><a href="ttsComponent.html">ttsComponent</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#RouteButton">RouteButton</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#UnitScreen">UnitScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>screens/map/components/Milestone.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import Svg, { G, Path } from 'react-native-svg'
+
+/**
+ * Represents a milestone for a given level.
+ * Summarizes all obtainable competencies for each given dimension.
+ *
+ * @component
+ * @returns {JSX.Element}
+ */
+const MilestoneComponent = (props) => {
+  return (
+    &lt;Svg width={100} height={100} viewBox='0 0 51.73 70.49'>
+      &lt;G id='Ebene_2' data-name='Ebene 2'>
+        &lt;G id='Ebene_1-2' data-name='Ebene 1'>
+          &lt;G id='Gruppe_79' data-name='Gruppe 79'>
+            &lt;Path
+              id='Pfad_103' data-name='Pfad 103' fill='#192c3d'
+              d='M51.05,41.75c-7.1-1.21-21.49-3.5-25.24-3.5C21.13,38.25.86,41.58.65,41.61L2.42,37.7,0,34.25c.85-.14,20.81-3.41,25.81-3.41s25.07,3.41,25.92,3.56l-2.66,3.3Z'
+            />
+          &lt;/G>
+          &lt;G id='Gruppe_80' data-name='Gruppe 80'>
+            &lt;Path id='Pfad_104' data-name='Pfad 104' fill='#86c4f1' d='M25.68,0,3.29,35.24H48.06Z' />
+            &lt;Path id='Pfad_105' data-name='Pfad 105' fill='#00ddb6' d='M25.68,70.49,48.06,35.24H3.29' />
+            &lt;Path id='Pfad_106' data-name='Pfad 106' fill='#ffc800' d='M25.68,35.24V0L48.06,35.24Z' />
+            &lt;Path id='Pfad_107' data-name='Pfad 107' fill='#e3adbc' d='M25.68,35.24V70.49L48.06,35.24Z' />
+          &lt;/G>
+          &lt;G id='Pfad_108' data-name='Pfad 108'>
+            &lt;Path fill='none' d='M25.68,0,3.29,35.24,25.68,70.49,48.06,35.24Z' />
+            &lt;Path
+              fill='#183b5e'
+              d='M25.68,3.73l-20,31.51,20,31.52,20-31.52-20-31.51m0-3.73L48.06,35.24,25.68,70.49,3.29,35.24Z'
+            />
+          &lt;/G>
+          &lt;Path
+            id='Pfad_109' data-name='Pfad 109' fill='none'
+            stroke='#183b5e' strokeMiterlimit={10} strokeWidth={12}
+            d='M3.29,37.14s16.89-.82,22.39-.82,22.38.82,22.38.82'
+          />
+          &lt;Path
+            id='Pfad_123-2' data-name='Pfad 123-2' fill='white'
+            d='M25.37,32.76l-1,2-2.25.32a.5.5,0,0,0-.42.56.48.48,0,0,0,.15.28l1.62,1.59-.38,2.24a.49.49,0,0,0,.4.57.54.54,0,0,0,.31,0l2-1.06,2,1.06a.5.5,0,0,0,.66-.21.49.49,0,0,0,.05-.31l-.39-2.24L29.78,36a.48.48,0,0,0,0-.69.51.51,0,0,0-.28-.15l-2.25-.32-1-2a.48.48,0,0,0-.66-.22.43.43,0,0,0-.22.22Z'
+          />
+        &lt;/G>
+      &lt;/G>
+    &lt;/Svg>
+  )
+}
+
+export const Milestone = React.memo(MilestoneComponent)
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
