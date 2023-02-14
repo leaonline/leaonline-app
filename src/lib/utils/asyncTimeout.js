@@ -5,7 +5,8 @@
  * @return {Promise}
  */
 export const asyncTimeout = ms => new Promise(resolve => {
-  setTimeout(() => {
+  const timer = setTimeout(() => {
+    clearTimeout(timer)
     resolve()
   }, ms)
 })

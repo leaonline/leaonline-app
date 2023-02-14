@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { View, Pressable } from 'react-native'
 import { Button } from 'react-native-elements'
 import Colors from '../constants/Colors'
@@ -56,11 +56,10 @@ const runHandlers = name => {
  * @param {string} props.align Defines the vertical alignment of the button and text
  * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
  * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
- * @param {string} props.id: The parameter to identify the buttons
+ * @param {string|number} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
  * @constructor
  */
-
 const ttsComponent = props => {
   // TODO use useReducer to implement complex state logic?
   const [isSpeaking, setIsSpeaking] = useState(false)
@@ -101,7 +100,7 @@ const ttsComponent = props => {
   /**
    * Starts speaking props.text. At startup it calls the function startSpeak() and at the end its calls stopSpeak()
    */
-  const speak = async () => {
+  const speak = useCallback(async () => {
     runHandlers('beforeSpeak')
 
     const isSpeaking = await Speech.isSpeakingAsync()
@@ -135,7 +134,7 @@ const ttsComponent = props => {
         setIsDone(true)
       }
     })
-  }
+  }, [])
   /**
    * Stops expo-speech and changes the color back to props.color and sets CurrentlyPlaying to false
    */
@@ -223,6 +222,7 @@ const ttsComponent = props => {
     }
     return (
       <Button
+        testID={props.id}
         containerStyle={ttsContainerStyle}
         buttonStyle={[styles.ttsButton, buttonStyle]}
         onPress={onPress}
@@ -240,6 +240,7 @@ const ttsComponent = props => {
         disabled={props.disabled}
         android_ripple={rippleConfig}
         onPress={onPress}
+        testID={props.id}
       >
         {renderIcon()}
       </Pressable>
@@ -265,12 +266,20 @@ const ttsComponent = props => {
  * @property debug {boolean} debugs all internal tts events if true
  */
 export const TTSengine = {
-  setSpeech (s, { speakImmediately = false, text = '', timeout = 500 } = {}) {
-    return promiseWithTimeout(new Promise((resolve) => {
-      globalDebug('set speech', { speakImmediately })
-      Speech = s
+  /**
+   *
+   * @param speechProvider {object}
+   * @param speakImmediately {boolean=false}
+   * @param text {string=''}
+   * @param timeout {number=}
+   * @return {Promise<*>}
+   */
+  setSpeech (speechProvider, { speakImmediately = false, text = '', timeout = 500 } = {}) {
+    globalDebug('set speech', { speakImmediately, timeout, text })
+    Speech = speechProvider
 
-      if (speakImmediately) {
+    if (speakImmediately) {
+      return promiseWithTimeout(new Promise((resolve) => {
         Speech.speak(text, {
           language: 'ger',
           pitch: 1,
@@ -279,13 +288,26 @@ export const TTSengine = {
           onDone: resolve,
           onError: resolve
         })
-      }
-    }), timeout)
+      }), timeout)
+    }
+    else {
+      return new Promise(resolve => resolve())
+    }
   },
   on: (name, fn) => {
     globalDebug('add global listener', name)
     handlers[name] = handlers[name] || []
     handlers[name].push(fn)
+  },
+  off: (name, fn) => {
+    globalDebug('add global listener', name)
+    const list = handlers[name] ?? []
+    const index = list.findIndex(value => value === fn)
+    if (index === -1) {
+      return false
+    }
+    list.splice(index, 1)
+    return true
   },
   stop () {
     return Speech.stop()
