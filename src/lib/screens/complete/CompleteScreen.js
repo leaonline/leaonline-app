@@ -4,7 +4,7 @@ import { Layout } from '../../constants/Layout'
 import { AppSessionContext } from '../../state/AppSessionContext'
 import { ScreenBase } from '../BaseScreen'
 import { useTranslation } from 'react-i18next'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadCompleteData } from './loadCompleteData'
 import { useTts } from '../../components/Tts'
 import { getDimensionColor } from '../unit/getDimensionColor'
@@ -35,7 +35,7 @@ export const CompleteScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs({ fn: () => loadCompleteData(session) })
+  const docs = useDocs({ fn: () => loadCompleteData(session) })
   const dimensionColor = getDimensionColor(session.dimension)
 
   // ---------------------------------------------------------------------------

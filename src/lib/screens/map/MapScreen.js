@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { View, FlatList } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadMapData } from './loadMapData'
 import { Log } from '../../infrastructure/Log'
 import { useTranslation } from 'react-i18next'
@@ -44,7 +44,7 @@ export const MapScreen = props => {
   const [activeStage, setActiveStage] = useState(-1)
   const [connectorWidth, setConnectorWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
-  const mapDocs = loadDocs({
+  const mapDocs = useDocs({
     runArgs: [session.field, session.loadUserData],
     allArgsRequired: true,
     fn: () => loadMapData({

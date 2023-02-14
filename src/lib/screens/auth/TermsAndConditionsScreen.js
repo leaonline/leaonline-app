@@ -11,7 +11,7 @@ import { Layout } from '../../constants/Layout'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { ActionButton } from '../../components/ActionButton'
 import { makeTransparent } from '../../styles/makeTransparent'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadTerms } from './loadTerms'
 import { Markdown } from '../../components/MarkdownWithTTS'
 
@@ -52,7 +52,7 @@ const reducer = (prevState, nextState) => {
 export const TermsAndConditionsScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const termsDocs = loadDocs({
+  const termsDocs = useDocs({
     fn: loadTerms
   })
   const [state, dispatch] = useReducer(reducer, initialState, undefined)

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadHomeData } from './loadHomeData'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Colors } from '../../constants/Colors'
@@ -27,7 +27,7 @@ export const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
-  const { data, error, loading } = loadDocs({ fn: loadHomeData })
+  const { data, error, loading } = useDocs({ fn: loadHomeData })
 
   const selectField = async value => {
     const { _id, title } = value

@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, useRef } from 'react'
-import { loadDocs } from '../meteor/loadDocs'
+import { useDocs } from '../meteor/useDocs'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { loadDevUnit } from './loadDevUnit'
 import { ScreenBase } from '../screens/BaseScreen'
@@ -54,7 +54,7 @@ export const UnitDevScreen = props => {
   const { page, show, scored, allTrue } = state
   const [session] = useContext(AppSessionContext)
   const { unitId, dimension } = session
-  const unitDocs = loadDocs({
+  const unitDocs = useDocs({
     fn: () => loadDevUnit(unitId)
   })
 

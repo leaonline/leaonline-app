@@ -20,7 +20,7 @@ const MAX_ATTEMPTS = 3
  * @param allArgsRequired {boolean=} optional boolean flag to skip loading until all given args are non-null
  * @return {{data: undefined, error: undefined, loading: boolean}}
  */
-export const loadDocs = ({ fn, runArgs = [], debug = false, allArgsRequired = false }) => {
+export const useDocs = ({ fn, runArgs = [], debug = false, allArgsRequired = false }) => {
   const [data, setData] = useState()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(true)
@@ -52,7 +52,7 @@ export const loadDocs = ({ fn, runArgs = [], debug = false, allArgsRequired = fa
     load().catch(e => {
       InteractionGraph.problem({
         type: 'loadFailed',
-        target: loadDocs.name,
+        target: useDocs.name,
         error: e,
         details: { attempts }
       })

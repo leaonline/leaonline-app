@@ -60,7 +60,7 @@ const runHandlers = name => {
  * @returns {JSX.Element}
  * @constructor
  */
-const ttsComponent = props => {
+const TtsComponent = props => {
   // TODO use useReducer to implement complex state logic?
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
@@ -320,7 +320,7 @@ export const TTSengine = {
   defaultSpeed: 1,
   currentSpeed: 1,
   currentVoice: undefined,
-  component: () => ttsComponent,
+  component: () => TtsComponent,
   updateSpeed: newSpeed => {
     globalDebug('set new speed', newSpeed)
     if (newSpeed < 0.1 || newSpeed > 2.0) {
@@ -378,4 +378,4 @@ const loadVoices = (counter, onComplete) => {
   }, (counter ?? 1) * 300)
 }
 
-export const useTts = () => ({ Tts: ttsComponent })
+export const useTts = () => ({ Tts: TtsComponent })

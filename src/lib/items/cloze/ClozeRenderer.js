@@ -277,11 +277,12 @@ export const ClozeRenderer = props => {
 // ============================================================================
 
 const RenderTts = ({ text, color }) => {
+  const { Tts } = useTts()
+
   if (!text?.length) {
     return null
   }
 
-  const { Tts } = useTts()
   return (<Tts color={color} text={text} dontShowText />)
 }
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { ListItem } from 'react-native-elements'
-import { loadDocs } from '../meteor/loadDocs'
+import { useDocs } from '../meteor/useDocs'
 import { loadDevData } from './loadDevData'
 import { ScreenBase } from '../screens/BaseScreen'
 import { createStyleSheet } from '../styles/createStyleSheet'
@@ -23,7 +23,7 @@ export const DeveloperScreen = props => {
   const [unitSets, setUnitSets] = useState(null)
   const [selectedUnit, setSelectedUnit] = useState(null)
   const [/* session */, sessionActions] = useContext(AppSessionContext)
-  const devDocs = loadDocs({
+  const devDocs = useDocs({
     fn: loadDevData
   })
 

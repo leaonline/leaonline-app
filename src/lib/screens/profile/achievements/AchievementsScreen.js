@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { profileData } from '../../../resources/profileData'
 import { useTts } from '../../../components/Tts'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { loadDocs } from '../../../meteor/loadDocs'
+import { useDocs } from '../../../meteor/useDocs'
 import { loadAchievementsData } from './loadAchievementsData'
 import { ScreenBase } from '../../BaseScreen'
 import { Layout } from '../../../constants/Layout'
@@ -23,7 +23,7 @@ import { DimensionAchievements } from './DimensionAchievements'
 export const AchievementsScreen = (props) => {
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const docs = loadDocs({
+  const docs = useDocs({
     fn: () => loadAchievementsData()
   })
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { RouteButton } from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadDimensionData } from './loadDimensionData'
 import { ColorTypeMap } from '../../constants/ColorTypeMap'
 import { Layout } from '../../constants/Layout'
@@ -35,7 +35,7 @@ export const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const docs = loadDocs({
+  const docs = useDocs({
     fn: () => loadDimensionData(session.stage),
     runArgs: [session.stage],
     allArgsRequired: true

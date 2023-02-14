@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next'
  */
 export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const { t } = useTranslation()
+  const { Tts } = useTts()
 
   if (!error && !message) {
     return null
@@ -34,8 +35,6 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
       <ActionButton text={label} onPress={onConfirm} />
     )
   }
-
-  const { Tts } = useTts()
 
   let textBase = message || error.reason || error.message || 'errors.fallback'
 

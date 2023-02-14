@@ -10,7 +10,7 @@ import { useContentElementFactory } from '../../components/factories/UnitContent
 import { Icon } from 'react-native-elements'
 import { Colors } from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { loadDocs } from '../../meteor/loadDocs'
+import { useDocs } from '../../meteor/useDocs'
 import { loadUnitData } from './loadUnitData'
 import { ActionButton } from '../../components/ActionButton'
 import { useTranslation } from 'react-i18next'
@@ -83,7 +83,7 @@ export const UnitScreen = props => {
   const [allTrue, setAllTrue] = useState()
   const [session, sessionActions] = useContext(AppSessionContext)
   const { unitSet, dimension } = session
-  const docs = loadDocs({ fn: () => loadUnitData(unitSet) })
+  const docs = useDocs({ fn: () => loadUnitData(unitSet) })
   const { t } = useTranslation()
   const { Tts } = useTts()
 
@@ -180,6 +180,11 @@ export const UnitScreen = props => {
   }, [props.navigation])
 
   // ---------------------------------------------------------------------------
+  // init renderer
+  // ---------------------------------------------------------------------------
+  const { Renderer } = useContentElementFactory()
+
+  // ---------------------------------------------------------------------------
   // SKip early
   // ---------------------------------------------------------------------------
   if (!docs.data || docs.error) {
@@ -189,7 +194,6 @@ export const UnitScreen = props => {
   // ---------------------------------------------------------------------------
   // Used to dynamically render elements
   // ---------------------------------------------------------------------------
-  const { Renderer } = useContentElementFactory()
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
   const showCorrectResponse = scored === page
   const dimensionColor = getDimensionColor(dimension)

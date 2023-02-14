@@ -89,7 +89,7 @@
       "react-hooks"
     ],
     "rules": {
-      "react-hooks/rules-of-hooks": "off",
+      "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
       "import/no-default-export": "error",
       "brace-style": [
