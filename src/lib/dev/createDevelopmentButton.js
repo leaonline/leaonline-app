@@ -19,7 +19,7 @@ export const createDevelopmentButton = ({ route }) => {
   }
 
   const Component = props => (
-    <Pressable android_ripple={rippleConfig} onPress={props.onPress} style={props.style}>
+    <Pressable accessibilityRole='button' android_ripple={rippleConfig} onPress={props.onPress} style={props.style}>
       <Icon
         name='keyboard'
         type='font-awesome-5'

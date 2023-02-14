@@ -21,10 +21,14 @@ export const BackButton = (props) => {
   const containerStyle = mergeStyles(styles.buttonContainer, props.style)
 
   return (
-    <Pressable style={containerStyle} onPress={handleOnPress} hitSlop={10} android_ripple={rippleConfig}>
-      <Icon
-        name={props.icon} type='font-awesome-5' color={Colors.secondary} size={18}
-      />
+    <Pressable
+      accessibilityRole='button'
+      style={containerStyle}
+      onPress={handleOnPress}
+      hitSlop={10}
+      android_ripple={rippleConfig}
+    >
+      <Icon name={props.icon} type='font-awesome-5' color={Colors.secondary} size={18} />
     </Pressable>
   )
 }

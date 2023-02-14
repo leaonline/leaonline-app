@@ -222,6 +222,7 @@ const TtsComponent = props => {
     }
     return (
       <Button
+        accessibilityRole='button'
         testID={props.id}
         containerStyle={ttsContainerStyle}
         buttonStyle={[styles.ttsButton, buttonStyle]}
@@ -237,6 +238,7 @@ const TtsComponent = props => {
   return (
     <View style={ttsContainerStyle}>
       <Pressable
+        accessibilityRole='button'
         disabled={props.disabled}
         android_ripple={rippleConfig}
         onPress={onPress}

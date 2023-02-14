@@ -43,7 +43,7 @@ export const ImageRenderer = props => {
       {loader()}
       {error
         ? (<ErrorMessage error={error} />)
-        : (<Image {...imageProps} resizeMode='center' />)}
+        : (<Image {...imageProps} accessibilityRole='image' resizeMode='center' />)}
     </View>
   )
 }

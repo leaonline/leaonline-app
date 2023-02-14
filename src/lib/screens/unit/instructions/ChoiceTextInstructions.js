@@ -51,7 +51,7 @@ export const ChoiceTextInstructions = props => {
   }
 
   return (
-    <Pressable onPress={toggleAnimation} style={styles.container}>
+    <Pressable accessibilityRole='button' onPress={toggleAnimation} style={styles.container}>
       <Animated.View
         style={[
           handPosition.getLayout(),

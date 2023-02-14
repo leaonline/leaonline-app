@@ -80,6 +80,7 @@ export const LeaButton = props => {
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
   return (
     <Button
+      accessible='button'
       title={props.title}
       titleStyle={titleStyle}
       buttonStyle={buttonStyle}

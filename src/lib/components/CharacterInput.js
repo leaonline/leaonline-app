@@ -125,6 +125,8 @@ export const CharacterInput = props => {
       const key = `${props.id}-${index}`
       return (
         <TextInput
+          accessibilityLabel='text'
+          accessibilityHint='text'
           ref={(thisComponent) => setRef(index, thisComponent)}
           onKeyPress={e => handleKeyPress(e, index)}
           style={styles.input}

@@ -101,7 +101,7 @@ export const ClozeRendererSelect = props => {
       backgroundColor={Colors.dark}
       overlayColor={makeTransparent(Colors.white, 0.6)}
     >
-      <Pressable style={pressStyles} onPress={onActivate}>
+      <Pressable accessibilityRole='button' style={pressStyles} onPress={onActivate}>
         <LeaText style={styles.label}>{label}</LeaText>
       </Pressable>
     </Tooltip>

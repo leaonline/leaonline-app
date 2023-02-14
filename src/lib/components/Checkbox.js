@@ -59,6 +59,7 @@ export const Checkbox = props => {
   return (
     <View style={containerStyle}>
       <CheckBox
+        accessibilityRole='checkbox'
         checked={props.checked ?? false}
         onPress={props.onPress}
         containerStyle={styles.checkbox}
@@ -68,7 +69,7 @@ export const Checkbox = props => {
         uncheckedIcon={props.uncheckedIcon}
         textStyle={props.textStyle}
       />
-      <Pressable style={{ flex: 1 }} onPress={props.onPress}>
+      <Pressable accessibilityRole='button' style={{ flex: 1 }} onPress={props.onPress}>
         {props.hideTts ? renderText() : renderTts()}
       </Pressable>
     </View>

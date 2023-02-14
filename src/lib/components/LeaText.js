@@ -20,6 +20,7 @@ export const LeaText = props => {
   const style = mergeStyles(styles.default, props.style, color ? { color } : undefined)
   return (
     <Text
+      accessibilityRole='text'
       textBreakStrategy='highQuality'
       android_hyphenationFrequency='full'
       adjustsFontSizeToFit={props.fitSize}

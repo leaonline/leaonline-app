@@ -103,6 +103,8 @@ export const ClozeRendererBlank = props => {
   // https://github.com/wix/react-native-ui-lib/blob/master/demo/src/screens/nativeComponentScreens/keyboardInput/demoKeyboards.js
   const renderInput = ({ onPressIn } = {}) => (
     <TextInput
+      accessibilityLabel='text'
+      accessibilityHint='text'
       editable={editable}
       placeholderTextColor={color}
       selectionColor={color}

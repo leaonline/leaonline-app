@@ -43,7 +43,7 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   }
 
   return (
-    <View style={styles.default}>
+    <View style={styles.default} accessibilityRole='alert'>
       <Tts block iconColor={Colors.danger} color={Colors.secondary} text={textBase} />
       <Tts block iconColor={Colors.danger} color={Colors.secondary} text={t('errors.restart')} />
       {renderConfirm()}

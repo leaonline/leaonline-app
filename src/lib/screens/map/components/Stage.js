@@ -103,6 +103,7 @@ export const Stage = props => {
 
   return (
     <Pressable
+      accessibilityRole='button'
       android_ripple={rippleConfig}
       android_disableSound={false}
       style={styles.container}

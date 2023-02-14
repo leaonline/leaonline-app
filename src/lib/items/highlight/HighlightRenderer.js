@@ -113,7 +113,7 @@ export const HighlightRenderer = props => {
       }
 
       return (
-        <Pressable onPress={onElementPress} key={index}>
+        <Pressable accessibilityRole='button' onPress={onElementPress} key={index}>
           <LeaText style={tokenStyle}>{value}</LeaText>
         </Pressable>
       )

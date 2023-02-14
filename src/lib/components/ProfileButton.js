@@ -15,7 +15,7 @@ export const ProfileButton = props => {
     navigation.navigate(props.route)
   }
   return (
-    <Pressable android_ripple={rippleConfig} onPress={toProfile} style={{ display: 'flex', marginLeft: 'auto' }}>
+    <Pressable accessibilityRole='button' android_ripple={rippleConfig} onPress={toProfile} style={{ display: 'flex', marginLeft: 'auto' }}>
       <Icon
         name='user' type='font-awesome-5' color={Colors.gray} reverse
         style size={18}

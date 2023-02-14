@@ -59,7 +59,7 @@ export const Confirm = props => {
 
     if (props.pressable) {
       return (
-        <Pressable style={styles.buttonContainer} onPress={onPress}>
+        <Pressable accessibilityRole='button' style={styles.buttonContainer} onPress={onPress}>
           <Icon
             name={props.icon} type='font-awesome-5' color={Colors.secondary}
             style
