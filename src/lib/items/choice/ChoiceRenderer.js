@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Choice } from './Choice'
-import { CompareState } from '../utils/CompareState'
 import { Checkbox } from '../../components/Checkbox'
 import { Colors } from '../../constants/Colors'
 import { Log } from '../../infrastructure/Log'
+import { getChoiceEntryScoreColor } from './getChoiceEntryScoreColor'
+import { getCompareValuesForSelectableItems } from '../shared/getCompareValuesForSelectableItems'
 
 const debug = Log.create('ChoiceRenderer', 'debug', true)
 
@@ -29,21 +30,7 @@ export const ChoiceRenderer = props => {
     }
 
     const correctResponses = value.scoring.flatMap(sc => sc.correctResponse)
-    const result = {}
-
-    // part 1 - check if all correct ones were selected
-    correctResponses.forEach(index => {
-      result[index] = selected[index] === true
-        ? 1 // right
-        : -1 // missing
-    })
-
-    // part 2 - check if others were selected that shouldn't be
-    Object.entries(selected).forEach(([index, value]) => {
-      if (value && result[index] === undefined) {
-        result[index] = 0 // wrong
-      }
-    })
+    const result = getCompareValuesForSelectableItems({ correctResponses, selected })
 
     setCompared(result)
   }, [showCorrectResponse, scoreResult, value, selected])
@@ -86,6 +73,7 @@ export const ChoiceRenderer = props => {
         ttsText={choice.tts}
         text={choice.text}
         hideTts={!choice.tts}
+        image={choice.image}
         onPress={onPress}
         checked={isSelected}
         checkedColor={Colors.secondary}
@@ -103,15 +91,9 @@ export const ChoiceRenderer = props => {
     const compareState = compared[index]
     const isSelected = !!(selected[index])
     const isCompared = typeof compareState === 'number'
-    let scoredColor
-
-    if (isSelected && compareState === 1) {
-      scoredColor = CompareState.getColor(compareState)
-    }
-
-    if (!isSelected && isCompared) {
-      scoredColor = CompareState.getColor(compareState)
-    }
+    const scoredColor = getChoiceEntryScoreColor({
+      isSelected, isCompared, compareState
+    })
 
     const key = `choice-${index}`
     return (
@@ -119,6 +101,7 @@ export const ChoiceRenderer = props => {
         key={key}
         ttsText={choice.tts}
         text={choice.text}
+        image={choice.image}
         hideTts={!choice.tts}
         onPress={() => {}}
         checked={isSelected || isCompared}

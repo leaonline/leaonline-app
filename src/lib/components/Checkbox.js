@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { CheckBox } from 'react-native-elements'
 import { Colors } from '../constants/Colors'
-import { Pressable, View } from 'react-native'
+import { ContentServer } from '../remotes/ContentServer'
+import { Image, Pressable, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'
 import { useTts } from './Tts'
@@ -22,6 +23,7 @@ import { LeaText } from './LeaText'
  * @param props.hideTts {boolean=} optional flag to hide tts
  * @param props.containerStyle {object=}
  * @param props.checked {boolean=}
+ * @param props.image {string=} optional image url
  * @param props.checkedColor {string=}
  * @param props.iconColor {string=}
  * @param props.uncheckedColor {string=}
@@ -40,6 +42,19 @@ export const Checkbox = props => {
   const textColor = props.textColor ?? Colors.secondary
   const iconColor = props.iconColor ?? checkedColor
   const ttsText = props.ttsText ?? props.text
+
+  const renderImage = useCallback(() => {
+    const uri = ContentServer.cleanUrl(props.image)
+    return (
+      <Image
+        accessibilityRole='image'
+        style={styles.image}
+        resizeMethod='resize'
+        resizeMode='center'
+        source={{ uri }}
+      />
+    )
+  }, [props.image])
 
   const renderTts = () => (
     <Tts
@@ -71,6 +86,7 @@ export const Checkbox = props => {
       />
       <Pressable accessibilityRole='button' style={{ flex: 1 }} onPress={props.onPress}>
         {props.hideTts ? renderText() : renderTts()}
+        {props.image && renderImage()}
       </Pressable>
     </View>
   )
@@ -87,5 +103,9 @@ const styles = createStyleSheet({
   },
   checkbox: {
     padding: 10
+  },
+  image: {
+    height: 100,
+    width: 100
   }
 })

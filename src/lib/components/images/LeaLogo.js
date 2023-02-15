@@ -22,5 +22,5 @@ const logos = {
 export const LeaLogo = props => {
   const { src, styles } = (logos[props.logo] ?? logos.footer)
   const imageStyle = mergeStyles(styles.logo, props.style)
-  return (<Image style={imageStyle} resizeMethod='resize' resizeMode='contain' source={src} />)
+  return (<Image style={imageStyle} accessibilityRole='image' resizeMethod='resize' resizeMode='contain' source={src} />)
 }

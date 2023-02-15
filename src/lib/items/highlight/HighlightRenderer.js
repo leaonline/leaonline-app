@@ -6,6 +6,7 @@ import { Colors } from '../../constants/Colors'
 import { LeaText } from '../../components/LeaText'
 import { CompareState } from '../utils/CompareState'
 import { HighlightTokenizer } from './HighlightTokenizer'
+import { getCompareValuesForSelectableItems } from '../shared/getCompareValuesForSelectableItems'
 
 export const HighlightRenderer = props => {
   const { dimensionColor } = props
@@ -32,21 +33,7 @@ export const HighlightRenderer = props => {
   useEffect(() => {
     if (props.showCorrectResponse) {
       const correctResponses = props.value.scoring.flatMap(sc => sc.correctResponse)
-      const result = {}
-
-      // part 1 - check if all correct ones were selected
-      correctResponses.forEach(index => {
-        result[index] = selected[index] === true
-          ? 1 // right
-          : -1 // missing
-      })
-
-      // part 2 - check if others were selected that shouldn't be
-      Object.entries(selected).forEach(([index, value]) => {
-        if (value && result[index] === undefined) {
-          result[index] = 0 // wrong
-        }
-      })
+      const result = getCompareValuesForSelectableItems({ correctResponses, selected })
 
       setCompared(result)
     }
