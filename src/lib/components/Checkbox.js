@@ -42,7 +42,6 @@ export const Checkbox = props => {
   const textColor = props.textColor ?? Colors.secondary
   const iconColor = props.iconColor ?? checkedColor
   const ttsText = props.ttsText ?? props.text
-
   const renderImage = useCallback(() => {
     const uri = ContentServer.cleanUrl(props.image)
     return (
@@ -59,7 +58,8 @@ export const Checkbox = props => {
   const renderTts = () => (
     <Tts
       id={props.id}
-      text={ttsText}
+      text={props.text}
+      ttsText={ttsText}
       color={textColor}
       iconColor={iconColor}
       align='center'
