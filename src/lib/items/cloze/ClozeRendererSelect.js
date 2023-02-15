@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { Pressable, View } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { Modal, Pressable, ScrollView, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
 import { Colors } from '../../constants/Colors'
@@ -9,6 +9,7 @@ import { makeTransparent } from '../../styles/makeTransparent'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { Layout } from '../../constants/Layout'
 
 /**
  * Renders a pressable element that triggers a Modal dialog with
@@ -32,24 +33,35 @@ import { useTranslation } from 'react-i18next'
  * @constructor
  */
 export const ClozeRendererSelect = props => {
-  const { color } = props
   const { Tts } = useTts()
   const { t } = useTranslation()
+  const [modalVisible, setModalVisible] = useState(false)
   const tooltipRef = useRef(null)
+
+  const { color } = props
+  const height = props.options.length * 70 // calculate if we have a vertical overflow
+  const isOverflow = Layout.withRatio(height) > (Layout.height() * 0.4)
   const showCompare = !!props.compare
+  const label = props.value !== undefined && props.value !== null
+    ? props.options[props.value]
+    : ''
 
   const onSelect = (option, index) => {
-    tooltipRef.current.toggleTooltip()
+    if (isOverflow) {
+      setModalVisible(false)
+    }
+    else {
+      tooltipRef.current.toggleTooltip()
+    }
+
     setTimeout(() => {
       props.onSelect(option, index)
     }, 250)
   }
 
-  const onActivate = () => tooltipRef.current.toggleTooltip()
-
-  const label = props.value !== undefined && props.value !== null
-    ? props.options[props.value]
-    : ''
+  const onActivate = () => isOverflow
+    ? setModalVisible(true)
+    : tooltipRef.current.toggleTooltip()
 
   const renderTooltipContent = () => showCompare
     ? renderScoreResult()
@@ -90,15 +102,44 @@ export const ClozeRendererSelect = props => {
   const compareStyles = props.compare?.color ? { backgroundColor: props.compare.color } : undefined
   const pressStyles = mergeStyles(styles.select, compareStyles)
   const longest = props.options.reduce((a, b) => a + b.length, 0)
+
+  // if our answers exceed half of the screen we need
+  // to display a model instead of a tooltip
+  if (isOverflow) {
+    return (
+      <>
+        <Modal
+          animationType='slide'
+          transparent
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+          style={styles.modal}
+        >
+          <ScrollView persistentScrollbar contentContainerStyle={styles.modalBackground}>
+            <View style={styles.modalCenteredView}>
+              <View style={styles.modalView}>
+                {renderTooltipContent()}
+              </View>
+            </View>
+          </ScrollView>
+        </Modal>
+        <Pressable accessibilityRole='button' style={pressStyles} onPress={onActivate}>
+          <LeaText style={styles.label}>{label}</LeaText>
+        </Pressable>
+      </>
+    )
+  }
+
   return (
     <Tooltip
       ref={tooltipRef}
-      height={props.options.length * 60}
-      width={150 + longest * 5}
+      height={height}
+      width={150 + longest * 6}
       popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
       withOverlay
       withPointer
       backgroundColor={Colors.dark}
+      containerStyle={styles.tooltipContainer}
       overlayColor={makeTransparent(Colors.white, 0.6)}
     >
       <Pressable accessibilityRole='button' style={pressStyles} onPress={onActivate}>
@@ -116,10 +157,10 @@ const styles = createStyleSheet({
     backgroundColor: 'rgba(0, 0, 0, 0.7)'
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
+    margin: 15,
+    backgroundColor: Colors.dark,
     borderRadius: 20,
-    padding: 35,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -129,6 +170,18 @@ const styles = createStyleSheet({
     shadowOpacity: 0.5,
     shadowRadius: 14,
     elevation: 5
+  },
+  tooltipContainer: {
+
+  },
+  actionsContainer: {
+    width: '100%'
+  },
+  modalBackground: {
+    backgroundColor: 'transparent'
+  },
+  modalCenteredView: {
+
   },
   select: {
     minWidth: 50,
@@ -145,7 +198,7 @@ const styles = createStyleSheet({
     elevation: 2
   },
   actionButton: {
-    minWidth: 120
+    marginBottom: 5
   },
   buttonOpen: {
     backgroundColor: '#F194FF'
@@ -157,6 +210,9 @@ const styles = createStyleSheet({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+  modal: {
+
   },
   modalText: {
     marginBottom: 15,

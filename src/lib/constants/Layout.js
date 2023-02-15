@@ -2,7 +2,7 @@ import { Colors } from './Colors'
 import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
 
-const { width } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 const ratio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const isLarge = width * ratio > 1300
@@ -12,6 +12,7 @@ export const Layout = {}
 Layout.statusBarHeight = () => Constants.statusBarHeight
 
 Layout.width = () => width * ratio
+Layout.height = () => height * ratio
 
 Layout.withRatio = value => value * ratio
 
