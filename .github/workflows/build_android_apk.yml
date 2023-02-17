@@ -16,11 +16,11 @@ jobs:
 
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
+        node-version: '14.x'
 
     - name: fetch Semikolon font file
       env:
@@ -39,7 +39,7 @@ jobs:
       run: cd src/android && ./gradlew assembleRelease
     
     - name: upload apk file
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: android-release-${{ github.event.inputs.releasetag }}
         path: src/android/app/build/outputs/apk/release/
