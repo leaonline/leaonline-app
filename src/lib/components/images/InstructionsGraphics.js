@@ -6,21 +6,22 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 
 export const InstructionsGraphics = (props) => {
   const { Tts } = useTts()
-  const Instruction = InstructionAnimations.get('choice-text')
+  const { hash, text } = props
+  const Instruction = InstructionAnimations.get(hash)
 
   if (!Instruction) {
     return (
-      <Tts text={props.source.value} />
+      <Tts text={text} />
     )
   }
 
   const readText = () => {
-    TTSengine.speakImmediately(props.source.value)
+    TTSengine.speakImmediately(text)
   }
 
   return (
     <View style={styles.container}>
-      <Tts text={props.source.value} color={props.color} dontShowText />
+      <Tts text={text} color={props.color} dontShowText />
       <Instruction onPress={readText} width={200} />
     </View>
   )

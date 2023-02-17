@@ -125,11 +125,15 @@ export const UnitRenderer = props => {
     })
   }
 
-  const renderInstructions = (list) => {
-    if (!list?.length) { return null }
+  const renderInstructions = () => {
+    const instructions = (unitDoc.pages[page]?.instructions ?? unitDoc.instructions)?.[0]
+
+    if (!instructions) {
+      return null
+    }
 
     return (
-      <InstructionsGraphics source={list[0]} color={dimensionColor} />
+      <InstructionsGraphics hash={instructions.hash} text={instructions.value} color={dimensionColor} />
     )
   }
 
@@ -188,7 +192,7 @@ export const UnitRenderer = props => {
             type='font-awesome-5'
           />
         </LeaText>
-        {renderInstructions(unitDoc.instructions)}
+        {renderInstructions()}
       </FadePanel>
 
       {/* 3. PART TASK PAGE CONTENT */}
@@ -197,8 +201,6 @@ export const UnitRenderer = props => {
         visible={fadeIn >= 2}
       >
         <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
-
-        {renderContent(unitDoc.pages[page]?.instructions)}
 
         {renderContent(unitDoc.pages[page]?.content)}
       </FadePanel>

@@ -43,6 +43,7 @@ const runHandlers = name => {
  * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
  * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
  * @param {boolean=} props.block: Makes the container flexGrow. If this causes problems, use style instead.
+ * @param {boolean=} props.asButton: Makes the container a block-sized button
  * @param {boolean=} props.disabled: Makes the button disabled
  * @param {string=} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary
  *   (examples in ./constants/Colors.js)
