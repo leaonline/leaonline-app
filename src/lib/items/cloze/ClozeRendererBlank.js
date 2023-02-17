@@ -151,7 +151,7 @@ export const ClozeRendererBlank = props => {
       <Tooltip
         ref={tooltipRef}
         height={100}
-        width={original.length * 10}
+        width={150 + original.length * 6}
         popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
         withOverlay
         withPointer
@@ -179,8 +179,11 @@ const styles = createStyleSheet({
   },
   text: {
     fontWeight: 'bold',
-    color: Colors.light
+    color: Colors.light,
   },
-  actionsContainer: {},
+  actionsContainer: {
+    width: '100%',
+    height: '100%'
+  },
   tooltip: {}
 })

@@ -3,19 +3,20 @@ import { useDocs } from '../meteor/useDocs'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { loadDevUnit } from './loadDevUnit'
 import { ScreenBase } from '../screens/BaseScreen'
-import { UnitRenderer } from '../screens/unit/UnitRenderer'
+import { UnitRenderer } from '../screens/unit/renderer/UnitRenderer'
 import { ActionButton } from '../components/ActionButton'
 import { checkResponse } from '../screens/unit/createResponseDoc'
 import { Colors } from '../constants/Colors'
-import { View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { getDimensionColor } from '../screens/unit/getDimensionColor'
 
-const initialState = {
+const initialState = () => ({
   page: 0,
   scored: -1,
   show: true,
   allTrue: false
-}
+})
 
 const reducer = (prevState, nextState) => {
   switch (nextState.type) {
@@ -50,7 +51,7 @@ export const UnitDevScreen = props => {
   const { t } = useTranslation()
   const responseRef = useRef({})
   const scoreRef = useRef({})
-  const [state, dispatch] = useReducer(reducer, initialState, undefined)
+  const [state, dispatch] = useReducer(reducer, initialState(), undefined)
   const { page, show, scored, allTrue } = state
   const [session] = useContext(AppSessionContext)
   const { unitId, dimension } = session
@@ -59,6 +60,7 @@ export const UnitDevScreen = props => {
   })
 
   const unitDoc = unitDocs?.data
+  const dimensionColor = getDimensionColor(dimension)
 
   const submitResponse = async ({ responses, data }) => {
     responseRef.current[page] = { responses, data }
@@ -80,11 +82,12 @@ export const UnitDevScreen = props => {
   const nextPage = () => dispatch({ type: 'to-page', page: page + 1 })
   const retry = () => {
     dispatch({ type: 'reset' })
+
     setTimeout(() => {
       delete scoreRef.current[page]
       delete responseRef.current[page]
       dispatch({ type: 'show' })
-    }, 300)
+    }, 500)
   }
 
   const renderTaskPageActions = () => {
@@ -132,6 +135,7 @@ export const UnitDevScreen = props => {
       {show && <UnitRenderer
         unitDoc={unitDoc}
         page={page}
+        dimensionColor={dimensionColor}
         showCorrectResponse={showCorrectResponse}
         submitResponse={submitResponse}
         allTrue={allTrue}
@@ -139,6 +143,7 @@ export const UnitDevScreen = props => {
         scoreResult={scoreResult}
         dimension={dimension}
                />}
+      {!show && <ActivityIndicator color={dimensionColor} size='large' />}
     </ScreenBase>
   )
 }

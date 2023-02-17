@@ -1,111 +1,74 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
-import {
-  View,
-  ScrollView,
-  Vibration
-} from 'react-native'
+import React, { useEffect, useRef, useContext, useReducer } from 'react'
 import { Log } from '../../infrastructure/Log'
-import { Layout } from '../../constants/Layout'
-import { useContentElementFactory } from '../../components/factories/UnitContentElementFactory'
-import { Icon } from 'react-native-elements'
 import { Colors } from '../../constants/Colors'
-import { createStyleSheet } from '../../styles/createStyleSheet'
+import { AppSessionContext } from '../../state/AppSessionContext'
+import { ScreenBase } from '../BaseScreen'
+import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { useDocs } from '../../meteor/useDocs'
 import { loadUnitData } from './loadUnitData'
 import { ActionButton } from '../../components/ActionButton'
 import { useTranslation } from 'react-i18next'
 import { completeUnit } from './completeUnit'
-import { getScoring } from '../../scoring/getScoring'
 import { Confirm } from '../../components/Confirm'
-import { getDimensionColor } from './getDimensionColor'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sendResponse'
 import { toArrayIfNot } from '../../utils/toArrayIfNot'
-import { useTts } from '../../components/Tts'
-import { LeaText } from '../../components/LeaText'
-import { AppSessionContext } from '../../state/AppSessionContext'
-import { ScreenBase } from '../BaseScreen'
-import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
-import { Config } from '../../env/Config'
-import { FadePanel } from '../../components/FadePanel'
-import { Sound } from '../../env/Sound'
-import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
-import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
-import { mergeStyles } from '../../styles/mergeStyles'
+import { getDimensionColor } from './getDimensionColor'
+import { UnitRenderer } from './renderer/UnitRenderer'
+import { checkResponse } from './createResponseDoc'
+import { UnitSetRenderer } from './renderer/UnitSetRenderer'
 import './registerComponents'
 import './registerInstructions'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { Layout } from '../../constants/Layout'
 
 const log = Log.create('UnitScreen')
 
-const RIGHT_ANSWER = 'rightAnswer'
-const WRONG_ANSWER = 'wrongAnswer'
+const initialState = () => ({
+  page: 0,
+  scored: -1,
+  show: true,
+  allTrue: false
+})
 
-Sound.load(RIGHT_ANSWER, () => require('../../assets/audio/right_answer.wav'))
-Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))
+const reducer = (prevState, nextState) => {
+  switch (nextState.type) {
+    case 'to-page':
+      return {
+        ...prevState,
+        page: nextState.page,
+        allTrue: false
+      }
+    case 'scored':
+      return {
+        ...prevState,
+        allTrue: nextState.allTrue,
+        scored: nextState.scored
+      }
+    case 'reset':
+      return {
+        ...prevState,
+        show: false,
+        scored: nextState.scored,
+        allTrue: false
+      }
+    case 'show':
+      return {
+        ...prevState,
+        show: true
+      }
+  }
+}
 
-/**
- * On this screen, the respective Unit is displayed and the users can interact
- * with it, by solving the tasks on its pages.
- *
- * If a unit is completed and there is no next unit in the queue, it navigates
- * the users to the {CompleteScreen}.
- *
- * If a next unit exists, it will load this next unit.
- *
- * On cancel, it navigates users back to the {MapScreen}.
- *
- * @category Screens
- * @component
- * @param props {object}
- * @param props.navigation {object} navigation API
- * @returns {JSX.Element}
- */
 export const UnitScreen = props => {
-  // We need to know the Keyboard state in order to show or hide elements.
-  // For example: In "editing" mode of a writing item we want to hide the "check" button.
-  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
-  const [fadeIn, setFadeIn] = useState(-1)
-
-  useKeyboardVisibilityHandler(({ status }) => {
-    if (status === 'shown') {
-      setKeyboardStatus('shown')
-    }
-    if (status === 'hidden') {
-      setKeyboardStatus('hidden')
-      scrollViewRef.current?.scrollToEnd({ animated: true })
-    }
-  })
-
+  const { t } = useTranslation()
   const responseRef = useRef({})
   const scoreRef = useRef({})
-  const scrollViewRef = useRef()
-  const [scored, setScored] = useState()
-  const [allTrue, setAllTrue] = useState()
+  const [state, dispatch] = useReducer(reducer, initialState(), undefined)
+  const { page, show, scored, allTrue } = state
   const [session, sessionActions] = useContext(AppSessionContext)
   const { unitSet, dimension } = session
   const docs = useDocs({ fn: () => loadUnitData(unitSet) })
-  const { t } = useTranslation()
-  const { Tts } = useTts()
-
-  const page = session.page || 0
-
-  // ---------------------------------------------------------------------------r
-  // update cards display
-  // ---------------------------------------------------------------------------
-  useEffect(() => {
-    if (page === 0) {
-      setFadeIn(0)
-      const timer1 = setTimeout(() => setFadeIn(1), 500)
-      const timer2 = setTimeout(() => setFadeIn(2), 1000)
-
-      return () => {
-        clearTimeout(timer1)
-        clearTimeout(timer2)
-      }
-    }
-
-    setFadeIn(2)
-  }, [session.page])
 
   // ---------------------------------------------------------------------------
   // Navigation updates
@@ -180,26 +143,17 @@ export const UnitScreen = props => {
   }, [props.navigation])
 
   // ---------------------------------------------------------------------------
-  // init renderer
-  // ---------------------------------------------------------------------------
-  const { Renderer } = useContentElementFactory()
-
-  // ---------------------------------------------------------------------------
   // SKip early
   // ---------------------------------------------------------------------------
   if (!docs.data || docs.error) {
-    return (<ScreenBase {...docs} style={styles.container} />)
+    return (<ScreenBase {...docs} />)
   }
 
-  // ---------------------------------------------------------------------------
-  // Used to dynamically render elements
-  // ---------------------------------------------------------------------------
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
-  const showCorrectResponse = scored === page
   const dimensionColor = getDimensionColor(dimension)
 
   // ---------------------------------------------------------------------------
-  // NAVIGATION
+  // finish --> NAVIGATION
   // ---------------------------------------------------------------------------
 
   /**
@@ -219,78 +173,6 @@ export const UnitScreen = props => {
       : props.navigation.navigate('complete')
   }
 
-  // ---------------------------------------------------------------------------
-  // RENDERING
-  // ---------------------------------------------------------------------------
-
-  const renderInstructions = (list) => {
-    if (!list?.length) { return null }
-
-    return (
-      <InstructionsGraphics source={list[0]} color={dimensionColor} />
-    )
-  }
-
-  /**
-   *  This is the generic content rendering method, which
-   *  applies to all content structure across units and unitSets
-   *  with their story pages.
-   *  Rendering of the elements is delegated to their respective
-   *  registered renderer using the {UnitContentElementFactory}
-   **/
-  const renderContent = (list) => {
-    if (!list?.length) { return null }
-
-    return list.map((element, index) => {
-      const elementData = { ...element }
-      elementData.dimensionColor = dimensionColor
-
-      // item elements are "interactive" beyond tts
-      // and require their own view and handlers
-      if (element.type === 'item') {
-        elementData.submitResponse = submitResponse
-        elementData.showCorrectResponse = showCorrectResponse
-        elementData.scoreResult = showCorrectResponse && scoreRef.current[page]
-      }
-
-      // all other elements are simply "display" elements
-      return (<Renderer key={index} style={styles.contentElement} {...elementData} />)
-    })
-  }
-
-  // ---------------------------------------------------------------------------
-  // STORY DISPLAY
-  // ---------------------------------------------------------------------------
-
-  // if this is the very beginning of this unit set AND
-  // we have a story to render, let's do it right now
-
-  if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
-    log('render story', unitSetDoc.shortCode)
-    return (
-      <ScreenBase {...docs} style={styles.container}>
-        <ScrollView ref={scrollViewRef} style={styles.scrollView} keyboardShouldPersistTaps='always'>
-          <View style={mergeStyles(styles.unitCard, dropShadow)}>
-            {renderContent(unitSetDoc.story)}
-          </View>
-        </ScrollView>
-
-        {/* -------- continue button ---------  */}
-        <ActionButton
-          block
-          tts={t('unitScreen.story.continue')}
-          color={dimensionColor}
-          onPress={finish}
-        />
-      </ScreenBase>
-    )
-  }
-
-  // ---------------------------------------------------------------------------
-  // TASK DISPLAY
-  // ---------------------------------------------------------------------------
-  log('render unit', unitDoc._id, unitDoc.shortCode, 'page=', page, 'checked=', scored)
-
   const submitResponse = async ({ responses, data }) => {
     log('item submit', data.contentId, responses)
     responseRef.current[page] = { responses, data }
@@ -301,17 +183,13 @@ export const UnitScreen = props => {
     const currentResponse = responseRef.current[page]
     log('check score', { currentResponse })
 
-    if (!currentResponse || !currentResponse.data || !currentResponse.responses) {
-      throw new Error('Response always needs to exist')
-    }
-
-    const { responses, data } = currentResponse
-    const { type, subtype, value } = data
-    const itemDoc = { type, subtype, ...value }
-    const scoreResult = await getScoring(itemDoc, { responses })
-    scoreRef.current[page] = scoreResult
-
-    log('score', type, subtype, scoreResult.score)
+    const checked = await checkResponse({ currentResponse })
+    scoreRef.current[page] = checked.scoreResult
+    dispatch({
+      type: 'scored',
+      allTrue: checked.allTrue,
+      scored: page
+    })
 
     // submit everything (in the background)
     const responseDoc = {}
@@ -346,9 +224,9 @@ export const UnitScreen = props => {
     responseDoc.unitId = unitDoc._id
     responseDoc.dimensionId = dimension._id
     responseDoc.page = page
-    responseDoc.itemId = data.contentId
-    responseDoc.itemType = data.subtype
-    responseDoc.scores = scoreResult.map(entry => {
+    responseDoc.itemId = currentResponse.data.contentId
+    responseDoc.itemType = currentResponse.data.subtype
+    responseDoc.scores = checked.scoreResult.map(entry => {
       // some items score single values, others multiple
       // some items have single competencies, others multiple
       // we therefore make all these properties to arrays
@@ -362,30 +240,22 @@ export const UnitScreen = props => {
 
     const competencies = responseDoc.scores.filter(entry => entry.score === true).length
     const prevCompetencies = session.competencies || 0
-    sessionActions.competencies(prevCompetencies + competencies)
 
-    log('submit response to server', responseDoc)
-    await sendResponse({ responseDoc })
-
-    setScored(page)
-
-    // if all scores are true then we add another box
-    // with positive reinforcement
-    if (scoreResult.every(entry => entry.score)) {
-      setAllTrue(page)
-      Vibration.vibrate(500)
-      scrollViewRef.current?.scrollToEnd({ animated: true })
-      await Sound.play(RIGHT_ANSWER)
+    try {
+      log('submit response to server', responseDoc)
+      await sendResponse({ responseDoc })
     }
-    else {
-      Vibration.vibrate(100)
-      await Sound.play(WRONG_ANSWER)
+    catch (e) {
+      log(e.message)
     }
+
+    return sessionActions.competencies(prevCompetencies + competencies)
   }
 
+  const showCorrectResponse = scored === page
+  const scoreResult = showCorrectResponse && scoreRef.current[page]
   const nextPage = () => {
-    setFadeIn(1) // fade out content
-    setAllTrue(-1)
+    dispatch({ type: 'to-page', page: page + 1 })
     setTimeout(() => {
       sessionActions.multi({
         page: page + 1,
@@ -394,35 +264,49 @@ export const UnitScreen = props => {
     }, 500)
   }
 
-  const renderFooter = () => {
-    if (keyboardStatus === 'shown') {
-      return null
-    }
+  // ---------------------------------------------------------------------------
+  // STORY DISPLAY
+  // ---------------------------------------------------------------------------
+
+  // if this is the very beginning of this unit set AND
+  // we have a story to render, let's do it right now
+
+  if (shouldRenderStory({ sessionDoc, unitSetDoc })) {
+    log('render story', unitSetDoc.shortCode)
     return (
-      <FadePanel style={styles.navigationButtons} visible={fadeIn >= 2}>
-        {renderTaskPageAction()}
-      </FadePanel>
+      <ScreenBase {...docs} style={styles.container}>
+        <UnitSetRenderer
+          unitSetDoc={unitSetDoc}
+          dimensionColor={dimensionColor}
+        />
+
+        {/* -------- continue button ---------  */}
+        <ActionButton
+          block
+          tts={t('unitScreen.story.continue')}
+          color={dimensionColor}
+          onPress={finish}
+        />
+      </ScreenBase>
     )
   }
 
-  const renderTaskPageAction = () => {
-    // if the page has not been checked yet we render a check-action button
+  const renderTaskPageActions = () => {
+    const hasNextPage = page < unitDoc.pages.length - 1
+    const isLast = (session.progress ?? 0) === (session.unitSet?.progress ?? 1)
+
     if (!showCorrectResponse) {
       return (
         <ActionButton
           block
           align='center'
           tts={t('unitScreen.actions.check')}
-          color={dimensionColor}
+          color={Colors.primary}
+          icon='edit'
           onPress={checkScore}
         />
       )
     }
-
-    // if this page has been scored, we can display a "continue" button
-    // which either moves to the next page or completes the unit
-    const hasNextPage = page < unitDoc.pages.length - 1
-    const isLast = (session.progress ?? 0) === (session.unitSet?.progress ?? 1)
 
     if (isLast) {
       return (
@@ -437,12 +321,13 @@ export const UnitScreen = props => {
     }
 
     if (hasNextPage) {
-      log('render next page button')
       return (
         <ActionButton
           block
           align='center'
-          tts={t('unitScreen.actions.next')} color={dimensionColor}
+          tts={t('unitScreen.actions.next')}
+          icon='arrow-right'
+          color={Colors.primary}
           onPress={nextPage}
         />
       )
@@ -458,159 +343,27 @@ export const UnitScreen = props => {
     )
   }
 
-  const renderAllTrue = () => {
-    if (allTrue !== page) {
-      return null
-    }
-
-    return (
-      <View style={{ ...styles.unitCard, ...styles.allTrue }}>
-        <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
-        <Icon
-          testID='alltrue-icon'
-          reverse
-          color={Colors.success}
-          size={20}
-          name='thumbs-up'
-          type='font-awesome-5'
-        />
-      </View>
-    )
-  }
-
-  const renderUnitTitle = () => {
-    if (!Config.debug.unit) {
-      return
-    }
-
-    return (
-      <View style={styles.unitCard}>
-        <LeaText>{unitDoc.shortCode}</LeaText>
-      </View>
-    )
-  }
-
   return (
     <ScreenBase {...docs} style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollView}
-        persistentScrollbar
-        keyboardShouldPersistTaps='always'
-      >
-        {renderUnitTitle()}
-
-        {/* 1. PART STIMULI */}
-        <FadePanel style={mergeStyles(styles.unitCard, dropShadow)} visible={fadeIn >= 0}>
-          {renderContent(unitDoc.stimuli)}
-        </FadePanel>
-
-        {/* 2. PART INSTRUCTIONS */}
-        <FadePanel style={{ ...styles.unitCard, ...dropShadow, paddingTop: 0 }} visible={fadeIn >= 1}>
-          <LeaText style={styles.pageText}>
-            <Icon
-              testID='info-icon'
-              reverse
-              color={Colors.gray}
-              size={10}
-              name='info'
-              type='font-awesome-5'
-            />
-          </LeaText>
-          {renderInstructions(unitDoc.instructions)}
-        </FadePanel>
-
-        {/* 3. PART TASK PAGE CONTENT */}
-        <FadePanel style={{ ...styles.unitCard, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }} visible={fadeIn >= 2}>
-          <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
-
-          {renderContent(unitDoc.pages[page]?.instructions)}
-
-          {renderContent(unitDoc.pages[page]?.content)}
-        </FadePanel>
-
-        {renderAllTrue()}
-
-        {renderFooter()}
-      </ScrollView>
+      {show && <UnitRenderer
+        unitDoc={unitDoc}
+        dimensionColor={dimensionColor}
+        page={page}
+        showCorrectResponse={showCorrectResponse}
+        submitResponse={submitResponse}
+        allTrue={allTrue}
+        taskPageAction={renderTaskPageActions}
+        scoreResult={scoreResult}
+        dimension={dimension}
+               />}
     </ScreenBase>
   )
 }
 
-const dropShadow = Layout.dropShadow()
-
-/**
- * @private stylesheet
- */
 const styles = createStyleSheet({
   container: {
     ...Layout.container({ margin: '1%' })
   },
-  itemContainer: {
-    flex: 1,
-    marginTop: 10,
-    marginBottom: 10
-  },
-  scrollView: {
-    flexGrow: 1
-  },
-  element: {
-    flex: 1,
-    alignItems: 'stretch'
-  },
-  navigationButtons: {
-    paddingTop: 7,
-    marginBottom: 15,
-    marginLeft: 4,
-    marginRight: 4,
-    alignItems: 'stretch'
-  },
-  routeButtonContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center'
-  },
-  unitCard: {
-    ...Layout.container(),
-    margin: 0,
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    padding: 5,
-    borderColor: Colors.white,
-    overflow: 'visible',
-    marginTop: 2,
-    marginBottom: 10,
-    marginLeft: 4,
-    marginRight: 4
-  },
-  pageText: {
-    alignSelf: 'center',
-    backgroundColor: Colors.gray,
-    color: Colors.white,
-    paddingLeft: 2,
-    paddingRight: 2,
-    paddingTop: 0,
-    paddingBottom: 0,
-    marginTop: 0,
-    marginBottom: 4,
-    fontSize: 16,
-    borderWidth: 0.5,
-    borderColor: Colors.gray
-  },
-  allTrue: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    alignContent: 'flex-start',
-    justifyContent: 'space-between',
-    flexShrink: 1,
-    borderColor: Colors.success,
-    backgroundColor: '#eaffee',
-    borderWidth: 4
-  },
-  contentElement: {
-    margin: 5
-  },
-  // navbar
   confirm: {
     borderRadius: 2,
     borderWidth: 1,

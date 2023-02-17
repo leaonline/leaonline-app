@@ -1,17 +1,23 @@
 import React from 'react'
-import { InstructionAnimations } from '../../screens/unit/instructions/InstructionAnimations'
-import { TTSengine, useTts } from '../Tts'
 import { View } from 'react-native'
-import { createStyleSheet } from '../../styles/createStyleSheet'
+import { InstructionAnimations } from '../instructions/InstructionAnimations'
+import { TTSengine, useTts } from '../../../components/Tts'
+import { createStyleSheet } from '../../../styles/createStyleSheet'
 
-export const InstructionsGraphics = (props) => {
+/**
+ *
+ * @param props
+ * @return {JSX.Element}
+ * @component
+ */
+export const InstructionsGraphicsRenderer = (props) => {
   const { Tts } = useTts()
   const { hash, text } = props
   const Instruction = InstructionAnimations.get(hash)
 
   if (!Instruction) {
     return (
-      <Tts text={text} />
+      <Tts text={text} style={styles.tts} />
     )
   }
 
@@ -32,5 +38,9 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start'
+  },
+  tts: {
+    margin: 0,
+    padding: 0
   }
 })

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Modal, Pressable, ScrollView, View } from 'react-native'
+import { Modal, Pressable, ScrollView, Text, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
 import { Colors } from '../../constants/Colors'
@@ -77,6 +77,7 @@ export const ClozeRendererSelect = props => {
     const regExpBody = expected.source.replace(/\D+/g, '')
     const index = Number.parseInt(regExpBody, 10)
     const correct = props.options[index]
+
     return (
       <View style={styles.correctResponse}>
         <Tts text={t('item.correctResponse', { value: correct })} dontShowText color={color} />
@@ -175,7 +176,8 @@ const styles = createStyleSheet({
 
   },
   actionsContainer: {
-    width: '100%'
+    width: '100%',
+    height: '100%'
   },
   modalBackground: {
     backgroundColor: 'transparent'
@@ -227,7 +229,9 @@ const styles = createStyleSheet({
     alignItems: 'center'
   },
   correctText: {
+    flexGrow: 1,
+    marginLeft: 3,
     fontWeight: 'bold',
-    color: Colors.light
+    color: Colors.light,
   }
 })

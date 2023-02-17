@@ -1,22 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { ScrollView, Vibration, View } from 'react-native'
-import { FadePanel } from '../../components/FadePanel'
-import { mergeStyles } from '../../styles/mergeStyles'
-import { LeaText } from '../../components/LeaText'
+import { FadePanel } from '../../../components/FadePanel'
+import { mergeStyles } from '../../../styles/mergeStyles'
+import { LeaText } from '../../../components/LeaText'
 import { Icon } from 'react-native-elements'
-import { Colors } from '../../constants/Colors'
-import { createStyleSheet } from '../../styles/createStyleSheet'
-import { useContentElementFactory } from '../../components/factories/UnitContentElementFactory'
-import { getDimensionColor } from './getDimensionColor'
-import { InstructionsGraphics } from '../../components/images/InstructionsGraphics'
+import { Colors } from '../../../constants/Colors'
+import { createStyleSheet } from '../../../styles/createStyleSheet'
+import { InstructionsGraphicsRenderer } from './InstructionsGraphicsRenderer'
 import { useTranslation } from 'react-i18next'
-import { useTts } from '../../components/Tts'
-import { Layout } from '../../constants/Layout'
-import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
-import { Sound } from '../../env/Sound'
-import { Log } from '../../infrastructure/Log'
+import { useTts } from '../../../components/Tts'
+import { Layout } from '../../../constants/Layout'
+import { useKeyboardVisibilityHandler } from '../../../hooks/useKeyboardVisibilityHandler'
+import { Sound } from '../../../env/Sound'
+import { unitCardStyles } from './unitCardStyles'
+import { ContentRenderer } from './ContentRenderer'
 
-const debug = Log.create('UnitRenderer')
+const PureContentRenderer = React.memo(ContentRenderer)
 
 /**
  * Renders the Unit, independent of the surrounding
@@ -28,21 +27,27 @@ const debug = Log.create('UnitRenderer')
  *
  * Still, keep in mind, that it's not a PureComponent!
  *
- * @param props
+ * @param props {object}
  * @component
  */
 export const UnitRenderer = props => {
-  debug(props)
   const [keyboardStatus, setKeyboardStatus] = useState(undefined)
   const [fadeIn, setFadeIn] = useState(-1)
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const { Renderer } = useContentElementFactory()
   const scrollViewRef = useRef()
 
-  const { unitDoc, dimension, page, submitResponse, showCorrectResponse, scoreResult, allTrue, taskPageAction } = props
+  const {
+    unitDoc,
+    dimensionColor,
+    page,
+    submitResponse,
+    showCorrectResponse,
+    scoreResult,
+    allTrue,
+    taskPageAction
+  } = props
   const unitId = unitDoc?._id
-  const dimensionColor = getDimensionColor(dimension)
 
   // We need to know the Keyboard state in order to show or hide elements.
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
@@ -90,41 +95,6 @@ export const UnitRenderer = props => {
     }
   }, [showCorrectResponse, allTrue])
 
-  /**
-   *  This is the generic content rendering method, which
-   *  applies to all content structure across units and unitSets
-   *  with their story pages.
-   *  Rendering of the elements is delegated to their respective
-   *  registered renderer using the {UnitContentElementFactory}
-   **/
-  const renderContent = (list) => {
-    if (!list?.length) { return null }
-
-    return list.map((element, index) => {
-      const key = `${unitId}-${page}-${index}`
-      const elementData = { ...element }
-      elementData.dimensionColor = dimensionColor
-      elementData.uid = key
-
-      // item elements are "interactive" beyond tts
-      // and require their own view and handlers
-      if (element.type === 'item') {
-        elementData.submitResponse = submitResponse
-        elementData.showCorrectResponse = showCorrectResponse
-        elementData.scoreResult = showCorrectResponse && scoreResult
-      }
-
-      // all other elements are simply "display" elements
-      return (
-        <Renderer
-          key={elementData.uid}
-          style={styles.contentElement}
-          {...elementData}
-        />
-      )
-    })
-  }
-
   const renderInstructions = () => {
     const instructions = (unitDoc.pages[page]?.instructions ?? unitDoc.instructions)?.[0]
 
@@ -133,7 +103,19 @@ export const UnitRenderer = props => {
     }
 
     return (
-      <InstructionsGraphics hash={instructions.hash} text={instructions.value} color={dimensionColor} />
+      <FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
+        <LeaText style={styles.pageText}>
+          <Icon
+            testID='info-icon'
+            reverse
+            color={Colors.gray}
+            size={10}
+            name='info'
+            type='font-awesome-5'
+          />
+        </LeaText>
+        <InstructionsGraphicsRenderer hash={instructions.hash} text={instructions.value} color={dimensionColor} />
+      </FadePanel>
     )
   }
 
@@ -143,7 +125,7 @@ export const UnitRenderer = props => {
     }
 
     return (
-      <View style={{ ...styles.unitCard, ...styles.allTrue }}>
+      <View style={{ ...unitCardStyles, ...styles.allTrue }}>
         <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
         <Icon
           testID='alltrue-icon'
@@ -176,33 +158,31 @@ export const UnitRenderer = props => {
       keyboardShouldPersistTaps='always'
     >
       {/* 1. PART STIMULI */}
-      <FadePanel style={mergeStyles(styles.unitCard, dropShadow)} visible={fadeIn >= 0}>
-        {renderContent(unitDoc.stimuli)}
+      <FadePanel style={mergeStyles(unitCardStyles, dropShadow)} visible={fadeIn >= 0}>
+        <PureContentRenderer
+          elements={unitDoc.stimuli}
+          keyPrefix={`${unitId}-stimuli`}
+        />
       </FadePanel>
 
       {/* 2. PART INSTRUCTIONS */}
-      <FadePanel style={{ ...styles.unitCard, ...dropShadow, paddingTop: 0 }} visible={fadeIn >= 1}>
-        <LeaText style={styles.pageText}>
-          <Icon
-            testID='info-icon'
-            reverse
-            color={Colors.gray}
-            size={10}
-            name='info'
-            type='font-awesome-5'
-          />
-        </LeaText>
-        {renderInstructions()}
-      </FadePanel>
+      {renderInstructions()}
 
       {/* 3. PART TASK PAGE CONTENT */}
       <FadePanel
-        style={{ ...styles.unitCard, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
+        style={{ ...unitCardStyles, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
         visible={fadeIn >= 2}
       >
         <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
-        {renderContent(unitDoc.pages[page]?.content)}
+        <PureContentRenderer
+          elements={unitDoc.pages[page]?.content}
+          keyPrefix={`${unitId}-${page}`}
+          scoreResult={showCorrectResponse && scoreResult}
+          showCorrectResponse={showCorrectResponse}
+          dimensionColor={dimensionColor}
+          submitResponse={submitResponse}
+        />
       </FadePanel>
 
       {renderAllTrue()}
@@ -215,25 +195,14 @@ export const UnitRenderer = props => {
 const RIGHT_ANSWER = 'rightAnswer'
 const WRONG_ANSWER = 'wrongAnswer'
 
-Sound.load(RIGHT_ANSWER, () => require('../../assets/audio/right_answer.wav'))
-Sound.load(WRONG_ANSWER, () => require('../../assets/audio/wrong_answer.mp3'))
+Sound.load(RIGHT_ANSWER, () => require('../../../assets/audio/right_answer.wav'))
+Sound.load(WRONG_ANSWER, () => require('../../../assets/audio/wrong_answer.mp3'))
 
 const styles = createStyleSheet({
-  contentElement: {
-    margin: 5
-  },
-  unitCard: {
-    ...Layout.container(),
-    margin: 0,
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    padding: 5,
-    borderColor: Colors.white,
-    overflow: 'visible',
-    marginTop: 2,
-    marginBottom: 10,
-    marginLeft: 4,
-    marginRight: 4
+  instructionStyles: {
+    ...Layout.dropShadow(),
+    paddingTop: 0,
+    justifyContent: 'space-between'
   },
   pageText: {
     alignSelf: 'center',
