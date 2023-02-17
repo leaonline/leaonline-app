@@ -34,6 +34,10 @@ Response.schema = {
   itemType: String,
   scores: Array,
   'scores.$': Object,
+  'scores.$.target': {
+    type: Number,
+    optional: true
+  },
   'scores.$.competency': Array,
   'scores.$.competency.$': String,
   'scores.$.correctResponse': Array,

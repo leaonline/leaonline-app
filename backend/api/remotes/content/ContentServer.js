@@ -163,7 +163,6 @@ ContentServer.sync = async ({ name, debug }) => {
   return stats
 }
 
-
 ContentServer.hooks = {
   beforeSyncUpsert: 'beforeSyncUpsert',
   syncEnd: 'syncEnd'
@@ -200,7 +199,6 @@ ContentServer.on = (hookName, ctxName, fn) => {
   const fns = map.get(ctxName)
   fns.add(fn)
 }
-
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
