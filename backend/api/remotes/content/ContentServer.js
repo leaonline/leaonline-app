@@ -124,6 +124,9 @@ ContentServer.sync = async ({ name, debug }) => {
   // if there is nothing to get, skip here
   if (!allDocs?.length) { return stats }
 
+  const onBeforeUpsert = getHooks(ContentServer.hooks.beforeSyncUpsert, name)
+  const onSyncEnd = getHooks(ContentServer.hooks.syncEnd, name)
+
   const allIds = []
   allIds.length = allDocs.length
   allDocs.forEach((doc, index) => {
@@ -136,12 +139,14 @@ ContentServer.sync = async ({ name, debug }) => {
     allIds[index] = docId
 
     if (collection.find(docId).count() === 0) {
+      onBeforeUpsert({ type: 'insert', doc })
       const insertId = collection.insert(doc)
       if (debug) log(name, 'inserted', insertId)
       stats.created++
     }
 
     else {
+      onBeforeUpsert({ type: 'update', doc })
       delete doc._id
       const updated = collection.update(docId, { $set: doc })
       if (debug) log(name, 'updated', docId, '=', updated)
@@ -153,8 +158,49 @@ ContentServer.sync = async ({ name, debug }) => {
   stats.removed = collection.remove({ _id: { $nin: allIds } })
   log(JSON.stringify(stats))
 
+  onSyncEnd(stats)
+
   return stats
 }
+
+
+ContentServer.hooks = {
+  beforeSyncUpsert: 'beforeSyncUpsert',
+  syncEnd: 'syncEnd'
+}
+
+const hooks = new Map()
+hooks.set('beforeSyncUpsert', new Map())
+hooks.set('syncEnd', new Map())
+
+const getHooks = (hooksName, ctxName) => {
+  const map = hooks.get(hooksName)
+  if (!map || !map.has(ctxName)) {
+    return () => {}
+  }
+
+  const fnSet = map.get(ctxName)
+
+  return fnSet && fnSet.size > 0
+    ? (data) => fnSet.forEach(fn => fn(data))
+    : () => {}
+}
+
+ContentServer.on = (hookName, ctxName, fn) => {
+  if (!hooks.has(hookName)) {
+    hooks.set(hookName, new Map())
+  }
+
+  const map = hooks.get(hookName)
+
+  if (!map.has(ctxName)) {
+    map.set(ctxName, new Set())
+  }
+
+  const fns = map.get(ctxName)
+  fns.add(fn)
+}
+
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
