@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native'
+import { Modal, Pressable, ScrollView, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
 import { Colors } from '../../constants/Colors'
@@ -232,6 +232,6 @@ const styles = createStyleSheet({
     flexGrow: 1,
     marginLeft: 3,
     fontWeight: 'bold',
-    color: Colors.light,
+    color: Colors.light
   }
 })

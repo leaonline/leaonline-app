@@ -179,7 +179,7 @@ const styles = createStyleSheet({
   },
   text: {
     fontWeight: 'bold',
-    color: Colors.light,
+    color: Colors.light
   },
   actionsContainer: {
     width: '100%',
