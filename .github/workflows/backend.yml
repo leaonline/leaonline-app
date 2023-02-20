@@ -18,7 +18,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v3
       with:
-        node-version: '16.x'
+        node-version: '14.x'
 
     - name: cache dependencies
       uses: actions/cache@v3
@@ -57,9 +57,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.meteor
-          key: v1-meteor-${{ hashFiles('.meteor/versions') }}
+          key: v2-meteor-${{ hashFiles('.meteor/versions') }}
           restore-keys: |
-                v1-meteor-
+                v2-meteor-
 
       - name: Cache NPM dependencies
         id: cache-meteor-npm
@@ -79,14 +79,14 @@ jobs:
             .meteor/local/plugin-cache
             .meteor/local/isopacks
             .meteor/local/bundler-cache/scanner
-          key: v1-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
+          key: v2-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
-            v1-meteor_build_cache-
+            v2-meteor_build_cache-
 
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '2.5'
+          meteor-release: '2.7.3'
 
       - name: Install NPM Dependencies
         run: cd backend && meteor npm ci
