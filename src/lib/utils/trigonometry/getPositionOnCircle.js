@@ -5,7 +5,7 @@
  * the full spectrum (0..TWO_PI)
  * @param n {number}
  * @param radius {number}
- * @return {[{ x: number, y: number }]}
+ * @return {Array<{ x: number, y: number }>}
  */
 export const getPositionOnCircle = ({ n, radius }) => {
   const positions = []

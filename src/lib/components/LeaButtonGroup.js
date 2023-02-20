@@ -13,7 +13,7 @@ import { mergeStyles } from '../styles/mergeStyles'
  * @param props.active {number=}
  * @param props.onPress {function|undefined}
  * @returns {JSX.Element}
- * @constructor
+ * @component
  */
 export const LeaButtonGroup = props => {
   const [index, setIndex] = useState(-1)

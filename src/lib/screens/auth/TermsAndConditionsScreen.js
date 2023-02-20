@@ -183,7 +183,7 @@ export const TermsAndConditionsScreen = props => {
 }
 
 /**
- * @private stylesheet
+ * @private
  */
 const styles = createStyleSheet({
   container: {

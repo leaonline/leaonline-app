@@ -6,7 +6,7 @@ import { Colors } from '../../../constants/Colors'
  * Use it to render plain text in units.
  * @param props
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const PlainTextRenderer = props => {
   const { Tts } = useTts()

@@ -59,7 +59,7 @@ const runHandlers = name => {
  * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
  * @param {string|number} props.id: The parameter to identify the buttons
  * @returns {JSX.Element}
- * @constructor
+ * @component
  */
 const TtsComponent = props => {
   // TODO use useReducer to implement complex state logic?
@@ -261,8 +261,7 @@ const TtsComponent = props => {
  *
  * @property setSpeech {function} use to inject tts implementation
  * @property stop {function} use to stop tts speech
- * @property isSpeaking {boolean} indicate if currently there is a
- *  speech ongoing
+ * @property isSpeaking {boolean} indicate if currently there is a speech ongoing
  * @property speakId {number} id of the target that is used for tts
  * @property iconColor {null} current color of the speech icon
  * @property component {function} returns the react component {ttsComponent}
@@ -272,8 +271,8 @@ export const TTSengine = {
   /**
    *
    * @param speechProvider {object}
-   * @param speakImmediately {boolean=false}
-   * @param text {string=''}
+   * @param {boolean} [speakImmediately=false]
+   * @param text {string}
    * @param timeout {number=}
    * @return {Promise<*>}
    */
@@ -297,11 +296,22 @@ export const TTSengine = {
       return new Promise(resolve => resolve())
     }
   },
+  /**
+   * Adds a new global hook
+   * @param name {string}
+   * @param fn {function}
+   */
   on: (name, fn) => {
     globalDebug('add global listener', name)
     handlers[name] = handlers[name] || []
     handlers[name].push(fn)
   },
+  /**
+   * Removes global hook
+   * @param name {string}
+   * @param fn {function}
+   * @return {boolean}
+   */
   off: (name, fn) => {
     globalDebug('add global listener', name)
     const list = handlers[name] ?? []
@@ -312,6 +322,10 @@ export const TTSengine = {
     list.splice(index, 1)
     return true
   },
+  /**
+   * Stops speaking
+   * @return {*}
+   */
   stop () {
     return Speech.stop()
   },
@@ -323,7 +337,15 @@ export const TTSengine = {
   defaultSpeed: 1,
   currentSpeed: 1,
   currentVoice: undefined,
+  /**
+   * Returns the TTS React component
+   * @return {function():JSX.Element}
+   */
   component: () => TtsComponent,
+  /**
+   * Sets a new speed, valid values are 0.1 <= x <= 2.0
+   * @param newSpeed {number}
+   */
   updateSpeed: newSpeed => {
     globalDebug('set new speed', newSpeed)
     if (newSpeed < 0.1 || newSpeed > 2.0) {
@@ -331,10 +353,19 @@ export const TTSengine = {
     }
     TTSengine.currentSpeed = newSpeed
   },
+  /**
+   * Sets a new voice by given identifier
+   * @param identifier {string}
+   */
   setVoice: identifier => {
     globalDebug('set default voice', identifier)
     TTSengine.currentVoice = identifier
   },
+  /**
+   * Speaks a new text immediately, stops
+   * all speech
+   * @param text
+   */
   speakImmediately: text => {
     globalDebug('speak immediately', text)
     Speech.stop()
@@ -346,6 +377,10 @@ export const TTSengine = {
       voice: TTSengine.currentVoice
     })
   },
+  /**
+   * Returns all available voices
+   * @return {Promise<Array<Object>>}
+   */
   getVoices: () => new Promise(resolve => {
     globalDebug('get voices')
     if (TTSengine.availableVoices !== null) {

@@ -9,7 +9,7 @@ const RATIO = 576 / 512 // 1,125
  * https://fontawesome.com/v5/icons/volume-up?s=solid&f=classic
  * @param props
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const SoundIcon = props => {
   const width = props.size * RATIO

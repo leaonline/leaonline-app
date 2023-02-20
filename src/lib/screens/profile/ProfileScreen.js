@@ -15,7 +15,7 @@ import { ActionButton } from '../../components/ActionButton'
  *  TODO
  * @param props
  * @returns {JSX.Element}
- * @constructor
+ * @component
  */
 export const ProfileScreen = (props) => {
   const screenReady = useTimeout({ timeout: 300 })

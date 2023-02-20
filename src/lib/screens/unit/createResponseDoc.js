@@ -7,9 +7,9 @@ import { getScoring } from '../../scoring/getScoring'
  * @param currentResponse.data.type {object} should be 'item'
  * @param currentResponse.data.subtype {object} defines the item type like Cloze, Choice etc.
  * @param currentResponse.data.value {object} item value definitions like scoring, text, etc.
- * @param currentResponse.responses {[string|number]} array of strings or numbers, the index of the response represents
+ * @param currentResponse.responses {Array<string|number>} array of strings or numbers, the index of the response represents
  *  the item-index
- * @return {Promise<{scoreResult: (*|[]), allTrue: this is T[]}>}
+ * @return {Promise<{scoreResult: object, allTrue: boolean }>}
  */
 export const checkResponse = async ({ currentResponse }) => {
   if (!currentResponse || !currentResponse.data || !currentResponse.responses) {

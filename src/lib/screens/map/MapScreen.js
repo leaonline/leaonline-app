@@ -258,7 +258,7 @@ const positionMap = {
 }
 
 /**
- * @private stylesheet
+ * @private
  */
 const styles = createStyleSheet({
   container: {

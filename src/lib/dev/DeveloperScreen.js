@@ -13,7 +13,7 @@ import { AppSessionContext } from '../state/AppSessionContext'
  *
  * @param props
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const DeveloperScreen = props => {
   const [filteredUnits, setFilteredUnits] = useState(null)

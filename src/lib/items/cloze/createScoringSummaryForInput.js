@@ -15,7 +15,7 @@ import { average } from '../../utils/math/average'
  * @return {{
  *  score: number,
  *  actual: string|number,
- *  entries: *[],
+ *  entries: Array<*>,
  *  color: string,
  *  index: number
  *  }}

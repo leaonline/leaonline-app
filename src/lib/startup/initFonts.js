@@ -1,7 +1,8 @@
 import * as Font from 'expo-font'
 
 /**
- * @private used to load our custom font
+ * used to load our custom font
+ * @private
  * @return {Promise<void>}
  */
 export const fetchFonts = async () => {

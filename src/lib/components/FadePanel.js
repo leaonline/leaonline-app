@@ -6,7 +6,7 @@ import { Animated } from 'react-native'
  * If an `onComplete` callback is passed it will
  * trigger, once the animation is complete and pass the `id` and `visible` value.
  *
- * @param children {[JSX.Element]}
+ * @param children {Array<JSX.Element>}
  * @param id {string}
  * @param visible {boolean}
  * @param style {object=}

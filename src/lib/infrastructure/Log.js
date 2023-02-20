@@ -73,9 +73,9 @@ Log.setLevel = level => {
 /**
  * Creates a new log type.
  * @param name {string} the namespace for the log
- * @param type {string='log'} the log type name
+ * @param {string=} [type='log'] the log type name
  * @param force {boolean=} overrides global logLevel
- * @return {(function())|*|(function(...[*]): void)}
+ * @return {function}
  */
 Log.create = (name, type = 'log', force) => {
   if (name in Config.debug && !Config.debug.name) {

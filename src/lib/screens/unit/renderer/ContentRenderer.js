@@ -10,7 +10,7 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
  *  registered renderer using the {UnitContentElementFactory}
  *
  *  @param props {object}
- *  @param props.elements {object[]=}
+ *  @param props.elements {Array<Object>=}
  *  @param props.keyPrefix {string}
  *  @param props.dimensionColor {string}
  *  @param props.submitResponse {function=}

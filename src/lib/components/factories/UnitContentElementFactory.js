@@ -48,7 +48,6 @@ UnitContentElementFactory.isRegistered = (options) => components.has(toKey(optio
  * @param props.type {string} the content type
  * @param props.subtype {string} the content subtype
  * @returns {JSX.Element}
- * @constructor
  * @component
  */
 UnitContentElementFactory.Renderer = props => {

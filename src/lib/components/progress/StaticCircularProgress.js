@@ -13,23 +13,23 @@ import { Colors } from '../../constants/Colors'
  * the percentage value.
  *
  * @param props
- * @param props.value {number=0}
- * @param props.maxValue {number=100}
- * @param props.radius {number=60}
+ * @param {number} [props.value=0]
+ * @param {number} [props.maxValue=100]
+ * @param {number} [props.radius=60]
  * @param props.text {string=}
- * @param props.textColor {string=Colors.secondary}
- * @param props.fontSize {number=14}
- * @param props.fontWeight {string='normal'}
- * @param props.strokeLinecap {string='round'}
- * @param props.valuePrefix {string=''}
- * @param props.valueSuffix {string=''}
- * @param props.fillColor {string=}
- * @param props.activeStrokeColor {string=Colors.primary}
- * @param props.activeStrokeSecondaryColor {string=Colors.secondary}
- * @param props.activeStrokeWidth {number=10}
- * @param props.inActiveStrokeWidth {number=10}
- * @param props.inActiveStrokeOpacity {number=1}
- * @param props.showProgressValue {boolean=false}
+ * @param {string} [props.textColor=Colors.secondary]
+ * @param {number} [props.fontSize=14]
+ * @param {string} [props.fontWeight='normal']
+ * @param {string} [props.strokeLinecap='round']
+ * @param {string} [props.valuePrefix='']
+ * @param {string} [props.valueSuffix='']
+ * @param {string} [props.fillColor=Colors.transparent]
+ * @param {string} [props.activeStrokeColor=Colors.primary]
+ * @param {string} [props.activeStrokeSecondaryColor=Colors.secondary]
+ * @param {number} [props.activeStrokeWidth=10]
+ * @param {number} [props.inActiveStrokeWidth=10]
+ * @param {number} [props.inActiveStrokeOpacity=1]
+ * @param {boolean} [props.showProgressValue=false]
  * @return {JSX.Element}
  * @component
  */

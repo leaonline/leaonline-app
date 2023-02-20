@@ -18,7 +18,7 @@ import { DimensionAchievements } from './DimensionAchievements'
  * progress.
  *
  * @return {*}
- * @constructor
+ * @component
  */
 export const AchievementsScreen = (props) => {
   const { t } = useTranslation()
@@ -54,7 +54,7 @@ export const AchievementsScreen = (props) => {
 }
 
 /**
- * @private stylesheet
+ * @private
  */
 const styles = createStyleSheet({
   container: {

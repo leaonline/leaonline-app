@@ -13,7 +13,6 @@ const logos = {
  * Renders one of the given lea logos. Available are currently: [footer] defaults to 'footer' if not found.
  * @component
  * @category Components
- * @constructor
  * @returns {JSX.Element}
  * @param props {object}
  * @param props.logo {string=} name of the available logos

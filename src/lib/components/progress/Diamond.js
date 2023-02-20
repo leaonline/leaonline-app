@@ -18,12 +18,12 @@ import { correctDiamondProgress } from './correctDiamondProgress'
  * @param props {object}
  * @param props.color {string} the color of the outline and filling
  * @param props.color {number} the percentage value (0..100) to determine the filling height
- * @param props.width {number=30} the width of the container
- * @param props.height {number=45} the height of the container
+ * @param {number} [props.width=30] the width of the container
+ * @param {number} [props.height=45] the height of the container
  * @param props.precise {boolean=} render precisely, fill may not look linear
  * @param props.value {number} fill value; 0..100
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const Diamond = props => {
   const width = props.width ?? 30

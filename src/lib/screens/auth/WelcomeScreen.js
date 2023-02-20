@@ -70,7 +70,7 @@ export const WelcomeScreen = props => {
 }
 
 /**
- * @private stylesheet
+ * @private
  */
 const styles = createStyleSheet({
   logo: {

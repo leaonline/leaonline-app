@@ -10,7 +10,7 @@ import { Layout } from '../../../constants/Layout'
  * @param props {object}
  * @param props.unitSetDoc {object} the unitSet doc
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const UnitSetRenderer = props => {
   const scrollViewRef = useRef()

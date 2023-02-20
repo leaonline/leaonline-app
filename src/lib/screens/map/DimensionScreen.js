@@ -112,7 +112,7 @@ export const DimensionScreen = props => {
 }
 
 /**
- * @private stylesheet
+ * @private
  */
 const styles = createStyleSheet({
   container: Layout.container(),

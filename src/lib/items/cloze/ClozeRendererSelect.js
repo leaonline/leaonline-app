@@ -27,10 +27,10 @@ import { Layout } from '../../constants/Layout'
  * @param props.compare {object} compare state
  * @param props.compare.score {object}
  * @param props.compare.score {number}
- * @param props.compare.entries {[object]}
+ * @param props.compare.entries {Array<Object>}
  * @param props.compare.actual {string}
  * @param props.compare.color {string}
- * @constructor
+ * @component
  */
 export const ClozeRendererSelect = props => {
   const { Tts } = useTts()

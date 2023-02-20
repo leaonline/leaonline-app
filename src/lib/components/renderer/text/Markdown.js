@@ -10,7 +10,7 @@ import { Layout } from '../../../constants/Layout'
  * @param props.value {string} the markdown text
  * @param props.style {object=} optional styles
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const MarkdownRenderer = props => {
   return (

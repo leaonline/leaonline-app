@@ -20,7 +20,7 @@ import { InteractionGraph } from '../../../infrastructure/log/InteractionGraph'
  * - soft-delete (dev-only)
  *
  * @return {*}
- * @constructor
+ * @component
  */
 export const AccountInfo = (props) => {
   const [modalContent, setModalContent] = useState(null)

@@ -21,7 +21,7 @@ const competencies = [
 
 /**
  * Represents a selectable stage on the map.
- * Renders a circular progress for the overall completed
+ * Renders circular progress for the overall completed
  * unitSets linked with this stage.
  * Renders for each linked unitSet (one unitSets per dimension)
  * a Diamond that represents the achieved competencies as filling gauge.
@@ -29,13 +29,13 @@ const competencies = [
  * @param props {object}
  * @param props.text {string} the label for this stage
  * @param props.onPress {function} function to be called when the stage is selected
- * @param props.unitSets {[object]}
- * @param props.dimensions {[object]}
+ * @param props.unitSets {Array<Object>}
+ * @param props.dimensions {Array<Object>}
  * @param props.width {number=}
  * @param props.height {number=}
  * @param props.isActive {boolean=}
  * @returns {JSX.Element}
- * @constructor
+ * @component
  */
 export const Stage = props => {
   const [diamonds, setDiamonds] = useState([])

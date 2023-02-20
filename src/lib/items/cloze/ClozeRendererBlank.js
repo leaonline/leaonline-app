@@ -20,7 +20,7 @@ import { Layout } from '../../constants/Layout'
  * @param props.original {string} the original expected value
  * @param props.onSubmit {function} sends text to parent component
  * @param props.style {object=} optional custom styles definitions
- * @param props.isMultiline {boolean=false} indicate that this is a multiline
+ * @param props.isMultiline {boolean=} indicate that this is a multiline
  *  text, that is used for sentences or long groups of words
  * @param props.compare {object=} optional compare object after entries were
  *  compared with correct response
@@ -30,7 +30,7 @@ import { Layout } from '../../constants/Layout'
  * @param props.pattern {string=} optional pattern that describes Keyboard
  *  behaviour
  * @return {JSX.Element}
- * @constructor
+ * @component
  */
 export const ClozeRendererBlank = props => {
   const tooltipRef = useRef(null)
