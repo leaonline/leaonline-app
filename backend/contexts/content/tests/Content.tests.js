@@ -2,7 +2,6 @@
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { Content } from '../Content'
-import { createMethod } from '../../../infrastructure/factories/createMethod'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { Field } from '../Field'
 import { Dimension } from '../Dimension'
@@ -39,9 +38,10 @@ describe('Content', function () {
   })
 
   describe(Content.methods.home.name, function () {
-    const home = createMethod(Content.methods.home)
+    const home = Content.methods.home.run
+
     it('returns nothing if no flag is true', function () {
-      const data = home.call({})
+      const data = home({})
       expect(data).to.deep.equal({
         field: [],
         dimension: [],
@@ -53,7 +53,7 @@ describe('Content', function () {
       DimensionCollection.insert({ title: 'foo' })
       LevelCollection.insert({ title: 'foo' })
 
-      const data = home.call({ field: true, dimension: true, level: true })
+      const data = home({ field: true, dimension: true, level: true })
       expect(data).to.deep.equal({
         field: [FieldCollection.findOne()],
         dimension: [DimensionCollection.findOne()],
@@ -62,12 +62,12 @@ describe('Content', function () {
     })
   })
   describe(Content.methods.map.name, function () {
-    const map = createMethod(Content.methods.map)
+    const map = Content.methods.map.run
 
     it('returns the current map data for a given field', function () {
       const fieldId = FieldCollection.insert({ title: 'foo' })
       const mapId = MapCollection.insert({ field: fieldId, foo: 'bar' })
-      const mapData = map.call({ fieldId })
+      const mapData = map({ fieldId })
       expect(mapData).to.deep.equal({
         _id: mapId,
         field: fieldId,
@@ -75,22 +75,21 @@ describe('Content', function () {
       })
     })
   })
-  describe(Content.methods.unit.name, function () {
-    const unit = createMethod(Content.methods.unit)
+  describe(Content.methods.session.name, function () {
+    const unit = Content.methods.session.run
 
     it('returns the current unit screen data', function () {
       const unitSetId = Random.id()
       const userId = Random.id()
       const sessionId = SessionCollection.insert({ userId, unitSet: unitSetId })
-      expect(unit._execute({ userId }, { unitSetId })).to.deep.equal({
-        sessionDoc: {
-          _id: sessionId,
-          userId,
-          unitSet: unitSetId
-        },
-        unitDoc: undefined,
-        unitSetDoc: undefined
+      const { sessionDoc, unitDoc, unitSetDoc } = unit.call({ userId }, { unitSetId })
+      expect(sessionDoc).to.deep.equal({
+        _id: sessionId,
+        userId,
+        unitSet: unitSetId
       })
+      expect(unitDoc).to.equal(undefined)
+      expect(unitSetDoc).to.equal(undefined)
     })
   })
 })

@@ -8,7 +8,6 @@ import {
 } from '../../../tests/helpers/stubCollection'
 import { createCollection } from '../../../infrastructure/factories/createCollection'
 import { asyncTimeout } from '../../../api/utils/asyncTimeout'
-import { createMethod } from '../../../infrastructure/factories/createMethod'
 import { ContextRegistry } from '../../ContextRegistry'
 
 const SyncCollection = createCollection(SyncState)
@@ -73,8 +72,8 @@ describe('SyncState', function () {
         SyncState.update(name)
       })
 
-      const method = createMethod(SyncState.methods.getHashes)
-      const states = method.call({ names })
+      const method = SyncState.methods.getHashes.run
+      const states = method({ names })
       states.forEach(state => {
         expect(names.includes(state.name)).to.equal(true)
         expect(state.version).to.equal(1)

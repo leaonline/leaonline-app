@@ -3,7 +3,7 @@ import { hasProp } from '../../api/utils/hasProp'
 import chalk from 'chalk'
 
 const logLevel = Meteor.settings.log.level
-console.debug(logLevel)
+
 const internal = {
   error: {
     level: 0,
@@ -45,10 +45,11 @@ const internal = {
  * @param options {object}
  * @param options.name {string} the prefix to log before the message
  * @param options.type {string} the allowed log type.
+ * @param {boolean} [includeInTests=false] set to true if to include in tests
  * @return {Function} a logger function or empty no-op function if log-level is
  *  not supported / defined
  */
-export const createLog = function ({ name = 'system', type = 'log' } = {}) {
+export const createLog = function ({ name = 'system', type = 'log', includeInTests = false } = {}) {
   if (!hasProp(internal, type)) {
     throw new Error(`Unexpected log type ${type}`)
   }
@@ -56,9 +57,10 @@ export const createLog = function ({ name = 'system', type = 'log' } = {}) {
   const logName = `[${name}]:`
   const logType = internal[type]
   const typeName = `${type}`
+  const excludeForTest = !includeInTests && Meteor.isTest
 
   // if the log level is not supported, wo return a no-op fn
-  if (logType.level > logLevel) {
+  if (logType.level > logLevel || excludeForTest) {
     return () => {}
   }
 
