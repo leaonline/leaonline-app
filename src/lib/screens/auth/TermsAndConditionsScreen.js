@@ -4,7 +4,6 @@ import { Colors } from '../../constants/Colors'
 import { TTSengine, useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { createStyleSheet } from '../../styles/createStyleSheet'
-import { RouteButton } from '../../components/RouteButton'
 import { LeaLogo } from '../../components/images/LeaLogo'
 import { Checkbox } from '../../components/Checkbox'
 import { Layout } from '../../constants/Layout'
@@ -158,23 +157,23 @@ export const TermsAndConditionsScreen = props => {
         />
 
         <View style={styles.decisionContainer}>
-          <RouteButton
+          <ActionButton
             title={t('TandCScreen.newUser')}
             align='center'
             block
             icon='user'
             iconColor={Colors.primary}
             containerStyle={styles.decisionButton}
-            handleScreen={() => handleAction('registration')}
+            onPress={() => handleAction('registration')}
           />
-          <RouteButton
+          <ActionButton
             title={t('TandCScreen.restoreWithCode')}
             align='center'
             block
             icon='lock'
             iconColor={Colors.primary}
             containerStyle={styles.decisionButton}
-            handleScreen={() => handleAction('restore')}
+            onPress={() => handleAction('restore')}
           />
         </View>
       </View>

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { RouteButton } from '../../components/RouteButton'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { useDocs } from '../../meteor/useDocs'
 import { loadDimensionData } from './loadDimensionData'
@@ -15,6 +14,7 @@ import { View } from 'react-native'
 import { Colors } from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
 import { Fill } from '../../components/layout/Fill'
+import { ActionButton } from '../../components/ActionButton'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -73,7 +73,7 @@ export const DimensionScreen = props => {
         : unitSet.dimension.title
       return (
         <View style={styles.dimension} key={index}>
-          <RouteButton
+          <ActionButton
             color={color}
             title={title}
             block

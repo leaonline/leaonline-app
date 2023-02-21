@@ -9,10 +9,17 @@ import { Vibration } from 'react-native'
  * invokes a Vibration and triggers the navigation to enter a new route.
  * @param route {string}
  * @param Component {JSX.Element}
- * @return {JSX.Element}
+ * @return {function():JSX.Element}
  */
 export const createRoutableComponent = ({ route, Component }) => {
-  return props => {
+  /**
+   *
+   * @param props {object}
+   * @param props.vibrate {boolean=}
+   * @return {JSX.Element}
+   * @component
+   */
+  const RoutableComponent = props => {
     const navigation = useNavigation()
     const toRoute = useCallback(async () => {
       await nextFrame()
@@ -26,4 +33,7 @@ export const createRoutableComponent = ({ route, Component }) => {
       <Component onPress={toRoute} {...props} />
     )
   }
+
+  // return
+  return RoutableComponent
 }

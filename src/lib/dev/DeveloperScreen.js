@@ -8,6 +8,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 import { Colors } from '../constants/Colors'
 import { AppSessionContext } from '../state/AppSessionContext'
+import { RouteButton } from '../components/RouteButton'
 
 /**
  *
@@ -150,19 +151,35 @@ export const DeveloperScreen = props => {
   }
 
   return (
-    <ScreenBase {...devDocs} style={styles.container}>
-      {renderFieldList()}
-      {renderDimensionList()}
-      {renderUnitSetList()}
-      {renderUnitList()}
-    </ScreenBase>
+    <View style={styles.container}>
+      <ScreenBase {...devDocs} style={styles.listContainer}>
+        {renderFieldList()}
+        {renderDimensionList()}
+        {renderUnitSetList()}
+        {renderUnitList()}
+      </ScreenBase>
+      <View style={styles.row}>
+        <RouteButton style={styles.button} block={true} route='mapDev' text='Map Screen' icon='map-marker' />
+      </View>
+    </View>
   )
 }
 const styles = createStyleSheet({
   container: {
+    ...Layout.container({ margin: 5 }),
+  },
+  button: {
+    borderColor: '#00f'
+  },
+  listContainer: {
+    flex: 1,
     ...Layout.container({ margin: 10 }),
     flexDirection: 'row',
     justifyContent: 'flex-start'
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
   },
   item: {
     flexDirection: 'row',
@@ -202,4 +219,4 @@ const styles = createStyleSheet({
   active: {
     backgroundColor: Colors.gray
   }
-})
+}, true)

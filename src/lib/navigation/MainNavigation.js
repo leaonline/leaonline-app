@@ -30,6 +30,7 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { createDevelopmentButton } from '../dev/createDevelopmentButton'
 import { DeveloperScreen } from '../dev/DeveloperScreen'
 import { UnitDevScreen } from '../dev/UnitDevScreen'
+import { MapDevScreen } from '../dev/MapDevScreen'
 
 const { AppSessionProvider } = AppSession.init({
   storage: AsyncStorage
@@ -173,6 +174,19 @@ export const MainNavigation = (props) => {
               headerLeft: () => (<BackButton icon='arrow-left' />),
               headerRight,
               headerTitle: CurrentProgress
+            }}
+          />
+          <Stack.Screen
+            name='mapDev'
+            component={MapDevScreen}
+            options={{
+              headerStyle,
+              title: t('mapScreen.title'),
+              headerBackVisible: false,
+              headerTitleAlign: 'center',
+              headerLeft: () => (<BackButton icon='arrow-left' />),
+              headerRight,
+              headerTitle: 'Map-Dev'
             }}
           />
         </>

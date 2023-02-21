@@ -1,36 +1,49 @@
-import React from 'react'
-import { Alert } from 'react-native'
+import React, { useCallback } from 'react'
 import { TTSengine } from './Tts'
-import { useTranslation } from 'react-i18next'
+import { Vibration } from 'react-native'
 import { ActionButton } from './ActionButton'
+import { useNavigation } from '@react-navigation/native'
 
 /**
  * RouteButton is an ActionButton with a default handler
- * on press. If pressed if will apply the given navigation handler
- * (handle screen) but provides an additional check, if it has
- * to wait until speech has ended.
+ * on press. If pressed, it will apply the given routing.
  *
  * @category Components
- * @param {function} props.handleScreen The screen to be navigated
- * @param {boolean} props.waitForSpeech It throws an alert that tts is still speaking and prevents the navigation, if false the tts is stopped (Default 'false')
+ * @param props {object}
+ * @param props.route {string} required route name
+ * @param props.vibrate {boolean=} optional
+ * @param props.stopSpeech {boolean=} optional, set to false to allow speech
+ * @param props.beforeRouting {function=} optional hook to run custom
+ *   actions, before routing executes. If returns false the routing will be
+ *   blocked and won't execute
  * @augments {ActionButton}
  * @component
  * @returns {JSX.Element}
  */
 export const RouteButton = props => {
-  const { t } = useTranslation()
+  const { vibrate, route, stopSpeech, beforeRouting, ...rest } = props
+  const navigation = useNavigation()
 
-  const navigationHandler = () => {
-    if (props.waitForSpeech) {
-      TTSengine.isSpeaking
-        ? Alert.alert(t('alert.title'), t('alert.navText'))
-        : props.handleScreen()
+  const gotoRoute = useCallback(() => {
+    if (vibrate !== false) {
+      Vibration.vibrate(100)
     }
-    else {
-      TTSengine.stop()
-      props.handleScreen()
-    }
-  }
+    navigation.navigate(route)
+  }, [route, vibrate])
 
-  return (<ActionButton {...props} onPress={navigationHandler} />)
+  const onPress = useCallback(async () => {
+    let shouldRoute
+    if (typeof beforeRouting === 'function') {
+      shouldRoute = await beforeRouting()
+    }
+
+    if (shouldRoute !== false) {
+      if (stopSpeech !== false) {
+        TTSengine.stop()
+      }
+      gotoRoute()
+    }
+  }, [beforeRouting, stopSpeech])
+
+  return (<ActionButton {...rest} onPress={onPress}/>)
 }
