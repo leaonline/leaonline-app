@@ -28,6 +28,7 @@ describe('Progress', function () {
         userId: Random.id(),
         fieldId: Random.id(),
         unitSetId: Random.id(),
+        dimensionId: Random.id(),
         progress: 123,
         competencies: 456,
         complete: false
@@ -40,6 +41,7 @@ describe('Progress', function () {
         unitSets: [
           {
             _id: insertDoc.unitSetId,
+            dimensionId: insertDoc.dimensionId,
             progress: insertDoc.progress,
             competencies: insertDoc.competencies,
             complete: insertDoc.complete
@@ -54,6 +56,7 @@ describe('Progress', function () {
         userId: Random.id(),
         fieldId: Random.id(),
         unitSetId: Random.id(),
+        dimensionId: Random.id(),
         progress: 123,
         competencies: 456,
         complete: false
@@ -66,6 +69,7 @@ describe('Progress', function () {
         unitSets: [
           {
             _id: updateDoc.unitSetId,
+            dimensionId: updateDoc.dimensionId,
             progress: updateDoc.progress,
             competencies: updateDoc.competencies,
             complete: updateDoc.complete
@@ -78,6 +82,7 @@ describe('Progress', function () {
         userId: Random.id(),
         fieldId: Random.id(),
         unitSetId: Random.id(),
+        dimensionId: Random.id(),
         progress: 123,
         competencies: 456,
         complete: false
@@ -89,6 +94,7 @@ describe('Progress', function () {
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
         unitSetId: insertDoc.unitSetId,
+        dimensionId: insertDoc.dimensionId,
         progress: 256,
         competencies: 512,
         complete: true
@@ -101,6 +107,7 @@ describe('Progress', function () {
         unitSets: [
           {
             _id: insertDoc.unitSetId,
+            dimensionId: insertDoc.dimensionId,
             progress: 256,
             competencies: 512,
             complete: true
@@ -114,6 +121,7 @@ describe('Progress', function () {
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
         unitSetId: newUnitSetId,
+        dimensionId: insertDoc.dimensionId,
         progress: 16,
         competencies: 32,
         complete: false
@@ -126,12 +134,14 @@ describe('Progress', function () {
         unitSets: [
           {
             _id: insertDoc.unitSetId,
+            dimensionId: insertDoc.dimensionId,
             progress: 256,
             competencies: 512,
             complete: true
           },
           {
             _id: newUnitSetId,
+            dimensionId: insertDoc.dimensionId,
             progress: 16,
             competencies: 32,
             complete: false

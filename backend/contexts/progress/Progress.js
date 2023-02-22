@@ -55,6 +55,10 @@ Progress.schema = {
     type: Number,
     defaultValue: 0
   },
+  'unitSets.$.dimension': {
+    type: String,
+    defaultValue: 0
+  },
   'unitSets.$.competencies': {
     type: Number,
     defaultValue: 0
@@ -65,22 +69,22 @@ Progress.schema = {
   }
 }
 
-Progress.create = ({ userId, fieldId, unitSetId, progress, competencies, complete }) => {
+Progress.create = ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) => {
   log('create', { userId, fieldId, unitSetId, progress, competencies, complete })
-  const unitSets = [{ _id: unitSetId, progress, competencies, complete }]
+  const unitSets = [{ _id: unitSetId, dimensionId, progress, competencies, complete }]
   return getCollection(Progress.name).insert({ userId, fieldId, unitSets })
 }
 
-Progress.update = ({ userId, fieldId, unitSetId, progress, competencies, complete }) => {
+Progress.update = ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) => {
   log('update', { userId, fieldId, unitSetId, progress, competencies, complete })
   const ProgressCollection = getCollection(Progress.name)
   const progressDoc = ProgressCollection.findOne({ userId, fieldId })
 
   if (!progressDoc) {
-    return Progress.create({ userId, fieldId, unitSetId, progress, competencies, complete })
+    return Progress.create({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete })
   }
 
-  const unitSetDoc = { _id: unitSetId, progress, competencies, complete }
+  const unitSetDoc = { _id: unitSetId, dimensionId, progress, competencies, complete }
   const index = progressDoc.unitSets.findIndex(entry => entry._id === unitSetId)
 
   // if we found a unit set, then we only update the data at the given index

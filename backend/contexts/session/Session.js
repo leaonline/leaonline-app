@@ -8,7 +8,6 @@ import { Response } from '../response/Response'
 import { Progress } from '../progress/Progress'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
-import { Achievements } from '../achievements/Achievements'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -305,16 +304,9 @@ Session.methods.update = {
         unitSetId: sessionDoc.unitSet,
         fieldId: sessionDoc.fieldId,
         progress: sessionDoc.progress,
+        dimensionId: sessionDoc.dimensionId,
         competencies: sessionDoc.competencies,
         complete: !!sessionDoc.completedAt
-      })
-
-      Achievements.update({
-        userId,
-        fieldId: sessionDoc.fieldId,
-        dimensionId: sessionDoc.dimensionId,
-        progress: sessionDoc.progress,
-        competencies: sessionDoc.competencies
       })
 
       return nextUnitId

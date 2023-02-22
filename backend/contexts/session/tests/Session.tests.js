@@ -11,20 +11,16 @@ import { Unit } from '../../content/Unit'
 import { UnitSet } from '../../content/UnitSet'
 import { Progress } from '../../progress/Progress'
 import { createMethod } from '../../../infrastructure/factories/createMethod'
-import { Achievements } from '../../achievements/Achievements'
-import { stub, restoreAll } from '../../../tests/helpers/stubUtils'
 
 const SessionCollection = initTestCollection(Session)
 const ProgressCollection = initTestCollection(Progress)
 const UnitCollection = initTestCollection(Unit)
-const AchievementsCollection = initTestCollection(Achievements)
 const UnitSetCollection = initTestCollection(UnitSet)
 const allCollections = [
   UnitCollection,
   ProgressCollection,
   UnitSetCollection,
-  SessionCollection,
-  AchievementsCollection
+  SessionCollection
 ]
 describe('Session', function () {
   before(function () {
@@ -36,9 +32,7 @@ describe('Session', function () {
   beforeEach(function () {
     allCollections.forEach(c => c.remove({}))
   })
-  afterEach(function () {
-    restoreAll()
-  })
+
   describe(Session.create.name, function () {
     it('creates a new entry for a given unitSet doc with story', function () {
       const userId = Random.id()
@@ -296,8 +290,6 @@ describe('Session', function () {
         progress: 2
       })
 
-      stub(Achievements, 'update', () => {})
-
       const next = method._execute({ userId }, { sessionId })
       expect(next).to.equal(nextUnitId)
 
@@ -308,6 +300,7 @@ describe('Session', function () {
         unitSets: [
           {
             _id: unitSet,
+            dimensionId,
             competencies: 1,
             complete: false,
             progress: 4

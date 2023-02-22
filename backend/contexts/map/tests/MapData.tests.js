@@ -144,7 +144,7 @@ describe('MapData', function () {
       MapData.create({ field: fieldDoc._id, dimensionsOrder })
 
       const toId = doc => doc._id
-      const { dimensions, entries, field, levels, maxProgress, maxCompetencies } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
+      const { dimensions, entries, field, levels, maxProgress } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(field).to.equal(fieldDoc._id)
       expect(levels).to.deep.equal(LevelCollection.find().fetch().map(toId))
@@ -189,6 +189,5 @@ describe('MapData', function () {
       expect(testCycleDoc.progress).to.equal(countedMaxProgress)
       expect(milestone.progress).to.equal(countedMaxProgress)
     })
-
   })
 })

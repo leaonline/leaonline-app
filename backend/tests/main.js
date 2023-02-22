@@ -12,7 +12,6 @@ import '../contexts/response/tests'
 import '../contexts/session/tests'
 import '../contexts/sync/tests'
 import '../contexts/users/tests'
-import '../contexts/achievements/tests'
 // infrastructure
 import '../infrastructure/factories/tests'
 import '../infrastructure/mixins/tests'
