@@ -51,13 +51,19 @@ export const DimensionScreen = props => {
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.stage(null)} />)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.update({ stage: null })} />)
     })
   }, [])
 
   const selectUnitSet = async unitSetDoc => {
-    const { dimension, ...unitSet } = unitSetDoc
-    await sessionActions.multi({ unitSet, dimension })
+    const { dimension, competencies, ...unitSet } = unitSetDoc
+    const initialCompetencies = {
+      max: competencies,
+      count: 0,
+      scored: 0,
+      percent: 0
+    }
+    await sessionActions.multi({ unitSet, dimension, competencies: initialCompetencies })
     props.navigation.navigate('unit')
   }
 
@@ -80,7 +86,7 @@ export const DimensionScreen = props => {
             containerStyle={styles.buttonContainer}
             titleStyle={{ color, fontWeight: 'bold' }}
             icon={unitSet.dimension.icon}
-            handleScreen={() => selectUnitSet(unitSet)}
+            onPress={() => selectUnitSet(unitSet)}
           />
           <StaticCircularProgress
             value={unitSet.progressPercent ?? 0}

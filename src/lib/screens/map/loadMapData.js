@@ -70,7 +70,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // low and thus only send the ids of the dimensions.
   // We assume, that dimensions have been loaded at the sync
   // step during startup.
-  // TODO: check if we can extract tjhis into a an async function
+  // TODO: check if we can extract this into a an async function
   // that loads dimensions at runtime (once, then from cache) to
   // avoid this (error-prone) assumption and avoid this loading
   // step during startup
@@ -113,7 +113,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
 
 const addUserData = async (mapData, fieldId) => {
   let progressDoc = await loadProgressDoc(fieldId)
-  debug('add user data', !!progressDoc)
+  debug('add user data', JSON.stringify(progressDoc))
 
   if (!progressDoc) {
     progressDoc = {
@@ -122,7 +122,8 @@ const addUserData = async (mapData, fieldId) => {
   }
 
   const levelsProgress = {}
-  mapData.progressIndex = 0
+
+  mapData.progressIndex = mapData.progressIndex ?? 0
 
   const updateEntry = (entry, index) => {
     if (['finish', 'start'].includes(entry.type)) {
@@ -133,8 +134,18 @@ const addUserData = async (mapData, fieldId) => {
     // where maxProgress is the maximum achievable progress and
     // where userProgress is the current user's progress (defaults to zero)
     if (entry.type === 'milestone') {
-      entry.maxProgress = levelsProgress[entry.level].max
-      entry.userProgress = levelsProgress[entry.level].user || 0
+      const newMaxProgress = levelsProgress[entry.level].max
+      if (entry.maxProgress !== newMaxProgress) {
+        debug(index, 'new milestone max progress:', newMaxProgress)
+        entry.maxProgress = newMaxProgress
+      }
+
+      const newUserProgress = levelsProgress[entry.level].user ?? 0
+
+      if (entry.userProgress !== newUserProgress) {
+        debug(index, 'new milestone user progress:', newUserProgress)
+        entry.userProgress = newUserProgress
+      }
       return
     }
 
@@ -146,12 +157,21 @@ const addUserData = async (mapData, fieldId) => {
 
     entry.unitSets.forEach(unitSet => {
       const userUnitSet = progressDoc.unitSets[unitSet._id] ?? { progress: 0, competencies: 0 }
-      const usersUnitSetProgress = userUnitSet.progress || 0
-      const usersUnitSetCompetencies = userUnitSet.competencies || 0
+      const usersUnitSetProgress = userUnitSet.progress ?? 0
+      const usersUnitSetCompetencies = userUnitSet.competencies ?? 0
 
       userStageProgress += usersUnitSetProgress
-      unitSet.userProgress = usersUnitSetProgress
-      unitSet.userCompetencies = usersUnitSetCompetencies
+
+      if (unitSet.userProgress !== usersUnitSetProgress) {
+        debug('stage', index, unitSet._id, 'has new unitSet progress:', usersUnitSetProgress)
+        unitSet.userProgress = usersUnitSetProgress
+      }
+
+      if (unitSet.userCompetencies !== usersUnitSetCompetencies) {
+        debug('stage', index, unitSet._id, 'has new unitSet competencies:', usersUnitSetCompetencies)
+        unitSet.userCompetencies = usersUnitSetCompetencies
+      }
+
     })
 
     entry.userProgress = userStageProgress
@@ -160,8 +180,14 @@ const addUserData = async (mapData, fieldId) => {
     // we need to track the "highest" index of a stage
     // that contains progress
     if (userStageProgress) {
+      debug('set last edited stage', index)
       mapData.progressIndex = index
     }
+
+    // from here we simply count up
+    // the values in order to sum them
+    // when reaching a milestone entry
+    // for the given level
 
     if (!levelsProgress[entry.level]) {
       levelsProgress[entry.level] = { max: 0, user: 0 }

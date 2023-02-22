@@ -45,10 +45,6 @@ export const Stage = props => {
   const viewBox = `0 0 ${width} ${height}`
 
   useEffect(() => {
-    if (!props.unitSets || !props.dimensions) {
-      return
-    }
-
     const diamondData = Config.dimensions.order.map(shortCode => {
       const key = `stage-${props.text}-${shortCode}`
       const unitSet = props.unitSets.find(u => {

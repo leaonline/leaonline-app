@@ -50,9 +50,16 @@ export const MapScreen = props => {
     fn: () => loadMapData({
       fieldDoc: session.field,
       loadUserData: session.loadUserData,
-      onUserDataLoaded: () => sessionActions.loadUserData(null)
+      onUserDataLoaded: () => sessionActions.update({ loadUserData: null })
     })
   })
+
+  useEffect(() => {
+    console.debug('MAP DATA CHANGED')
+    if (mapDocs?.data?.entries) {
+      console.debug(JSON.stringify(mapDocs.data.entries[3], null, 2))
+    }
+  }, [mapDocs])
 
   useEffect(() => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
@@ -60,30 +67,30 @@ export const MapScreen = props => {
       title: mapScreenTitle,
       headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
     })
-  }, [session.field])
+  }, [session.field, props.navigation])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.field(null)} />)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.update({ field: null })} />)
     })
-  }, [])
+  }, [props.navigation, sessionActions])
 
-  const onListLayoutDetected = (event) => {
+  const onListLayoutDetected = useCallback((event) => {
     const { width } = event.nativeEvent.layout
     setStageConnectorWidth(width - ITEM_HEIGHT - (ITEM_HEIGHT / 2))
     setConnectorWidth((width / 2) - ITEM_HEIGHT)
-  }
+  }, [setStageConnectorWidth, setConnectorWidth])
 
   const selectStage = useCallback(async (stage, index) => {
     setActiveStage(index)
     await nextFrame()
-    const newStage = { ...stage }
-    newStage.level = mapData.levels[newStage.level]
-    newStage.unitSets = stage.unitSets.map(doc => ({ ...doc }))
-    newStage.unitSets.forEach(unitSet => {
-      unitSet.dimension = mapData.dimensions[unitSet.dimension]
+
+    const unitSets = stage.unitSets.map(doc => ({ ...doc }))
+    unitSets.forEach(unitSet => {
+      unitSet.dimension = mapData.dimensions[unitSet.dimension]._id
     })
-    await sessionActions.stage(newStage)
+
+    await sessionActions.update({ stage: unitSets })
     props.navigation.navigate('dimension')
   }, [mapDocs])
 
@@ -127,7 +134,7 @@ export const MapScreen = props => {
     // at this point we need to be fail-resistant
     log('unexpected entry type', entry.type)
     return null
-  }, [connectorWidth, mapDocs])
+  }, [connectorWidth, mapDocs, session])
 
   /* expected mapData structure:
    *
@@ -208,6 +215,9 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, is
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
   const { viewPosition } = stage
+  if (index === 3) {
+    console.debug('render stage', index, JSON.stringify(stage, null, 2))
+  }
   return (
     <View style={stageStyle}>
       {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}

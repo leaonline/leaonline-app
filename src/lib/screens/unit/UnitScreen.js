@@ -193,32 +193,6 @@ export const UnitScreen = props => {
 
     // submit everything (in the background)
     const responseDoc = {}
-
-    /*
-     userId: String,
-     sessionId: String,
-     unitSetId: String,
-     unitId: String,
-     dimensionId: String,
-     timeStamp: Date,
-     page: Number,
-     itemId: String,
-     itemType: String,
-     scores: Array,
-     'scores.$': Object,
-     'scores.$.competency': Array,
-     'scores.$.competency.$': String,
-     'scores.$.correctResponse': Array,
-     'scores.$.correctResponse.$': {
-     type: oneOf(String, Integer, RegExp)
-     },
-     'scores.$.isUndefined': Boolean,
-     'scores.$.score': Boolean,
-     'scores.$.value': Array,
-     'scores.$.value.$': {
-     type: oneOf(String, Integer)
-     }
-     */
     responseDoc.sessionId = sessionDoc._id
     responseDoc.unitSetId = unitSetDoc._id
     responseDoc.unitId = unitDoc._id
@@ -238,8 +212,23 @@ export const UnitScreen = props => {
       return copy
     })
 
-    const competencies = responseDoc.scores.filter(entry => entry.score === true).length
-    const prevCompetencies = session.competencies || 0
+    let count = 0
+    let scored = 0
+
+    responseDoc.scores.forEach(entry => {
+      count += entry.competency.length
+      scored += entry.score === true
+        ? entry.competency.length
+        : 0
+    })
+
+    const prevCompetencies = session.competencies
+    const competencies = {
+      max: prevCompetencies.max,
+      count: prevCompetencies.count + count,
+      scored: prevCompetencies.scored + scored,
+      percent: prevCompetencies.percent
+    }
 
     try {
       log('submit response to server', responseDoc)
@@ -249,7 +238,7 @@ export const UnitScreen = props => {
       log(e.message)
     }
 
-    return sessionActions.competencies(prevCompetencies + competencies)
+    return sessionActions.update({ competencies })
   }
 
   const showCorrectResponse = scored === page

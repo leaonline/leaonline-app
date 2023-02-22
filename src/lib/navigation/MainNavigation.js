@@ -24,17 +24,14 @@ import { useKeepAwake } from 'expo-keep-awake'
 import { BackButton } from '../components/BackButton'
 import { CurrentProgress } from '../components/progress/CurrentProgress'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
-import { AppSession } from '../state/AppSession'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { createDevelopmentButton } from '../dev/createDevelopmentButton'
 import { DeveloperScreen } from '../dev/DeveloperScreen'
 import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
+import { initAppSession } from '../startup/initAppSession'
 
-const { AppSessionProvider } = AppSession.init({
-  storage: AsyncStorage
-})
+const { AppSessionProvider } = initAppSession()
 
 /**
  * StackNavigator navigates between screens in a push/pop fashion.

@@ -69,7 +69,8 @@ export const CompleteScreen = props => {
     }
   }, [props.navigation])
 
-  const count = session.competencies || 0
+  const count = Math.round(100 * (session.competencies.scored / session.competencies.max))
+
   const moveToMap = () => {
     // clear session variables: unit unitSet progress
     sessionActions.multi({
