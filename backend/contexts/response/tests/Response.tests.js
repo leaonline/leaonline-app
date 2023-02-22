@@ -33,18 +33,18 @@ describe('Response', function () {
         userId,
         sessionId,
         unitId,
-        scores: [{ score: true }, { score: false }]
+        scores: [{ score: true, competency: [1, 2] }, { score: false, competency: [1] }]
       }
       const insertDoc2 = {
         userId,
         sessionId,
         unitId,
-        scores: [{}, { score: true }]
+        scores: [{}, { score: true, competency: [4, 5, 6] }, { score: true, competency: 1 }, { score: true }]
       }
       ResponseCollection.insert(insertDoc1)
       ResponseCollection.insert(insertDoc2)
       expect(Response.countAccomplishedAnswers({ userId, sessionId, unitId }))
-        .to.equal(2)
+        .to.equal(6)
     })
   })
 

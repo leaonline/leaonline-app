@@ -64,12 +64,21 @@ Response.schema = {
 Response.countAccomplishedAnswers = ({ userId, sessionId, unitId }) => {
   log('count accomplished answers', { userId, sessionId, unitId })
   const allDocsByUnit = getCollection(Response.name).find({ userId, sessionId, unitId })
+
   let count = 0
 
   allDocsByUnit.forEach(responseDoc => {
     responseDoc.scores.forEach(entry => {
       if (entry.score) {
-        count++
+        const competency = Array.isArray(entry.competency)
+          ? entry.competency
+          : entry.competency
+            ? [entry.competency]
+            : []
+        // since there are more than once competencies
+        // available for a single score entry, we need
+        // to count them all!
+        count += competency.length
       }
     })
   })
@@ -102,6 +111,7 @@ Response.methods.submit = {
         unitId: responseDoc.unit,
         page: responseDoc.page
       }
+
       return getCollection(Response.name).upsert(selector, modifier)
     }
   })
