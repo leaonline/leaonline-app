@@ -57,6 +57,22 @@ MapData.schema = {
   },
 
   /**
+   * The overall maximum achievable progress
+   * for this field
+   */
+  maxProgress: {
+    type: Number
+  },
+
+  /**
+   * The overall maximum achievable competencies
+   * for this field
+   */
+  maxCompetencies: {
+    type: Number
+  },
+
+  /**
    * This is the list of entries. An entry is either a "stage" or a "milestone".
    *
    * A "stage" is a certain step in the list of actionable tasks (represented by UnitSets).
@@ -223,6 +239,8 @@ MapData.create = (options) => {
     field,
     dimensions: dimensions.map(d => d._id),
     levels: levels.map(l => l._id),
+    maxProgress: 0,
+    maxCompetencies: 0,
     entries: []
   }
 
@@ -343,6 +361,10 @@ MapData.create = (options) => {
           // At this point we know for sure, that there is
           hasAtLeastOneStage = true
           maxCompetencies += competencies
+
+          // summ progress/competencies to the max values
+          mapData.maxCompetencies += competencies
+          mapData.maxProgress += unitSetDoc.progress
         })
 
       // after we have counted all competencies for this milestone

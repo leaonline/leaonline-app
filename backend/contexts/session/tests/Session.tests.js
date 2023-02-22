@@ -11,16 +11,20 @@ import { Unit } from '../../content/Unit'
 import { UnitSet } from '../../content/UnitSet'
 import { Progress } from '../../progress/Progress'
 import { createMethod } from '../../../infrastructure/factories/createMethod'
+import { Achievements } from '../../achievements/Achievements'
+import { stub, restoreAll } from '../../../tests/helpers/stubUtils'
 
 const SessionCollection = initTestCollection(Session)
 const ProgressCollection = initTestCollection(Progress)
 const UnitCollection = initTestCollection(Unit)
+const AchievementsCollection = initTestCollection(Achievements)
 const UnitSetCollection = initTestCollection(UnitSet)
 const allCollections = [
   UnitCollection,
   ProgressCollection,
   UnitSetCollection,
-  SessionCollection
+  SessionCollection,
+  AchievementsCollection
 ]
 describe('Session', function () {
   before(function () {
@@ -32,6 +36,9 @@ describe('Session', function () {
   beforeEach(function () {
     allCollections.forEach(c => c.remove({}))
   })
+  afterEach(function () {
+    restoreAll()
+  })
   describe(Session.create.name, function () {
     it('creates a new entry for a given unitSet doc with story', function () {
       const userId = Random.id()
@@ -39,7 +46,8 @@ describe('Session', function () {
         _id: Random.id(),
         field: Random.id(),
         story: [{}],
-        units: [Random.id(), Random.id()]
+        units: [Random.id(), Random.id()],
+        dimension: Random.id()
       }
       const { _id, startedAt, ...sessionDoc } = Session.create({ userId, unitSetDoc })
 
@@ -47,6 +55,7 @@ describe('Session', function () {
         userId: userId,
         unitSet: unitSetDoc._id,
         fieldId: unitSetDoc.field,
+        dimensionId: unitSetDoc.dimension,
         nextUnit: unitSetDoc.units[0]
       })
       expect(_id).to.be.a('string')
@@ -57,6 +66,7 @@ describe('Session', function () {
       const unitSetDoc = {
         _id: Random.id(),
         field: Random.id(),
+        dimension: Random.id(),
         units: [Random.id(), Random.id()]
       }
       const { _id, startedAt, ...sessionDoc } = Session.create({ userId, unitSetDoc })
@@ -66,6 +76,7 @@ describe('Session', function () {
         unitSet: unitSetDoc._id,
         fieldId: unitSetDoc.field,
         unit: unitSetDoc.units[0],
+        dimensionId: unitSetDoc.dimension,
         nextUnit: unitSetDoc.units[1]
       })
       expect(_id).to.be.a('string')
@@ -78,11 +89,13 @@ describe('Session', function () {
       const userId = Random.id()
       const unitId = Random.id()
       const unitSet = Random.id()
+      const dimensionId = Random.id()
 
       UnitCollection.insert({ _id: unitId, shortCode: 'foo' })
       UnitSetCollection.insert({
         _id: unitSet,
         field: Random.id(),
+        dimension: dimensionId,
         units: [unitId, Random.id()]
       })
       SessionCollection.insert({
@@ -91,6 +104,7 @@ describe('Session', function () {
         unitSet,
         fieldId,
         unit: unitId,
+        dimensionId,
         nextUnit: undefined,
         competencies: 0,
         progress: 0
@@ -258,13 +272,16 @@ describe('Session', function () {
       const unitSet = Random.id()
       const unitId = Random.id()
       const fieldId = Random.id()
+      const dimensionId = Random.id()
 
       UnitCollection.insert({
         _id: unitId,
-        pages: [{}, {}]
+        pages: [{}, {}],
+        dimension: dimensionId
       })
       UnitSetCollection.insert({
         _id: unitSet,
+        dimension: dimensionId,
         units: [unitId, nextUnitId, nextNextUnitId]
       })
 
@@ -272,11 +289,14 @@ describe('Session', function () {
         userId,
         unitSet,
         fieldId,
+        dimensionId,
         unit: unitId,
         nextUnit: nextUnitId,
         competencies: 1,
         progress: 2
       })
+
+      stub(Achievements, 'update', () => {})
 
       const next = method._execute({ userId }, { sessionId })
       expect(next).to.equal(nextUnitId)

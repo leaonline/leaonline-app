@@ -144,7 +144,7 @@ describe('MapData', function () {
       MapData.create({ field: fieldDoc._id, dimensionsOrder })
 
       const toId = doc => doc._id
-      const { dimensions, entries, field, levels } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
+      const { dimensions, entries, field, levels, maxProgress, maxCompetencies } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(field).to.equal(fieldDoc._id)
       expect(levels).to.deep.equal(LevelCollection.find().fetch().map(toId))
@@ -156,7 +156,7 @@ describe('MapData', function () {
       expect(milestone.level).to.equal(0)
 
       const competenciesByDimension = [0, 0, 0, 0, 0]
-      let maxProgress = 0
+      let countedMaxProgress = 0
 
       entries.forEach(entry => {
         expect(entry.type).to.equal('stage')
@@ -171,10 +171,12 @@ describe('MapData', function () {
         })
 
         expect(entry.progress).to.equal(entryProgress)
-        maxProgress += entryProgress
+        countedMaxProgress += entryProgress
 
         // unit sets are sorted by correct dimensions
       })
+
+      expect(countedMaxProgress).to.equal(maxProgress)
 
       // ensure the milestone competency count it the correct sum
       // of the stage's unitSet competencies per dimension
@@ -184,8 +186,9 @@ describe('MapData', function () {
 
       // check testcycles overall progress
       const testCycleDoc = TestCycleCollection.findOne({ field: fieldDoc._id })
-      expect(testCycleDoc.progress).to.equal(maxProgress)
-      expect(milestone.progress).to.equal(maxProgress)
+      expect(testCycleDoc.progress).to.equal(countedMaxProgress)
+      expect(milestone.progress).to.equal(countedMaxProgress)
     })
+
   })
 })

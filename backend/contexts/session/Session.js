@@ -7,6 +7,8 @@ import { createLog } from '../../infrastructure/log/createLog'
 import { Response } from '../response/Response'
 import { Progress } from '../progress/Progress'
 import { Field } from '../content/Field'
+import { Dimension } from '../content/Dimension'
+import { Achievements } from '../achievements/Achievements'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -40,6 +42,13 @@ Session.schema = {
     dependency: {
       collection: Field.name,
       field: Field.representative
+    }
+  },
+  dimensionId: {
+    type: String,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
     }
   },
   progress: {
@@ -92,7 +101,8 @@ Session.create = ({ userId, unitSetDoc }) => {
     userId: userId,
     startedAt: new Date(),
     unitSet: unitSetDoc._id,
-    fieldId: unitSetDoc.field
+    fieldId: unitSetDoc.field,
+    dimensionId: unitSetDoc.dimension
   }
   const hasStory = unitSetDoc.story?.length
   const unitId = unitSetDoc.units[0]
@@ -289,6 +299,7 @@ Session.methods.update = {
 
       // get the updated session doc and update the user progress
       const sessionDoc = getCollection(Session.name).findOne({ _id: sessionId })
+
       Progress.update({
         userId: userId,
         unitSetId: sessionDoc.unitSet,
@@ -296,6 +307,14 @@ Session.methods.update = {
         progress: sessionDoc.progress,
         competencies: sessionDoc.competencies,
         complete: !!sessionDoc.completedAt
+      })
+
+      Achievements.update({
+        userId,
+        fieldId: sessionDoc.fieldId,
+        dimensionId: sessionDoc.dimensionId,
+        progress: sessionDoc.progress,
+        competencies: sessionDoc.competencies
       })
 
       return nextUnitId
