@@ -148,7 +148,8 @@ describe('MapData', function () {
 
       expect(field).to.equal(fieldDoc._id)
       expect(levels).to.deep.equal(LevelCollection.find().fetch().map(toId))
-      expect(dimensions).to.deep.equal(DimensionCollection.find().fetch().map(toId))
+      expect(dimensions.map(entry => entry._id))
+        .to.deep.equal(DimensionCollection.find().fetch().map(toId))
       expect(entries.length).to.equal(UnitSetCollection.find().count() + 1)
 
       const milestone = entries.pop()

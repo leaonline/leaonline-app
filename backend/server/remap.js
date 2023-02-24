@@ -2,7 +2,7 @@ import { getCollection } from '../api/utils/getCollection'
 import { Field } from '../contexts/content/Field'
 import { MapData } from '../contexts/map/MapData'
 import { SyncState } from '../contexts/sync/SyncState'
-
+import { Achievements } from '../contexts/achievements/Achievements'
 /**
  * This invokes the MapData to recreate itself from given DB documents.
  * Also updates the sync state that is used in the app to fetch new updated data.
@@ -20,7 +20,18 @@ export const runRemap = ({ active, dryRun, dimensions }) => {
     if (fields.count() > 0) {
       // create map data for each field
       for (const field of fields) {
-        MapData.create({ field: field._id, dryRun, dimensionsOrder: dimensions.order })
+        const fieldId = field._id
+        MapData.create({ field: fieldId, dryRun, dimensionsOrder: dimensions.order })
+
+        const mapDoc = MapData.get({ field: fieldId })
+        mapDoc.dimensions.forEach(entry => {
+          const dimensionId = entry._id
+          const { maxProgress, maxCompetencies } = entry
+
+          if (maxCompetencies > 0 && maxProgress > 0) {
+            Achievements.update({ dimensionId, fieldId, maxProgress, maxCompetencies })
+          }
+        })
       }
     }
 

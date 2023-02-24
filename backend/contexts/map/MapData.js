@@ -40,7 +40,16 @@ MapData.schema = {
     type: Array
   },
   'dimensions.$': {
+    type: Object
+  },
+  'dimensions.$._id': {
     type: String
+  },
+  'dimensions.$.maxProgress': {
+    type: Number
+  },
+  'dimensions.$.maxCompetencies': {
+    type: Number
   },
 
   /**
@@ -237,7 +246,7 @@ MapData.create = (options) => {
   const UnitCollection = getCollection('unit')
   const mapData = {
     field,
-    dimensions: dimensions.map(d => d._id),
+    dimensions: dimensions.map(({ _id }) => ({ _id, maxProgress: 0, maxCompetencies: 0 })),
     levels: levels.map(l => l._id),
     maxProgress: 0,
     maxCompetencies: 0,
@@ -365,6 +374,10 @@ MapData.create = (options) => {
           // summ progress/competencies to the max values
           mapData.maxCompetencies += competencies
           mapData.maxProgress += unitSetDoc.progress
+
+          // also add progress/competencies to the dimensions
+          mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
+          mapData.dimensions[dimensionIndex].maxCompetencies += competencies
         })
 
       // after we have counted all competencies for this milestone

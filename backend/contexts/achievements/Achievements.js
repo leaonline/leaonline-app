@@ -1,0 +1,91 @@
+import { getCollection } from '../../api/utils/getCollection'
+import { Field } from '../content/Field'
+import { Dimension } from '../content/Dimension'
+
+/**
+ * Contains documents of all possible field <-> dimension
+ * combinations with the maximum achievable progress and
+ * competencies.
+ */
+export const Achievements = {
+  name: 'achievements',
+  label: 'achievements.title',
+  icon: 'trophy'
+}
+
+Achievements.schema = {
+  dimensionId: {
+    type: String,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
+    }
+  },
+  fieldId: {
+    type: String,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
+  },
+  maxProgress: {
+    type: Number
+  },
+  maxCompetencies: {
+    type: Number
+  }
+}
+
+Achievements.create = ({ dimensionId, fieldId }) => {
+  const collection = getCollection(Achievements.name)
+  const achievementId = collection.insert({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
+  return collection.findOne(achievementId)
+}
+
+Achievements.update = ({ dimensionId, fieldId, maxProgress, maxCompetencies }) => {
+  const collection = getCollection(Achievements.name)
+  const query = { dimensionId, fieldId }
+  let achievementDoc = collection.findOne(query)
+
+  if (!achievementDoc) {
+    achievementDoc = Achievements.create(query)
+  }
+
+  return collection.update(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+}
+
+Achievements.methods = {}
+
+Achievements.methods.getAll = {
+  name: 'achievements.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  run: function ({ dependencies = {} } = {}) {
+    const allAchievements = getCollection(Achievements.name).find({}, {
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+
+    const data = { [Achievements.name]: allAchievements }
+
+    if (dependencies[Field.name]) {
+      data[Field.name] = getCollection(Field.name).find().fetch()
+    }
+
+    if (dependencies[Dimension.name]) {
+      data[Field.name] = getCollection(Dimension.name).find().fetch()
+    }
+
+    return data
+  }
+}

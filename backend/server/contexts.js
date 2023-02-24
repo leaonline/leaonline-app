@@ -16,6 +16,7 @@ import { Legal } from '../contexts/legal/Legal'
 import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
+import { Achievements } from '../contexts/achievements/Achievements'
 import { MapIcons } from '../contexts/map/MapIcons'
 import { DevData } from '../contexts/dev/DevData'
 
@@ -32,7 +33,7 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons, Achievements].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })
@@ -40,7 +41,7 @@ ContentServer.contexts().forEach(ctx => {
 // create methods for backend ctx
 // where in staging mode we add additional contexts
 // that make methods only accessible in this mode
-const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons]
+const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Achievements, Analytics, Legal, InteractionGraph, MapIcons]
 
 if (Meteor.settings.isStaging) {
   methodContexts.push(DevData)

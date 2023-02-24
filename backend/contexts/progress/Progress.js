@@ -55,9 +55,10 @@ Progress.schema = {
     type: Number,
     defaultValue: 0
   },
-  'unitSets.$.dimension': {
+  'unitSets.$.dimensionId': {
     type: String,
     defaultValue: 0
+
   },
   'unitSets.$.competencies': {
     type: Number,
@@ -148,5 +149,14 @@ Progress.methods.getAll = {
     }
 
     return data
+  }
+}
+
+Progress.methods.my = {
+  name: 'progress.methods.my',
+  schema: {},
+  run: function () {
+    const { userId } = this
+    return getCollection(Progress.name).find({ userId }).fetch()
   }
 }
