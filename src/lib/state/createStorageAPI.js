@@ -7,11 +7,11 @@ const { EJSON } = Meteor
 
 /**
  * @param storage {object}
- * @param storage.setItem {async function}
- * @param storage.getItem {async function}
- * @param storage.removeItem {async function}
- * @param storage.multiRemove {async function}
- * @param storage.multiSet {async function}
+ * @param storage.setItem {function}
+ * @param storage.getItem {function}
+ * @param storage.removeItem {function}
+ * @param storage.multiRemove {function}
+ * @param storage.multiSet {function}
  */
 export const createStorageAPI = ({ storage }) => {
   return new StorageAPI({ storage })
