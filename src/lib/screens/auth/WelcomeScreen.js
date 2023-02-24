@@ -60,7 +60,7 @@ export const WelcomeScreen = props => {
         <FadePanel visible={continueAvailable} style={styles.panel}>
           <RouteButton
             title={t('common.continue')}
-            block={true}
+            block
             route='termsAndConditions'
           />
         </FadePanel>

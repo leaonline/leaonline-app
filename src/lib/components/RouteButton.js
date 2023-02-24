@@ -45,5 +45,5 @@ export const RouteButton = props => {
     }
   }, [beforeRouting, stopSpeech])
 
-  return (<ActionButton {...rest} onPress={onPress}/>)
+  return (<ActionButton {...rest} onPress={onPress} />)
 }

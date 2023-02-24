@@ -68,7 +68,7 @@ describe(loadMapData.name, () => {
     ]
 
     const mapData = {
-      dimensions: dimensions.map(toDocId),
+      dimensions: dimensions.map(doc => ({ _id: doc._id, maxProgress: 123, maxCompetencies: 456 })),
       levels: levels.map(toDocId),
       entries: [{}]
     }

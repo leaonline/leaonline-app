@@ -5,16 +5,12 @@ import { loadProgressDoc } from './loadProgressData'
 import { Config } from '../../env/Config'
 import { MapIcons } from './MapIcons'
 import nextFrame from 'next-frame'
+import { getMapCache } from './getMapCache'
 
 const useDebug = Config.debug.map
 const debug = useDebug
   ? Log.create('loadMapData', 'debug')
   : () => {}
-
-// we use a simple RAM cache for the map data
-// so it's only loaded once per session but we never
-// persist it in order to obtain new changes from the server
-const mapCache = new Map()
 
 /**
  * Loads map data to build the map, that will be filled with user data and supplemented with
@@ -37,6 +33,8 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
     debug('no field selected, skip with null')
     return null
   }
+
+  const mapCache = getMapCache()
 
   // 1. for the current field get map data from cache
   // or load from server, field is required at this step
@@ -76,7 +74,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // step during startup
   if (!mapData.dimensionsResolved) {
     for (let i = 0; i < mapData.dimensions.length; i++) {
-      const dimensionId = mapData.dimensions[i]
+      const dimensionId = mapData.dimensions[i]._id
       mapData.dimensions[i] = Dimension.collection().findOne(dimensionId)
     }
     mapData.dimensionsResolved = true
@@ -171,7 +169,6 @@ const addUserData = async (mapData, fieldId) => {
         debug('stage', index, unitSet._id, 'has new unitSet competencies:', usersUnitSetCompetencies)
         unitSet.userCompetencies = usersUnitSetCompetencies
       }
-
     })
 
     entry.userProgress = userStageProgress

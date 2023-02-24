@@ -24,7 +24,6 @@ class SessionValidator {
 
       dict.set(key, { isArray, schema: new SimpleSchema(definitions.schema) })
     })
-
   }
 
   validateKey (key) {

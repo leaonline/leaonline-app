@@ -4,7 +4,6 @@ import { Log } from '../infrastructure/Log'
 import { createStorageAPI } from './createStorageAPI'
 import { createSessionValidator } from '../startup/createSessionValidator'
 
-
 /**
  * Contains the state for an app's current session.
  * @type {object}
@@ -83,10 +82,12 @@ AppSession.init = ({ storage, schema }) => {
     const [state, dispatch] = useReducer(reducer, getInitialState(), undefined)
     const actions = useMemo(() => createActions({ dispatch }), [])
 
-    useEffect(() => {
-      console.debug('<<<<<<<<<<< STATE CHANGED >>>>>>>>>>>')
-      console.debug(JSON.stringify(state, null, 2))
-    }, [state])
+    // xxx: we should a hook, useDebug
+    // that prints its deps on change
+    // useEffect(() => {
+    //   console.debug('<<<<<<<<<<< STATE CHANGED >>>>>>>>>>>')
+    //   console.debug(JSON.stringify(state, null, 2))
+    // }, [state])
 
     // at this point we do an initial request, where
     // we try to load non-null values from the storage
@@ -103,6 +104,3 @@ AppSession.init = ({ storage, schema }) => {
 
   return { AppSessionProvider }
 }
-
-
-

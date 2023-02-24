@@ -55,9 +55,8 @@ export const MapScreen = props => {
   })
 
   useEffect(() => {
-    console.debug('MAP DATA CHANGED')
     if (mapDocs?.data?.entries) {
-      console.debug(JSON.stringify(mapDocs.data.entries[3], null, 2))
+      // console.debug(mapDocs?.data?.entries[3])
     }
   }, [mapDocs])
 
@@ -215,9 +214,7 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, is
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
   const { viewPosition } = stage
-  if (index === 3) {
-    console.debug('render stage', index, JSON.stringify(stage, null, 2))
-  }
+
   return (
     <View style={stageStyle}>
       {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}

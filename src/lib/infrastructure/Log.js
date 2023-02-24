@@ -115,3 +115,5 @@ Log.warn = (...args) => allLevels.warning.run(...args)
 Log.error = (...args) => allLevels.error.run(...args)
 
 Log.fatal = (...args) => allLevels.fatal.run(...args)
+
+Log.print = obj => Log.debug(JSON.stringify(obj, null, 2))

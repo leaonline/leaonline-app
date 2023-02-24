@@ -3,7 +3,6 @@ import { ScrollView, View } from 'react-native'
 import { LinearProgress } from 'react-native-elements'
 import { Colors } from '../../../constants/Colors'
 import { useTranslation } from 'react-i18next'
-import { profileData } from '../../../resources/profileData'
 import { useTts } from '../../../components/Tts'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { useDocs } from '../../../meteor/useDocs'
@@ -44,7 +43,7 @@ export const AchievementsScreen = (props) => {
           <LinearProgress
             color={Colors.primary}
             variant='determinate'
-            value={profileData.progress.global}
+            value={docs?.data?.overallProgress ?? 0}
             style={styles.globalProgress}
           />
         </View>

@@ -29,7 +29,8 @@ class StorageAPI {
       if (typeof value === 'string') {
         return EJSON.parse(value)
       }
-    } catch (e) {
+    }
+    catch (e) {
       Log.error(e)
     }
     return null

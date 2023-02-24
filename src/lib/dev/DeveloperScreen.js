@@ -159,14 +159,14 @@ export const DeveloperScreen = props => {
         {renderUnitList()}
       </ScreenBase>
       <View style={styles.row}>
-        <RouteButton style={styles.button} block={true} route='mapDev' text='Map Screen' icon='map-marker' />
+        <RouteButton style={styles.button} block route='mapDev' text='Map Screen' icon='map-marker' />
       </View>
     </View>
   )
 }
 const styles = createStyleSheet({
   container: {
-    ...Layout.container({ margin: 5 }),
+    ...Layout.container({ margin: 5 })
   },
   button: {
     borderColor: '#00f'
@@ -179,7 +179,7 @@ const styles = createStyleSheet({
   },
   row: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   item: {
     flexDirection: 'row',
