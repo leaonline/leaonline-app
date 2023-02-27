@@ -219,4 +219,4 @@ const styles = createStyleSheet({
   active: {
     backgroundColor: Colors.gray
   }
-}, true)
+})

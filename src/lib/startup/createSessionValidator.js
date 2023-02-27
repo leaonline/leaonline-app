@@ -28,7 +28,7 @@ class SessionValidator {
 
   validateKey (key) {
     if (!this.singles.has(key) && !this.documents.has(key)) {
-      throw new Error(`Key "${key}" not in schema!`)
+      throw new Error(`Key "${key}" not in Session-schema!`)
     }
   }
 

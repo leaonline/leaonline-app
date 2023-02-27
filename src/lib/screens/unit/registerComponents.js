@@ -10,7 +10,8 @@ import { scoreHighlight } from '../../items/highlight/scoring'
 import { ClozeRenderer } from '../../items/cloze/ClozeRenderer'
 import { scoreCloze } from '../../items/cloze/scoring'
 import { scoreChoice } from '../../items/choice/scoring'
-
+import { scoreConnect } from '../../items/connect/scoreConnect'
+import { ConnectItemRenderer } from '../../items/choice/ConnectItemRenderer'
 // /////////////////////////////////////////////////////////////////////////////
 //
 // display elements
@@ -81,4 +82,18 @@ Scoring.register({
   type: 'item',
   subtype: 'highlight',
   scoreFn: scoreHighlight
+})
+
+// connect
+
+UnitContentElementFactory.register({
+  type: 'item',
+  subtype: 'connect',
+  component: ConnectItemRenderer
+})
+
+Scoring.register({
+  type: 'item',
+  subtype: 'connect',
+  scoreFn: scoreConnect
 })

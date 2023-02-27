@@ -50,6 +50,12 @@ export const getSessionSchema = () => {
         value: String
       }
     },
+    unitId: {
+      type: 'scalar',
+      schema: {
+        value: String
+      }
+    },
     page: {
       type: 'scalar',
       schema: {
