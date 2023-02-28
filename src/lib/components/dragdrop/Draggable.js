@@ -16,7 +16,7 @@ export function draggable (Consumer) {
         pan: new Animated.ValueXY()
       }
 
-      this.moveEvent = Animated.event([
+      this.moveHandler = Animated.event([
         null,
         {
           dx: this.state.pan.x,
@@ -26,6 +26,7 @@ export function draggable (Consumer) {
 
       this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true,
         onPanResponderMove: (e, gesture) => {
           const { pageX, pageY } = e.nativeEvent
 
@@ -33,11 +34,17 @@ export function draggable (Consumer) {
             x: pageX,
             y: pageY
           })
-          this.moveEvent(e, gesture)
+
+          this.moveHandler(e, gesture)
+        },
+        onPanResponderGrant: () => {
+          this.state.pan.setOffset({
+            x: this.state.pan.x._value,
+            y: this.state.pan.y._value
+          });
         },
         onPanResponderStart: e => {
           const { pageX, pageY } = e.nativeEvent
-
           this.props.__dndContext.handleDragStart(this.identifier, {
             x: pageX,
             y: pageY
@@ -45,12 +52,23 @@ export function draggable (Consumer) {
         },
         onPanResponderRelease: e => {
           const { pageX, pageY } = e.nativeEvent
+          const update = () => {
+            this.state.pan.flattenOffset()
+          }
 
           if (this.props.bounceBack) {
-            Animated.spring(this.state.pan, {
-              toValue: { x: 0, y: 0 }
-            }).start()
+            const springConfig = {
+              toValue: { x: 0, y: 0 },
+              useNativeDriver: true
+            }
+            Animated
+              .spring(this.state.pan, springConfig)
+              .start(update)
           }
+          else {
+            update()
+          }
+
           this.props.__dndContext.handleDragEnd(this.identifier, {
             x: pageX,
             y: pageY

@@ -16,18 +16,19 @@ import { Layout } from '../constants/Layout'
  * @component
  */
 export const LeaText = props => {
-  const { color } = props
-  const style = mergeStyles(styles.default, props.style, color ? { color } : undefined)
+  const { color, children, style, fitSize, autoScale, ...rest } = props
+  const mergedStyle = mergeStyles(styles.default, style, color ? { color } : undefined)
   return (
     <Text
       accessibilityRole='text'
       textBreakStrategy='highQuality'
       android_hyphenationFrequency='full'
-      adjustsFontSizeToFit={props.fitSize}
-      allowFontScaling={props.autoScale}
-      style={style}
+      adjustsFontSizeToFit={fitSize}
+      allowFontScaling={autoScale}
+      style={mergedStyle}
+      {...rest}
     >
-      {props.children}
+      {children}
     </Text>
   )
 }

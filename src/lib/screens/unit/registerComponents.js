@@ -11,7 +11,7 @@ import { ClozeRenderer } from '../../items/cloze/ClozeRenderer'
 import { scoreCloze } from '../../items/cloze/scoring'
 import { scoreChoice } from '../../items/choice/scoring'
 import { scoreConnect } from '../../items/connect/scoreConnect'
-import { ConnectItemRenderer } from '../../items/choice/ConnectItemRenderer'
+import { ConnectItemRenderer } from '../../items/connect/ConnectItemRenderer'
 // /////////////////////////////////////////////////////////////////////////////
 //
 // display elements
