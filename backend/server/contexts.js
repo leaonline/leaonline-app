@@ -13,6 +13,7 @@ import { Response } from '../contexts/response/Response'
 import { Analytics } from '../contexts/analytics/Analytics'
 import { ServiceRegistry } from '../api/remotes/ServiceRegistry'
 import { Legal } from '../contexts/legal/Legal'
+import { Feedback } from '../contexts/feedback/Feedback'
 import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
@@ -33,7 +34,7 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons, Achievements].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons, Achievements, Feedback].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })
@@ -41,7 +42,7 @@ ContentServer.contexts().forEach(ctx => {
 // create methods for backend ctx
 // where in staging mode we add additional contexts
 // that make methods only accessible in this mode
-const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Achievements, Analytics, Legal, InteractionGraph, MapIcons]
+const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Achievements, Analytics, Legal, Feedback, InteractionGraph, MapIcons]
 
 if (Meteor.settings.isStaging) {
   methodContexts.push(DevData)
@@ -68,6 +69,7 @@ ServiceRegistry.register(MapIcons)
 ServiceRegistry.register(Progress)
 ServiceRegistry.register(Users)
 ServiceRegistry.register(Legal)
+ServiceRegistry.register(Feedback)
 
 const methods = Object.values(ServiceRegistry.methods)
 methods.forEach(method => createMethod(method))

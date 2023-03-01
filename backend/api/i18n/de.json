@@ -42,5 +42,10 @@
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "contact": "Kontakt"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "threshold": "Threshold",
+    "phrases": "Sätze"
   }
 }
