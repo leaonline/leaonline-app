@@ -74,7 +74,7 @@ describe('SyncState', function () {
 
       const method = SyncState.methods.getHashes.run
       const states = method({ names })
-      states.forEach(state => {
+      Object.values(states).forEach(state => {
         expect(names.includes(state.name)).to.equal(true)
         expect(state.version).to.equal(1)
       })

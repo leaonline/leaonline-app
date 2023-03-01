@@ -27,7 +27,8 @@ const settingsSchema = schema({
         "unitSet": Boolean,
         "dimension": Boolean,
         "level": Boolean,
-        "testCycle": Boolean
+        "testCycle": Boolean,
+        "mapIcons": Boolean
       }),
       remap: schema({
         active: Boolean,

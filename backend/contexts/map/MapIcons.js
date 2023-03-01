@@ -4,7 +4,8 @@ import { getCollection } from '../../api/utils/getCollection'
 export const MapIcons = {
   name: 'mapIcons',
   label: 'mapIcons.title',
-  icon: 'wrench'
+  icon: 'wrench',
+  sync: true
 }
 
 MapIcons.schema = {

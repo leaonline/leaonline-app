@@ -24,7 +24,8 @@
         "unitSet": true,
         "dimension": true,
         "level": true,
-        "testCycle": true
+        "testCycle": true,
+        "mapIcons": true
       },
       "remap": {
         "active": true,

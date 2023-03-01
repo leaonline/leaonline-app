@@ -34,7 +34,7 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, MapIcons, Achievements, Feedback].forEach(ctx => {
+;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, Achievements].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
 })

@@ -19,7 +19,9 @@ Meteor.startup(async () => {
       await ContentServer.sync(ctx)
 
       // let the clients know, that we have updated the data
-      SyncState.update(ctx.name)
+      if (ctx.sync) {
+        SyncState.update(ctx.name)
+      }
     }
   }
   runRemap(remap)

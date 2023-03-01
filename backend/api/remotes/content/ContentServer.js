@@ -20,6 +20,8 @@ import { createLog } from '../../../infrastructure/log/createLog'
 // for better reasoning between connection and logic we have
 // all connection functionality in a separate file
 import { ContentConnection } from './ContentConnection'
+import { MapIcons } from '../../../contexts/map/MapIcons'
+import { Feedback } from '../../../contexts/feedback/Feedback'
 
 // set the lib's validator to allow validation of received unit docs
 SchemaValidator.set(function (schema) {
@@ -27,7 +29,7 @@ SchemaValidator.set(function (schema) {
   return doc => instance.validate(doc)
 })
 
-const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle]
+const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle, MapIcons, Feedback]
 const contextNames = contexts.map(ctx => ctx.name)
 const log = createLog({ name: 'ContentServer' })
 

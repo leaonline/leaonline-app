@@ -8,7 +8,8 @@ import { getCollection } from '../../api/utils/getCollection'
 export const Feedback = {
   name: 'feedback',
   label: 'feedback.title',
-  icon: 'thumbs-up'
+  icon: 'thumbs-up',
+  sync: true
 }
 
 Feedback.schema = {

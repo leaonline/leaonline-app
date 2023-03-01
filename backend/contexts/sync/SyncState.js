@@ -3,6 +3,12 @@ import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { ContextRegistry } from '../ContextRegistry'
 import { createLog } from '../../infrastructure/log/createLog'
+import { Unit } from '../content/Unit'
+import { Field } from '../content/Field'
+import { Dimension } from '../content/Dimension'
+import { Level } from '../content/Level'
+import { MapIcons } from '../map/MapIcons'
+import { Feedback } from '../feedback/Feedback'
 
 /**
  * This context represents the current state of sync. If should be updated
@@ -17,6 +23,7 @@ export const SyncState = {
 }
 
 const log = createLog({ name: SyncState.name })
+const appContexts = [Field, Dimension, Level, MapIcons, Feedback].map(ctx => ctx.name)
 
 /**
  * DB Schema
@@ -68,7 +75,7 @@ SyncState.validate = names => {
   names.forEach(name => {
     const ctx = ContextRegistry.get(name)
 
-    if (!ctx || !ctx.sync) {
+    if (!ctx?.sync) {
       throw new Error(`Attempt to sync "${name}" but it's not defined for sync!`)
     }
   })
@@ -89,14 +96,29 @@ SyncState.methods = {}
  */
 SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',
-  schema: {
-    names: Array,
-    'names.$': String
-  },
+  schema: {},
   run: onServerExec(function () {
     return function ({ names }) {
-      SyncState.validate(names)
-      return SyncState.get({ names })
+      const syncDoc = {}
+      const docs = SyncState.get({ names: appContexts })
+      docs.forEach(doc => {
+        syncDoc[doc.name] = doc
+      })
+      return syncDoc
+    }
+  })
+}
+
+SyncState.methods.getDocs = {
+  name: 'syncState.methods.getDocs',
+  schema: {
+    name: String,
+  },
+  run: onServerExec(function () {
+    return function ({ name }) {
+      SyncState.validate([name])
+      const collection = getCollection(name)
+      return collection.find().fetch()
     }
   })
 }
