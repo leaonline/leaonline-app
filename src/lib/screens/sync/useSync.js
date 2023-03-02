@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Sync } from '../../infrastructure/sync/Sync'
+import { Log } from '../../infrastructure/Log'
 
 export const useSync = () => {
   const [progress, setProgress] = useState(0)
@@ -11,10 +12,11 @@ export const useSync = () => {
       .finally(() => {
         setProgress(100)
         setTimeout(() => {
+          console.debug('Sync complete!', Log.print(Sync.collection().findOne()))
           setComplete(true)
         }, 5000)
       })
-  })
+  }, [])
 
   return { progress, complete }
 }

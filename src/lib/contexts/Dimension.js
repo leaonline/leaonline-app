@@ -10,3 +10,7 @@ Dimension.collection = () => {
 }
 
 Dimension.storage = createContextStorage(Dimension)
+
+Dimension.init = async  () =>  {
+  return Dimension.storage.loadIntoCollection()
+}

@@ -12,7 +12,6 @@
         "delete": "users.methods.delete"
       },
       "content": {
-        "home": "content.methods.home",
         "map": "content.methods.map",
         "unit": "content.methods.unit",
         "session": "content.methods.session"

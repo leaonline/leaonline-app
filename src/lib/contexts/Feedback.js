@@ -10,3 +10,7 @@ Feedback.collection = () => {
 }
 
 Feedback.storage = createContextStorage(Feedback)
+
+Feedback.init = async () => {
+  return Feedback.storage.loadIntoCollection()
+}

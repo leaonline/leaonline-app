@@ -63,7 +63,6 @@ Config.methods.defaultTimeout = backend.methods.defaultTimeout
 
 Config.methods.createUser = backend.methods.users.create
 Config.methods.deleteUser = backend.methods.users.delete
-Config.methods.getHomeData = backend.methods.content.home
 Config.methods.getMapData = backend.methods.content.map
 Config.methods.getUnitData = backend.methods.content.session
 Config.methods.getUnitDev = backend.methods.content.unit
