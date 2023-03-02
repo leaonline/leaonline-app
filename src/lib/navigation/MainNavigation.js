@@ -30,6 +30,8 @@ import { DeveloperScreen } from '../dev/DeveloperScreen'
 import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
+import { useSyncRequired } from '../infrastructure/sync/useSyncRequired'
+import { SyncScreen } from '../screens/sync/SyncScreen'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -51,12 +53,28 @@ export const MainNavigation = (props) => {
   const { t } = useTranslation()
   const { state, authContext } = useLogin()
   const { Tts } = useTts()
+  const { syncRequired } = useSyncRequired()
   const { userToken, isSignout, isDeleted } = state
   const renderTitleTts = text => (
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
   )
 
   const renderScreens = () => {
+    if (syncRequired) {
+      return (
+        <Stack.Screen
+          name='sync'
+          component={SyncScreen}
+          options={{
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerTitle: () => (<></>)
+          }}
+        />
+      )
+    }
+
     if (userToken && !isSignout && !isDeleted) {
       const headerRight = () => (<ProfileButton route='profile' />)
       const mapScreenTitle = t('mapScreen.title')

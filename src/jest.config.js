@@ -8,5 +8,6 @@ module.exports = {
   ],
   collectCoverage: true,
   coverageDirectory: '.coverage',
-  coverageReporters: ['html']
+  coverageReporters: ['html'],
+  setupFiles: ['./jestSetup.js']
 }

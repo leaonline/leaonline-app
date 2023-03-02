@@ -1,9 +1,37 @@
 import sinon from 'sinon'
 
-export const stub = (target, prop, fn) => {
-  const stub = sinon.stub(target, prop)
-  stub.callsFake(fn)
-  return stub
+const stubs = new Map()
+
+export const stub = (target, name, handler) => {
+  if (stubs.get(target)) {
+    throw new Error(`already stubbed: ${name}`)
+  }
+  const stubbedTarget = sinon.stub(target, name)
+  if (typeof handler === 'function') {
+    stubbedTarget.callsFake(handler)
+  }
+  else {
+    stubbedTarget.value(handler)
+  }
+  stubs.set(stubbedTarget, name)
 }
 
-export const restoreAll = () => sinon.restore()
+export const restore = (target, name) => {
+  if (!target[name] || !target[name].restore) {
+    throw new Error(`not stubbed: ${name}`)
+  }
+  target[name].restore()
+  stubs.delete(target)
+}
+
+export const overrideStub = (target, name, handler) => {
+  restore(target, name)
+  stub(target, name, handler)
+}
+
+export const restoreAll = () => {
+  stubs.forEach((name, target) => {
+    stubs.delete(target)
+    target.restore()
+  })
+}

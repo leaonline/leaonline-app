@@ -7,12 +7,12 @@ const data = {
   value: {
     left: [
       { text: 'z.B. 1000 g' },
-      { text: 'z.B. 10000 g' },
+      { text: 'z.B. 10000 g' }
     ],
     right: [
       { text: 'z.B. 10 kg' },
-      { text: 'z.B. 1 kg' },
-    ],
+      { text: 'z.B. 1 kg' }
+    ]
   }
 }
 

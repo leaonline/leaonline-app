@@ -5,23 +5,23 @@ import { Layout } from '../../constants/Layout'
 import { LeaText } from '../../components/LeaText'
 import { Colors } from '../../constants/Colors'
 import { createDragDropContext } from '../../components/dragdrop/createDragDropContext'
+import { Log } from '../../infrastructure/Log'
 
+const debug = Log.create('ConnectItemRenderer', 'debug')
 const { Provider, Droppable, Draggable } = createDragDropContext()
 
 const initialState = () => ({
   current: -1,
   selected: {},
-  over: {},
+  over: {}
 })
 
 const reducer = (prevState, nextState) => {
-  const { type, ...rest } = nextState
-
   switch (nextState.type) {
     case 'dragStart':
       return {
         ...prevState,
-        current: nextState.index,
+        current: nextState.index
       }
     case 'dragEnd':
       return {
@@ -67,7 +67,7 @@ export const ConnectItemRenderer2 = props => {
           <Draggable
             onDragStart={data => {
               if (typeof selected[index] === 'number') {
-                console.debug(data)
+                debug(data)
               }
               else {
                 dispatch({ type: 'dragStart', index })
@@ -117,7 +117,7 @@ export const ConnectItemRenderer2 = props => {
         >
           {({ active, viewProps }) => {
             const draggingOver = active && current !== -1
-            const dzStyles =  [viewProps.style, styles.dropzoneContainer]
+            const dzStyles = [viewProps.style, styles.dropzoneContainer]
 
             if (draggingOver && !isOccupied) {
               dzStyles.push(styles.dropzoneContainerActive)
@@ -131,7 +131,7 @@ export const ConnectItemRenderer2 = props => {
                 style={dzStyles}
               >
                 <LeaText style={styles.textElement}>{text}</LeaText>
-                <View style={styles.dropzone}></View>
+                <View style={styles.dropzone} />
               </Animated.View>
             )
           }}
@@ -208,7 +208,7 @@ const styles = createStyleSheet({
     backgroundColor: Colors.gray
   },
   dropzoneContainerDropped: {
-    borderColor: Colors.secondary,
+    borderColor: Colors.secondary
   },
   dropzone: {
     flex: 1

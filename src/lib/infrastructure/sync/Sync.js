@@ -1,159 +1,179 @@
-import { getCollection } from '../collections/collections'
 import { callMeteor } from '../../meteor/call'
-import { Log } from '../Log'
 import { Config } from '../../env/Config'
+import { createContextStorage } from '../../contexts/createContextStorage'
+import { ContextRepository } from '../ContextRepository'
+import { Log } from '../Log'
 
 /**
- * Helps with keeping collections synced
+ * Helps in keeping collections synced.
  */
 export const Sync = {
   name: 'sync'
 }
 
+const debug = Log.create(Sync.name, 'debug')
+
 Sync.collection = () => {
-  throw new Error(`${Sync.name} is not initialized`)
+  throw new Error(`Collection ${Sync.name} is not initialized`)
 }
 
-const log = Log.create(Sync.name)
-const debug = Config.debug.sync
-  ? Log.create(Sync.name, 'debug')
-  : () => {}
+Sync.storage = createContextStorage(Sync)
 
 /**
- * Receives a list of `{name, hash}` objects and determines,
- * which of these has to be synced by comparing the hashes with those
- * from the server.
- * @param contexts {Array<Object>}
+ * This should be called at startup.
+ * Fetches to locally stored sync doc
+ * that can be used to compare the local
+ * sync state with the server state.
  */
-Sync.compare = async (contexts) => {
-  const names = contexts.map(ctx => ctx.name)
-  log('compare', names.toString())
+Sync.init = async () => {
+  await Sync.storage.loadIntoCollection()
 
-  const toSync = []
-
-  // first we need to get all the hashes
-  const result = await Sync.getHashes(names)
-  const hashes = new Map()
-  result.forEach(({ name, hash }) => hashes.set(name, hash))
-
-  contexts.forEach(({ name, hash }) => {
-    const newHash = hashes.get(name)
-
-    if (!newHash) {
-      throw new Error(`Expected hash for ${name} got undefined`)
-    }
-
-    const value = { newHash, name }
-
-    if (!hash || hash !== newHash) {
-      return toSync.push(value)
-    }
-
-    // edge case - we have a hash but surprisingly we have
-    // no more documents in our storage, which in turns requires sync
-
-    if (getCollection(name).find().count() === 0) {
-      toSync.push(value)
-    }
-  })
-
-  return toSync
-}
-
-/**
- * Asks the server for the current hashes for a list of given names
- * @param names
- * @return {Promise<any>}
- */
-Sync.getHashes = async (names) => {
-  log('get hashes', names.toString())
-  const result = await callMeteor({
-    name: 'syncState.methods.getHashes', // TODO from env
-    args: { names }
-  })
-  log(result.length, 'hashes received')
-  return result
-}
-
-/**
- * Updates a whole collection. Inserts new docs, updates existing ones and
- * removes docs, which are not used on the server anymore.
- * @param name
- * @param newHash
- * @param docs
- * @param remove
- * @return {Promise<{inserted: number, updated: number, removed: *}>}
- */
-Sync.updateCollection = async ({ name, docs, newHash, remove = false }) => {
-  log('update collection', name, 'with', docs.length, 'docs')
-  const collection = getCollection(name)
-
-  if (!collection) {
-    throw new Error(`Expected collection for ${name}, got undefined`)
+  if (Sync.collection().find().count() === 0) {
+    Sync.collection().insert({})
   }
 
-  if (!docs.length) {
-    throw new Error(`Expected to receive docs for ${name}, got 0 docs`)
-  }
-
-  const updated = update(collection, docs)
-
-  if (remove) {
-    const docsIds = docs.map(d => d._id)
-    updated.removed = collection.remove({ _id: { $nin: docsIds } })
-  }
-
-  // if everything went okay, we can update the hash and tag the
-  // collection as up to date with the server
-  await updateHash(name, newHash)
-
-  log(name, 'update results', JSON.stringify(updated))
-  log(name, 'new size', collection.find().count())
-  return updated
+  internal.initialized = true
 }
 
 /**
- * Updates a collection by given documents but does not remove any docs.
  * @private
- * @param collection
- * @param docs
- * @return {{inserted: number, updated: number, removed: number}}
  */
-const update = (collection, docs) => {
-  if (!docs.length) {
-    throw new Error(`Expected to receive docs for ${collection._name}, got 0 docs`)
+const internal = {
+  initialized: false,
+  syncRequired: null,
+  queue: []
+}
+
+/**
+ * @private
+ */
+const checkInit = () => {
+  if (!internal.initialized) {
+    throw new Error('Sync.init must be called first')
+  }
+}
+
+/**
+ * @private
+ */
+const checkRequired = () => {
+  if (internal.syncRequired !== true) {
+    throw new Error('Sync should not run if not required')
+  }
+}
+
+Sync.getQueue = () => [].concat(internal.queue)
+
+Sync.reset = () => {
+  internal.syncRequired = null
+  internal.queue = []
+}
+
+/**
+ * Determines, whether a sync is necessary.
+ * @async
+ * @returns {Promise<boolean>}
+ */
+Sync.isRequired = async () => {
+  checkInit()
+
+  if (internal.syncRequired !== null) {
+    return internal.syncRequired
   }
 
-  let inserted = 0
-  let updated = 0
-  docs.forEach(doc => {
-    let result
-    if (collection.find({ _id: doc._id }).count() > 0) {
-      result = collection.update({ _id: doc._id }, { $set: doc })
-      updated++
-      debug('updated doc', result)
-    }
-    else {
-      result = collection.insert(doc)
-      inserted++
-      debug('inserted doc', result)
+  const localSyncDoc = Sync.collection().findOne()
+  const serverSyncDoc = await callMeteor({
+    name: Config.methods.getSyncDoc,
+    args: {}
+  })
+
+  Object.entries(serverSyncDoc).forEach(([key, value]) => {
+    const { hash, updatedAt } = value
+    const local = localSyncDoc[key] ?? {}
+
+    if (local.hash !== hash) {
+      internal.queue.push({ key, hash, updatedAt })
     }
   })
 
-  return { inserted, updated, removed: 0 }
+  const syncRequired = internal.queue.length > 0
+  internal.syncRequired = syncRequired
+  return syncRequired
 }
 
-const updateHash = (name, hash) => {
-  log('update hash', name, hash)
+/**
+ * Executes a sync for all queued contexts.
+ * Updates the locally stored sync doc.
+ * @throws {Error} if invoked, although no sync is required
+ */
+Sync.run = async ({ onProgress }) => {
+  checkInit()
+  checkRequired()
 
-  const collection = Sync.collection()
-  const updatedAt = new Date()
+  const localSyncDoc = Sync.collection().findOne()
+  const updateSyncDoc = {}
 
-  const result = collection.find({ name }).count() > 0
-    ? collection.update({ name }, { $set: { hash, updatedAt } })
-    : collection.insert({ name, hash, updatedAt })
+  let current = 0
+  const max = internal.queue.length
 
-  debug('update hash', name, result)
+  for (const entry of internal.queue) {
+    const { key, hash, updatedAt } = entry
+    debug('sync', key)
 
-  return result
+    const ctx = ContextRepository.get(key)
+
+    if (!ctx) {
+      throw new Error(`Expected ctx for key ${key}`)
+    }
+
+    await Sync.syncContext({
+      name: key,
+      collection: ctx.collection(),
+      storage: ctx.storage
+    })
+
+    updateSyncDoc[key] = { updatedAt, hash }
+    current++
+
+    onProgress({ progress: current / max })
+  }
+
+  Sync.collection().update(localSyncDoc._id, {
+    $set: { ...updateSyncDoc }
+  })
+
+  await Sync.storage.saveFromCollection()
+  internal.syncRequired = false
+  internal.queue = []
+
+  return updateSyncDoc
+}
+
+/**
+ * Syncs a context by given name, collection and storage.
+ * Wipes and replaces the collection, updates the storage.
+ * @param name
+ * @param collection
+ * @param storage
+ * @returns {Promise<boolean>}
+ */
+Sync.syncContext = async ({ name, collection, storage }) => {
+  checkInit()
+
+  const docs = await callMeteor({
+    name: Config.methods.getSyncDocsForContext,
+    args: { name }
+  })
+
+  if (Array.isArray(docs) && docs.length > 0) {
+    collection.remove({})
+
+    docs.forEach(doc => {
+      collection.insert(doc)
+    })
+    await storage.saveFromCollection()
+    return true
+  }
+
+  return false
 }

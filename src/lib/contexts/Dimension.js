@@ -1,3 +1,5 @@
+import { createContextStorage } from './createContextStorage'
+
 export const Dimension = {
   name: 'dimension',
   isLocal: false
@@ -6,3 +8,5 @@ export const Dimension = {
 Dimension.collection = () => {
   throw new Error('is not initialized')
 }
+
+Dimension.storage = createContextStorage(Dimension)

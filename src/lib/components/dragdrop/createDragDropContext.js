@@ -152,7 +152,6 @@ function createDragDropContext () {
     }
 
     handleDragMove = (draggingId, position) => {
-
       const currentDroppable = this.getDroppableInArea(position)
       const draggable = this.getDraggable(draggingId)
       const prevDroppingId = this.state.currentDropping

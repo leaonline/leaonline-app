@@ -12,7 +12,7 @@ export const fetchFonts = async () => {
     handle = require('../assets/fonts/SemikolonPlus-Regular.ttf')
   }
   catch (error) {
-    handle = require('../assets/fonts/OpenSansVariable.ttf')
+    handle = require('../assets/fonts/OpenSans-Regular.ttf')
   }
   finally {
     if (handle != null) {

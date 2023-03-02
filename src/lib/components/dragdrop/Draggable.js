@@ -41,7 +41,7 @@ export function draggable (Consumer) {
           this.state.pan.setOffset({
             x: this.state.pan.x._value,
             y: this.state.pan.y._value
-          });
+          })
         },
         onPanResponderStart: e => {
           const { pageX, pageY } = e.nativeEvent

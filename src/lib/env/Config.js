@@ -72,6 +72,8 @@ Config.methods.updateSession = backend.methods.session.update
 Config.methods.submitResponse = backend.methods.response.submit
 Config.methods.getTerms = backend.methods.terms.get
 Config.methods.getDevData = backend.methods.dev.get
+Config.methods.getSyncDoc = 'syncState.methods.getHashes'
+Config.methods.getSyncDocsForContext = 'syncState.methods.getDocs'
 
 /**
  * This configures the connection behaviour with the backend server.
