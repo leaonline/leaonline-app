@@ -36,9 +36,9 @@ Feedback.methods.update = {
     _id: {
       type: String
     },
-    threshold: { ...Feedback.schema.threshold, ...optional},
-    phrases: { ...Feedback.schema.phrases, ...optional},
-    'phrases.$': { ...Feedback.schema['phrases.$'], ...optional},
+    threshold: { ...Feedback.schema.threshold, ...optional },
+    phrases: { ...Feedback.schema.phrases, ...optional },
+    'phrases.$': { ...Feedback.schema['phrases.$'], ...optional }
   },
   run: function ({ _id, threshold, phrases }) {
     const query = { _id }
@@ -99,5 +99,3 @@ Feedback.methods.getAll = {
 }
 
 Feedback.publications = {}
-
-

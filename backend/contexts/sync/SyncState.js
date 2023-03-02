@@ -3,7 +3,6 @@ import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { ContextRegistry } from '../ContextRegistry'
 import { createLog } from '../../infrastructure/log/createLog'
-import { Unit } from '../content/Unit'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
 import { Level } from '../content/Level'
@@ -112,7 +111,7 @@ SyncState.methods.getHashes = {
 SyncState.methods.getDocs = {
   name: 'syncState.methods.getDocs',
   schema: {
-    name: String,
+    name: String
   },
   run: onServerExec(function () {
     return function ({ name }) {
