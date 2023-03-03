@@ -7,8 +7,6 @@ export const resetSyncData = async () => {
   Object.keys(syncDoc).forEach(key => {
     data[key] = null
   })
-console.debug(data)
   Sync.collection().update(_id, { $set: data })
-  console.debug(Sync.collection().findOne())
   return Sync.storage.saveFromCollection()
 }

@@ -1,13 +1,11 @@
 import React from 'react'
 import { View } from 'react-native'
-import { useSync } from './useSync'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { Colors } from '../../constants/Colors'
 import { LinearProgress } from 'react-native-elements'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
-import { useNavigation } from '@react-navigation/native'
 
 /**
  * Sync screen displays a loading progress and

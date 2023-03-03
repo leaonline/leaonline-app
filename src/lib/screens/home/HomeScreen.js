@@ -41,7 +41,6 @@ export const HomeScreen = props => {
     props.navigation.navigate('map')
   }, [sessionActions])
 
-
   /**
    * Renders the RouteButtons for the Homescreen
    */

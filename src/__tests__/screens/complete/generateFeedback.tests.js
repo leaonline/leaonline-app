@@ -5,7 +5,7 @@ const fallback = Feedback.getFallbackDoc()
 
 describe(generateFeedback.name, function () {
   it('returns a fallback doc if nothing is found', () => {
-    const data = [{}, { threshold: 0 }, { feedbackDocs: [] }, { threshold: 0, feedbackDocs: []}]
+    const data = [{}, { threshold: 0 }, { feedbackDocs: [] }, { threshold: 0, feedbackDocs: [] }]
     data.forEach(({ threshold, feedbackDocs }) => {
       const feedback = generateFeedback({ threshold, feedbackDocs })
       expect(feedback.percent).toBe(0)
@@ -14,7 +14,7 @@ describe(generateFeedback.name, function () {
     })
   })
   it('falls back to the first doc in list, if no doc is suitable for the threshold', () => {
-    const feedbackDocs = [{ threshold: 0.2, phrases: ['foo']}, { threshold: 0.5, phrases: ['bar']}]
+    const feedbackDocs = [{ threshold: 0.2, phrases: ['foo'] }, { threshold: 0.5, phrases: ['bar'] }]
     const data = [{}, { threshold: 0 }, { threshold: 0.1 }]
 
     data.forEach(({ threshold }) => {
@@ -27,8 +27,8 @@ describe(generateFeedback.name, function () {
 
   it('returns the appropriate feedback for the current threshold', () => {
     const feedbackDocs = [
-      { threshold: 0.2, phrases: ['foo', 'bar']},
-      { threshold: 0.5, phrases: ['baz', 'moo']}
+      { threshold: 0.2, phrases: ['foo', 'bar'] },
+      { threshold: 0.5, phrases: ['baz', 'moo'] }
     ]
 
     for (let i = 0.2; i < 0.5; i += 0.01) {

@@ -143,7 +143,9 @@ export const DeveloperScreen = props => {
             >
               <ListItem.Content style={styles.listItem}>
                 <ListItem.Title
-                  style={styles.title}>{unitDoc.shortCode.replace(`${fieldName}_${unitSetCode}_`, '')}</ListItem.Title>
+                  style={styles.title}
+                >{unitDoc.shortCode.replace(`${fieldName}_${unitSetCode}_`, '')}
+                </ListItem.Title>
               </ListItem.Content>
             </ListItem>
           ))
@@ -161,14 +163,14 @@ export const DeveloperScreen = props => {
         {renderUnitList()}
       </ScreenBase>
       <View style={styles.row}>
-        <RouteButton style={styles.button} block route="mapDev" text="Map Screen" icon="map-marker"/>
+        <RouteButton style={styles.button} block route='mapDev' text='Map Screen' icon='map-marker' />
       </View>
       <View style={styles.row}>
         <Button
           style={styles.button}
           onPress={resetSyncData}
-          title="Reset Sync Data"
-          icon="trash"
+          title='Reset Sync Data'
+          icon='trash'
         />
       </View>
     </View>

@@ -14,8 +14,6 @@ import { Vibration } from 'react-native'
 import { LeaText } from '../../components/LeaText'
 import { Sound } from '../../env/Sound'
 import { Log } from '../../infrastructure/Log'
-import { Feedback } from '../../contexts/Feedback'
-import { randomArrayElement } from '../../utils/array/randomArrayElement'
 import { generateFeedback } from './generateFeedback'
 
 const COMPLETE = 'complete'
@@ -73,7 +71,6 @@ export const CompleteScreen = props => {
       unsubscribeBeforeRemove()
     }
   }, [props.navigation])
-
 
   useEffect(() => {
     if (!session.competencies || !docs.data) {

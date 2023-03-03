@@ -30,7 +30,6 @@ import { DeveloperScreen } from '../dev/DeveloperScreen'
 import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
-import { useSyncRequired } from '../infrastructure/sync/useSyncRequired'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -52,7 +51,6 @@ export const MainNavigation = (props) => {
   const { t } = useTranslation()
   const { state, authContext } = useLogin()
   const { Tts } = useTts()
-  const { syncRequired } = useSyncRequired({ userToken: state?.userToken })
   const { userToken, isSignout, isDeleted } = state
   const renderTitleTts = text => (
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
@@ -80,7 +78,7 @@ export const MainNavigation = (props) => {
         />,
         <Stack.Screen
           name='map'
-          ky='map'
+          key='map'
           component={MapScreen}
           options={{
             headerStyle,
