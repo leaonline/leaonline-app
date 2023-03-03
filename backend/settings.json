@@ -25,7 +25,8 @@
         "dimension": true,
         "level": true,
         "testCycle": true,
-        "mapIcons": true
+        "mapIcons": true,
+        "feedback": true
       },
       "remap": {
         "active": true,
