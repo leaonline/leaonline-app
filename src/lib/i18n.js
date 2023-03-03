@@ -137,6 +137,10 @@ const resources = {
     legal: {
       paragraph: 'Paragraph',
       paragraphen: 'Paragraphs'
+    },
+    syncScreen: {
+      syncing: 'Syncing data',
+      synced: 'Syncing complete'
     }
   },
   de: {
@@ -267,6 +271,10 @@ const resources = {
     legal: {
       paragraph: 'Paragraph',
       paragraphen: 'Paragraphen'
+    },
+    syncScreen: {
+      syncing: 'Aktualisiere daten',
+      synced: 'Daten aktualisiert'
     }
   }
 }

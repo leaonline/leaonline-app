@@ -3,7 +3,7 @@ import { Dimension } from '../../contexts/Dimension'
 import { Log } from '../../infrastructure/Log'
 import { loadProgressDoc } from './loadProgressData'
 import { Config } from '../../env/Config'
-import { MapIcons } from './MapIcons'
+import { MapIcons } from '../../contexts/MapIcons'
 import nextFrame from 'next-frame'
 import { getMapCache } from './getMapCache'
 

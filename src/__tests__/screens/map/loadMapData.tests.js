@@ -6,7 +6,7 @@ import { loadMapData } from '../../../lib/screens/map/loadMapData'
 import { toDocId } from '../../../lib/utils/toDocId'
 import { mockCollection, resetCollection, restoreCollection } from '../../../__testHelpers__/mockCollection'
 import { byDocId } from '../../../lib/utils/byDocId'
-import { MapIcons } from '../../../lib/screens/map/MapIcons'
+import { MapIcons } from '../../../lib/contexts/MapIcons'
 
 MapIcons.register(() => null)
 MapIcons.register(() => null)

@@ -5,6 +5,12 @@ export const Feedback = {
   isLocal: true
 }
 
+Feedback.getFallbackDoc = () => ({
+  threshold: 0,
+  isFallback: true,
+  phrases: ['feedback.fallback'] // requires i18n
+})
+
 Feedback.collection = () => {
   throw new Error('is not initialized')
 }

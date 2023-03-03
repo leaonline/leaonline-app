@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -14,6 +14,9 @@ import { Vibration } from 'react-native'
 import { LeaText } from '../../components/LeaText'
 import { Sound } from '../../env/Sound'
 import { Log } from '../../infrastructure/Log'
+import { Feedback } from '../../contexts/Feedback'
+import { randomArrayElement } from '../../utils/array/randomArrayElement'
+import { generateFeedback } from './generateFeedback'
 
 const COMPLETE = 'complete'
 
@@ -32,6 +35,8 @@ Sound.load(COMPLETE, () => require('../../assets/audio/trophy_animation.mp3'))
  * @returns {JSX.Element}
  */
 export const CompleteScreen = props => {
+  const [percent, setPercent] = useState(-1)
+  const [phrase, setPhrase] = useState()
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
@@ -69,7 +74,18 @@ export const CompleteScreen = props => {
     }
   }, [props.navigation])
 
-  const count = Math.round(100 * (session.competencies.scored / session.competencies.max))
+
+  useEffect(() => {
+    if (!session.competencies || !docs.data) {
+      return
+    }
+
+    const threshold = session.competencies.scored / session.competencies.max
+    const { feedbackDocs } = docs.data
+    const feedback = generateFeedback({ threshold, feedbackDocs })
+    setPhrase(feedback.phrase)
+    setPercent(feedback.percent)
+  }, [docs.data, session.competencies])
 
   const moveToMap = () => {
     // clear session variables: unit unitSet progress
@@ -86,6 +102,19 @@ export const CompleteScreen = props => {
     props.navigation.navigate('map')
   }
 
+  const renderPhrase = () => {
+    if (!phrase) { return null }
+    // t('completeScreen.correctScores', { count: percent })
+    return (
+      <Tts
+        align='center'
+        text={phrase}
+        color={dimensionColor}
+        iconColor={dimensionColor}
+      />
+    )
+  }
+
   return (
     <ScreenBase {...docs} style={styles.container}>
       <Tts
@@ -94,16 +123,11 @@ export const CompleteScreen = props => {
         color={dimensionColor}
         iconColor={dimensionColor}
       />
-      <Tts
-        align='center'
-        text={t('completeScreen.correctScores', { count })}
-        color={dimensionColor}
-        iconColor={dimensionColor}
-      />
+      {renderPhrase()}
 
-      <LeaText style={styles.count} color={dimensionColor}>{count}</LeaText>
+      <LeaText style={styles.count} color={dimensionColor}>{percent}</LeaText>
 
-      <Celebrate />
+      <Celebrate percent={percent > -1 ? percent : null} />
 
       <ActionButton block color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>

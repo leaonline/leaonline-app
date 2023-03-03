@@ -31,7 +31,6 @@ import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
 import { useSyncRequired } from '../infrastructure/sync/useSyncRequired'
-import { SyncScreen } from '../screens/sync/SyncScreen'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -53,159 +52,154 @@ export const MainNavigation = (props) => {
   const { t } = useTranslation()
   const { state, authContext } = useLogin()
   const { Tts } = useTts()
-  const { syncRequired } = useSyncRequired()
+  const { syncRequired } = useSyncRequired({ userToken: state?.userToken })
   const { userToken, isSignout, isDeleted } = state
   const renderTitleTts = text => (
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
   )
 
   const renderScreens = () => {
-    if (syncRequired) {
-      return (
-        <Stack.Screen
-          name='sync'
-          component={SyncScreen}
-          options={{
-            headerStyle,
-            headerBackVisible: false,
-            headerTitleAlign: 'center',
-            headerTitle: () => (<></>)
-          }}
-        />
-      )
-    }
-
     if (userToken && !isSignout && !isDeleted) {
       const headerRight = () => (<ProfileButton route='profile' />)
       const mapScreenTitle = t('mapScreen.title')
       const profileScreenTitle = t('profileScreen.headerTitle')
       const achievementScreenTitle = t('profileScreen.achievements.title')
-      return (
-        <>
-          <Stack.Screen
-            name='home'
-            component={HomeScreen}
-            options={{
-              headerStyle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<DevelopmentButton />),
-              headerTitle: () => (<></>),
-              headerRight
-            }}
-          />
-          <Stack.Screen
-            name='map'
-            component={MapScreen}
-            options={{
-              headerStyle,
-              title: mapScreenTitle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerRight
-            }}
-          />
-          <Stack.Screen
-            name='dimension'
-            component={DimensionScreen}
-            options={{
-              headerStyle,
-              title: mapScreenTitle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerRight
-            }}
-          />
-          <Stack.Screen
-            name='unit'
-            component={UnitScreen}
-            options={{
-              headerStyle,
-              title: t('unitScreen.title'),
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerRight,
-              headerTitle: CurrentProgress
-            }}
-          />
-          <Stack.Screen
-            name='complete'
-            component={CompleteScreen}
-            options={{
-              headerStyle,
-              title: t('completeScreen.title'),
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerRight,
-              headerTitle: CurrentProgress
-            }}
-          />
-          <Stack.Screen
-            name='profile'
-            component={ProfileScreen}
-            options={{
-              headerStyle,
-              title: profileScreenTitle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerTitle: () => renderTitleTts(profileScreenTitle),
-              headerRight: () => (<></>)
-            }}
-          />
-          <Stack.Screen
-            name='achievements'
-            component={AchievementsScreen}
-            options={{
-              headerStyle,
-              title: achievementScreenTitle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerTitle: () => renderTitleTts(achievementScreenTitle),
-              headerRight: () => (<></>)
-            }}
-          />
-          <Stack.Screen
-            name='development'
-            component={DeveloperScreen}
-            options={{
-              title: 'Dev',
-              headerStyle,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerRight
-            }}
-          />
-          <Stack.Screen
-            name='unitDev'
-            component={UnitDevScreen}
-            options={{
-              headerStyle,
-              title: t('unitScreen.title'),
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerRight,
-              headerTitle: CurrentProgress
-            }}
-          />
-          <Stack.Screen
-            name='mapDev'
-            component={MapDevScreen}
-            options={{
-              headerStyle,
-              title: t('mapScreen.title'),
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: () => (<BackButton icon='arrow-left' />),
-              headerRight,
-              headerTitle: 'Map-Dev'
-            }}
-          />
-        </>
-      )
+      const screens = [
+        <Stack.Screen
+          name='home'
+          key='home'
+          component={HomeScreen}
+          options={{
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<DevelopmentButton />),
+            headerTitle: () => (<></>),
+            headerRight
+          }}
+        />,
+        <Stack.Screen
+          name='map'
+          ky='map'
+          component={MapScreen}
+          options={{
+            headerStyle,
+            title: mapScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight
+          }}
+        />,
+        <Stack.Screen
+          name='dimension'
+          key='dimension'
+          component={DimensionScreen}
+          options={{
+            headerStyle,
+            title: mapScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight
+          }}
+        />,
+        <Stack.Screen
+          name='unit'
+          key='unit'
+          component={UnitScreen}
+          options={{
+            headerStyle,
+            title: t('unitScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        <Stack.Screen
+          name='complete'
+          key='complete'
+          component={CompleteScreen}
+          options={{
+            headerStyle,
+            title: t('completeScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        <Stack.Screen
+          name='profile'
+          key='profile'
+          component={ProfileScreen}
+          options={{
+            headerStyle,
+            title: profileScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerTitle: () => renderTitleTts(profileScreenTitle),
+            headerRight: () => (<></>)
+          }}
+        />,
+        <Stack.Screen
+          name='achievements'
+          key='achievements'
+          component={AchievementsScreen}
+          options={{
+            headerStyle,
+            title: achievementScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerTitle: () => renderTitleTts(achievementScreenTitle),
+            headerRight: () => (<></>)
+          }}
+        />,
+        <Stack.Screen
+          name='development'
+          key='development'
+          component={DeveloperScreen}
+          options={{
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerRight
+          }}
+        />,
+        <Stack.Screen
+          name='unitDev'
+          key='unitDev'
+          component={UnitDevScreen}
+          options={{
+            headerStyle,
+            title: t('unitScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        <Stack.Screen
+          name='mapDev'
+          key='mapDev'
+          component={MapDevScreen}
+          options={{
+            headerStyle,
+            title: t('mapScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerRight,
+            headerTitle: 'Map-Dev'
+          }}
+        />
+      ]
+
+      return screens
     }
 
     const welcomeTitle = t('welcomeScreen.title')

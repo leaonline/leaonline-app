@@ -1,6 +1,20 @@
 import React from 'react'
-import { Colors } from '../../constants/Colors'
-export const MapIcons = {}
+import { Colors } from '../constants/Colors'
+import { createContextStorage } from './createContextStorage'
+
+export const MapIcons = {
+  name: 'mapIcons'
+}
+
+MapIcons.collection = () => {
+  throw new Error('MapIcons is not intialized')
+}
+
+MapIcons.storage = createContextStorage(MapIcons)
+
+MapIcons.init = async () => {
+  return MapIcons.storage.loadIntoCollection()
+}
 
 const icons = []
 

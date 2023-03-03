@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { useDocs } from '../../meteor/useDocs'
@@ -11,6 +11,8 @@ import { Layout } from '../../constants/Layout'
 import { ActionButton } from '../../components/ActionButton'
 import { Fill } from '../../components/layout/Fill'
 import { ScrollView } from 'react-native'
+import { useSync } from '../sync/useSync'
+import { SyncScreen } from '../sync/SyncScreen'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -27,21 +29,23 @@ export const HomeScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
+  const { syncRequired, complete, progress } = useSync()
   const { data, error, loading } = useDocs({ fn: loadHomeData })
 
-  const selectField = async value => {
+  const selectField = useCallback(async value => {
     const { _id, title } = value
     await sessionActions.multi({
       field: { _id, title },
       loadUserData: true
     })
     props.navigation.navigate('map')
-  }
+  }, [sessionActions])
+
 
   /**
    * Renders the RouteButtons for the Homescreen
    */
-  const renderButtons = () => {
+  const renderButtons = useCallback(() => {
     return (data || []).map((item, key) => {
       return (
         <ActionButton
@@ -56,6 +60,12 @@ export const HomeScreen = props => {
         />
       )
     })
+  }, [data])
+
+  if (syncRequired) {
+    return (
+      <SyncScreen progress={progress} complete={complete} />
+    )
   }
 
   return (

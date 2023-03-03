@@ -1,4 +1,4 @@
-import { MapIcons } from './MapIcons'
+import { MapIcons } from '../../contexts/MapIcons'
 import { Anchor } from './icons/Anchor'
 import { Cogwheels } from './icons/Cogwheels'
 import { Building } from './icons/Building'

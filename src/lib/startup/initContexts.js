@@ -6,11 +6,12 @@ import { Level } from '../contexts/Level'
 import { Sync } from '../infrastructure/sync/Sync'
 import { Log } from '../infrastructure/Log'
 import { Feedback } from '../contexts/Feedback'
+import { MapIcons } from '../contexts/MapIcons'
 
 const log = Log.create('startup')
 
 export const initContexts = async () => {
-  const allContexts = [Field, Dimension, Level, Sync, Feedback]
+  const allContexts = [Field, Dimension, Level, Sync, Feedback, MapIcons]
 
   for (const context of allContexts) {
     // in dev mode we may face the situation, where we fast-reload

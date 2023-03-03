@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { Button, ScrollView, View } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import { useDocs } from '../meteor/useDocs'
 import { loadDevData } from './loadDevData'
@@ -9,6 +9,7 @@ import { Layout } from '../constants/Layout'
 import { Colors } from '../constants/Colors'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { RouteButton } from '../components/RouteButton'
+import { resetSyncData } from './resetSyncData'
 
 /**
  *
@@ -141,7 +142,8 @@ export const DeveloperScreen = props => {
               onPress={() => selectUnit(unitDoc)}
             >
               <ListItem.Content style={styles.listItem}>
-                <ListItem.Title style={styles.title}>{unitDoc.shortCode.replace(`${fieldName}_${unitSetCode}_`, '')}</ListItem.Title>
+                <ListItem.Title
+                  style={styles.title}>{unitDoc.shortCode.replace(`${fieldName}_${unitSetCode}_`, '')}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
           ))
@@ -159,11 +161,20 @@ export const DeveloperScreen = props => {
         {renderUnitList()}
       </ScreenBase>
       <View style={styles.row}>
-        <RouteButton style={styles.button} block route='mapDev' text='Map Screen' icon='map-marker' />
+        <RouteButton style={styles.button} block route="mapDev" text="Map Screen" icon="map-marker"/>
+      </View>
+      <View style={styles.row}>
+        <Button
+          style={styles.button}
+          onPress={resetSyncData}
+          title="Reset Sync Data"
+          icon="trash"
+        />
       </View>
     </View>
   )
 }
+
 const styles = createStyleSheet({
   container: {
     ...Layout.container({ margin: 5 })
