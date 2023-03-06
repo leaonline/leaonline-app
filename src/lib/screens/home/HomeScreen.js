@@ -31,7 +31,6 @@ export const HomeScreen = props => {
   const [/* session */, sessionActions] = useContext(AppSessionContext)
   const { syncRequired, complete, progress } = useSync()
   const { data, error, loading } = useDocs({ fn: loadHomeData })
-
   const selectField = useCallback(async value => {
     const { _id, title } = value
     await sessionActions.multi({
