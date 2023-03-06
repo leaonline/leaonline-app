@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTts } from './Tts'
 import { ActionButton } from './ActionButton'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
@@ -32,7 +32,7 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const renderConfirm = () => {
     if (!onConfirm) { return null }
     return (
-      <ActionButton text={label} onPress={onConfirm} />
+      <ActionButton text={label} onPress={onConfirm}/>
     )
   }
 
@@ -43,22 +43,47 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   }
 
   return (
-    <View style={styles.default} accessibilityRole='alert'>
-      <Tts block iconColor={Colors.danger} color={Colors.secondary} text={textBase} />
-      <Tts block iconColor={Colors.danger} color={Colors.secondary} text={t('errors.restart')} />
+    <View style={styles.container} accessibilityRole="alert">
+      <Image
+        source={image.src}
+        style={styles.image}
+        accessibilityRole="image"
+        resizeMethod="resize"
+        resizeMode="contain"
+      />
+      <Tts
+        text={textBase}
+        block={true}
+        iconColor={Colors.danger}
+        color={Colors.secondary}
+      />
+      <Tts
+        text={t('errors.restart')}
+        block={true}
+        iconColor={Colors.danger}
+        color={Colors.secondary}
+      />
       {renderConfirm()}
     </View>
   )
 }
 
+const image = {
+  src: require('../assets/images/sorry.png')
+}
+
 /** @private */
 const styles = createStyleSheet({
-  default: {
+  container: {
+    ...Layout.container(),
     padding: 15,
     borderColor: Colors.danger,
     borderWidth: 0.5,
     borderRadius: 15,
     backgroundColor: Colors.light,
     ...Layout.dropShadow()
+  },
+  image: {
+    width: '100%',
   }
 })
