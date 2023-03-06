@@ -12,9 +12,11 @@ import { MainNavigation } from './navigation/MainNavigation'
 import { initExceptionHandling } from './startup/initExceptionHandling'
 import { CatchErrors } from './components/CatchErrors'
 import { initSound } from './startup/initSound'
+import { validateSettingsSchema } from './schema/validateSettingsSchema'
 
 const initFunction = [
   initExceptionHandling,
+  validateSettingsSchema,
   initContexts,
   fetchFonts,
   initTTs,
