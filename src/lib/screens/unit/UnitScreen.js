@@ -290,7 +290,7 @@ export const UnitScreen = props => {
           block
           align='center'
           tts={t('unitScreen.actions.check')}
-          color={Colors.primary}
+          color={dimensionColor}
           icon='edit'
           onPress={checkScore}
         />
@@ -316,7 +316,7 @@ export const UnitScreen = props => {
           align='center'
           tts={t('unitScreen.actions.next')}
           icon='arrow-right'
-          color={Colors.primary}
+          color={dimensionColor}
           onPress={nextPage}
         />
       )
