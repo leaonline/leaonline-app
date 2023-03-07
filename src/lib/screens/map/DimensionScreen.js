@@ -110,8 +110,12 @@ export const DimensionScreen = props => {
 
   return (
     <ScreenBase {...docs} style={styles.container}>
-      <Tts text={t('dimensionScreen.instructions')} block align='center' />
-      {renderDimensions()}
+      <View style={styles.textContainer}>
+        <Tts text={t('dimensionScreen.instructions')} block align='center' />
+      </View>
+      <View style={styles.textContainer}>
+        {renderDimensions()}
+      </View>
       <Fill />
     </ScreenBase>
   )
@@ -121,7 +125,9 @@ export const DimensionScreen = props => {
  * @private
  */
 const styles = createStyleSheet({
-  container: Layout.container(),
+  container: {
+    ...Layout.container()
+  },
   instructions: {
     flex: 1
   },
@@ -137,5 +143,10 @@ const styles = createStyleSheet({
     flexGrow: 1,
     flex: 1,
     marginRight: 5
+  },
+  textContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 })

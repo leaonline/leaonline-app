@@ -10,7 +10,7 @@ import { AppSessionContext } from '../../state/AppSessionContext'
 import { Layout } from '../../constants/Layout'
 import { ActionButton } from '../../components/ActionButton'
 import { Fill } from '../../components/layout/Fill'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useSync } from '../sync/useSync'
 import { SyncScreen } from '../sync/SyncScreen'
 
@@ -69,15 +69,18 @@ export const HomeScreen = props => {
   return (
     <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Tts
-          id='homeScreen.text'
-          text={t('homeScreen.text')}
-          color={Colors.secondary}
-          block
-          align='flex-start'
-        />
-        <Fill />
-        {renderButtons()}
+        <View style={styles.textContainer}>
+          <Tts
+            id='homeScreen.text'
+            text={t('homeScreen.text')}
+            color={Colors.secondary}
+            block
+            align='flex-start'
+          />
+        </View>
+        <View style={styles.buttons}>
+          {renderButtons()}
+        </View>
         <Fill />
       </ScrollView>
     </ScreenBase>
@@ -92,7 +95,17 @@ const styles = createStyleSheet({
   scrollContainer: {
     ...Layout.container(),
     flexGrow: 1,
-    flex: 0
+    flex: 0,
+  },
+  textContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  buttons: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    flex: 1,
   },
   buttonContainer: {
     marginTop: 10,
