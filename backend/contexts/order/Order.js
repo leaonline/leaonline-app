@@ -10,7 +10,7 @@ export const Order = {
   sync: true
 }
 
-Order.schema =  {
+Order.schema = {
   fields: {
     type: Array
   },
@@ -22,7 +22,7 @@ Order.schema =  {
     }
   },
   dimensions: {
-    type: Array,
+    type: Array
   },
   'dimensions.$': {
     type: String,

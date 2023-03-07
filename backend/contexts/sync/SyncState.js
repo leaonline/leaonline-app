@@ -3,12 +3,6 @@ import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { ContextRegistry } from '../ContextRegistry'
 import { createLog } from '../../infrastructure/log/createLog'
-import { Field } from '../content/Field'
-import { Dimension } from '../content/Dimension'
-import { Level } from '../content/Level'
-import { MapIcons } from '../map/MapIcons'
-import { Feedback } from '../feedback/Feedback'
-import { Order } from '../order/Order'
 
 /**
  * This context represents the current state of sync. If should be updated
