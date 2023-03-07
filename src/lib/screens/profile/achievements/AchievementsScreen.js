@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View, Image } from 'react-native'
 import { LinearProgress } from 'react-native-elements'
 import { Colors } from '../../../constants/Colors'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,7 @@ import { loadAchievementsData } from './loadAchievementsData'
 import { ScreenBase } from '../../BaseScreen'
 import { Layout } from '../../../constants/Layout'
 import { DimensionAchievements } from './DimensionAchievements'
+import { Achievements } from '../../../contexts/Achievements'
 
 /**
  * Displays the user's achievements for
@@ -31,6 +32,32 @@ export const AchievementsScreen = (props) => {
     <ScreenBase {...docs} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {ready && (<DimensionAchievements {...docs?.data} />)}
+
+        <View style={styles.images}>
+          <Image
+            source={Achievements.trophies.bronze.src}
+            style={styles.image}
+            accessibilityRole='image'
+            resizeMethod='scale'
+            resizeMode='stretch'
+          />
+          <Image
+            source={Achievements.trophies.silver.src}
+            style={styles.image}
+            accessibilityRole='image'
+            resizeMethod='scale'
+            resizeMode='stretch'
+          />
+          <Image
+            source={Achievements.trophies.gold.src}
+            style={styles.image}
+            accessibilityRole='image'
+            resizeMethod='scale'
+            resizeMode='stretch'
+
+          />
+        </View>
+
         <View style={styles.headline}>
           <Tts
             text={t('profileScreen.progress')}
@@ -74,5 +101,16 @@ const styles = createStyleSheet({
     borderRadius: 15,
     height: 15,
     width: '65%'
+  },
+  images: {
+    marginTop: 25,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  image: {
+    width: 75,
+    height: 150,
+    opacity: 0.3
   }
 })

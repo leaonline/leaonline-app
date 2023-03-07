@@ -3,7 +3,9 @@ import { Field } from '../../../contexts/Field'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
 import { callMeteor } from '../../../meteor/call'
 import { Log } from '../../../infrastructure/Log'
-import { asyncTimeout } from '../../../utils/asyncTimeout'
+import { Order } from '../../../contexts/Order'
+import { byOrderedIds } from '../../../utils/array/byOrderedIds'
+import { Achievements } from '../../../contexts/Achievements'
 
 const debug = Log.create('')
 
@@ -15,21 +17,19 @@ const debug = Log.create('')
  * @return {Promise<{overallProgress: number, fields: object[], dimensions: object[]}>}
  */
 export const loadAchievementsData = async () => {
+  const order = Order.collection().findOne()
   const fields = Field.collection().find().fetch()
+
+  if (order) {
+    fields.sort(byOrderedIds(order.fields))
+  }
 
   const progressDocs = await callMeteor({
     name: 'progress.methods.my',
     args: {}
   })
 
-  const achievementDocsRaw = await callMeteor({
-    name: 'achievements.methods.getAll',
-    args: {}
-  })
-
-  await asyncTimeout(1000)
-
-  const achievementDocs = achievementDocsRaw.achievements
+  const achievementDocs = Achievements.collection().find().fetch()
   debug('loaded achievements', achievementDocs?.length)
 
   let globalMaxProgress = 0
@@ -39,9 +39,15 @@ export const loadAchievementsData = async () => {
     globalMaxProgress += achievementDoc.maxProgress
   })
 
-  const dimensions = Dimension.collection()
+  const dimensionDocs = Dimension.collection()
     .find()
     .fetch()
+
+  if (order) {
+    dimensionDocs.sort(byOrderedIds(order.dimensions))
+  }
+
+  const dimensions = dimensionDocs
     .map(dimensionDoc => {
       let maxProgress = 0
       const maxCompetencies = new Map()

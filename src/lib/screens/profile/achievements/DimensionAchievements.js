@@ -108,7 +108,7 @@ export const DimensionAchievements = React.memo(RenderDimensionAchievements)
 
 const styles = createStyleSheet({
   listItem: {
-    marginBottom: 10
+    marginTop: 20
   },
   listItemContainer: {
     backgroundColor: Colors.transparent,
@@ -117,7 +117,9 @@ const styles = createStyleSheet({
   },
   listItemSubContainer: {
     backgroundColor: Colors.transparent,
-    padding: 0
+    padding: 0,
+    marginTop: 5,
+    marginLeft: 15
   },
   listIconButton: {
     marginLeft: 3,
@@ -135,9 +137,7 @@ const styles = createStyleSheet({
     flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 5,
-    marginBottom: 5
+    justifyContent: 'flex-start'
   },
   listItemRowContent: {
     backgroundColor: Colors.white,
