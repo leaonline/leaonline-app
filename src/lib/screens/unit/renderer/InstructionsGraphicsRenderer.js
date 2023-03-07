@@ -17,7 +17,9 @@ export const InstructionsGraphicsRenderer = (props) => {
 
   if (!Instruction) {
     return (
-      <Tts text={text} style={styles.tts} />
+      <View style={styles.container}>
+        <Tts text={text} style={styles.tts} block={true} />
+      </View>
     )
   }
 
