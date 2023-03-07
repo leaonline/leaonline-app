@@ -22,7 +22,7 @@ export const UnitSetRenderer = props => {
         <ContentRenderer
           elements={unitSetDoc.story}
           keyPrefix='unitSet'
-          color={dimensionColor}
+          dimensionColor={dimensionColor}
         />
       </View>
     </ScrollView>

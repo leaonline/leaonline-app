@@ -15,7 +15,7 @@ export const PlainTextRenderer = props => {
     <Tts
       block
       style={props.style}
-      iconColor={props.dimensionColor}
+      iconColor={props.dimensionColor ?? props.color}
       color={Colors.secondary}
       asButton={props.hidden}
       text={props.value}

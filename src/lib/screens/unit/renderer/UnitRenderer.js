@@ -162,6 +162,7 @@ export const UnitRenderer = props => {
         <PureContentRenderer
           elements={unitDoc.stimuli}
           keyPrefix={`${unitId}-stimuli`}
+          dimensionColor={dimensionColor}
         />
       </FadePanel>
 
