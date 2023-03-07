@@ -3,7 +3,7 @@ import { randomIntInclusive } from '../math/randomIntInclusive'
 /**
  * returns a random value in array.
  * @throws {Error} if no array is given
- * @param array {*[]}
+ * @param array {array}
  * @returns {undefined|*} undefined if array has length of 0,
  *  otherwise any element the array contains
  */
