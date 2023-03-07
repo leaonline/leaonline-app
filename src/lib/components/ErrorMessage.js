@@ -84,6 +84,7 @@ const styles = createStyleSheet({
     ...Layout.dropShadow()
   },
   image: {
+    flex: 1,
     width: '100%',
   }
 })

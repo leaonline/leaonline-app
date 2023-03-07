@@ -3,6 +3,8 @@ import { Sync } from '../../infrastructure/sync/Sync'
 import { Log } from '../../infrastructure/Log'
 import { asyncTimeout } from '../../utils/asyncTimeout'
 
+const debug = Log.create('useSync', 'debug')
+
 export const useSync = () => {
   const [syncRequired, setSyncRequired] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -11,11 +13,16 @@ export const useSync = () => {
   useEffect(() => {
     const syncHandler = async () => {
       const isRequired = await Sync.isRequired()
+      debug({ isRequired })
 
       if (isRequired) {
         setSyncRequired(true)
 
-        const onProgress = (data) => setProgress(data.progress)
+        const onProgress = (data) => {
+          debug('progress', data)
+          setProgress(data.progress)
+        }
+        debug('run sync', Sync.getQueue())
         try {
           await Sync.run({ onProgress })
         }
@@ -23,6 +30,7 @@ export const useSync = () => {
           Log.error(e)
         }
         finally {
+          debug('sync complete')
           setComplete(true)
           await asyncTimeout(500)
           setSyncRequired(false)

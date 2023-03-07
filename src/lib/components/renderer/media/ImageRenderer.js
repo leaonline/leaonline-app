@@ -5,7 +5,6 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
 import { ContentServer } from '../../../remotes/ContentServer'
 import { mergeStyles } from '../../../styles/mergeStyles'
-import { ErrorMessage } from '../../ErrorMessage'
 
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug', true)
@@ -36,14 +35,18 @@ export const ImageRenderer = props => {
     resizeMethod: 'auto'
   }
 
-  const loader = () => loadComplete ? null : (<Loading />)
+  if (error) {
+    return null
+  }
+
+  const loader = () => loadComplete
+    ? null
+    : (<Loading />)
 
   return (
     <View style={styles.imageContainer}>
       {loader()}
-      {error
-        ? (<ErrorMessage error={error} />)
-        : (<Image {...imageProps} accessibilityRole='image' resizeMode='center' />)}
+      <Image {...imageProps} accessibilityRole='image' resizeMode='center' />)
     </View>
   )
 }

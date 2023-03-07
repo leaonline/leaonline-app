@@ -107,6 +107,7 @@ Sync.isRequired = async () => {
  * @throws {Error} if invoked, although no sync is required
  */
 Sync.run = async ({ onProgress }) => {
+  debug('run')
   checkInit()
   checkRequired()
 
@@ -115,6 +116,8 @@ Sync.run = async ({ onProgress }) => {
 
   let current = 0
   const max = internal.queue.length
+
+  debug('run with queue', internal.queue)
 
   for (const entry of internal.queue) {
     const { key, hash, updatedAt } = entry
@@ -166,6 +169,7 @@ Sync.syncContext = async ({ name, collection, storage }) => {
   })
 
   if (Array.isArray(docs) && docs.length > 0) {
+    debug('syncContext received', docs.length, 'docs')
     collection.remove({})
 
     docs.forEach(doc => {

@@ -244,8 +244,8 @@ const resources = {
         retry: 'Erneut bearbeiten'
       },
       abort: {
-        question: 'Willst du die Übung wirklich abbrechen?',
-        abort: 'Abbrechen',
+        question: 'Willst du die Übung wirklich beenden?',
+        abort: 'Beenden',
         continue: 'Fortsetzen'
       },
       allTrue: 'Super!'
