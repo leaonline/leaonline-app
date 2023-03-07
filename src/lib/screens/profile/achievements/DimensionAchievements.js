@@ -99,6 +99,7 @@ const RenderDimensionAchievements = props => {
             </ListItem>
           )
         })}
+        {isSelected && <View style={styles.lastItem} />}
       </ListItem.Accordion>
     )
   })
@@ -159,5 +160,8 @@ const styles = createStyleSheet({
     justifyContent: 'space-around',
     marginLeft: '30%',
     marginRight: '30%'
+  },
+  lastItem: {
+    height: 25
   }
 })

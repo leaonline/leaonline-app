@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { ScrollView, View, Image } from 'react-native'
 import { LinearProgress } from 'react-native-elements'
 import { Colors } from '../../../constants/Colors'
@@ -27,35 +27,37 @@ export const AchievementsScreen = (props) => {
     fn: () => loadAchievementsData()
   })
 
+  const overallProgress = docs?.data?.overallProgress ?? 0
   const ready = docs?.data?.dimensions?.length && docs?.data?.fields?.length
+
+  const renderTrophies = useCallback(() => {
+    return Object.entries(Achievements.trophies).map(([name, trophy]) => {
+      const trophyStyle = [styles.image]
+
+      if (overallProgress > trophy.threshold) {
+        trophyStyle.push(styles.imageActive)
+      }
+
+      return (
+        <Image
+          key={name}
+          source={trophy.src}
+          style={trophyStyle}
+          accessibilityRole='image'
+          resizeMethod='scale'
+          resizeMode='stretch'
+        />
+      )
+    })
+  }, [overallProgress])
+
   return (
     <ScreenBase {...docs} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {ready && (<DimensionAchievements {...docs?.data} />)}
 
         <View style={styles.images}>
-          <Image
-            source={Achievements.trophies.bronze.src}
-            style={styles.image}
-            accessibilityRole='image'
-            resizeMethod='scale'
-            resizeMode='stretch'
-          />
-          <Image
-            source={Achievements.trophies.silver.src}
-            style={styles.image}
-            accessibilityRole='image'
-            resizeMethod='scale'
-            resizeMode='stretch'
-          />
-          <Image
-            source={Achievements.trophies.gold.src}
-            style={styles.image}
-            accessibilityRole='image'
-            resizeMethod='scale'
-            resizeMode='stretch'
-
-          />
+          {renderTrophies()}
         </View>
 
         <View style={styles.headline}>
@@ -111,6 +113,11 @@ const styles = createStyleSheet({
   image: {
     width: 75,
     height: 150,
-    opacity: 0.3
+    opacity: 0.3,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  imageActive: {
+    opacity: 1.0
   }
-})
+}, true)
