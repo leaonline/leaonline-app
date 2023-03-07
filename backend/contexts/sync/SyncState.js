@@ -8,6 +8,7 @@ import { Dimension } from '../content/Dimension'
 import { Level } from '../content/Level'
 import { MapIcons } from '../map/MapIcons'
 import { Feedback } from '../feedback/Feedback'
+import { Order } from '../order/Order'
 
 /**
  * This context represents the current state of sync. If should be updated
@@ -22,7 +23,12 @@ export const SyncState = {
 }
 
 const log = createLog({ name: SyncState.name })
-const appContexts = [Field, Dimension, Level, MapIcons, Feedback].map(ctx => ctx.name)
+const appContexts = new Set()
+const getAppContexts = () => [...appContexts]
+
+SyncState.register = (name) => {
+  appContexts.add(name)
+}
 
 /**
  * DB Schema
@@ -99,7 +105,7 @@ SyncState.methods.getHashes = {
   run: onServerExec(function () {
     return function ({ names }) {
       const syncDoc = {}
-      const docs = SyncState.get({ names: appContexts })
+      const docs = SyncState.get({ names: getAppContexts() })
       docs.forEach(doc => {
         syncDoc[doc.name] = doc
       })
