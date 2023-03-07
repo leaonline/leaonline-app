@@ -10,7 +10,7 @@ import { Achievements } from '../contexts/achievements/Achievements'
  * @param active {boolean} determines, whether the remap should be executed
  * @param dryRun {boolean} determines, whether the remap result should be saved as new Map data
  * @param dimensions {object} determines dimensions order
- * @param dimensions.order {[string]}
+ * @param dimensions.order {string[]}
  */
 export const runRemap = ({ active, dryRun, dimensions }) => {
   if (active) {

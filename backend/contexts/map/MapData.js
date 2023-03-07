@@ -212,7 +212,7 @@ const checkIntegrity = ({ condition, premise }) => {
  * @param options {object}
  * @param options.field {string} the field id
  * @param options.dryRun {boolean} if false will not be saved to db
- * @param options.dimensionsOrder {[string]} array of short codes to sort dimensions
+ * @param options.dimensionsOrder {string[]} array of short codes to sort dimensions
  */
 MapData.create = (options) => {
   const { field, dryRun, dimensionsOrder } = options
