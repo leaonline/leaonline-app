@@ -85,7 +85,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Session.methods.html">methods</a></li><li><a href="Session.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#runRemap">runRemap</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-onServerExec.html">onServerExec</a></li></ul><h3>Namespaces</h3><ul><li><a href="Session.methods.html">methods</a></li><li><a href="Session.schema.html">schema</a></li></ul><h3>Classes</h3><ul><li><a href="Repository.html">Repository</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Achievements">Achievements</a></li><li><a href="global.html#createLog">createLog</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#cursorToMap">cursorToMap</a></li><li><a href="global.html#ensureCollectionExists">ensureCollectionExists</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureContextExists">ensureContextExists</a></li><li><a href="global.html#environmentExtensionMixin">environmentExtensionMixin</a></li><li><a href="global.html#Feedback">Feedback</a></li><li><a href="global.html#Integer">Integer</a></li><li><a href="global.html#oneOf">oneOf</a></li><li><a href="global.html#RegEx">RegEx</a></li><li><a href="global.html#removeUser">removeUser</a></li><li><a href="global.html#runRemap">runRemap</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li></ul></div><div class="category"><h2>api</h2><h3>Modules</h3><ul><li><a href="module-asyncTimeout.html">asyncTimeout</a></li><li><a href="module-getCollection.html">getCollection</a></li><li><a href="module-getLocalCollection.html">getLocalCollection</a></li><li><a href="module-hasProp.html">hasProp</a></li><li><a href="module-isSchemaInstance.html">isSchemaInstance</a></li></ul><h3>Namespaces</h3><ul><li><a href="ContentConnection.html">ContentConnection</a></li><li><a href="ContentServer.html">ContentServer</a></li><li><a href="LocalCollections.html">LocalCollections</a></li><li><a href="RestoreCodes.html">RestoreCodes</a></li><li><a href="UserEmail.html">UserEmail</a></li></ul></div><div class="category"><h2>contexts</h2><h3>Modules</h3><ul><li><a href="module-countUnitCompetencies.html">countUnitCompetencies</a></li></ul><h3>Namespaces</h3><ul><li><a href="Content.html">Content</a></li><li><a href="ContextRegistry.html">ContextRegistry</a></li><li><a href="MapData.html">MapData</a></li><li><a href="Progress.html">Progress</a></li><li><a href="Response.html">Response</a></li><li><a href="Session.html">Session</a></li><li><a href="SyncState.html">SyncState</a></li><li><a href="Users.html">Users</a></li><li><a href="Users.methods.html">methods</a></li><li><a href="Users.schema.html">schema</a></li></ul></div><div class="category"><h2>startup</h2><h3>Modules</h3><ul><li><a href="module-useFixtures.html">useFixtures</a></li></ul></div>
                 
             </nav>
         </div>
@@ -105,6 +105,7 @@
             <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
+import { cursorToMap } from '../../api/utils/cursorToMap'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -116,6 +117,8 @@ import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
  */
 export const MapData = {
   name: 'mapData',
+  label: 'mapData.title',
+  icon: 'map',
   methods: {}
 }
 
@@ -141,7 +144,16 @@ MapData.schema = {
     type: Array
   },
   'dimensions.$': {
+    type: Object
+  },
+  'dimensions.$._id': {
     type: String
+  },
+  'dimensions.$.maxProgress': {
+    type: Number
+  },
+  'dimensions.$.maxCompetencies': {
+    type: Number
   },
 
   /**
@@ -155,6 +167,22 @@ MapData.schema = {
   },
   'levels.$': {
     type: String
+  },
+
+  /**
+   * The overall maximum achievable progress
+   * for this field
+   */
+  maxProgress: {
+    type: Number
+  },
+
+  /**
+   * The overall maximum achievable competencies
+   * for this field
+   */
+  maxCompetencies: {
+    type: Number
   },
 
   /**
@@ -196,7 +224,7 @@ MapData.schema = {
    */
   'entries.$.progress': {
     type: Number,
-    optional: true // TODO validate against type
+    min: 1
   },
 
   /**
@@ -229,7 +257,15 @@ MapData.schema = {
    * The progress of the UnitSet is already computed on the content service side.
    */
   'entries.$.unitSets.$.progress': {
-    type: Number
+    type: Number,
+    min: 1
+  },
+
+  /**
+   * The relates unit set short-code
+   */
+  'entries.$.unitSets.$.code': {
+    type: String
   },
 
   /**
@@ -260,7 +296,15 @@ MapData.schema = {
 }
 
 const log = createLog({ name: MapData.name })
+const warn = createLog({ name: MapData.name, type: 'warn' })
 const byLevel = (a, b) => a.level - b.level
+const checkIntegrity = ({ condition, premise }) => {
+  if (!condition) {
+    throw new Error(
+      `Integrity failed: ${premise}`
+    )
+  }
+}
 
 /**
  * Creates read-optimized map data for every field. This is a very resource-
@@ -268,34 +312,54 @@ const byLevel = (a, b) => a.level - b.level
  *
  * Do not call from a regular method that could be invoked by clients.
  * @method
+ *
+ * @param options {object}
+ * @param options.field {string} the field id
+ * @param options.dryRun {boolean} if false will not be saved to db
+ * @param options.dimensionsOrder {string[]} array of short codes to sort dimensions
  */
-MapData.create = ({ field, dryRun }) => {
+MapData.create = (options) => {
+  const { field, dryRun, dimensionsOrder } = options
   const fieldDoc = getCollection('field').findOne(field)
-
-  if (!fieldDoc) {
-    throw new Error(`Field doc not found by _id "${field}"`)
-  }
+  checkIntegrity({
+    condition: fieldDoc,
+    premise: `Expect field doc by _id "${field}"`
+  })
 
   log('create for field', fieldDoc.title)
+  const dimensions = getCollection('dimension')
+    .find()
+    .fetch()
+    .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
+  const levels = getCollection('level')
+    .find()
+    .fetch()
+    .sort(byLevel)
 
-  const dimensions = getCollection('dimension').find().fetch()
-  const levels = getCollection('level').find().fetch().sort(byLevel)
-
-  if (!dimensions.length) throw new Error('No Dimensions found')
-  if (!levels.length) throw new Error('No Levels found')
+  checkIntegrity({
+    condition: dimensions.length,
+    premise: 'Expect at least one dimension doc'
+  })
+  checkIntegrity({
+    condition: levels.length,
+    premise: 'Expect at least one level doc'
+  })
 
   const TestCycleCollection = getCollection('testCycle')
   const UnitSetCollection = getCollection('unitSet')
+  const UnitCollection = getCollection('unit')
   const mapData = {
     field,
-    dimensions: dimensions.map(d => d._id),
+    dimensions: dimensions.map(({ _id }) => ({ _id, maxProgress: 0, maxCompetencies: 0 })),
     levels: levels.map(l => l._id),
+    maxProgress: 0,
+    maxCompetencies: 0,
     entries: []
   }
 
   // for each level
   levels.forEach((levelDoc, levelIndex) => {
-    log('collect level (milestone)', levelDoc._id)
+    log('collect level (milestone)', levelDoc.title)
 
     // each level ends with a milestone
     const milestone = {
@@ -304,6 +368,10 @@ MapData.create = ({ field, dryRun }) => {
       progress: 0,
       competencies: []
     }
+
+    // used to determine, whether to add a milestone at the end
+    // of a level or not
+    let hasAtLeastOneStage = false
 
     // -------------------------------------------------------------------------
     // phase 1 - collecting
@@ -322,7 +390,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // for each dimension
     dimensions.forEach((dimensionDoc, dimensionIndex) => {
-      log('collect dimension', dimensionDoc._id)
+      log('collect dimension', dimensionDoc.shortCode, dimensionDoc.title)
       const dimensionId = dimensionDoc._id
       const testCycleDoc = TestCycleCollection.findOne({
         field: field,
@@ -330,15 +398,20 @@ MapData.create = ({ field, dryRun }) => {
         dimension: dimensionDoc._id
       })
 
+      // if we found no test cycle for this given combination we need to
+      // make sure there is no further map building for this test cycle.
       if (!testCycleDoc) {
-        // throw new Meteor.Error('mapData.createError', 'testCycleNotFound', {
-        //   field: field,
-        //   level: levelDoc._id,
-        //   dimension: dimensionDoc._id
-        // })
-        // TODO throw err ?
-        return log(' no TestCycle for ', levelDoc.title, dimensionDoc.title)
+        return warn(fieldDoc.title, 'has no TestCycle for ', dimensionDoc.title, `(${dimensionDoc._id})`, levelDoc.title, `(${levelDoc._id})`)
       }
+
+      // get unit sets with fallback in case they are undefined on some
+      // test cycle docs and to prevent followup errors
+      const unitSets = testCycleDoc.unitSets || []
+
+      checkIntegrity({
+        condition: unitSets.length,
+        premise: `Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
+      })
 
       // once we know, if we have any unitSets,
       // we add a new stage for this dimension
@@ -348,20 +421,67 @@ MapData.create = ({ field, dryRun }) => {
       // which
       let maxCompetencies = 0
 
-      UnitSetCollection.find({ _id: { $in: testCycleDoc.unitSets } })
-        .fetch()
-        .forEach(unitSetDoc => {
+      const unitSetCursor = UnitSetCollection.find({ _id: { $in: unitSets } })
+      const expectedUnitSets = unitSets.length
+      const actualUnitSets = unitSetCursor.count()
+
+      // If there is a mismatch between unit sets, as defined in the test cycle doc,
+      // we have an integrity issue and need to throw this as error
+      checkIntegrity({
+        condition: actualUnitSets === expectedUnitSets,
+        premise: `Expect ${expectedUnitSets} unit sets for test cycle ${testCycleDoc._id}, got ${actualUnitSets}`
+      })
+
+      const unitSetMap = cursorToMap(unitSetCursor)
+
+      unitSets
+        .forEach(unitSetId => {
+          const unitSetDoc = unitSetMap.get(unitSetId)
+
+          checkIntegrity({
+            condition: unitSetDoc,
+            premise: `Expect unit set doc by _id ${unitSetId}`
+          })
+
           const competencies = countCompetencies(unitSetDoc, log)
-          log('collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+          log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+
+          const units = unitSetDoc.units || []
+          const unitCursor = UnitCollection.find({ _id: { $in: units } })
+          const expectedUnits = units.length
+          const actualUnits = unitCursor.count()
+
+          checkIntegrity({
+            condition: expectedUnits > 0,
+            premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
+          })
+
+          // We also require strict integrity of units in a unit set
+          checkIntegrity({
+            condition: expectedUnits === actualUnits,
+            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
+          })
+
           // push new stage to the stage data
           stages[dimensionId].push({
             dimension: dimensionIndex,
             _id: unitSetDoc._id,
             progress: unitSetDoc.progress,
+            code: unitSetDoc.shortCode,
             competencies: competencies
           })
 
+          // At this point we know for sure, that there is
+          hasAtLeastOneStage = true
           maxCompetencies += competencies
+
+          // summ progress/competencies to the max values
+          mapData.maxCompetencies += competencies
+          mapData.maxProgress += unitSetDoc.progress
+
+          // also add progress/competencies to the dimensions
+          mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
+          mapData.dimensions[dimensionIndex].maxCompetencies += competencies
         })
 
       // after we have counted all competencies for this milestone
@@ -397,7 +517,7 @@ MapData.create = ({ field, dryRun }) => {
 
     // first, we estimate the largest list length, which will
     // determine the number of stages we will get for our map
-    stageEntries.forEach(list => {
+    stageEntries.forEach((list = []) => {
       if (list.length > maxLength) {
         maxLength = list.length
       }
@@ -416,8 +536,7 @@ MapData.create = ({ field, dryRun }) => {
 
         // we need to sum the progress of all unitSets
         // to be able to display progress for the full stage
-        stage.progress += (unitSet.progress || 0)
-
+        stage.progress += unitSet.progress
         stage.unitSets.push(unitSet)
       })
 
@@ -428,14 +547,23 @@ MapData.create = ({ field, dryRun }) => {
       mapData.entries.push(stage)
     }
 
-    // after all stages of one iteration have been added
-    // we can finally add the milestone entry
-    mapData.entries.push(milestone)
+    // After all stages of one iteration have been added we can finally add the milestone entry.
+    // However, this is only to be added, in case there is an actual map created.
+    // This is only the case, if we have added at least one stage.
+    // There is a real case, where no test cycle is defined for a given combination
+    // of field/dimension/level and we need to be aware of that.
+    if (hasAtLeastOneStage) {
+      mapData.entries.push(milestone)
+    }
   })
 
-  if (dryRun) { return }
+  // At this point we skip on dryRun but also if we
+  // found no way to build a map for a given field.
+  // This is also important to determine, whether a field
+  // should even be listed in the overview.
+  if (dryRun || mapData.entries.length === 0) { return }
 
-  // update collections
+  // Otherwise, we can safely update the collection.
   return getCollection(MapData.name).upsert({ field }, { $set: mapData })
 }
 
@@ -461,6 +589,32 @@ const countCompetencies = (unitSet, log) => {
 }
 
 MapData.get = ({ field }) => getCollection(MapData.name).findOne({ field })
+
+MapData.methods = {}
+
+MapData.methods.getAll = {
+  name: 'mapData.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  backend: true,
+  run: function () {
+    const docs = getCollection(MapData.name).find({}, {
+      hint: {
+        $natural: -1
+      }
+    }).fetch()
+    return { [MapData.name]: docs }
+  }
+}
 </code></pre>
         </article>
     </section>

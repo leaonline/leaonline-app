@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation fixtures/useFixtures.js</title>
+  <title>lea.online App-Backend Documentation contexts/feedback/Feedback.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>fixtures/useFixtures.js</h1>
+                    <h1>contexts/feedback/Feedback.js</h1>
                 </header>
                 
 
@@ -102,48 +102,107 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import fixtures from './fixtures.js'
-import { getCollection } from '../api/utils/getCollection'
-import { createLog } from '../infrastructure/log/createLog'
-import { SyncState } from '../contexts/sync/SyncState'
-import { Meteor } from 'meteor/meteor'
-
-const fixturesIsActive = Meteor.settings.useFixtures
-const debug = createLog({ name: 'useFixtures', type: 'debug' })
+            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
 
 /**
- * Inserts fixture docs for every relevant context into db, if "useFixtures" is set to true in the settings.
- * Otherwise, removes all fixture docs from DB.
- *
- * This is useful, in case you want to start the app without using a production data dump.
- *
- * @category startup
- * @module useFixtures
- * @return {undefined} nothing to return
+ * Feedback allows to define specific responses
+ * to users after finished test cylces that
+ * should motive, depending on the percentual score.
  */
-export const useFixtures = () => {
-  Object.entries(fixtures).forEach(([name, documents]) => {
-    debug(name, 'docs:', documents.length)
-    const collection = getCollection(name)
-
-    documents.forEach(doc => {
-      if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
-        debug('upsert', JSON.stringify(upsert))
-      }
-
-      else {
-        const removed = collection.remove({ _id: doc._id })
-        debug(name, 'removed:', removed)
-      }
-    })
-
-    debug(name, 'update sync state')
-    SyncState.update(name)
-  })
-
-  debug('all done')
+export const Feedback = {
+  name: 'feedback',
+  label: 'feedback.title',
+  icon: 'thumbs-up',
+  sync: true
 }
+
+Feedback.schema = {
+  threshold: {
+    type: Number,
+    min: 0,
+    max: 1
+  },
+  phrases: {
+    type: Array
+  },
+  'phrases.$': {
+    type: String
+  }
+}
+
+Feedback.methods = {}
+
+const optional = { optional: true }
+Feedback.methods.update = {
+  name: 'feedback.methods.update',
+  backend: true,
+  schema: {
+    _id: {
+      type: String
+    },
+    threshold: { ...Feedback.schema.threshold, ...optional },
+    phrases: { ...Feedback.schema.phrases, ...optional },
+    'phrases.$': { ...Feedback.schema['phrases.$'], ...optional }
+  },
+  run: function ({ _id, threshold, phrases }) {
+    const query = { _id }
+    const modifier = { $set: {} }
+
+    if (typeof threshold === 'number') {
+      modifier.$set.threshold = threshold
+    }
+
+    if (Array.isArray(phrases)) {
+      modifier.$set.phrases = phrases
+    }
+
+    return getCollection(Feedback.name).update(query, modifier)
+  }
+}
+
+Feedback.methods.insert = {
+  name: 'feedback.methods.insert',
+  schema: Feedback.schema,
+  backend: true,
+  run: function ({ threshold, phrases }) {
+    return getCollection(Feedback.name).insert({ threshold, phrases })
+  }
+}
+
+Feedback.methods.get = {
+  name: 'feedback.methods.get',
+  schema: {
+    _id: {
+      type: String,
+      optional: true
+    }
+  },
+  run: function ({ _id } = {}) {
+    return getCollection(Feedback.name).findOne({ _id })
+  }
+}
+
+Feedback.methods.getAll = {
+  name: 'feedback.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  run: function () {
+    return {
+      [Feedback.name]: getCollection(Feedback.name).find().fetch()
+    }
+  }
+}
+
+Feedback.publications = {}
 </code></pre>
         </article>
     </section>

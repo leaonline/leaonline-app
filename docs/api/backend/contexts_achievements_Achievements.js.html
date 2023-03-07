@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation fixtures/useFixtures.js</title>
+  <title>lea.online App-Backend Documentation contexts/achievements/Achievements.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>fixtures/useFixtures.js</h1>
+                    <h1>contexts/achievements/Achievements.js</h1>
                 </header>
                 
 
@@ -102,47 +102,96 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import fixtures from './fixtures.js'
-import { getCollection } from '../api/utils/getCollection'
-import { createLog } from '../infrastructure/log/createLog'
-import { SyncState } from '../contexts/sync/SyncState'
-import { Meteor } from 'meteor/meteor'
-
-const fixturesIsActive = Meteor.settings.useFixtures
-const debug = createLog({ name: 'useFixtures', type: 'debug' })
+            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
+import { Field } from '../content/Field'
+import { Dimension } from '../content/Dimension'
 
 /**
- * Inserts fixture docs for every relevant context into db, if "useFixtures" is set to true in the settings.
- * Otherwise, removes all fixture docs from DB.
- *
- * This is useful, in case you want to start the app without using a production data dump.
- *
- * @category startup
- * @module useFixtures
- * @return {undefined} nothing to return
+ * Contains documents of all possible field &lt;-> dimension
+ * combinations with the maximum achievable progress and
+ * competencies.
  */
-export const useFixtures = () => {
-  Object.entries(fixtures).forEach(([name, documents]) => {
-    debug(name, 'docs:', documents.length)
-    const collection = getCollection(name)
+export const Achievements = {
+  name: 'achievements',
+  label: 'achievements.title',
+  icon: 'trophy'
+}
 
-    documents.forEach(doc => {
-      if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
-        debug('upsert', JSON.stringify(upsert))
+Achievements.schema = {
+  dimensionId: {
+    type: String,
+    dependency: {
+      collection: Dimension.name,
+      field: Dimension.representative
+    }
+  },
+  fieldId: {
+    type: String,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
+  },
+  maxProgress: {
+    type: Number
+  },
+  maxCompetencies: {
+    type: Number
+  }
+}
+
+Achievements.create = ({ dimensionId, fieldId }) => {
+  const collection = getCollection(Achievements.name)
+  const achievementId = collection.insert({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
+  return collection.findOne(achievementId)
+}
+
+Achievements.update = ({ dimensionId, fieldId, maxProgress, maxCompetencies }) => {
+  const collection = getCollection(Achievements.name)
+  const query = { dimensionId, fieldId }
+  let achievementDoc = collection.findOne(query)
+
+  if (!achievementDoc) {
+    achievementDoc = Achievements.create(query)
+  }
+
+  return collection.update(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+}
+
+Achievements.methods = {}
+
+Achievements.methods.getAll = {
+  name: 'achievements.methods.getAll',
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  run: function ({ dependencies = {} } = {}) {
+    const allAchievements = getCollection(Achievements.name).find({}, {
+      hint: {
+        $natural: -1
       }
+    }).fetch()
 
-      else {
-        const removed = collection.remove({ _id: doc._id })
-        debug(name, 'removed:', removed)
-      }
-    })
+    const data = { [Achievements.name]: allAchievements }
 
-    debug(name, 'update sync state')
-    SyncState.update(name)
-  })
+    if (dependencies[Field.name]) {
+      data[Field.name] = getCollection(Field.name).find().fetch()
+    }
 
-  debug('all done')
+    if (dependencies[Dimension.name]) {
+      data[Field.name] = getCollection(Dimension.name).find().fetch()
+    }
+
+    return data
+  }
 }
 </code></pre>
         </article>

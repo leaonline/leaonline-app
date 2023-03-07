@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation fixtures/useFixtures.js</title>
+  <title>lea.online App-Backend Documentation contexts/users/removeUser.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>fixtures/useFixtures.js</h1>
+                    <h1>contexts/users/removeUser.js</h1>
                 </header>
                 
 
@@ -102,48 +102,44 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import fixtures from './fixtures.js'
-import { getCollection } from '../api/utils/getCollection'
-import { createLog } from '../infrastructure/log/createLog'
-import { SyncState } from '../contexts/sync/SyncState'
-import { Meteor } from 'meteor/meteor'
-
-const fixturesIsActive = Meteor.settings.useFixtures
-const debug = createLog({ name: 'useFixtures', type: 'debug' })
+            <pre class="prettyprint source linenums"><code>import { Meteor } from 'meteor/meteor'
+import { getCollection } from '../../api/utils/getCollection'
+import { Session } from '../session/Session'
+import { Progress } from '../progress/Progress'
+import { createLog } from '../../infrastructure/log/createLog'
+import { Response } from '../response/Response'
 
 /**
- * Inserts fixture docs for every relevant context into db, if "useFixtures" is set to true in the settings.
- * Otherwise, removes all fixture docs from DB.
- *
- * This is useful, in case you want to start the app without using a production data dump.
- *
- * @category startup
- * @module useFixtures
- * @return {undefined} nothing to return
+ * Removes a given user plus all her associated sessions, responses and feedbacks.
+ * @param userId {String}
+ * @param calledBy {String}
+ * @return {{responsesRemoved: Number, sessionsRemoved: Number, userRemoved: Number}}
  */
-export const useFixtures = () => {
-  Object.entries(fixtures).forEach(([name, documents]) => {
-    debug(name, 'docs:', documents.length)
-    const collection = getCollection(name)
+export const removeUser = function (userId, calledBy) {
+  debug({ userId, calledBy })
+  const user = Meteor.users.findOne(userId)
 
-    documents.forEach(doc => {
-      if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
-        debug('upsert', JSON.stringify(upsert))
-      }
-
-      else {
-        const removed = collection.remove({ _id: doc._id })
-        debug(name, 'removed:', removed)
-      }
+  if (!user) {
+    throw new Meteor.Error('removeUser.error', 'removeUser.userDoesNotExist', {
+      userId,
+      calledBy
     })
+  }
 
-    debug(name, 'update sync state')
-    SyncState.update(name)
-  })
+  const responsesRemoved = getCollection(Response.name).remove({ userId })
+  const sessionsRemoved = getCollection(Session.name).remove({ userId })
+  const progressRemoved = getCollection(Progress.name).remove({ userId })
+  const userRemoved = Meteor.users.remove({ _id: userId })
 
-  debug('all done')
+  return {
+    responsesRemoved,
+    sessionsRemoved,
+    progressRemoved,
+    userRemoved
+  }
 }
+
+const debug = createLog({ name: removeUser.name, type: 'debug' })
 </code></pre>
         </article>
     </section>
