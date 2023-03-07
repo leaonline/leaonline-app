@@ -32,7 +32,7 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const renderConfirm = () => {
     if (!onConfirm) { return null }
     return (
-      <ActionButton text={label} onPress={onConfirm}/>
+      <ActionButton text={label} onPress={onConfirm} />
     )
   }
 
@@ -43,23 +43,23 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   }
 
   return (
-    <View style={styles.container} accessibilityRole="alert">
+    <View style={styles.container} accessibilityRole='alert'>
       <Image
         source={image.src}
         style={styles.image}
-        accessibilityRole="image"
-        resizeMethod="resize"
-        resizeMode="contain"
+        accessibilityRole='image'
+        resizeMethod='resize'
+        resizeMode='contain'
       />
       <Tts
         text={textBase}
-        block={true}
+        block
         iconColor={Colors.danger}
         color={Colors.secondary}
       />
       <Tts
         text={t('errors.restart')}
-        block={true}
+        block
         iconColor={Colors.danger}
         color={Colors.secondary}
       />
@@ -85,6 +85,6 @@ const styles = createStyleSheet({
   },
   image: {
     flex: 1,
-    width: '100%',
+    width: '100%'
   }
 })

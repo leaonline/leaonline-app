@@ -7,6 +7,7 @@ import { toDocId } from '../../../lib/utils/toDocId'
 import { mockCollection, resetCollection, restoreCollection } from '../../../__testHelpers__/mockCollection'
 import { byDocId } from '../../../lib/utils/byDocId'
 import { MapIcons } from '../../../lib/contexts/MapIcons'
+import { Order } from '../../../lib/contexts/Order'
 
 MapIcons.register(() => null)
 MapIcons.register(() => null)
@@ -15,15 +16,18 @@ MapIcons.register(() => null)
 describe(loadMapData.name, () => {
   beforeAll(() => {
     mockCollection(Dimension)
+    mockCollection(Order)
   })
 
   afterEach(() => {
     restoreAll()
     resetCollection(Dimension)
+    resetCollection(Order)
   })
 
   afterAll(() => {
     restoreCollection(Dimension)
+    restoreCollection(Order)
   })
 
   it('returns null if the server responded with no or faulty map data', async () => {
