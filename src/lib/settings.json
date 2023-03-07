@@ -2,7 +2,7 @@
   "isDevelopment": false,
   "isDeveloperRelease": true,
   "backend": {
-    "url": "ws://192.168.59.44:8080/websocket",
+    "url": "ws://192.168.139.44:8080/websocket",
     "maxTimeout": 3000,
     "interval": 250,
     "methods": {
@@ -39,7 +39,7 @@
     }
   },
   "content": {
-    "url": "http://192.168.59.44:3030",
+    "url": "http://192.168.139.44:3030",
     "replaceUrl": "https://content.lealernen.de"
   },
   "log": {
@@ -63,8 +63,5 @@
     "tts": false,
     "accounts": false,
     "AppSession": false
-  },
-  "dimensions": {
-    "order": ["W", "R", "M", "S"]
   }
 }

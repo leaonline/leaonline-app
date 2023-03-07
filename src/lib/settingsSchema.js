@@ -68,9 +68,5 @@ export const settingsSchema = schema({
     tts: Boolean,
     accounts: Boolean,
     AppSession: Boolean
-  }),
-  dimensions: schema({
-    order: Array,
-    'order.$': String
   })
 })

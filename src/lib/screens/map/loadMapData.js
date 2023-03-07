@@ -7,7 +7,7 @@ import { MapIcons } from '../../contexts/MapIcons'
 import nextFrame from 'next-frame'
 import { getMapCache } from './getMapCache'
 import { Order } from '../../contexts/Order'
-import { byOrderedIds } from '../../utils/array/byOrderedIds'
+import { toDocId } from '../../utils/toDocId'
 
 const useDebug = Config.debug.map
 const debug = useDebug
@@ -75,17 +75,18 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
   // avoid this (error-prone) assumption and avoid this loading
   // step during startup
   if (!mapData.dimensionsResolved) {
-    const order = Order.collection().findOne()
-
     for (let i = 0; i < mapData.dimensions.length; i++) {
       const dimensionId = mapData.dimensions[i]._id
-      mapData.dimensions[i] = Dimension.collection().findOne(dimensionId)
+      const dimensionDoc = Dimension.collection().findOne(dimensionId)
+
+      if (dimensionDoc) {
+        mapData.dimensions[i] = dimensionDoc
+      }
     }
 
-    if (order) {
-      mapData.dimensions.sort(byOrderedIds(order.dimensions))
-    }
+    const order = Order.collection().findOne()
 
+    mapData.dimensionOrder = order?.dimensions ?? mapData.dimensions.map(toDocId)
     mapData.dimensionsResolved = true
   }
 

@@ -7,7 +7,6 @@ import { Pressable, Vibration } from 'react-native'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Colors } from '../../../constants/Colors'
 import { ColorTypeMap } from '../../../constants/ColorTypeMap'
-import { Config } from '../../../env/Config'
 import { Loading } from '../../../components/Loading'
 
 const MemoDiamond = React.memo(Diamond)
@@ -33,6 +32,7 @@ const competencies = [
  * @param props.dimensions {Array<Object>}
  * @param props.width {number=}
  * @param props.height {number=}
+ * @param props.dimensionOrder {string[]}
  * @param props.isActive {boolean=}
  * @returns {JSX.Element}
  * @component
@@ -45,11 +45,11 @@ export const Stage = props => {
   const viewBox = `0 0 ${width} ${height}`
 
   useEffect(() => {
-    const diamondData = Config.dimensions.order.map(shortCode => {
-      const key = `stage-${props.text}-${shortCode}`
+    const diamondData = props.dimensionOrder.map(_id => {
+      const key = `stage-${props.text}-${_id}`
       const unitSet = props.unitSets.find(u => {
         const dimension = props.dimensions[u.dimension]
-        return dimension.shortCode === shortCode
+        return dimension._id === _id
       })
 
       if (unitSet) {

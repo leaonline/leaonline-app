@@ -95,17 +95,17 @@ const styles = createStyleSheet({
   scrollContainer: {
     ...Layout.container(),
     flexGrow: 1,
-    flex: 0,
+    flex: 0
   },
   textContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    flex: 1
   },
   buttons: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    flex: 1,
+    flex: 1
   },
   buttonContainer: {
     marginTop: 10,

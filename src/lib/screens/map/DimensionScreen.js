@@ -147,6 +147,6 @@ const styles = createStyleSheet({
   textContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   }
 })

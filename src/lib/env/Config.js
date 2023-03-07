@@ -1,7 +1,7 @@
 /* global __DEV__ */
 import settings from '../settings.json'
 
-const { backend, content, log, debug, isDevelopment, isDeveloperRelease, dimensions } = settings
+const { backend, content, log, debug, isDevelopment, isDeveloperRelease } = settings
 
 /**
  * These are the unified application globals.
@@ -92,8 +92,6 @@ Config.content.url = content.url
  * This is dev only, overrides hard-coded URLs with the local ip based url.
  */
 Config.content.replaceUrl = content.replaceUrl
-
-Config.dimensions = dimensions
 
 Config.pattern = {}
 Config.pattern.unitSetCode = /\w\w_\w\d{4}/

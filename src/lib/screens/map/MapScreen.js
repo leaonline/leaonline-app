@@ -102,6 +102,7 @@ export const MapScreen = props => {
         connectorWidth: stageConnectorWidth,
         selectStage,
         isActive,
+        dimensionOrder: mapData?.dimensionOrder,
         dimensions: mapData?.dimensions
       })
     }
@@ -209,7 +210,7 @@ const flatListGetItemLayout = (data, index) => {
 }
 const flatListKeyExtractor = (item) => item.entryKey
 
-const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, isActive }) => {
+const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, dimensionOrder, isActive }) => {
   const progress = 100 * (stage.userProgress || 0) / stage.progress
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
@@ -224,6 +225,7 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, is
         onPress={() => selectStage(stage, index)}
         unitSets={stage.unitSets}
         dimensions={dimensions}
+        dimensionOrder={dimensionOrder}
         text={stage.label}
         progress={progress}
         isActive={isActive}
