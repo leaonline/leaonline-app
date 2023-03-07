@@ -27,7 +27,8 @@
         "testCycle": true,
         "mapIcons": true,
         "feedback": true,
-        "order":true
+        "order":true,
+        "achievements":true
       },
       "remap": {
         "active": true,

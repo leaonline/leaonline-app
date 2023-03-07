@@ -1,4 +1,5 @@
 import { getCollection } from '../../api/utils/getCollection'
+import { SyncState } from '../sync/SyncState'
 
 /**
  * Feedback allows to define specific responses
@@ -52,7 +53,9 @@ Feedback.methods.update = {
       modifier.$set.phrases = phrases
     }
 
-    return getCollection(Feedback.name).update(query, modifier)
+    const updated = getCollection(Feedback.name).update(query, modifier)
+    SyncState.update(Feedback.name)
+    return updated
   }
 }
 
@@ -61,7 +64,9 @@ Feedback.methods.insert = {
   schema: Feedback.schema,
   backend: true,
   run: function ({ threshold, phrases }) {
-    return getCollection(Feedback.name).insert({ threshold, phrases })
+    const insertId = getCollection(Feedback.name).insert({ threshold, phrases })
+    SyncState.update(Feedback.name)
+    return insertId
   }
 }
 

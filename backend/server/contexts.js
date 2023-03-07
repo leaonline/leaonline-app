@@ -66,9 +66,7 @@ methodContexts.forEach(ctx => {
 })
 
 // register these contexts for auto-sync with the app
-;[Field, Dimension, Level, MapIcons, Feedback, Order].forEach(ctx => {
-  SyncState.register(ctx.name)
-})
+;[Field, Dimension, Level, MapIcons, Feedback, Order, Achievements].forEach(ctx => SyncState.register(ctx))
 
 ServiceRegistry.init({
   icon: 'mobile',

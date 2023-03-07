@@ -30,7 +30,8 @@ const settingsSchema = schema({
         "testCycle": Boolean,
         "mapIcons": Boolean,
         "feedback": Boolean,
-        "order": Boolean
+        "order": Boolean,
+        "achievements": Boolean
       }),
       remap: schema({
         active: Boolean,

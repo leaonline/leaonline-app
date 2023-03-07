@@ -1,6 +1,7 @@
 import { Dimension } from '../content/Dimension'
 import { Field } from '../content/Field'
 import { getCollection } from '../../api/utils/getCollection'
+import { SyncState } from '../sync/SyncState'
 
 export const Order = {
   name: 'order',
@@ -47,7 +48,9 @@ Order.methods.update = {
   run: function ({ _id, ...orderDoc }) {
     const selector = { _id }
     const modifier = { $set: orderDoc }
-    return getCollection(Order.name).update(selector, modifier)
+    const updated = getCollection(Order.name).update(selector, modifier)
+    SyncState.update(Order.name)
+    return updated
   }
 }
 

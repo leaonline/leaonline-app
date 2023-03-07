@@ -1,6 +1,7 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
+import { SyncState } from '../sync/SyncState'
 
 /**
  * Contains documents of all possible field <-> dimension
@@ -10,7 +11,8 @@ import { Dimension } from '../content/Dimension'
 export const Achievements = {
   name: 'achievements',
   label: 'achievements.title',
-  icon: 'trophy'
+  icon: 'trophy',
+  sync: true
 }
 
 Achievements.schema = {
@@ -51,7 +53,10 @@ Achievements.update = ({ dimensionId, fieldId, maxProgress, maxCompetencies }) =
     achievementDoc = Achievements.create(query)
   }
 
-  return collection.update(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+  const updated = collection.update(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+  SyncState.update(Achievements.name)
+
+  return updated
 }
 
 Achievements.methods = {}
