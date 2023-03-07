@@ -46,7 +46,7 @@ export const ImageRenderer = props => {
   return (
     <View style={styles.imageContainer}>
       {loader()}
-      <Image {...imageProps} accessibilityRole='image' resizeMode='center' />)
+      <Image {...imageProps} accessibilityRole='image' resizeMode='center' />
     </View>
   )
 }
