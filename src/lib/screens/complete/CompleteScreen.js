@@ -10,8 +10,7 @@ import { useTts } from '../../components/Tts'
 import { getDimensionColor } from '../unit/getDimensionColor'
 import { ActionButton } from '../../components/ActionButton'
 import { Celebrate } from './Celebrate'
-import { Vibration } from 'react-native'
-import { LeaText } from '../../components/LeaText'
+import { Vibration, View } from 'react-native'
 import { Sound } from '../../env/Sound'
 import { Log } from '../../infrastructure/Log'
 import { generateFeedback } from './generateFeedback'
@@ -108,24 +107,30 @@ export const CompleteScreen = props => {
         text={phrase}
         color={dimensionColor}
         iconColor={dimensionColor}
+        style={styles.phrase}
       />
     )
   }
 
   return (
     <ScreenBase {...docs} style={styles.container}>
-      <Tts
-        align='center'
-        text={t('completeScreen.congratulations')}
-        color={dimensionColor}
-        iconColor={dimensionColor}
-      />
-      {renderPhrase()}
+      <View style={styles.section}>
+        <Tts
+          align='center'
+          text={t('completeScreen.congratulations')}
+          color={dimensionColor}
+          iconColor={dimensionColor}
+          fontStyle={styles.congrats}
+        />
+      </View>
 
-      <LeaText style={styles.count} color={dimensionColor}>{percent}</LeaText>
+      <View style={styles.section}>
+        {renderPhrase()}
+      </View>
 
-      <Celebrate percent={percent > -1 ? percent : null} />
-
+      <View style={{ flex: 2 }}>
+        <Celebrate percent={percent > -1 ? percent : null} />
+      </View>
       <ActionButton block color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>
   )
@@ -137,7 +142,6 @@ const styles = createStyleSheet({
   },
   count: {
     alignSelf: 'center',
-    fontSize: 50,
     lineHeight: 100,
     margin: 0,
     padding: 0,
@@ -154,5 +158,12 @@ const styles = createStyleSheet({
     width: '100%',
     flex: 1,
     alignItems: 'center'
+  },
+  congrats: {
+    fontWeight: 'bold'
+  },
+  section: {
+    flex: 1,
+    justifyContent: 'center'
   }
 })
