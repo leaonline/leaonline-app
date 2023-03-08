@@ -21,12 +21,12 @@ GIT_HASH=$(git rev-parse --short HEAD)
 TIMESTAMP=$(date +%F-%T)
 
 # this is our final filename
-FILENAME="lea-app-$TIMESTAMP-$GIT_HASH.apk"
+FILENAME="lea-app-$TIMESTAMP-$GIT_HASH.aab"
 
 cd ./src/android/
 
 echo "start building"
-./gradlew assembleRelease
+./gradlew bundleRelease
 
 echo "move build to $BUILD_PATH/$FILENAME"
 mkdir -p "$BUILD_PATH"

@@ -46,7 +46,7 @@ print "2. Install Android"
 
 INSTALL_ANDROID="n"
 
-if [ -f "/usr/lib/android-sdk/emulator/emulator" ];
+if [ ! -f "/usr/lib/android-sdk/emulator/emulator" ];
 then
   print "OPTIONAL: Found no Android SDK+Emulator, do you wish to install it?"
   print "If you want to use your physical devices you can skip this option."
