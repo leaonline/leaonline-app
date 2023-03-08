@@ -124,6 +124,9 @@ SyncState.methods.getDocs = {
     return function ({ name }) {
       SyncState.validate([name])
       const collection = getCollection(name)
+      if (!collection) {
+        throw new Error(`No collection found for ${name}`)
+      }
       return collection.find().fetch()
     }
   })

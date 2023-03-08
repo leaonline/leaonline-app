@@ -15,7 +15,8 @@ export const MapData = {
   name: 'mapData',
   label: 'mapData.title',
   icon: 'map',
-  methods: {}
+  methods: {},
+  sync: true
 }
 
 /**

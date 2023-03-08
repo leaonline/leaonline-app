@@ -44,7 +44,18 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData, SyncState, Session, Response, Progress, Analytics, Legal, InteractionGraph, Achievements, Order].forEach(ctx => {
+;[MapData,
+  MapIcons,
+  SyncState,
+  Session,
+  Response,
+  Progress,
+  Analytics,
+  Legal,
+  InteractionGraph,
+  Achievements,
+  Order,
+  Feedback].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
   init(ctx)
@@ -53,7 +64,21 @@ ContentServer.contexts().forEach(ctx => {
 // create methods for backend ctx
 // where in staging mode we add additional contexts
 // that make methods only accessible in this mode
-const methodContexts = [MapData, Users, Content, SyncState, Session, Response, Progress, Achievements, Analytics, Legal, Feedback, InteractionGraph, MapIcons, Order]
+const methodContexts = [
+  MapData,
+  Users,
+  Content,
+  SyncState,
+  Session,
+  Response,
+  Progress,
+  Achievements,
+  Analytics,
+  Legal,
+  Feedback,
+  InteractionGraph,
+  MapIcons,
+  Order]
 
 if (Meteor.settings.isStaging) {
   methodContexts.push(DevData)
@@ -94,3 +119,4 @@ ServiceRegistry.register(Field)
 const methods = Object.values(ServiceRegistry.methods)
 methods.forEach(method => createMethod(method))
 rateLimitMethods(methods)
+
