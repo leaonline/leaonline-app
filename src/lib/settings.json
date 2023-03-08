@@ -2,7 +2,7 @@
   "isDevelopment": false,
   "isDeveloperRelease": true,
   "backend": {
-    "url": "ws://192.168.139.44:8080/websocket",
+    "url": "wss://appbackend.lealernen.de/websocket",
     "maxTimeout": 3000,
     "interval": 250,
     "methods": {
@@ -39,11 +39,10 @@
     }
   },
   "content": {
-    "url": "http://192.168.139.44:3030",
-    "replaceUrl": "https://content.lealernen.de"
+    "url": "https://content.lealernen.de"
   },
   "log": {
-    "level": 0,
+    "level": 3,
     "target": {
       "active": true,
       "transport": "ddp",
@@ -58,8 +57,8 @@
     "state": false,
     "sync": false,
     "home": false,
-    "map": true,
-    "unit": true,
+    "map": false,
+    "unit": false,
     "tts": false,
     "accounts": false,
     "AppSession": false

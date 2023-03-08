@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Pressable, Vibration } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { Colors } from '../constants/Colors'
@@ -7,16 +7,16 @@ import { createStyleSheet } from '../styles/createStyleSheet'
 import { mergeStyles } from '../styles/mergeStyles'
 
 export const BackButton = (props) => {
-  const navigation = useNavigation()
-  const handleOnPress = async () => {
+  const { goBack } = useNavigation()
+  const handleOnPress = useCallback(async () => {
     if (props.vibrate !== false) {
       Vibration.vibrate(100)
     }
     if (props.onPress) {
       await props.onPress()
     }
-    return navigation.goBack()
-  }
+    return goBack()
+  }, [goBack, props.onPress, props.vibrate])
 
   const containerStyle = mergeStyles(styles.buttonContainer, props.style)
 

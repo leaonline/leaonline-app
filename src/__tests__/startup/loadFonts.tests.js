@@ -1,9 +1,9 @@
 import * as Font from 'expo-font'
-import { fetchFonts } from '../../lib/startup/initFonts'
+import { initFonts } from '../../lib/startup/initFonts'
 
-describe(fetchFonts.name, function () {
+describe(initFonts.name, function () {
   it('successfully loads at least one font from assets', async () => {
-    await fetchFonts()
+    await initFonts()
     const isLoaded = Font.isLoaded('semicolon')
     expect(isLoaded).toBe(true)
   })

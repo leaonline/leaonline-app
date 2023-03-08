@@ -1,9 +1,9 @@
-import SimpleSchema from 'simpl-schema'
+const SimpleSchema = require('simpl-schema')
 
 const schema = x => new SimpleSchema(x)
 const Integer = SimpleSchema.Integer
 
-export const settingsSchema = schema({
+const settingsSchema = schema({
   isDevelopment: Boolean,
   isDeveloperRelease: Boolean,
   backend: schema({
@@ -45,7 +45,10 @@ export const settingsSchema = schema({
   }),
   content: schema({
     url: String,
-    replaceUrl: String
+    replaceUrl: {
+      type: String,
+      optional: true
+    }
   }),
   log: schema({
     level: Integer,
@@ -70,3 +73,5 @@ export const settingsSchema = schema({
     AppSession: Boolean
   })
 })
+
+module.exports = { settingsSchema }

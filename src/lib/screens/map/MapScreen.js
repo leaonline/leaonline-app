@@ -55,12 +55,6 @@ export const MapScreen = props => {
   })
 
   useEffect(() => {
-    if (mapDocs?.data?.entries) {
-      // console.debug(mapDocs?.data?.entries[3])
-    }
-  }, [mapDocs])
-
-  useEffect(() => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
