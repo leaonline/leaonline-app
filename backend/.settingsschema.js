@@ -31,6 +31,7 @@ const settingsSchema = schema({
         "mapIcons": Boolean,
         "feedback": Boolean,
         "order": Boolean,
+        "legal": Boolean,
         "achievements": Boolean
       }),
       remap: schema({

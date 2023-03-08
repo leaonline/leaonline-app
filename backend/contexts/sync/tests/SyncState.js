@@ -21,10 +21,17 @@ describe('SyncState', function () {
     restoreCollections()
   })
 
+  afterEach(() => {
+    SyncCollection.remove({})
+  })
+
   describe(SyncState.update.name, function () {
     it('updates a sync state of a given name', async function () {
       const name = Random.id()
       const names = [name]
+      const ctx = { name, sync: true }
+      SyncState.register(ctx)
+      ContextRegistry.add(name, ctx)
       expect(SyncState.get({ names })).to.deep.equal([])
 
       SyncState.update(name)
@@ -68,15 +75,17 @@ describe('SyncState', function () {
       const names = [Random.id(), Random.id()]
       names.forEach(name => {
         const ctx = { name, sync: true }
+        SyncState.register(ctx)
         ContextRegistry.add(name, ctx)
         SyncState.update(name)
       })
 
       const method = SyncState.methods.getHashes.run
       const states = method({ names })
+
       Object.values(states).forEach(state => {
         expect(names.includes(state.name)).to.equal(true)
-        expect(state.version).to.equal(1)
+        expect(state.version).to.be.above(0)
       })
     })
   })

@@ -19,9 +19,10 @@ export const SyncState = {
 const log = createLog({ name: SyncState.name })
 const appContexts = new Set()
 const getAppContexts = () => [...appContexts]
-const checkIfSync = (ctx = {}) => {
+const checkIfSync = (ctx = {}, name) => {
   if (!ctx.sync) {
-    throw new Error(`Attempt to sync "${ctx.name}" but it's not defined for sync!`)
+    const errorName = ctx.name ?? name
+    throw new Error(`Attempt to sync "${errorName}" but it's not defined for sync!`)
   }
 }
 
@@ -52,6 +53,9 @@ SyncState.schema = {
  */
 SyncState.update = name => {
   log('update', name)
+  const ctx = ContextRegistry.get(name)
+  checkIfSync(ctx)
+
   const hash = Random.id(8)
   const updatedAt = new Date()
 
@@ -79,7 +83,7 @@ SyncState.get = ({ names }) => getCollection(SyncState.name)
 SyncState.validate = names => {
   names.forEach(name => {
     const ctx = ContextRegistry.get(name)
-    checkIfSync(ctx)
+    checkIfSync(ctx, name)
   })
 }
 

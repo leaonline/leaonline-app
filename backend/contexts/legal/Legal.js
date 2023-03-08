@@ -1,9 +1,11 @@
 import { getCollection } from '../../api/utils/getCollection'
+import { SyncState } from '../sync/SyncState'
 
 export const Legal = {
   name: 'legal',
   label: 'legal.title',
   icon: 'info',
+  sync: true,
   isConfigDoc: true
 }
 
@@ -49,7 +51,9 @@ Legal.methods.update = {
     contact: Legal.schema.contact
   },
   run: function ({ _id, imprint, privacy, terms, contact }) {
-    return getCollection(Legal.name).update(_id, { $set: { imprint, privacy, terms, contact } })
+    const updated = getCollection(Legal.name).update(_id, { $set: { imprint, privacy, terms, contact } })
+    SyncState.update(Legal.name)
+    return updated
   }
 }
 

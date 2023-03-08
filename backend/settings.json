@@ -28,6 +28,7 @@
         "mapIcons": true,
         "feedback": true,
         "order":true,
+        "legal":true,
         "achievements":true
       },
       "remap": {

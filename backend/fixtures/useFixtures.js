@@ -3,6 +3,7 @@ import { getCollection } from '../api/utils/getCollection'
 import { createLog } from '../infrastructure/log/createLog'
 import { SyncState } from '../contexts/sync/SyncState'
 import { Meteor } from 'meteor/meteor'
+import { ContextRegistry } from '../contexts/ContextRegistry'
 
 const fixturesIsActive = Meteor.settings.useFixtures
 const debug = createLog({ name: 'useFixtures', type: 'debug' })
@@ -34,8 +35,12 @@ export const useFixtures = () => {
       }
     })
 
-    debug(name, 'update sync state')
-    SyncState.update(name)
+    const ctx = ContextRegistry.get(name)
+
+    if (ctx?.sync) {
+      debug(name, 'update sync state')
+      SyncState.update(name)
+    }
   })
 
   debug('all done')
