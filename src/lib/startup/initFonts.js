@@ -5,7 +5,7 @@ import * as Font from 'expo-font'
  * @private
  * @return {Promise<void>}
  */
-export const fetchFonts = async () => {
+export const initFonts = async () => {
   let handle = null // bad style, alternative?
 
   try {
