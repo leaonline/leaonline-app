@@ -11,6 +11,9 @@ import { ErrorMessage } from '../../../components/ErrorMessage'
 import { mergeStyles } from '../../../styles/mergeStyles'
 import { RequestRestoreCodes } from './RequestRestoreCodes'
 import { InteractionGraph } from '../../../infrastructure/log/InteractionGraph'
+import { useDocs } from '../../../meteor/useDocs'
+import { loadAccountData } from './loadAccountData'
+import { MarkdownRenderer } from '../../../components/renderer/text/Markdown'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -26,6 +29,9 @@ export const AccountInfo = (props) => {
   const [modalContent, setModalContent] = useState(null)
   const [error, setError] = useState(null)
   const { signOut, deleteAccount } = useContext(AuthContext)
+  const docs = useDocs({
+    fn: loadAccountData
+  })
   const { t } = useTranslation()
   const { Tts } = useTts()
 
@@ -108,8 +114,28 @@ export const AccountInfo = (props) => {
       }
     }
 
+    actions.privacy = {
+      icon: 'shield',
+      key: 'privacy',
+      label: () => t('legal.privacy'),
+      onPress: () => setModalContent(actions.privacy.modal),
+      modal: {
+        scrollable: true,
+        body: () => {
+          return (
+            <MarkdownRenderer value={docs.data.legal.privacy} />
+          )
+        },
+        deny: {
+          icon: 'times',
+          label: () => t('actions.close'),
+          handler: () => setModalContent(null)
+        }
+      }
+    }
+
     return Object.values(actions)
-  }, [])
+  }, [docs.data])
 
   const handlePress = (fn) => () => fn()
   const containerStyle = mergeStyles(styles.container, props.containerStyle)
