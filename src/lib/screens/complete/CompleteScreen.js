@@ -14,6 +14,8 @@ import { Vibration, View } from 'react-native'
 import { Sound } from '../../env/Sound'
 import { Log } from '../../infrastructure/Log'
 import { generateFeedback } from './generateFeedback'
+import { Colors } from '../../constants/Colors'
+import { LeaText } from '../../components/LeaText'
 
 const COMPLETE = 'complete'
 
@@ -105,8 +107,8 @@ export const CompleteScreen = props => {
       <Tts
         align='center'
         text={phrase}
-        color={dimensionColor}
-        iconColor={dimensionColor}
+        color={Colors.secondary}
+        iconColor={Colors.secondary}
         style={styles.phrase}
       />
     )
@@ -118,10 +120,14 @@ export const CompleteScreen = props => {
         <Tts
           align='center'
           text={t('completeScreen.congratulations')}
-          color={dimensionColor}
-          iconColor={dimensionColor}
+          color={Colors.secondary}
+          iconColor={Colors.secondary}
           fontStyle={styles.congrats}
         />
+      </View>
+
+      <View style={[styles.section, styles.centered]}>
+        <LeaText style={styles.percent}>{`${percent} %`}</LeaText>
       </View>
 
       <View style={styles.section}>
@@ -165,5 +171,13 @@ const styles = createStyleSheet({
   section: {
     flex: 1,
     justifyContent: 'center'
+  },
+  centered: {
+    alignItems: 'center'
+  },
+  percent: {
+    fontWeight: 'bold',
+    fontSize: 40,
+    lineHeight: 48
   }
 })
