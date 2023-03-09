@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { KeyboardTypes } from '../utils/KeyboardTypes'
-import { SafeAreaView, TextInput, View } from 'react-native'
+import { Pressable, SafeAreaView, StatusBar, TextInput, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Colors } from '../../constants/Colors'
-import { makeTransparent } from '../../styles/makeTransparent'
-import { Tooltip } from 'react-native-elements'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { LeaText } from '../../components/LeaText'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 import { Layout } from '../../constants/Layout'
-
+import Tooltip from 'react-native-walkthrough-tooltip'
 /**
  * Renders a blanks, which is a free-text input specific to the Cloze item.
  *
@@ -32,10 +30,9 @@ import { Layout } from '../../constants/Layout'
  * @component
  */
 export const ClozeRendererBlank = props => {
-  const tooltipRef = useRef(null)
+  const [showTooltip, setShowTooltip] = useState(false)
   const { t } = useTranslation()
   const { Tts } = useTts()
-  const submitting = useRef(false)
   const [value, setValue] = useState('')
   const [editActive, setEditActive] = useState(false)
   const inputStyle = { ...styles.input }
@@ -69,7 +66,6 @@ export const ClozeRendererBlank = props => {
   }
 
   const activateEdit = () => {
-    console.debug('edt active', blanksId)
     setEditActive(true)
   }
 
@@ -141,18 +137,14 @@ export const ClozeRendererBlank = props => {
   }
 
   if (compare) {
-    const openTooltip = () => {
-      tooltipRef.current.toggleTooltip()
-    }
-
-    const renderTooltipContent = () => {
+    const ToolTipContent = React.forwardRef(() => {
       return (
         <View style={styles.correctResponse}>
           <Tts text={t('item.correctResponse', { value: original })} dontShowText color={color} />
           <LeaText style={styles.text}>{original}</LeaText>
         </View>
       )
-    }
+    })
 
     //return renderInput({ onPressIn: openTooltip })
     const width = 150 + original.length * 6
@@ -164,24 +156,23 @@ export const ClozeRendererBlank = props => {
     const height = widthExceeded
       ? 150
       : 100
+    const contentStyle = { width: finalWidth, height }
 
     return (
-      <SafeAreaView>
       <Tooltip
-        ref={tooltipRef}
-        height={height}
-        width={finalWidth}
-        popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-        withOverlay={true}
-        withPointer={true}
-        toggleOnPress={true}
-        backgroundColor={Colors.dark}
-        containerStyle={styles.tooltip}
-        overlayColor={makeTransparent(Colors.white, 0.3)}
+        isVisible={showTooltip}
+        content={<ToolTipContent />}
+        placement="top"
+        showChildInTooltip={false}
+        tooltipStyle={styles.tooltip}
+        contentStyle={[styles.tooltipContent, contentStyle]}
+        topAdjustment={-StatusBar.currentHeight}
+        onClose={() => setShowTooltip(false)}
       >
-        {renderInput({ onPressIn: openTooltip })}
-        </Tooltip>
-      </SafeAreaView>
+        <Pressable onPress={() => setShowTooltip(!showTooltip)}>
+          {renderInput({ onPressIn: () => {}})}
+        </Pressable>
+      </Tooltip>
     )
   }
 
@@ -193,12 +184,13 @@ const styles = createStyleSheet({
   input: {
     ...Layout.input(),
     maxWidth: '85%',
-    minWidth: 40
+    minWidth: 40,
+    margin: 0
   },
   correctResponse: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   text: {
     fontWeight: 'bold',
@@ -207,11 +199,16 @@ const styles = createStyleSheet({
     marginLeft: 10
   },
   actionsContainer: {
-    width: '100%',
-    height: '100%'
+    flex: 1,
+    flexGrow: 1
   },
-  tooltip: {
-    padding: 10
+  tooltip: {},
+  tooltipContent: {
+    flex: 1,
+    flexGrow: 1,
+    width: 200,
+    backgroundColor: Colors.dark,
+    ...Layout.dropShadow()
   },
   inputWrap: {}
 })

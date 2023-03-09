@@ -1,16 +1,14 @@
 import React, { useRef, useState } from 'react'
-import { Modal, Pressable, ScrollView, View } from 'react-native'
+import { Modal, Pressable, ScrollView, StatusBar, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
 import { Colors } from '../../constants/Colors'
 import { LeaText } from '../../components/LeaText'
-import { Tooltip } from 'react-native-elements'
-import { makeTransparent } from '../../styles/makeTransparent'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { Layout } from '../../constants/Layout'
-
+import Tooltip from 'react-native-walkthrough-tooltip'
 /**
  * Renders a pressable element that triggers a Modal dialog with
  * a select list.
@@ -36,22 +34,22 @@ export const ClozeRendererSelect = props => {
   const { Tts } = useTts()
   const { t } = useTranslation()
   const [modalVisible, setModalVisible] = useState(false)
-  const tooltipRef = useRef(null)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   const { color } = props
   const height = props.options.length * 70 // calculate if we have a vertical overflow
-  const isOverflow = Layout.withRatio(height) > (Layout.height() * 0.4)
+  const isVerticalOverflow = Layout.withRatio(height) > (Layout.height() * 0.4)
   const showCompare = !!props.compare
   const label = props.value !== undefined && props.value !== null
     ? props.options[props.value]
     : ''
 
   const onSelect = (option, index) => {
-    if (isOverflow) {
+    if (isVerticalOverflow) {
       setModalVisible(false)
     }
     else {
-      tooltipRef.current.toggleTooltip()
+      setShowTooltip(true)
     }
 
     setTimeout(() => {
@@ -59,9 +57,11 @@ export const ClozeRendererSelect = props => {
     }, 250)
   }
 
-  const onActivate = () => isOverflow
-    ? setModalVisible(true)
-    : tooltipRef.current.toggleTooltip()
+  const onActivate = () => {
+    return isVerticalOverflow
+      ? setModalVisible(true)
+      : setShowTooltip(true)
+  }
 
   const renderTooltipContent = () => showCompare
     ? renderScoreResult()
@@ -87,17 +87,24 @@ export const ClozeRendererSelect = props => {
   }
 
   const renderActions = () => {
-    return props.options.map((option, index) => (
-      <ActionButton
-        key={index}
-        text={option}
-        color={color}
-        block
-        align='center'
-        containerStyle={styles.actionButton}
-        onPress={() => onSelect(option, index)}
-      />
-    ))
+    return (
+      <React.Fragment>
+        {props.options.map((option, index) => (
+        <ActionButton
+          key={index}
+          text={option}
+          color={color}
+          block
+          align='center'
+          containerStyle={styles.actionButton}
+          onPress={() => {
+            onSelect(option, index)
+            setShowTooltip(false)
+          }}
+        />
+        ))}
+      </React.Fragment>
+    )
   }
 
   const compareStyles = props.compare?.color ? { backgroundColor: props.compare.color } : undefined
@@ -106,7 +113,7 @@ export const ClozeRendererSelect = props => {
 
   // if our answers exceed half of the screen we need
   // to display a model instead of a tooltip
-  if (isOverflow) {
+  if (isVerticalOverflow) {
     return (
       <>
         <Modal
@@ -124,27 +131,44 @@ export const ClozeRendererSelect = props => {
             </View>
           </ScrollView>
         </Modal>
-        <Pressable accessibilityRole='button' style={pressStyles} onPress={onActivate}>
+        <Pressable
+          accessibilityRole='button'
+          style={pressStyles}
+          onPress={onActivate}>
           <LeaText style={styles.label}>{label}</LeaText>
         </Pressable>
       </>
     )
   }
 
+  const width = 150 + longest * 6
+  const maxWidth = Layout.width() - 20 // incl. padding
+  const widthExceeded = width > maxWidth
+  const finalWidth = widthExceeded
+    ? maxWidth
+    : width
+  const finalHeight = !showCompare
+    ? props.options.length * 60
+    : widthExceeded
+      ? 150
+      : 100
+  const contentStyle = { width: finalWidth, height: finalHeight }
+
   return (
     <Tooltip
-      ref={tooltipRef}
-      height={height}
-      width={150 + longest * 6}
-      popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-      withOverlay={true}
-      withPointer={true}
-      backgroundColor={Colors.dark}
-      containerStyle={styles.tooltipContainer}
-      overlayColor={makeTransparent(Colors.white, 0.6)}
+      isVisible={showTooltip}
+      content={renderTooltipContent()}
+      placement="top"
+      showChildInTooltip={false}
+      tooltipStyle={styles.tooltip}
+      contentStyle={[styles.tooltipContent, contentStyle]}
+      topAdjustment={-StatusBar.currentHeight}
+      onClose={() => setShowTooltip(false)}
     >
-      <Pressable accessibilityRole='button' style={pressStyles} onPress={onActivate}>
-        <LeaText style={styles.label}>{label}</LeaText>
+      <Pressable onPress={onActivate}>
+        <View style={pressStyles}>
+          <LeaText style={styles.label}>{label}</LeaText>
+        </View>
       </Pressable>
     </Tooltip>
   )
@@ -174,6 +198,19 @@ const styles = createStyleSheet({
   },
   tooltipContainer: {
 
+  },
+  tooltip: {
+
+  },
+  parent: {
+
+  },
+  tooltipContent: {
+    flex: 1,
+    flexGrow: 1,
+    width: 200,
+    backgroundColor: Colors.dark,
+    ...Layout.dropShadow()
   },
   actionsContainer: {
     width: '100%',

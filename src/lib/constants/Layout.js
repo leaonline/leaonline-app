@@ -2,10 +2,14 @@ import { Colors } from './Colors'
 import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
 
+const window = Dimensions.get('window')
 const { width, height } = Dimensions.get('screen')
 const ratio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const isLarge = width * ratio > 1300
+
+console.debug(Dimensions.get('window'))
+console.debug(Dimensions.get('screen'))
 
 export const Layout = {}
 
@@ -26,6 +30,8 @@ Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
 Layout.fontScale = () => fontScale
 
 Layout.fontSize = () => 22
+
+Layout.windowScale = () => window.scale
 
 const defaultContainerMargin = isLarge
   ? '8%'
