@@ -30,7 +30,10 @@ export const HomeScreen = props => {
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
   const { syncRequired, complete, progress } = useSync()
-  const { data, error, loading } = useDocs({ fn: loadHomeData })
+  const { data, error, loading } = useDocs({
+    fn: () => loadHomeData({ syncRequired, complete }),
+    runArgs: [syncRequired, complete]
+  })
   const selectField = useCallback(async value => {
     const { _id, title } = value
     await sessionActions.multi({
