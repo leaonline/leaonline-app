@@ -11,7 +11,10 @@ export const Layout = {}
 
 Layout.statusBarHeight = () => Constants.statusBarHeight
 
-Layout.width = () => width * ratio
+Layout.width = () => width
+
+Layout.ratio = () => ratio
+
 Layout.height = () => height * ratio
 
 Layout.withRatio = value => value * ratio
@@ -21,6 +24,8 @@ Layout.isLarge = () => isLarge
 Layout.lineWidth = (value) => PixelRatio.roundToNearestPixel(value)
 
 Layout.fontScale = () => fontScale
+
+Layout.fontSize = () => 22
 
 const defaultContainerMargin = isLarge
   ? '8%'
@@ -40,13 +45,15 @@ Layout.content = () => {
   }
 }
 
+
+
 /**
  * Default styles for (Text-) input
  * components.
  */
 Layout.input = () => ({
   padding: 5,
-  fontSize: 18,
+  fontSize: Layout.fontSize() / Layout.fontScale(),
   fontFamily: 'semicolon',
   color: Colors.secondary,
   backgroundColor: '#fff',
@@ -60,7 +67,7 @@ Layout.input = () => ({
 Layout.defaultFont = () => ({
   color: Colors.secondary,
   fontFamily: 'semicolon',
-  fontSize: 22 / Layout.fontScale(),
+  fontSize: Layout.fontSize() / Layout.fontScale(),
   lineHeight: 28,
   fontStyle: 'normal',
   fontWeight: 'normal',

@@ -137,8 +137,8 @@ export const ClozeRendererSelect = props => {
       height={height}
       width={150 + longest * 6}
       popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-      withOverlay
-      withPointer
+      withOverlay={true}
+      withPointer={true}
       backgroundColor={Colors.dark}
       containerStyle={styles.tooltipContainer}
       overlayColor={makeTransparent(Colors.white, 0.6)}
@@ -230,7 +230,7 @@ const styles = createStyleSheet({
   },
   correctText: {
     flexGrow: 1,
-    marginLeft: 3,
+    marginLeft: 10,
     fontWeight: 'bold',
     color: Colors.light
   }

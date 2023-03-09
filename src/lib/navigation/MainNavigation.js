@@ -44,6 +44,14 @@ const { AppSessionProvider } = initAppSession()
  */
 const Stack = createNativeStackNavigator()
 const headerStyle = { backgroundColor: Colors.light }
+const headerOptions = {
+  statusBarHidden: false,
+  statusBarTranslucent: true,
+  statusBarColor: Colors.light,
+  statusBarStyle: 'dark',
+  statusBarAnimation: 'fade'
+}
+
 const DevelopmentButton = createDevelopmentButton({ route: 'development' })
 
 export const MainNavigation = (props) => {
@@ -68,6 +76,7 @@ export const MainNavigation = (props) => {
           key='home'
           component={HomeScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             headerBackVisible: false,
             headerTitleAlign: 'center',
@@ -81,6 +90,7 @@ export const MainNavigation = (props) => {
           key='map'
           component={MapScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: mapScreenTitle,
             headerBackVisible: false,
@@ -93,6 +103,7 @@ export const MainNavigation = (props) => {
           key='dimension'
           component={DimensionScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: mapScreenTitle,
             headerBackVisible: false,
@@ -105,6 +116,7 @@ export const MainNavigation = (props) => {
           key='unit'
           component={UnitScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: t('unitScreen.title'),
             headerBackVisible: false,
@@ -118,6 +130,7 @@ export const MainNavigation = (props) => {
           key='complete'
           component={CompleteScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: t('completeScreen.title'),
             headerBackVisible: false,
@@ -131,6 +144,7 @@ export const MainNavigation = (props) => {
           key='profile'
           component={ProfileScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: profileScreenTitle,
             headerBackVisible: false,
@@ -145,6 +159,7 @@ export const MainNavigation = (props) => {
           key='achievements'
           component={AchievementsScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: achievementScreenTitle,
             headerBackVisible: false,
@@ -159,6 +174,7 @@ export const MainNavigation = (props) => {
           key='development'
           component={DeveloperScreen}
           options={{
+            ...headerOptions,
             title: 'Dev',
             headerStyle,
             headerBackVisible: false,
@@ -172,6 +188,7 @@ export const MainNavigation = (props) => {
           key='unitDev'
           component={UnitDevScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: t('unitScreen.title'),
             headerBackVisible: false,
@@ -186,6 +203,7 @@ export const MainNavigation = (props) => {
           key='mapDev'
           component={MapDevScreen}
           options={{
+            ...headerOptions,
             headerStyle,
             title: t('mapScreen.title'),
             headerBackVisible: false,
@@ -211,6 +229,7 @@ export const MainNavigation = (props) => {
           name='authDecision'
           component={WelcomeScreen}
           options={{
+            ...headerOptions,
             title: welcomeTitle,
             headerStyle,
             headerTitleAlign: 'center',
@@ -221,6 +240,7 @@ export const MainNavigation = (props) => {
           name='termsAndConditions'
           component={TermsAndConditionsScreen}
           options={{
+            ...headerOptions,
             title: tcTitle,
             headerStyle,
             headerTitleAlign: 'center',
@@ -232,6 +252,7 @@ export const MainNavigation = (props) => {
           name='registration'
           component={RegistrationScreen}
           options={{
+            ...headerOptions,
             title: registerTitle,
             headerStyle,
             headerTitleAlign: 'center',
@@ -243,6 +264,7 @@ export const MainNavigation = (props) => {
           name='restore'
           component={RestoreScreen}
           options={{
+            ...headerOptions,
             title: registerTitle,
             headerStyle,
             headerTitleAlign: 'center',

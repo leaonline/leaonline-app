@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { KeyboardTypes } from '../utils/KeyboardTypes'
-import { TextInput, View } from 'react-native'
+import { SafeAreaView, TextInput, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Colors } from '../../constants/Colors'
 import { makeTransparent } from '../../styles/makeTransparent'
@@ -101,40 +101,43 @@ export const ClozeRendererBlank = props => {
 
   // TODO integrate custom keyboard for pattern-based input filter
   // https://github.com/wix/react-native-ui-lib/blob/master/demo/src/screens/nativeComponentScreens/keyboardInput/demoKeyboards.js
-  const renderInput = ({ onPressIn } = {}) => (
-    <TextInput
-      accessibilityLabel='text'
-      accessibilityHint='text'
-      editable={editable}
-      placeholderTextColor={color}
-      selectionColor={color}
-      value={value}
-      // prevent various type assistance functionalities
-      autoCorrect={false}
-      autoCapitalize='none'
-      contextMenuHidden
-      importantForAutofill='no' // android
-      textContentType='none' // ios
-      spellCheck={false}
-      // appearance
-      maxLength={maxLength}
-      multiline={isMultiline}
-      blurOnSubmit
-      style={inputStyle}
-      textAlign={textAlign}
-      // selectionColor
-      // keyboard
-      returnKeyType={props.hasNext ? 'next' : 'done'}
-      keyboardType={keyboardType}
-      // events
-      onPressIn={onPressIn ?? activateEdit}
-      onChangeText={setValue}
-      onEndEditing={handleSubmit}
-    />
-  )
+  const renderInput = ({ onPressIn } = {}) => {
+    return (
+      <TextInput
+        accessibilityLabel='text'
+        accessibilityHint='text'
+        editable={editable}
+        placeholderTextColor={color}
+        selectionColor={color}
+        value={value}
+        // prevent various type assistance functionalities
+        autoCorrect={false}
+        autoCapitalize='none'
+        contextMenuHidden
+        importantForAutofill='no' // android
+        textContentType='none' // ios
+        spellCheck={false}
+        // appearance
+        multiline={isMultiline}
+        maxLength={maxLength}
+        blurOnSubmit
+        style={inputStyle}
+        textAlign={textAlign}
+        // selectionColor
+        // keyboard
+        returnKeyType={props.hasNext ? 'next' : 'done'}
+        keyboardType={keyboardType}
+        // events
+        onPressIn={onPressIn ?? activateEdit}
+        onChangeText={setValue}
+        onEndEditing={handleSubmit}
+      />
+    )
+  }
 
   if (compare) {
     const openTooltip = () => {
+      console.debug('toggle')
       tooltipRef.current.toggleTooltip()
     }
 
@@ -147,20 +150,34 @@ export const ClozeRendererBlank = props => {
       )
     }
 
+    //return renderInput({ onPressIn: openTooltip })
+    const width = 150 + original.length * 6
+    const maxWidth = Layout.width() - 20 // incl. padding
+    const widthExceeded = width > maxWidth
+    const finalWidth = widthExceeded
+      ? maxWidth
+      : width
+    const height = widthExceeded
+      ? 150
+      : 100
+
     return (
+      <SafeAreaView>
       <Tooltip
         ref={tooltipRef}
-        height={100}
-        width={150 + original.length * 6}
+        height={height}
+        width={finalWidth}
         popover={<View style={styles.actionsContainer}>{renderTooltipContent()}</View>}
-        withOverlay
-        withPointer
+        withOverlay={true}
+        withPointer={true}
+        toggleOnPress={true}
         backgroundColor={Colors.dark}
         containerStyle={styles.tooltip}
         overlayColor={makeTransparent(Colors.white, 0.3)}
       >
         {renderInput({ onPressIn: openTooltip })}
-      </Tooltip>
+        </Tooltip>
+      </SafeAreaView>
     )
   }
 
@@ -170,20 +187,26 @@ export const ClozeRendererBlank = props => {
 
 const styles = createStyleSheet({
   input: {
-    ...Layout.input()
+    ...Layout.input(),
+    maxWidth: '85%'
   },
   correctResponse: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   text: {
     fontWeight: 'bold',
-    color: Colors.light
+    color: Colors.light,
+    flex: 1,
+    marginLeft: 10
   },
   actionsContainer: {
     width: '100%',
     height: '100%'
   },
-  tooltip: {}
+  tooltip: {
+    padding: 10
+  },
+  inputWrap: {}
 })
