@@ -30,7 +30,7 @@ echo "start building"
 
 echo "move build to $BUILD_PATH/$FILENAME"
 mkdir -p "$BUILD_PATH"
-mv ./app/build/outputs/apk/release/app-release.apk "$BUILD_PATH/$FILENAME"
+mv ./app/build/outputs/bundle/release/app-release.aab "$BUILD_PATH/$FILENAME"
 
 
 git restore ./src/lib/settings.json
