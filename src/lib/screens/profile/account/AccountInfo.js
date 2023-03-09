@@ -115,7 +115,7 @@ export const AccountInfo = (props) => {
     }
 
     actions.privacy = {
-      icon: 'shield',
+      icon: 'shield-alt',
       key: 'privacy',
       label: () => t('legal.privacy'),
       onPress: () => setModalContent(actions.privacy.modal),

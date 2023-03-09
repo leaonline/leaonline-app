@@ -120,4 +120,4 @@ const styles = createStyleSheet({
   imageActive: {
     opacity: 1.0
   }
-}, true)
+})

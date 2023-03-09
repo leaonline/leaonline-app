@@ -5,17 +5,17 @@ export const Achievements = {
 }
 
 Achievements.trophies = {
-  bronze: {
-    src: require('../assets/images/trophy-bronze.png'),
-    threshold: 0
-  },
   silver: {
     src: require('../assets/images/trophy-silver.png'),
-    threshold: 0.4
+    threshold: 0.33
   },
   gold: {
     src: require('../assets/images/trophy-gold.png'),
-    threshold: 0.7
+    threshold: 0.66
+  },
+  bronze: {
+    src: require('../assets/images/trophy-bronze.png'),
+    threshold: 0
   }
 }
 
