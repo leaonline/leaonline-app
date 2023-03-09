@@ -303,7 +303,9 @@ const getCellStyle = (hasTableBorder, cellBorder) => {
 
 const styles = createStyleSheet({
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 25,
+    marginBottom: 25
   },
   ttsContainer: {
     width: '100%',

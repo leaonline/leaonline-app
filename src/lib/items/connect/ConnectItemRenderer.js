@@ -56,7 +56,7 @@ const reducer = (prevState, nextState) => {
   }
 }
 
-export const ConnectItemRenderer2 = props => {
+export const ConnectItemRenderer = props => {
   const [state, dispatch] = useReducer(reducer, initialState(), undefined)
   const { selected, over, current } = state
 

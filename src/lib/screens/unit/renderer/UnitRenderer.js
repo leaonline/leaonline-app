@@ -57,7 +57,7 @@ export const UnitRenderer = props => {
     }
     if (status === 'hidden') {
       setKeyboardStatus('hidden')
-      scrollViewRef.current?.scrollToEnd({ animated: true })
+      // scrollViewRef.current?.scrollToEnd({ animated: true })
     }
   })
 

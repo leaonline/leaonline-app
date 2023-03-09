@@ -8,7 +8,6 @@ import { Tooltip } from 'react-native-elements'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { LeaText } from '../../components/LeaText'
-import { useBackHandler } from '../../hooks/useBackHandler'
 import { useKeyboardVisibilityHandler } from '../../hooks/useKeyboardVisibilityHandler'
 import { Layout } from '../../constants/Layout'
 
@@ -36,6 +35,7 @@ export const ClozeRendererBlank = props => {
   const tooltipRef = useRef(null)
   const { t } = useTranslation()
   const { Tts } = useTts()
+  const submitting = useRef(false)
   const [value, setValue] = useState('')
   const [editActive, setEditActive] = useState(false)
   const inputStyle = { ...styles.input }
@@ -59,10 +59,6 @@ export const ClozeRendererBlank = props => {
     setValue(null)
   }, [blanksId])
 
-  useBackHandler(() => {
-    onSubmit(value)
-  })
-
   let textAlign = 'center'
 
   if (hasPrefix && !hasSuffix) {
@@ -72,16 +68,24 @@ export const ClozeRendererBlank = props => {
     textAlign = 'right'
   }
 
-  const activateEdit = () => setEditActive(true)
+  const activateEdit = () => {
+    console.debug('edt active', blanksId)
+    setEditActive(true)
+  }
 
   useKeyboardVisibilityHandler(({ status }) => {
     if (status === 'hidden' && editActive) {
-      onSubmit(value)
       setEditActive(false)
+      handleSubmit()
     }
   })
 
-  const handleSubmit = () => onSubmit(value)
+  const handleBlur = () => {
+    setEditActive(false)
+  }
+  const handleSubmit = () => {
+    onSubmit(value)
+  }
 
   if (compare?.color) {
     inputStyle.backgroundColor = compare.color
@@ -131,13 +135,13 @@ export const ClozeRendererBlank = props => {
         onPressIn={onPressIn ?? activateEdit}
         onChangeText={setValue}
         onEndEditing={handleSubmit}
+        onBlur={handleBlur}
       />
     )
   }
 
   if (compare) {
     const openTooltip = () => {
-      console.debug('toggle')
       tooltipRef.current.toggleTooltip()
     }
 
@@ -188,7 +192,8 @@ export const ClozeRendererBlank = props => {
 const styles = createStyleSheet({
   input: {
     ...Layout.input(),
-    maxWidth: '85%'
+    maxWidth: '85%',
+    minWidth: 40
   },
   correctResponse: {
     flex: 1,
