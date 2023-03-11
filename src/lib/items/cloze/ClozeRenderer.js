@@ -159,7 +159,7 @@ export const ClozeRenderer = props => {
                 original={token.value}
                 style={blankStyle}
                 hasNext={hasNext}
-                isMultiline={true}
+                isMultiline
                 hasPrefix={token.hasPre}
                 hasSuffix={token.hasSuf}
                 pattern={tokenGroup.pattern}

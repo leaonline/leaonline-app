@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { KeyboardTypes } from '../utils/KeyboardTypes'
-import { Pressable, SafeAreaView, StatusBar, TextInput, View } from 'react-native'
+import { Pressable, StatusBar, TextInput, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Colors } from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
@@ -146,7 +146,7 @@ export const ClozeRendererBlank = props => {
       )
     })
 
-    //return renderInput({ onPressIn: openTooltip })
+    // return renderInput({ onPressIn: openTooltip })
     const width = 150 + original.length * 6
     const maxWidth = Layout.width() - 20 // incl. padding
     const widthExceeded = width > maxWidth
@@ -162,15 +162,15 @@ export const ClozeRendererBlank = props => {
       <Tooltip
         isVisible={showTooltip}
         content={<ToolTipContent />}
-        placement="top"
+        placement='top'
         showChildInTooltip={false}
         tooltipStyle={styles.tooltip}
         contentStyle={[styles.tooltipContent, contentStyle]}
         topAdjustment={-StatusBar.currentHeight}
         onClose={() => setShowTooltip(false)}
       >
-        <Pressable onPress={() => setShowTooltip(!showTooltip)}>
-          {renderInput({ onPressIn: () => {}})}
+        <Pressable accessibilityRole='button' onPress={() => setShowTooltip(!showTooltip)}>
+          {renderInput({ onPressIn: () => {} })}
         </Pressable>
       </Tooltip>
     )

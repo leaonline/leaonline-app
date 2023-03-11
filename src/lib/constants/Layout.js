@@ -8,9 +8,6 @@ const ratio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const isLarge = width * ratio > 1300
 
-console.debug(Dimensions.get('window'))
-console.debug(Dimensions.get('screen'))
-
 export const Layout = {}
 
 Layout.statusBarHeight = () => Constants.statusBarHeight
@@ -33,6 +30,9 @@ Layout.fontSize = () => 22
 
 Layout.windowScale = () => window.scale
 
+Layout.yOffset = () => window.height - height
+Layout.xOffset = () => window.width - width
+
 const defaultContainerMargin = isLarge
   ? '8%'
   : '3%'
@@ -50,8 +50,6 @@ Layout.content = () => {
     padding: 20
   }
 }
-
-
 
 /**
  * Default styles for (Text-) input

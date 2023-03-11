@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Modal, Pressable, ScrollView, StatusBar, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
@@ -88,22 +88,22 @@ export const ClozeRendererSelect = props => {
 
   const renderActions = () => {
     return (
-      <React.Fragment>
+      <>
         {props.options.map((option, index) => (
-        <ActionButton
-          key={index}
-          text={option}
-          color={color}
-          block
-          align='center'
-          containerStyle={styles.actionButton}
-          onPress={() => {
-            onSelect(option, index)
-            setShowTooltip(false)
-          }}
-        />
+          <ActionButton
+            key={index}
+            text={option}
+            color={color}
+            block
+            align='center'
+            containerStyle={styles.actionButton}
+            onPress={() => {
+              onSelect(option, index)
+              setShowTooltip(false)
+            }}
+          />
         ))}
-      </React.Fragment>
+      </>
     )
   }
 
@@ -134,7 +134,8 @@ export const ClozeRendererSelect = props => {
         <Pressable
           accessibilityRole='button'
           style={pressStyles}
-          onPress={onActivate}>
+          onPress={onActivate}
+        >
           <LeaText style={styles.label}>{label}</LeaText>
         </Pressable>
       </>
@@ -158,14 +159,14 @@ export const ClozeRendererSelect = props => {
     <Tooltip
       isVisible={showTooltip}
       content={renderTooltipContent()}
-      placement="top"
+      placement='top'
       showChildInTooltip={false}
       tooltipStyle={styles.tooltip}
       contentStyle={[styles.tooltipContent, contentStyle]}
       topAdjustment={-StatusBar.currentHeight}
       onClose={() => setShowTooltip(false)}
     >
-      <Pressable onPress={onActivate}>
+      <Pressable accessibilityRole='button' onPress={onActivate}>
         <View style={pressStyles}>
           <LeaText style={styles.label}>{label}</LeaText>
         </View>
