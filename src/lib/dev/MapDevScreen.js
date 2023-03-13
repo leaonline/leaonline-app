@@ -1,9 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-
 import { ConnectItemRenderer } from '../items/connect/ConnectItemRenderer'
 import { Colors } from '../constants/Colors'
-import { useTts } from '../components/Tts'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
 
@@ -11,7 +9,8 @@ const data = {
   value: {
     left: [
       { text: 'z.B. 1000 g' },
-      { text: 'z.B. 10000 g' }
+      { text: 'z.B. 10000 g' },
+      { text: 'Im ..... ist Materialstau.' }
     ],
     right: [
       { text: 'z.B. 10 kg' },
@@ -21,22 +20,18 @@ const data = {
 }
 
 export const MapDevScreen = () => {
-  const { Tts } = useTts()
+  const submitResponse = () => {}
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <ConnectItemRenderer value={data.value} dimensionColor={Colors.success} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Tts text='hallo' block />
-      </View>
+      <ConnectItemRenderer value={data.value} dimensionColor={Colors.success} submitResponse={submitResponse} />
     </View>
   )
 }
 
 const styles = createStyleSheet({
   container: {
-    ...Layout.container()
+    ...Layout.container(),
+    height: '100%'
   },
   root: {
     ...Layout.container(),
@@ -45,6 +40,7 @@ const styles = createStyleSheet({
     margin: 0,
     borderColor: '#f00'
   },
+  section: { flex: 1 },
   dot: {
     width: 4,
     height: 4,

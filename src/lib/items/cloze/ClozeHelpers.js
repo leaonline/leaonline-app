@@ -16,7 +16,8 @@ ClozeHelpers.isEmptyCell = value => value === '<<>>'
 
 const scorable = [
   Cloze.flavor.blanks.value,
-  Cloze.flavor.select.value
+  Cloze.flavor.select.value,
+  Cloze.flavor.empty.value
 ]
 
 ClozeHelpers.isScoreableFlavor = flavor => scorable.includes(flavor)

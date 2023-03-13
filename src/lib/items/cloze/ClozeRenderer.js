@@ -163,7 +163,6 @@ export const ClozeRenderer = props => {
                 hasPrefix={token.hasPre}
                 hasSuffix={token.hasSuf}
                 pattern={tokenGroup.pattern}
-                onSubmit={() => {}}
               />
             )
           }

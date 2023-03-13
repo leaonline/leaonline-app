@@ -335,9 +335,11 @@ export const ConnectItemRenderer = props => {
         >
           <View style={nodeStyle}>
             <LeaText
-              fitSize={true}
+              fitSize
               autoScale={false}
-              style={isSelected ? styles.textSelected : styles.text}>{text}</LeaText>
+              style={isSelected ? styles.textSelected : styles.text}
+            >{text}
+            </LeaText>
           </View>
           <View
             style={styles.dot}
@@ -442,8 +444,11 @@ export const ConnectItemRenderer = props => {
             onLayout={(event) => onDotLayout(event, index, false)}
           />
           <View style={nodeStyle}>
-            <LeaText fitSize={true} autoScale={false}
-                     style={isSelected ? styles.textSelected : styles.text}>{text}</LeaText>
+            <LeaText
+              fitSize autoScale={false}
+              style={isSelected ? styles.textSelected : styles.text}
+            >{text}
+            </LeaText>
           </View>
         </Pressable>
       )
@@ -555,7 +560,7 @@ const styles = createStyleSheet({
     borderRadius: 15
   },
   textSelected: {
-    color: Colors.white,
+    color: Colors.white
   },
   text: {
   },

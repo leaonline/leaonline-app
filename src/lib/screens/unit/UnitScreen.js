@@ -173,69 +173,83 @@ export const UnitScreen = props => {
       : props.navigation.navigate('complete')
   }
 
+  // response submission is associated with the
+  // current page and contentId to support multiple
+  // items per page
   const submitResponse = async ({ responses, data }) => {
-    log('item submit', data.contentId, responses)
-    responseRef.current[page] = { responses, data }
+    const { contentId } = data
+
+    responseRef.current[page] = responseRef.current[page] ?? {}
+    responseRef.current[page][contentId] = { responses, data }
   }
+
+  const allTrueValues = []
+  let counts = 0
+  let scores = 0
 
   const checkScore = async () => {
     // get scoring method
-    const currentResponse = responseRef.current[page]
-    log('check score', { currentResponse })
+    const allResponses = Object.values(responseRef.current[page])
 
-    const checked = await checkResponse({ currentResponse })
-    scoreRef.current[page] = checked.scoreResult
+    for (const currentResponse of allResponses) {
+      log('check score', { currentResponse })
+
+      const checked = await checkResponse({ currentResponse })
+
+      // score refs also need to save by page and contentId
+      // to support multiple items per page
+      scoreRef.current[page][currentResponse.data.contentId] = checked.scoreResult
+      allTrueValues.push(checked.allTrue)
+
+      // submit everything to the servers
+      const responseDoc = {}
+      responseDoc.sessionId = sessionDoc._id
+      responseDoc.unitSetId = unitSetDoc._id
+      responseDoc.unitId = unitDoc._id
+      responseDoc.dimensionId = dimension._id
+      responseDoc.page = page
+      responseDoc.itemId = currentResponse.data.contentId
+      responseDoc.itemType = currentResponse.data.subtype
+      responseDoc.scores = checked.scoreResult.map(entry => {
+        // some items score single values, others multiple
+        // some items have single competencies, others multiple
+        // we therefore make all these properties to arrays
+        // to comply with the server's defined schema
+        const copy = { ...entry }
+        copy.competency = toArrayIfNot(copy.competency)
+        copy.correctResponse = toArrayIfNot(copy.correctResponse)
+        copy.value = toArrayIfNot(copy.value)
+        return copy
+      })
+
+      responseDoc.scores.forEach(entry => {
+        counts += entry.competency.length
+        scores += entry.score === true
+          ? entry.competency.length
+          : 0
+      })
+
+      try {
+        log('submit response to server', responseDoc)
+        await sendResponse({ responseDoc })
+      }
+      catch (e) {
+        log(e.message)
+      }
+    }
+
     dispatch({
       type: 'scored',
-      allTrue: checked.allTrue,
+      allTrue: allTrueValues.every(value => value === true),
       scored: page
-    })
-
-    // submit everything (in the background)
-    const responseDoc = {}
-    responseDoc.sessionId = sessionDoc._id
-    responseDoc.unitSetId = unitSetDoc._id
-    responseDoc.unitId = unitDoc._id
-    responseDoc.dimensionId = dimension._id
-    responseDoc.page = page
-    responseDoc.itemId = currentResponse.data.contentId
-    responseDoc.itemType = currentResponse.data.subtype
-    responseDoc.scores = checked.scoreResult.map(entry => {
-      // some items score single values, others multiple
-      // some items have single competencies, others multiple
-      // we therefore make all these properties to arrays
-      // to comply with the server's defined schema
-      const copy = { ...entry }
-      copy.competency = toArrayIfNot(copy.competency)
-      copy.correctResponse = toArrayIfNot(copy.correctResponse)
-      copy.value = toArrayIfNot(copy.value)
-      return copy
-    })
-
-    let count = 0
-    let scored = 0
-
-    responseDoc.scores.forEach(entry => {
-      count += entry.competency.length
-      scored += entry.score === true
-        ? entry.competency.length
-        : 0
     })
 
     const prevCompetencies = session.competencies
     const competencies = {
       max: prevCompetencies.max,
-      count: prevCompetencies.count + count,
-      scored: prevCompetencies.scored + scored,
+      count: prevCompetencies.count + counts,
+      scored: prevCompetencies.scored + scores,
       percent: prevCompetencies.percent
-    }
-
-    try {
-      log('submit response to server', responseDoc)
-      await sendResponse({ responseDoc })
-    }
-    catch (e) {
-      log(e.message)
     }
 
     return sessionActions.update({ competencies })

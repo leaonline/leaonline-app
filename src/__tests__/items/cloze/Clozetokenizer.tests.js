@@ -553,7 +553,7 @@ Das Doppelte: || {{blanks$[82]$}} || 52  || {{blanks$[38]$}} || 42 || 88`
 
 <<>> || {{blanks$[8]$$cellBorder=top&pattern=0123456789}} || {{blanks$[6]$$cellBorder=top&pattern=0123456789}}`
       const { tokens, tokenIndexes } = ClozeTokenizer.tokenize({ text, isTable: true })
-      expect(tokenIndexes).toEqual([0, 1])
+      expect(tokenIndexes).toEqual([0, 1, 2])
       expect(tokens).toEqual([
         // 1. row
         [
@@ -610,9 +610,11 @@ Das Doppelte: || {{blanks$[82]$}} || 52  || {{blanks$[38]$}} || 42 || 88`
             tts: '',
             value: [
               {
-                // empties should not have an
-                // itemIndex as they are considered
-                // non-grade-able
+                // empties need an
+                // itemIndex because scoring
+                // references targets by index
+                // that includes empties
+                itemIndex: 0,
                 flavor: Cloze.flavor.empty.value,
                 hasPre: false,
                 hasSuf: false,
@@ -649,7 +651,7 @@ Das Doppelte: || {{blanks$[82]$}} || 52  || {{blanks$[38]$}} || 42 || 88`
             tts: '',
             value: [
               {
-                itemIndex: 0,
+                itemIndex: 1,
                 flavor: Cloze.flavor.blanks.value,
                 hasPre: false,
                 hasSuf: false,
@@ -671,7 +673,7 @@ Das Doppelte: || {{blanks$[82]$}} || 52  || {{blanks$[38]$}} || 42 || 88`
             tts: '',
             value: [
               {
-                itemIndex: 1,
+                itemIndex: 2,
                 flavor: Cloze.flavor.blanks.value,
                 hasPre: false,
                 hasSuf: false,

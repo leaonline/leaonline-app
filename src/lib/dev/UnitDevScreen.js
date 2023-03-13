@@ -63,16 +63,25 @@ export const UnitDevScreen = props => {
   const dimensionColor = getDimensionColor(dimension)
 
   const submitResponse = async ({ responses, data }) => {
-    responseRef.current[page] = { responses, data }
+    responseRef.current[page] = responseRef.current[page] ?? {}
+    responseRef.current[page][data.contentId] = { responses, data }
   }
 
   const checkScore = async () => {
-    const currentResponse = responseRef.current[page]
-    const checked = await checkResponse({ currentResponse })
-    scoreRef.current[page] = checked.scoreResult
+    scoreRef.current[page] = scoreRef.current[page] ?? {}
+
+    const allResponses = Object.values(responseRef.current[page])
+    const allTrue = []
+    for (const currentResponse of allResponses) {
+      const checked = await checkResponse({ currentResponse })
+
+      scoreRef.current[page][currentResponse.data.contentId] = checked.scoreResult
+      allTrue.push(checked.allTrue)
+    }
+
     dispatch({
       type: 'scored',
-      allTrue: checked.allTrue,
+      allTrue: allTrue.every(value => value === true),
       scored: page
     })
   }

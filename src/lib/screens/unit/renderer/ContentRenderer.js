@@ -36,7 +36,12 @@ export const ContentRenderer = props => {
     if (element.type === 'item') {
       elementData.submitResponse = submitResponse
       elementData.showCorrectResponse = showCorrectResponse
-      elementData.scoreResult = showCorrectResponse && scoreResult
+
+      // the score result needs to be resolved by contentId
+      // since there may be more than one item on a page
+      if (showCorrectResponse) {
+        elementData.scoreResult = scoreResult[elementData.contentId]
+      }
     }
 
     // all other elements are simply "display" elements
