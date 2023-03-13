@@ -334,7 +334,10 @@ export const ConnectItemRenderer = props => {
           onPress={() => onPressLeft({ id: index })}
         >
           <View style={nodeStyle}>
-            <LeaText style={isSelected ? styles.textSelected : undefined}>{text}</LeaText>
+            <LeaText
+              fitSize={true}
+              autoScale={false}
+              style={isSelected ? styles.textSelected : styles.text}>{text}</LeaText>
           </View>
           <View
             style={styles.dot}
@@ -439,7 +442,8 @@ export const ConnectItemRenderer = props => {
             onLayout={(event) => onDotLayout(event, index, false)}
           />
           <View style={nodeStyle}>
-            <LeaText style={isSelected ? styles.textSelected : undefined}>{text}</LeaText>
+            <LeaText fitSize={true} autoScale={false}
+                     style={isSelected ? styles.textSelected : styles.text}>{text}</LeaText>
           </View>
         </Pressable>
       )
@@ -513,6 +517,7 @@ const styles = createStyleSheet({
   },
   centerContainer: {
     flex: 1,
+    maxWidth: '15%',
     flexDirection: 'column',
     flexGrow: 1,
     alignItems: 'center',
@@ -527,7 +532,7 @@ const styles = createStyleSheet({
     paddingTop: 10,
     paddingBottom: 10,
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
     backgroundColor: Colors.transparent,
     borderColor: Colors.secondary,
@@ -550,7 +555,9 @@ const styles = createStyleSheet({
     borderRadius: 15
   },
   textSelected: {
-    color: Colors.white
+    color: Colors.white,
+  },
+  text: {
   },
   textElement: {}
 })
