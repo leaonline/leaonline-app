@@ -119,4 +119,3 @@ ServiceRegistry.register(Field)
 const methods = Object.values(ServiceRegistry.methods)
 methods.forEach(method => createMethod(method))
 rateLimitMethods(methods)
-

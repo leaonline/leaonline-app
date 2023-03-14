@@ -104,9 +104,12 @@ SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',
   schema: {},
   run: onServerExec(function () {
-    return function ({ names }) {
+    return function () {
       const syncDoc = {}
-      const docs = SyncState.get({ names: getAppContexts() })
+      const names = getAppContexts()
+      console.debug('[SyncState]: get hashes', names)
+
+      const docs = SyncState.get({ names })
       docs.forEach(doc => {
         syncDoc[doc.name] = doc
       })
@@ -122,6 +125,7 @@ SyncState.methods.getDocs = {
   },
   run: onServerExec(function () {
     return function ({ name }) {
+      console.debug('[SyncState]: get', name)
       SyncState.validate([name])
       const collection = getCollection(name)
       if (!collection) {

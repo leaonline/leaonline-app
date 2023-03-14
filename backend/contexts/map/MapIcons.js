@@ -1,5 +1,6 @@
 import { Field } from '../content/Field'
 import { getCollection } from '../../api/utils/getCollection'
+import { SyncState } from '../sync/SyncState'
 
 export const MapIcons = {
   name: 'mapIcons',
@@ -31,7 +32,9 @@ MapIcons.methods.insert = {
   schema: MapIcons.schema,
   backend: true,
   run: function ({ fieldId, icons }) {
-    return getCollection(MapIcons.name).insert({ fieldId, icons })
+    const docId = getCollection(MapIcons.name).insert({ fieldId, icons })
+    SyncState.update(MapIcons.name)
+    return docId
   }
 }
 
@@ -45,7 +48,11 @@ MapIcons.methods.update = {
   },
   backend: true,
   run: function ({ _id, fieldId, icons }) {
-    return getCollection(MapIcons.name).update({ _id }, { fieldId, icons })
+    const updated = getCollection(MapIcons.name).update({ _id }, {
+      $set: { fieldId, icons }
+    })
+    SyncState.update(MapIcons.name)
+    return updated
   }
 }
 
@@ -55,17 +62,19 @@ MapIcons.methods.remove = {
     _id: String
   },
   run: function ({ _id }) {
-    return getCollection(MapIcons.name).remove({ _id })
+    const removed = getCollection(MapIcons.name).remove({ _id })
+    SyncState.update(MapIcons.name)
+    return removed
   }
 }
 
 MapIcons.methods.get = {
   name: 'mapIcons.methods.get',
   schema: {
-    fieldId: String
+    _id: String
   },
-  run: function ({ fieldId }) {
-    return getCollection(MapIcons.name).findOne({ fieldId })
+  run: function ({ _id }) {
+    return getCollection(MapIcons.name).findOne({ _id })
   }
 }
 
