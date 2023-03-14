@@ -126,6 +126,7 @@ src/lib/assets/linked/
 
 # deployment folders
 src/.deploy
+.deploy
 
 # android keystores
 .keystore

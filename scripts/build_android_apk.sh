@@ -31,4 +31,4 @@ mkdir -p "$BUILD_PATH"
 mv ./app/build/outputs/apk/release/app-release.apk "$BUILD_PATH/$FILENAME"
 
 
-git restore ./src/lib/settings.json
+git restore src/lib/settings.json
