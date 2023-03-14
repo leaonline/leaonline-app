@@ -10,11 +10,12 @@ import { MapIcons } from '../contexts/MapIcons'
 import { Order } from '../contexts/Order'
 import { Achievements } from '../contexts/Achievements'
 import { Legal } from '../contexts/Legal'
+import { UserProgress } from '../contexts/UserProgress'
 
 const log = Log.create('startup')
 
 export const initContexts = async () => {
-  const allContexts = [Field, Dimension, Level, Legal, Sync, Feedback, MapIcons, Order, Achievements]
+  const allContexts = [Field, Dimension, Level, Legal, Sync, Feedback, MapIcons, Order, Achievements, UserProgress]
 
   for (const context of allContexts) {
     // in dev mode we may face the situation, where we fast-reload

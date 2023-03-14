@@ -172,6 +172,14 @@ Sync.syncContext = async ({ name, collection, storage }) => {
   debug('syncContext received', docs?.length, 'docs')
   if (Array.isArray(docs) && docs.length > 0) {
     const ids = new Set()
+    collection.find().forEach(doc => {
+      debug('remove', doc._id)
+      collection.remove({ _id: doc._id })
+    })
+
+    if (collection.find().count() > 0) {
+      throw new Error('Collection is not clean')
+    }
 
     docs.forEach(doc => {
       ids.add(doc._id)
@@ -186,9 +194,10 @@ Sync.syncContext = async ({ name, collection, storage }) => {
 
     const removed = collection.remove({ _id: { $nin: [...ids] } })
     debug('removed', removed, 'outdated docs')
+    const count = collection.find().count()
 
-    if (collection.find().count() !== docs.length) {
-      throw new Error(`Expected ${name} collection to be in sync by ${docs.length} docs!`)
+    if (count !== docs.length) {
+      throw new Error(`Expected ${name} collection to be in sync by ${docs.length} docs, got ${count}!`)
     }
 
     await storage.saveFromCollection()

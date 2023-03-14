@@ -45,7 +45,9 @@ export const Stage = props => {
   const viewBox = `0 0 ${width} ${height}`
 
   useEffect(() => {
-    const diamondData = props.dimensionOrder.map(_id => {
+    let hasFifth = false
+
+    const diamondData = props.dimensionOrder.map((_id, index) => {
       const key = `stage-${props.text}-${_id}`
       const unitSet = props.unitSets.find(u => {
         const dimension = props.dimensions[u.dimension]
@@ -53,7 +55,12 @@ export const Stage = props => {
       })
 
       if (unitSet) {
+        if (index > competencies.length -1) {
+          hasFifth = true
+        }
+
         return {
+          unitSet: unitSet.code,
           color: ColorTypeMap.get(props.dimensions[unitSet.dimension].colorType),
           competencies: Math.round(((unitSet.userCompetencies || 0) / unitSet.competencies) * 100),
           key
@@ -66,6 +73,10 @@ export const Stage = props => {
         key
       }
     })
+
+    if (hasFifth) {
+      diamondData.shift()
+    }
 
     setDiamonds(diamondData)
     setPressed(false)
@@ -149,7 +160,7 @@ const RenderStageContent = ({ width, height, viewBox, stageProgress, text, progr
       </G>
       {
         competencies.map(({ x, y }, index) => {
-          const { color, competencies, key } = diamonds[index] || {
+          const { color, competencies, key } = diamonds[index] ?? {
             color: Colors.light,
             competencies: 0,
             key: index
