@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { Colors } from '../../constants/Colors'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ClozeTokenizer } from './ClozeTokenizer'
@@ -17,6 +17,16 @@ import { createScoringSummaryForInput } from './createScoringSummaryForInput'
 
 const debug = Log.create('ClozeRenderer', 'debug', true)
 
+/**
+ *
+ * @param props {object}
+ * @param props.dimensionColor {string}
+ * @param props.contentId {string}
+ * @param props.value {object}
+ * @param props.submitResponse {function}
+ * @return {JSX.Element}
+ * @constructor
+ */
 export const ClozeRenderer = props => {
   const { dimensionColor, contentId, value } = props
   const [entered, setEntered] = useState({})
@@ -163,6 +173,7 @@ export const ClozeRenderer = props => {
                 hasPrefix={token.hasPre}
                 hasSuffix={token.hasSuf}
                 pattern={tokenGroup.pattern}
+                onSubmit={() => {}}
               />
             )
           }
@@ -204,16 +215,21 @@ export const ClozeRenderer = props => {
     }
     else if (!entry.isCellSkip) {
       return (
-        <LeaText>{entry.value}</LeaText>
+        <LeaText
+          fitSize
+          numberOfLines={1}
+          style={styles.cellText}
+        >{entry.value}
+        </LeaText>
       )
     }
     else {
-      return (<LeaText />)
+      return (<LeaText style={styles.cellSkip} />)
     }
   }
 
   if (isTable) {
-    return (
+    const renderTable = () => (
       <View style={[styles.container, props.style]}>
         {tokens.map((row, rowIndex) => {
           return (
@@ -232,6 +248,27 @@ export const ClozeRenderer = props => {
           )
         })}
       </View>
+    )
+
+    let isBigTable = false
+    tokens.forEach(row => {
+      if (row.length >= 8) {
+        isBigTable = true
+      }
+    })
+
+    if (!isBigTable) {
+      return renderTable()
+    }
+
+    return (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator
+        persistentScrollbar
+      >
+        {renderTable()}
+      </ScrollView>
     )
   }
 
@@ -384,7 +421,9 @@ const styles = createStyleSheet({
   cell: {
     padding: 5,
     flex: 1,
+    width: 45,
     flexGrow: 1,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -399,5 +438,18 @@ const styles = createStyleSheet({
   cellBorderBottom: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.gray
+  },
+  hscroll: {
+    flex: 0,
+    flexDirection: 'column',
+    borderColor: '#0f0',
+    borderWidth: 1,
+    height: '100%'
+  },
+  cellText: {
+    borderColor: '#0f0'
+  },
+  cellSkip: {
+    borderColor: '#f0f'
   }
 })
