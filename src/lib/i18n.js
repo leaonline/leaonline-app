@@ -136,7 +136,10 @@ const resources = {
     },
     legal: {
       paragraph: 'Paragraph',
-      paragraphen: 'Paragraphs'
+      paragraphen: 'Paragraphs',
+      privacy: 'Privacy',
+      terms: 'Terms and Conditions',
+      imprint: 'Imprint'
     },
     syncScreen: {
       syncing: 'Syncing data',
@@ -270,7 +273,10 @@ const resources = {
     },
     legal: {
       paragraph: 'Paragraph',
-      paragraphen: 'Paragraphen'
+      paragraphen: 'Paragraphen',
+      privacy: 'Datenschutz',
+      terms: 'Nutzungs\u00ADbedingungen',
+      imprint: 'Impressum'
     },
     syncScreen: {
       syncing: 'Aktualisiere daten',

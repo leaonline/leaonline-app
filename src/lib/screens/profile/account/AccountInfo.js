@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react'
-import { View, Modal } from 'react-native'
+import { View, Modal, ScrollView } from 'react-native'
 import { useTts } from '../../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { ActionButton } from '../../../components/ActionButton'
@@ -134,6 +134,47 @@ export const AccountInfo = (props) => {
       }
     }
 
+    actions.terms = {
+      icon: 'handshake',
+      key: 'terms',
+      label: () => t('legal.terms'),
+      onPress: () => setModalContent(actions.terms.modal),
+      modal: {
+        scrollable: true,
+        body: () => {
+          return (
+            <MarkdownRenderer value={docs.data.legal.terms} />
+          )
+        },
+        deny: {
+          icon: 'times',
+          label: () => t('actions.close'),
+          handler: () => setModalContent(null)
+        }
+      }
+    }
+
+    actions.imprint = {
+      icon: 'certificate',
+      key: 'imprint',
+      label: () => t('legal.imprint'),
+      onPress: () => setModalContent(actions.imprint.modal),
+      modal: {
+        scrollable: true,
+        body: () => {
+          return (
+            <MarkdownRenderer value={docs.data.legal.imprint} />
+          )
+        },
+        deny: {
+          icon: 'times',
+          label: () => t('actions.close'),
+          handler: () => setModalContent(null)
+        }
+      }
+    }
+
+
     return Object.values(actions)
   }, [docs.data])
 
@@ -142,6 +183,13 @@ export const AccountInfo = (props) => {
   const renderModal = () => {
     const visible = !!modalContent
     const content = modalContent ?? {}
+
+    const renderModalContent = () => (
+      <View style={styles.modalContent}>
+        {content.instructions && (<Tts align='flex-start' text={content.instructions()} block style={styles.modalInstructions} />)}
+        {content.body ? content.body() : null}
+      </View>
+    )
 
     return (
       <Modal
@@ -152,10 +200,15 @@ export const AccountInfo = (props) => {
         style={styles.modal}
       >
         <View style={styles.modalBody}>
-          <View style={styles.modalContent}>
-            {content.instructions && (<Tts align='flex-start' text={content.instructions()} block style={styles.modalInstructions} />)}
-            {content.body ? content.body() : null}
-          </View>
+          {
+            content.scrollable
+              ? (
+                <ScrollView showsVerticalScrollIndicator={true} persistentScrollbar={true}>
+                  {renderModalContent()}
+                </ScrollView>
+              )
+              : renderModalContent()
+          }
           <View style={styles.actions}>
             {content.approve && (
               <ActionButton
