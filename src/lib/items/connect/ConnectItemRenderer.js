@@ -237,7 +237,7 @@ export const ConnectItemRenderer = props => {
     // example:
     // select left 1 and right 0 and 2 results in
     // '1,0,2'
-    Object.entries(selected).forEach(([left, allRight]) => {
+    Object.entries(current).forEach(([left, allRight]) => {
       const right = allRight.join(',')
       const value = `${left},${right}`
       responses.push(value)

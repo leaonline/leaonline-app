@@ -1,25 +1,39 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { View } from 'react-native'
 import { Colors } from '../constants/Colors'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
-import { ClozeRenderer } from '../items/cloze/ClozeRenderer'
+import { ConnectItemRenderer } from '../items/connect/ConnectItemRenderer'
 
-const clozeData = {
-  text: '2 || 7 || 2 || 2 || : || 9 || = || {{blanks$[3]$$pattern=0123456789}} || {{blanks$[0]$$pattern=0123456789}} || {{blanks$[2]$$pattern=0123456789}}  ||Rest || {{blanks$[4]$$pattern=0123456789}}\n\n{{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>>|| <<>> || <<>> \n\n\n{{empty$[e]$$pattern=0123456789}} || {{empty$[e]$$pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>> || <<>>|| <<>>|| <<>> \n\n{{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || {{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>> || <<>> || <<>> || <<>> \n\n<<>> ||{{empty$[e]$$pattern=0123456789}} || {{empty$[e]$$pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>>|| <<>> || <<>> \n\n<<>> ||{{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || {{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>> || <<>> || <<>> \n\n<<>> || <<>> || {{empty$[e]$$pattern=0123456789}} || {{empty$[e]$$pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>> || <<>> \n<<>> || <<>> || {{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || {{empty$[e]$$cellBorder=bottom&pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>>|| <<>> || <<>> \n\n<<>> || <<>> ||<<>> || {{empty$[e]$$pattern=0123456789}} || <<>> || <<>> || <<>> || <<>> || <<>>|| <<>> || <<>>',
-  isTable: true,
-  hasTableBorder: false,
-  scoring: []
+const data = {
+  value: {
+    left: [
+      { text: 'z.B. 1000 g' },
+      { text: 'z.B. 10000 g' },
+      { text: 'Im ..... ist Materialstau.' }
+    ],
+    right: [
+      { text: 'z.B. 10 kg' },
+      { text: 'z.B. 1 kg' }
+    ]
+  }
 }
-
 export const MapDevScreen = () => {
+  const responseRef = useRef({})
+  const page = 0
+
+  const submitResponse = async ({ responses, data }) => {
+    responseRef.current[page] = responseRef.current[page] ?? {}
+    responseRef.current[page][data.contentId] = { responses, data }
+  }
+
   return (
-    <View style={styles.container}>
-      <ClozeRenderer
-        value={clozeData}
+    <View style={styles.connectContainer}>
+      <ConnectItemRenderer
+        contentId='132465'
+        value={data.value}
+        submitResponse={submitResponse}
         dimensionColor='#0ff'
-        contentId='123213213'
-        submitResponse={() => {}}
       />
     </View>
   )
@@ -28,7 +42,12 @@ export const MapDevScreen = () => {
 const styles = createStyleSheet({
   container: {
     flex: 1,
-    margin: 20
+    margin: 20,
+    height: 200
+  },
+  connectContainer: {
+    ...Layout.container(),
+    height: '100%'
   },
   root: {
     ...Layout.container(),
@@ -57,4 +76,4 @@ const styles = createStyleSheet({
     borderColor: '#ff0',
     borderWidth: 1
   }
-})
+}, true)

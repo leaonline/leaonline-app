@@ -10,6 +10,7 @@ import { Colors } from '../constants/Colors'
 import { ActivityIndicator, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { getDimensionColor } from '../screens/unit/getDimensionColor'
+import { Log } from '../infrastructure/Log'
 
 const initialState = () => ({
   page: 0,
@@ -71,6 +72,7 @@ export const UnitDevScreen = props => {
     scoreRef.current[page] = scoreRef.current[page] ?? {}
 
     const allResponses = Object.values(responseRef.current[page])
+    Log.print(allResponses.map(r => r.responses))
     const allTrue = []
     for (const currentResponse of allResponses) {
       const checked = await checkResponse({ currentResponse })
