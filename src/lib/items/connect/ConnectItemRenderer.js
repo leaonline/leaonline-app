@@ -10,6 +10,7 @@ import { Colors } from '../../constants/Colors'
 import { Svg, Path, Circle } from 'react-native-svg'
 import { UndefinedScore } from '../../scoring/UndefinedScore'
 import { clearObject } from '../../utils/object/clearObject'
+import { ImageRenderer } from '../../components/renderer/media/ImageRenderer'
 
 /**
  * Renders a connect item, where users have to connect
@@ -307,7 +308,7 @@ export const ConnectItemRenderer = props => {
   }
 
   const renderLeftElements = () => {
-    return props.value.left.map(({ text }, index) => {
+    return props.value.left.map(({ text, image }, index) => {
       const nodeId = `left-${index}`
       const isActive = active === index && !props.showCorrectResponse
       const isSelected = index in selected && !props.showCorrectResponse
@@ -326,6 +327,8 @@ export const ConnectItemRenderer = props => {
         nodeStyle.push(highlightedStyle)
       }
 
+
+
       return (
         <Pressable
           accessibilityRole='button'
@@ -334,12 +337,11 @@ export const ConnectItemRenderer = props => {
           onPress={() => onPressLeft({ id: index })}
         >
           <View style={nodeStyle}>
-            <LeaText
-              fitSize
-              autoScale={false}
-              style={isSelected ? styles.textSelected : styles.text}
-            >{text}
-            </LeaText>
+            {
+              image
+                ? renderImage({ isSelected, image })
+                : renderText({ isSelected, text })
+            }
           </View>
           <View
             style={styles.dot}
@@ -415,7 +417,7 @@ export const ConnectItemRenderer = props => {
   }
 
   const renderRightElements = () => {
-    return props.value.right.map(({ text }, index) => {
+    return props.value.right.map(({ text, image }, index) => {
       const nodeId = `right-${index}`
       const nodeStyle = [styles.node]
       const isSelected = (
@@ -444,11 +446,11 @@ export const ConnectItemRenderer = props => {
             onLayout={(event) => onDotLayout(event, index, false)}
           />
           <View style={nodeStyle}>
-            <LeaText
-              fitSize autoScale={false}
-              style={isSelected ? styles.textSelected : styles.text}
-            >{text}
-            </LeaText>
+            {
+              image
+                ? renderImage({ isSelected, image })
+                : renderText({ isSelected, text })
+            }
           </View>
         </Pressable>
       )
@@ -470,6 +472,25 @@ export const ConnectItemRenderer = props => {
         </View>
       </View>
     </View>
+  )
+}
+
+const renderText = ({ isSelected, text }) => (
+  <LeaText
+    fitSize
+    autoScale={false}
+    style={isSelected ? styles.textSelected : styles.text}
+  >{text}
+  </LeaText>
+)
+
+const renderImage = ({ isSelected, image }) => {
+  return (
+    <ImageRenderer
+      width={25}
+      style={isSelected ? styles.imageSelected : styles.image }
+      value={image}
+    />
   )
 }
 
@@ -564,5 +585,11 @@ const styles = createStyleSheet({
   },
   text: {
   },
-  textElement: {}
+  textElement: {},
+  image: {
+    width: '100%'
+  },
+  imageSelected: {
+    width: '100%',
+  }
 })

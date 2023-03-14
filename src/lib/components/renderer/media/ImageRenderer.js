@@ -9,6 +9,15 @@ import { mergeStyles } from '../../../styles/mergeStyles'
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug', true)
 
+/**
+ * Renders an image by given value
+ * @param props {object}
+ * @param props.width {string|number}
+ * @param props.value {string} url
+ * @param props.style {object=} optional styles
+ * @return {JSX.Element|null}
+ * @constructor
+ */
 export const ImageRenderer = props => {
   const widthRatio = props.width
     ? Number.parseInt(props.width) / 12
@@ -31,7 +40,7 @@ export const ImageRenderer = props => {
     // other potential events:
     // onLayout: event => console.debug('layout', event.nativeEvent),
     // onProgress:event => console.debug('progress', event.nativeEvent),
-    style: mergeStyles(styles.image, { width: win.width * widthRatio }),
+    style: mergeStyles(styles.image, { width: win.width * widthRatio }, props.style),
     resizeMethod: 'auto'
   }
 
