@@ -97,7 +97,7 @@ export const CompleteScreen = props => {
     })
 
     // clear the navigation stack and move to the map
-    props.navigation.navigate('map')
+    props.navigation.navigate('dimension')
   }
 
   const renderPhrase = () => {
