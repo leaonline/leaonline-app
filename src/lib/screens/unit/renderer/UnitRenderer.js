@@ -36,6 +36,7 @@ export const UnitRenderer = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const scrollViewRef = useRef()
+  const lastScrollPos = useRef({ x: 0, y: 0 }).current
 
   const {
     unitDoc,
@@ -58,8 +59,19 @@ export const UnitRenderer = props => {
     if (status === 'hidden') {
       setKeyboardStatus('hidden')
       // scrollViewRef.current?.scrollToEnd({ animated: true })
+      scrollViewRef.current?.scrollTo({
+        x: lastScrollPos.x,
+        y: lastScrollPos.y,
+        animated: true
+      })
     }
   })
+
+  const updateLastScrollPos = e => {
+    const { contentOffset } = e.nativeEvent
+    lastScrollPos.x = contentOffset.x
+    lastScrollPos.y = contentOffset.y
+  }
 
   // we want to have our cards appearing in intervals
   useEffect(() => {
@@ -153,6 +165,7 @@ export const UnitRenderer = props => {
   return (
     <ScrollView
       ref={scrollViewRef}
+      onMomentumScrollEnd={updateLastScrollPos}
       contentContainerStyle={styles.scrollView}
       persistentScrollbar
       keyboardShouldPersistTaps='always'

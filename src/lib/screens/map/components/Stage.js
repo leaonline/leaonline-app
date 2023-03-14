@@ -55,7 +55,7 @@ export const Stage = props => {
       })
 
       if (unitSet) {
-        if (index > competencies.length -1) {
+        if (index > competencies.length - 1) {
           hasFifth = true
         }
 
