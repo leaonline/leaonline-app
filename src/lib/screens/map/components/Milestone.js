@@ -69,5 +69,4 @@ const renderStar = (index, xOffsetLeft) => (
   />
 )
 
-
 export const Milestone = React.memo(MilestoneComponent)

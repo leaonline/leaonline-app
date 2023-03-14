@@ -239,6 +239,10 @@ const addViewProperties = async (mapData) => {
     last.type = 'finish'
   }
 
+  // start always gets the first icon assigned
+  mapData.entries[0].viewPosition = mapData.entries[0].viewPosition ?? {}
+  mapData.entries[0].viewPosition.icon = MapIcons.getIncrementalIconIndex()
+
   // 6.3. add view position
   // 6.4. add unique keys to every entry (react-specific)
 
@@ -283,8 +287,7 @@ const addViewProperties = async (mapData) => {
       viewPosition.right = useLeft
         ? connector
         : null
-
-      entry.viewPosition = viewPosition
+      entry.viewPosition = Object.assign({}, entry.viewPosition, viewPosition)
       useLeft = !useLeft
     }
 
@@ -297,7 +300,7 @@ const addViewProperties = async (mapData) => {
       const right = last === 'right'
         ? 'left2right-down'
         : 'left2right-up'
-      entry.viewPosition = { current, left, right }
+      entry.viewPosition = entry.viewPosition = Object.assign({}, entry.viewPosition, { current, left, right })
     }
 
     entry.entryKey = `map-entry-${index++}`

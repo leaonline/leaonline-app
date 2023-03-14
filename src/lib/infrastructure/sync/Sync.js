@@ -75,6 +75,7 @@ Sync.reset = () => {
  * @returns {Promise<boolean>}
  */
 Sync.isRequired = async () => {
+  debug('[Sync]: run isRequired check')
   checkInit()
 
   if (internal.syncRequired !== null) {
@@ -168,13 +169,28 @@ Sync.syncContext = async ({ name, collection, storage }) => {
     args: { name }
   })
 
+  debug('syncContext received', docs?.length, 'docs')
   if (Array.isArray(docs) && docs.length > 0) {
-    debug('syncContext received', docs.length, 'docs')
-    collection.remove({})
+    const ids = new Set()
 
     docs.forEach(doc => {
-      collection.insert(doc)
+      ids.add(doc._id)
+
+      if (collection.find({ _id: doc._id }).count() === 0) {
+        collection.insert(doc)
+      }
+      else {
+        collection.update(doc._id, { $set: doc })
+      }
     })
+
+    const removed = collection.remove({ _id: { $nin: [...ids] } })
+    debug('removed', removed, 'outdated docs')
+
+    if (collection.find().count() !== docs.length) {
+      throw new Error(`Expected ${name} collection to be in sync by ${docs.length} docs!`)
+    }
+
     await storage.saveFromCollection()
     return true
   }

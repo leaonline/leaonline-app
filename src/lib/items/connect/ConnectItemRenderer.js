@@ -327,8 +327,6 @@ export const ConnectItemRenderer = props => {
         nodeStyle.push(highlightedStyle)
       }
 
-
-
       return (
         <Pressable
           accessibilityRole='button'
@@ -488,7 +486,7 @@ const renderImage = ({ isSelected, image }) => {
   return (
     <ImageRenderer
       width={25}
-      style={isSelected ? styles.imageSelected : styles.image }
+      style={isSelected ? styles.imageSelected : styles.image}
       value={image}
     />
   )
@@ -590,6 +588,6 @@ const styles = createStyleSheet({
     width: '100%'
   },
   imageSelected: {
-    width: '100%',
+    width: '100%'
   }
 })

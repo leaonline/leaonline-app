@@ -13,6 +13,7 @@ import { Fill } from '../../components/layout/Fill'
 import { ScrollView, View } from 'react-native'
 import { useSync } from '../sync/useSync'
 import { SyncScreen } from '../sync/SyncScreen'
+import { MapIcons } from '../../contexts/MapIcons'
 
 /**
  * The main screen for registered users. From here they can navigate to their
@@ -36,6 +37,8 @@ export const HomeScreen = props => {
   })
   const selectField = useCallback(async value => {
     const { _id, title } = value
+    MapIcons.setField(_id)
+
     await sessionActions.multi({
       field: { _id, title },
       loadUserData: true

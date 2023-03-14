@@ -9,25 +9,24 @@ import { byDocId } from '../../../lib/utils/byDocId'
 import { MapIcons } from '../../../lib/contexts/MapIcons'
 import { Order } from '../../../lib/contexts/Order'
 
-MapIcons.register(() => null)
-MapIcons.register(() => null)
-MapIcons.register(() => null)
-
 describe(loadMapData.name, () => {
   beforeAll(() => {
     mockCollection(Dimension)
     mockCollection(Order)
+    mockCollection(MapIcons)
   })
 
   afterEach(() => {
     restoreAll()
     resetCollection(Dimension)
     resetCollection(Order)
+    resetCollection(MapIcons)
   })
 
   afterAll(() => {
     restoreCollection(Dimension)
     restoreCollection(Order)
+    restoreCollection(MapIcons)
   })
 
   it('returns null if the server responded with no or faulty map data', async () => {
@@ -145,6 +144,13 @@ describe(loadMapData.name, () => {
       { _id: simpleRandom() }
     ]
 
+    stub(MapIcons.collection(), 'findOne', () => ({
+      fieldId: fieldDoc._id,
+      icons: ['foo', 'bar']
+    }))
+
+    MapIcons.setField(fieldDoc._id)
+
     const mapData = {
       dimensions: dimensions.map(toDocId),
       levels: levels.map(toDocId),
@@ -157,6 +163,9 @@ describe(loadMapData.name, () => {
         },
         {
           type: 'milestone'
+        },
+        {
+          type: 'stage'
         },
         {
           type: 'stage'
@@ -176,6 +185,7 @@ describe(loadMapData.name, () => {
       type: 'start',
       entryKey: 'map-entry-0',
       viewPosition: {
+        icon: 0,
         current: 'center',
         left: 'fill',
         right: 'left2right-up'
@@ -190,7 +200,7 @@ describe(loadMapData.name, () => {
       entryKey: 'map-entry-1',
       label: 1,
       viewPosition: {
-        icon: 0,
+        icon: 1,
         left: 'right2left',
         current: 'right',
         right: null
@@ -228,21 +238,21 @@ describe(loadMapData.name, () => {
       entryKey: 'map-entry-4',
       label: 3,
       viewPosition: {
-        icon: -1,
-        left: null,
+        icon: 0, // index begins again at 0
+        left: 'right2left',
         current: 'right',
         right: null
       }
     })
 
     // last
-    expect(entries[5]).toEqual({
+    expect(entries[6]).toEqual({
       type: 'finish',
-      entryKey: 'map-entry-5',
+      entryKey: 'map-entry-6',
       viewPosition: {
         current: 'center',
-        left: 'fill',
-        right: 'left2right-down'
+        left: 'right2left-down',
+        right: 'fill'
       }
     })
   })

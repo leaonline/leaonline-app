@@ -1,6 +1,7 @@
 import React from 'react'
 import { Colors } from '../constants/Colors'
 import { createContextStorage } from './createContextStorage'
+import { Icon } from 'react-native-elements'
 
 export const MapIcons = {
   name: 'mapIcons'
@@ -16,40 +17,44 @@ MapIcons.init = async () => {
   return MapIcons.storage.loadIntoCollection()
 }
 
-const icons = []
-
-MapIcons.size = () => icons.length
-
-MapIcons.register = component => {
-  icons.push(component)
+MapIcons.setField = fieldId => {
+  const currentIcons = MapIcons.collection().findOne({ fieldId })
+  internal.icons = currentIcons?.icons ?? []
+  internal.count = 0
 }
 
-let count = 0
+const internal = {
+  icons: [],
+  count: 0
+}
+
+MapIcons.size = () => internal.icons.length
 
 MapIcons.getIncrementalIconIndex = () => {
-  if (icons.length === 0) {
+  if (internal.icons.length === 0) {
     return -1
   }
 
-  if (count > icons.length - 1) {
-    count = 0
+  if (internal.count > internal.icons.length - 1) {
+    internal.count = 0
   }
 
-  return count++
+  return internal.count++
 }
 
 MapIcons.render = (index) => {
-  if (index > icons.length - 1 || index < 0) {
+  if (index > internal.icons.length - 1 || index < 0) {
     return null
   }
 
-  const Component = icons[index]
+  const name = internal.icons[index]
   return (
-    <Component
-      stroke={Colors.gray}
-      fill={Colors.light}
-      width={60}
-      height={60}
+    <Icon
+      color={Colors.gray}
+      size={50}
+      name={name}
+      reverse={false}
+      type='font-awesome-5'
     />
   )
 }

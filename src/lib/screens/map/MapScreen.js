@@ -10,19 +10,16 @@ import { ScreenBase } from '../BaseScreen'
 import { useTts } from '../../components/Tts'
 import { BackButton } from '../../components/BackButton'
 import { Stage } from './components/Stage'
-import { MapStart } from './components/Start'
 import { MapFinish } from './components/Finish'
 import { Milestone } from './components/Milestone'
 import { LeaText } from '../../components/LeaText'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { Connector } from './components/Connector'
-import { loadMapIcons } from './loadMapIcons'
 import nextFrame from 'next-frame'
+import { MapIcons } from '../../contexts/MapIcons'
 
 const log = Log.create('MapScreen')
 const ITEM_HEIGHT = 100
-
-loadMapIcons() // TODO defer loading these to a much later point as they are not crucial
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -119,7 +116,7 @@ export const MapScreen = props => {
       return (
         <View style={styles.stage}>
           {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapStart size={ITEM_HEIGHT / 2} />
+          {MapIcons.render(0)}
           {renderConnector(entry.viewPosition.right, connectorWidth)}
         </View>
       )
@@ -176,11 +173,11 @@ export const MapScreen = props => {
           decelerationRate='fast'
           disableIntervalMomentum
           initialScrollIndex={mapData.progressIndex ?? 0}
-          removeClippedSubviews={false}
+          removeClippedSubviews
           persistentScrollbar
           keyExtractor={flatListKeyExtractor}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
+          initialNumToRender={50}
+          maxToRenderPerBatch={50}
           updateCellsBatchingPeriod={100}
           getItemLayout={flatListGetItemLayout}
         />
@@ -266,6 +263,8 @@ const positionMap = {
 const styles = createStyleSheet({
   container: {
     // ...Layout.container()
+    marginLeft: 15,
+    marginRight: 15
   },
   scrollView: {
     width: '100%'
