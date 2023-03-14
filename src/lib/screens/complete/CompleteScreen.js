@@ -106,6 +106,7 @@ export const CompleteScreen = props => {
     return (
       <Tts
         align='center'
+        block={true}
         text={phrase}
         color={Colors.secondary}
         iconColor={Colors.secondary}
