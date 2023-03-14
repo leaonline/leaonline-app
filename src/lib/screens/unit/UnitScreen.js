@@ -21,6 +21,7 @@ import './registerComponents'
 import './registerInstructions'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
+import { UserProgress } from '../../contexts/UserProgress'
 
 const log = Log.create('UnitScreen')
 
@@ -168,6 +169,9 @@ export const UnitScreen = props => {
       unit: nextUnitId,
       page: 0
     })
+
+    await UserProgress.update({ fieldId: session.field?._id })
+
     return nextUnitId
       ? props.navigation.push('unit')
       : props.navigation.navigate('complete')
@@ -177,23 +181,22 @@ export const UnitScreen = props => {
   // current page and contentId to support multiple
   // items per page
   const submitResponse = async ({ responses, data }) => {
-    const { contentId } = data
-
     responseRef.current[page] = responseRef.current[page] ?? {}
-    responseRef.current[page][contentId] = { responses, data }
+    responseRef.current[page][data.contentId] = { responses, data }
   }
 
-  const allTrueValues = []
-  let counts = 0
-  let scores = 0
-
   const checkScore = async () => {
+    scoreRef.current[page] = scoreRef.current[page] ?? {}
+
     // get scoring method
     const allResponses = Object.values(responseRef.current[page])
+    const allTrueValues = []
+
+    let counts = 0
+    let scores = 0
 
     for (const currentResponse of allResponses) {
       log('check score', { currentResponse })
-
       const checked = await checkResponse({ currentResponse })
 
       // score refs also need to save by page and contentId
