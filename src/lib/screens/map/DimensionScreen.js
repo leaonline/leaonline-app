@@ -15,6 +15,8 @@ import { Colors } from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
 import { Fill } from '../../components/layout/Fill'
 import { ActionButton } from '../../components/ActionButton'
+import { useProgress } from '../../hooks/useProgress'
+import { useScreenIsActive } from '../../hooks/screenIsActive'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -35,11 +37,16 @@ export const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
+  const { progressDoc } = useProgress({ fieldId: session.field?._id })
   const docs = useDocs({
     fn: () => loadDimensionData(session.stage),
     runArgs: [session.stage],
     allArgsRequired: true
   })
+
+  const { isActive } = useScreenIsActive()
+  console.debug({isActive })
+  console.debug({ progressDoc: !!progressDoc })
 
   useEffect(() => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
@@ -54,6 +61,8 @@ export const DimensionScreen = props => {
       headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.update({ stage: null })} />)
     })
   }, [])
+
+  if (!isActive) { return null }
 
   const selectUnitSet = async unitSetDoc => {
     const { dimension, competencies, ...unitSet } = unitSetDoc
@@ -77,19 +86,23 @@ export const DimensionScreen = props => {
       const title = Config.debug.map
         ? unitSet.dimension.title + ' ' + unitSet.code
         : unitSet.dimension.title
+      const userProgress = progressDoc?.unitSets?.[unitSet._id]?.progress ?? unitSet.userProgress
+      const progress = Math.round(
+        (userProgress ?? 0) / (unitSet.progress ?? 1) * 100
+      )
       return (
         <View style={styles.dimension} key={index}>
           <ActionButton
             color={color}
             title={title}
-            block
+            block={true}
             containerStyle={styles.buttonContainer}
             titleStyle={{ color, fontWeight: 'bold' }}
             icon={unitSet.dimension.icon}
             onPress={() => selectUnitSet(unitSet)}
           />
           <StaticCircularProgress
-            value={unitSet.progressPercent ?? 0}
+            value={progress ?? 0}
             maxValue={100}
             textColor={color}
             activeStrokeColor={color}
