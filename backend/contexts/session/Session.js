@@ -217,12 +217,17 @@ Session.update = ({ sessionId, userId }) => {
     name: UnitSet.name
   })
 
-  const unitDoc = sessionDoc.unit && UnitCollection.findOne(sessionDoc.unit)
-  ensureDocument({
-    document: unitDoc,
-    docId: sessionDoc.unit,
-    name: Unit.name
-  })
+  let unitDoc
+
+  if (sessionDoc.unit) {
+    unitDoc = UnitCollection.findOne(sessionDoc.unit)
+
+    ensureDocument({
+      document: unitDoc,
+      docId: sessionDoc.unit,
+      name: Unit.name
+    })
+  }
 
   const timestamp = new Date()
   log({ timestamp, sessionDoc, unitDoc })
