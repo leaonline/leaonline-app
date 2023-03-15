@@ -167,18 +167,19 @@ const TtsComponent = props => {
     if (props.dontShowText) { return null }
 
     // color always defaults to secondary
-    const styleProps = { color: getIdleTextColor(), marginLeft: 10 }
+    const textStyleProps = { color: getIdleTextColor(), marginLeft: 10 }
 
     if (props.block) {
-      styleProps.flex = 1
-      styleProps.flexGrow = 1
+      textStyleProps.flex = 1
+      textStyleProps.flexGrow = 1
     }
 
     if (props.fontStyle) {
-      Object.assign(styleProps, props.fontStyle)
+      Object.assign(textStyleProps, props.fontStyle)
+      console.debug(textStyleProps)
     }
 
-    return (<LeaText style={styleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
+    return (<LeaText style={textStyleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
   }
 
   const ttsContainerStyle = { ...styles.container }

@@ -13,7 +13,7 @@ import { RequestRestoreCodes } from './RequestRestoreCodes'
 import { InteractionGraph } from '../../../infrastructure/log/InteractionGraph'
 import { useDocs } from '../../../meteor/useDocs'
 import { loadAccountData } from './loadAccountData'
-import { MarkdownRenderer } from '../../../components/renderer/text/Markdown'
+import { Markdown } from '../../../components/MarkdownWithTTS'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -123,7 +123,7 @@ export const AccountInfo = (props) => {
         scrollable: true,
         body: () => {
           return (
-            <MarkdownRenderer value={docs.data.legal.privacy} />
+            <Markdown value={docs.data.legal.privacy} />
           )
         },
         deny: {
@@ -143,7 +143,7 @@ export const AccountInfo = (props) => {
         scrollable: true,
         body: () => {
           return (
-            <MarkdownRenderer value={docs.data.legal.terms} />
+            <Markdown value={docs.data.legal.terms} />
           )
         },
         deny: {
@@ -163,7 +163,7 @@ export const AccountInfo = (props) => {
         scrollable: true,
         body: () => {
           return (
-            <MarkdownRenderer value={docs.data.legal.imprint} />
+            <Markdown value={docs.data.legal.imprint} />
           )
         },
         deny: {

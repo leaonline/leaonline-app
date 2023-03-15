@@ -25,7 +25,8 @@ export const LeaText = props => {
     autoScale = false,
     ...rest
   } = props
-  const mergedStyle = mergeStyles(styles.default, style, color ? { color } : undefined)
+
+  const mergedStyle = mergeStyles(styles.default, color ? { color } : undefined, style)
   return (
     <Text
       accessibilityRole='text'

@@ -4,9 +4,10 @@ import { TTSengine } from './Tts'
 import { View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import MarkdownRenderer from 'react-native-markdown-display'
+import { Colors } from '../constants/Colors'
 
 const Tts = TTSengine.component()
-
+const linkPattern = /(@)|(www.)|(http:\/\/)|(https:\/\/)|(mailto:)/
 const rules = {
   body (node, children, parent, thisStyles) {
     return (
@@ -35,6 +36,13 @@ const rules = {
     }
 
     const text = node.content
+    const fontStyles = { ...styles.textTitle }
+    const isLink = linkPattern.test(text)
+
+    if (isLink) {
+      Object.assign(fontStyles, styles.textLink)
+    }
+
     const transformed = text
       .replace(/§§/g, getI18n().t('legal.paragraphs'))
       .replace(/§/g, getI18n().t('legal.paragraph'))
@@ -46,7 +54,7 @@ const rules = {
         text={text}
         dontShowText={false}
         ttsText={transformed}
-        fontStyle={styles.textTitle}
+        fontStyle={fontStyles}
         align='flex-start'
       />
     )
@@ -82,11 +90,25 @@ const styles = createStyleSheet({
     borderColor: '#ff0',
     flex: 1,
     flexGrow: 1
+  },
+  textLink: {
+    color: Colors.primary,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primary
   }
 })
 
+/**
+ * @private
+ */
 const MarkdownWithTTS = props => {
   return (<MarkdownRenderer style={props.style} rules={rules}>{props.value}</MarkdownRenderer>)
 }
-
+/**
+ * @param props {object}
+ * @props.style {object=}
+ * @props.value {string}
+ * @return {JSX.Element}
+ * @component
+ */
 export const Markdown = React.memo(MarkdownWithTTS)
