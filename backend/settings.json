@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "lea.App-Backend"
+  },
   "defaultLang": "de",
   "isStaging": true,
   "oauth": {
@@ -59,6 +62,11 @@
   },
   "log": {
     "level": 4
+  },
+  "email": {
+    "notify": ["admin@example.com"],
+    "replyTo": "noreply@example.com",
+    "from": "system@example.com"
   },
   "public": {}
 }

@@ -140,6 +140,7 @@ describe('Session', function () {
         pages: [{}, {}]
       })
 
+      UnitSetCollection.insert({ _id: unitSet, units: [unitId] })
       const sessionId = SessionCollection.insert({
         userId,
         unitSet,

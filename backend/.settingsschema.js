@@ -2,6 +2,9 @@ const SimpleSchema = require('simpl-schema')
 const schema = def => new SimpleSchema(def)
 
 const settingsSchema = schema({
+  app: schema({
+    name: String
+  }),
   isStaging: Boolean,
   defaultLang: String,
   oauth: schema({
@@ -68,6 +71,21 @@ const settingsSchema = schema({
   }),
   log: schema({
     level: SimpleSchema.Integer
+  }),
+  email: schema({
+    notify: {
+      type: Array,
+      optional: true
+    },
+    'notify.$': SimpleSchema.RegEx.Email,
+    replyTo: {
+      type: SimpleSchema.RegEx.Email,
+      optional: true
+    },
+    from: {
+      type: SimpleSchema.RegEx.Email,
+      optional: true
+    }
   }),
   public: schema({})
 })
