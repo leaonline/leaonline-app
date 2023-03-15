@@ -65,13 +65,14 @@ const RenderDimensionAchievements = props => {
       >
         {fields.map((fieldDoc) => {
           const diamonds = new Array(5)
-          const max = dimensionDoc.competencies[fieldDoc._id].value
+          const percent = dimensionDoc.competencies[fieldDoc._id].value
 
-          for (let i = 0; i < 5; i++) {
-            diamonds[i] = (i + 1) < max
-              ? 100
-              : 0
-          }
+          // 5 diamonds
+          diamonds[0] = percent > 0 ? 100 : 0
+          diamonds[1] = percent > 20 ? 100 : 0
+          diamonds[2] = percent > 40 ? 100 : 0
+          diamonds[3] = percent > 60 ? 100 : 0
+          diamonds[4] = percent > 80 ? 100 : 0
 
           return isSelected && (
             <ListItem

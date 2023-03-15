@@ -18,9 +18,13 @@ UserProgress.collection = () => {
 UserProgress.update = ({ fieldId, unitSetDoc }) => {
   const progressDoc = UserProgress.collection().findOne({ fieldId })
 
+  // there might be the situation where no progressDoc is available
+  // for example on the first unitSet story complete on a new field
+  // where the doc yet has to be created on the server and fetched
   if (!progressDoc) {
-    throw new Error('UserProgress.update: Expected progress doc for', { unitSetId: unitSetDoc._id, fieldId })
+    return
   }
+
   const unitSetId = unitSetDoc._id
 
   // if we found a unit set, then we only update the data at the given index
