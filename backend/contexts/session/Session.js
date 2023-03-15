@@ -1,7 +1,6 @@
-import { Meteor } from 'meteor/meteor'
-import { getCollection } from '../../api/utils/getCollection'
 import { UnitSet } from '../content/UnitSet'
 import { Unit } from '../content/Unit'
+import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
 import { Response } from '../response/Response'
@@ -206,8 +205,6 @@ Session.update = ({ sessionId, userId }) => {
     name: Session.name,
     details: { userId }
   })
-
-
 
   // 2 get the current unitDoc by sessionDoc.unit
   const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
