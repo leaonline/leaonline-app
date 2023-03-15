@@ -164,13 +164,21 @@ export const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
+    UserProgress.update({
+      fieldId: session.field?._id,
+      unitSetDoc: {
+        _id: unitSetDoc._id,
+        dimensionId: unitSetDoc.dimensionId,
+        progress: unitSetDoc.progress,
+        competencies: 0
+      }
+    })
+
     await sessionActions.multi({
       progress: session.progress + 1,
       unit: nextUnitId,
       page: 0
     })
-
-    await UserProgress.update({ fieldId: session.field?._id })
 
     return nextUnitId
       ? props.navigation.push('unit')

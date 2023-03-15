@@ -7,15 +7,11 @@ export const useProgress = ({ fieldId }) => {
   const [progressDoc, setProgressDoc] = useState(null)
 
   useFocusEffect(useCallback(() => {
-    console.debug('load progress')
     UserProgress.get({ fieldId })
       .catch(Log.error)
       .then(doc => {
-        Log.print(doc)
         if (doc) {
-          setTimeout(() => {
-            setProgressDoc(doc)
-          }, 1000)
+          setProgressDoc(doc)
         }
       })
   }, [fieldId]))

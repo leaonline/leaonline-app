@@ -8,9 +8,9 @@ export const useScreenIsActive = (dependencies = []) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       setIsActive(false)
-    });
+    })
 
-    return unsubscribe;
+    return unsubscribe
   }, [navigation].concat(dependencies))
 
   useFocusEffect(useCallback(() => {

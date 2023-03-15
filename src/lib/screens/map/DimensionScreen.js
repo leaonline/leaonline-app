@@ -45,8 +45,6 @@ export const DimensionScreen = props => {
   })
 
   const { isActive } = useScreenIsActive()
-  console.debug({isActive })
-  console.debug({ progressDoc: !!progressDoc })
 
   useEffect(() => {
     const dimensionScreenTitle = session.field?.title ?? t('dimensionScreen.title')
@@ -86,6 +84,7 @@ export const DimensionScreen = props => {
       const title = Config.debug.map
         ? unitSet.dimension.title + ' ' + unitSet.code
         : unitSet.dimension.title
+
       const userProgress = progressDoc?.unitSets?.[unitSet._id]?.progress ?? unitSet.userProgress
       const progress = Math.round(
         (userProgress ?? 0) / (unitSet.progress ?? 1) * 100
@@ -95,7 +94,7 @@ export const DimensionScreen = props => {
           <ActionButton
             color={color}
             title={title}
-            block={true}
+            block
             containerStyle={styles.buttonContainer}
             titleStyle={{ color, fontWeight: 'bold' }}
             icon={unitSet.dimension.icon}

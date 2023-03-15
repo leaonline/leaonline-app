@@ -174,7 +174,6 @@ export const AccountInfo = (props) => {
       }
     }
 
-
     return Object.values(actions)
   }, [docs.data])
 
@@ -203,10 +202,10 @@ export const AccountInfo = (props) => {
           {
             content.scrollable
               ? (
-                <ScrollView showsVerticalScrollIndicator={true} persistentScrollbar={true}>
+                <ScrollView showsVerticalScrollIndicator persistentScrollbar>
                   {renderModalContent()}
                 </ScrollView>
-              )
+                )
               : renderModalContent()
           }
           <View style={styles.actions}>

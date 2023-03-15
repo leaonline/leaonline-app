@@ -176,7 +176,6 @@ const TtsComponent = props => {
 
     if (props.fontStyle) {
       Object.assign(textStyleProps, props.fontStyle)
-      console.debug(textStyleProps)
     }
 
     return (<LeaText style={textStyleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
