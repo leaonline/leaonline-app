@@ -10,10 +10,10 @@ import { AuthContext } from '../../contexts/AuthContext'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
 import { Layout } from '../../constants/Layout'
 import { Colors } from '../../constants/Colors'
-import { asyncTimeout } from '../../utils/asyncTimeout'
 import { Loading } from '../../components/Loading'
+import { Log } from '../../infrastructure/Log'
 
-export const RestoreScreen = () => {
+export const RestoreScreen = (props) => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [allCodes, setAllCodes] = useState(false)
@@ -50,12 +50,12 @@ export const RestoreScreen = () => {
   }
   const checkCodes = async () => {
     setCheckingCode(true)
-    await asyncTimeout(300)
     restore({
       codes: codes.current.map(entry => entry.join('')),
       voice: TTSengine.currentVoice,
       speed: TTSengine.currentSpeed,
       onError: err => {
+        Log.error(err)
         setCheckingCode(false)
         InteractionGraph.problem({
           type: 'rejected',
@@ -71,6 +71,15 @@ export const RestoreScreen = () => {
           target: `${RestoreScreen.name}`,
           type: 'restored'
         })
+
+        setTimeout(() => {
+          try {
+            props.navigation.navigate('home')
+          }
+          catch (e) {
+            Log.error(e)
+          }
+        }, 400)
       }
     })
   }
