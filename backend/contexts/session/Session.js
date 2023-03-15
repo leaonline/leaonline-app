@@ -8,6 +8,7 @@ import { Response } from '../response/Response'
 import { Progress } from '../progress/Progress'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
+import { ensureDocument } from '../../api/utils/ensureDocument'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -199,13 +200,30 @@ Session.update = ({ sessionId, userId }) => {
 
   // 1 get sessionDoc by sessionId+userId
   const sessionDoc = SessionCollection.findOne({ _id: sessionId, userId })
-  if (!sessionDoc) {
-    throw new Meteor.Error('session.updateFailed', 'docNotFound', { sessionId, userId })
-  }
+  ensureDocument({
+    document: sessionDoc,
+    docId: sessionId,
+    name: Session.name,
+    details: { userId }
+  })
+
+
 
   // 2 get the current unitDoc by sessionDoc.unit
   const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
+  ensureDocument({
+    document: unitSetDoc,
+    docId: sessionDoc.unitSet,
+    name: UnitSet.name
+  })
+
   const unitDoc = sessionDoc.unit && UnitCollection.findOne(sessionDoc.unit)
+  ensureDocument({
+    document: unitDoc,
+    docId: sessionDoc.unit,
+    name: Unit.name
+  })
+
   const timestamp = new Date()
   log({ timestamp, sessionDoc, unitDoc })
 
@@ -261,8 +279,8 @@ Session.update = ({ sessionId, userId }) => {
   }
 
   log('update doc:', { sessionId, updateDoc })
-
   SessionCollection.update(sessionId, updateDoc)
+
   return sessionDoc.nextUnit
 }
 
