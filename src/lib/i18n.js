@@ -88,6 +88,14 @@ const resources = {
       deleteAccount: {
         title: 'Delete my account',
         instructions: 'This deletes your account and all files you have produced. Once complete, you will not be able to restore it. Are you sure to delete your account?'
+      },
+      close: {
+        successful: 'Dein Konto wurde erfolgreich {{action}}!',
+        deleted: 'gelöscht',
+        signedOut: 'abgemeldet',
+        next: 'Du kannst nun die App schließen oder neustarten.',
+        restart: 'App neu starten',
+        close: 'App schließen'
       }
     },
     mapScreen: {
@@ -220,11 +228,19 @@ const resources = {
       },
       signOut: {
         title: 'Abmelden',
-        instructions: 'Meldet dich als aktiver Nutzer ab. Du benötigst zum wieder anmelden drei codes. Diese bekommst du über die Funktion "Profil sichern". Möchtest du dich jetzt abmelden?'
+        instructions: 'Hier meldest du dich ab. Schreibe dir die Codes auf oder mache ein Foto. Du brauchst sie, um dich wieder anzumelden.'
       },
       deleteAccount: {
         title: 'Profil löschen',
-        instructions: 'Dein Profil wird zusammen mit deinen Antworten und deinem Fortschritt endgültig gelöscht. Sie können danach nicht wiederher\u00ADgestellt werden. Möchtest diese Daten jetzt löschen?'
+        instructions: 'Dein Profil wird zusammen mit deinen Antworten und deinem Fortschritt endgültig gelöscht. Sie können danach nicht wiederher\u00ADgestellt werden. Möchtest dein Profil jetzt löschen?'
+      },
+      close: {
+        successful: 'Dein Konto wurde erfolgreich {{action}}!',
+        deleted: 'gelöscht',
+        signedOut: 'abgemeldet',
+        next: 'Du kannst nun die App schließen oder neustarten.',
+        restart: 'App neu starten',
+        close: 'App schließen'
       }
     },
     mapScreen: {

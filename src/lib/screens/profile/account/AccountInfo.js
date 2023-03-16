@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import { View, Modal, ScrollView } from 'react-native'
 import { useTts } from '../../../components/Tts'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +14,8 @@ import { InteractionGraph } from '../../../infrastructure/log/InteractionGraph'
 import { useDocs } from '../../../meteor/useDocs'
 import { loadAccountData } from './loadAccountData'
 import { Markdown } from '../../../components/MarkdownWithTTS'
+import { Icon } from 'react-native-elements'
+import { AppTerminate } from '../../../infrastructure/app/AppTerminate'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -28,12 +30,41 @@ import { Markdown } from '../../../components/MarkdownWithTTS'
 export const AccountInfo = (props) => {
   const [modalContent, setModalContent] = useState(null)
   const [error, setError] = useState(null)
+  const lastAction = useRef('')
   const { signOut, deleteAccount } = useContext(AuthContext)
   const docs = useDocs({
     fn: loadAccountData
   })
   const { t } = useTranslation()
   const { Tts } = useTts()
+  const getLastAction = () => lastAction.current
+
+  const closeModal = useMemo(() => ({
+    instructions: () => {
+      const action = t(`accountInfo.close.${getLastAction()}`)
+      return t('accountInfo.close.successful', { action })
+    },
+    body: () => (
+      <>
+        <Icon name='check' color={Colors.success} type='font-awesome-5' />
+        <Tts block text={t('accountInfo.close.next')} />
+      </>
+    ),
+    approve: {
+      icon: 'sync',
+      label: () => t('accountInfo.close.restart'),
+      handler: () => {
+        AppTerminate.restart()
+      }
+    },
+    deny: {
+      icon: 'door-open',
+      label: () => t('accountInfo.close.close'),
+      handler: () => {
+        AppTerminate.close()
+      }
+    }
+  }), [])
 
   const buttons = useMemo(() => {
     const onError = err => setError(err)
@@ -82,10 +113,19 @@ export const AccountInfo = (props) => {
       onPress: () => setModalContent(actions.signOut.modal),
       modal: {
         instructions: () => t('accountInfo.signOut.instructions'),
+        body: () => (<RequestRestoreCodes onError={onError} />),
         approve: {
           icon: 'sign-out-alt',
           label: () => t('accountInfo.signOut.title'),
-          handler: () => signOut({ onError })
+          handler: () => {
+            const onSuccess = () => {
+              lastAction.current = 'signedOut'
+              setTimeout(() => {
+                setModalContent(closeModal)
+              }, 500)
+            }
+            signOut({ onError, onSuccess })
+          }
         },
         deny: {
           icon: 'times',
@@ -100,11 +140,25 @@ export const AccountInfo = (props) => {
       label: () => t('accountInfo.deleteAccount.title'),
       onPress: () => setModalContent(actions.deleteAccount.modal),
       modal: {
-        instructions: () => t('accountInfo.deleteAccount.instructions'),
+        body: () => (
+          <View style={styles.danger}>
+            <Tts block text={t('accountInfo.deleteAccount.instructions')} color={Colors.danger} />
+          </View>
+        ),
         approve: {
           icon: 'sign-out-alt',
           label: () => t('accountInfo.deleteAccount.title'),
-          handler: () => deleteAccount({ onError })
+          color: Colors.danger,
+          titleStyle: styles.dangerText,
+          handler: () => {
+            const onSuccess = () => {
+              lastAction.current = 'deleted'
+              setTimeout(() => {
+                setModalContent(closeModal)
+              }, 500)
+            }
+            deleteAccount({ onError, onSuccess })
+          }
         },
         deny: {
           icon: 'times',
@@ -185,7 +239,8 @@ export const AccountInfo = (props) => {
 
     const renderModalContent = () => (
       <View style={styles.modalContent}>
-        {content.instructions && (<Tts align='flex-start' text={content.instructions()} block style={styles.modalInstructions} />)}
+        {content.instructions && (
+          <Tts align='flex-start' text={content.instructions()} block style={styles.modalInstructions} />)}
         {content.body ? content.body() : null}
       </View>
     )
@@ -214,6 +269,8 @@ export const AccountInfo = (props) => {
                 icon={content.approve.icon}
                 containerStyle={styles.actionButton}
                 block
+                iconColor={content.approve.color}
+                color={content.approve.color}
                 text={content.approve.label()}
                 onPress={handlePress(modalContent.approve.handler)}
               />
@@ -282,5 +339,14 @@ const styles = createStyleSheet({
   actionButton: {
     marginTop: 10,
     marginBottom: 10
+  },
+  danger: {
+    flex: 1,
+    borderWidth: 2,
+    borderColor: Colors.danger,
+    padding: 5
+  },
+  dangerText: {
+    color: Colors.danger
   }
 })

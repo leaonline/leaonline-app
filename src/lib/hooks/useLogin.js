@@ -118,9 +118,10 @@ export const useLogin = () => {
   // the auth can be referenced via useContext in the several
   // screens later on
   const authContext = useMemo(() => ({
-    signOut: ({ onError }) => {
+    signOut: ({ onError, onSuccess }) => {
       Meteor.logout(err => {
         if (err) { return onError(err) }
+        onSuccess && onSuccess()
         dispatch({ type: 'SIGN_OUT' })
       })
     },
@@ -135,7 +136,7 @@ export const useLogin = () => {
         // in order to use it for auto-login when we open
         // the app next time
         Meteor._handleLoginCallback(err, res)
-        onSuccess()
+        onSuccess && onSuccess()
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
         dispatch({ type, token })
@@ -152,13 +153,13 @@ export const useLogin = () => {
         // in order to use it for auto-login when we open
         // the app next time
         Meteor._handleLoginCallback(err, res)
-        onSuccess()
+        onSuccess && onSuccess()
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
         dispatch({ type, token })
       })
     },
-    deleteAccount: ({ onError }) => {
+    deleteAccount: ({ onError, onSuccess }) => {
       Meteor.call('users.methods.delete', {}, (deleteError) => {
         if (deleteError) {
           return onError(deleteError)
@@ -167,6 +168,7 @@ export const useLogin = () => {
         // instead of calling Meteor.logout we
         // directly invoke the logout handler
         Meteor.handleLogout()
+        onSuccess && onSuccess()
         dispatch({ type: 'DELETE' })
       })
     }
