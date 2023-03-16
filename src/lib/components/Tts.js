@@ -153,7 +153,7 @@ const TtsComponent = props => {
   const startSpeak = () => {
     debug('start')
     setIsSpeaking(true)
-    setSpeakingId(props.id)
+    setSpeakingId(props.testId ?? props.id)
     setIconColor(props.activeIconColor ?? Colors.primary)
     if (props.onStart) {
       props.onStart({ isDone, isSpeaking, speakingId })
@@ -224,7 +224,7 @@ const TtsComponent = props => {
     return (
       <Button
         accessibilityRole='button'
-        testID={props.id}
+        testID={props.testId}
         containerStyle={ttsContainerStyle}
         buttonStyle={[styles.ttsButton, buttonStyle]}
         onPress={onPress}
@@ -243,7 +243,7 @@ const TtsComponent = props => {
         disabled={props.disabled}
         android_ripple={rippleConfig}
         onPress={onPress}
-        testID={props.id}
+        testID={props.testId}
       >
         {renderIcon()}
       </Pressable>

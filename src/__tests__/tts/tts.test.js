@@ -25,7 +25,7 @@ it('speaks a given text', async () => {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -50,7 +50,7 @@ it('updates global TTSEngine props as side effect', async function () {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -86,7 +86,7 @@ it('stops if the action is executed before the tts is done', async function () {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -121,7 +121,7 @@ it('resolve to a complete state via options.onStart', async () => {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -160,7 +160,7 @@ it('resolve to a stopped state via options.onStopped', async () => {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -205,7 +205,7 @@ it('allows to attach beforeSpeak listener', async () => {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -243,7 +243,7 @@ it('resolve to a complete state via options.onDone', async () => {
   const { Tts } = useTts()
   const { getByTestId } = render(
     <>
-      <Tts text='ttsMock.text' color={Colors.primary} id='ttsMock.text' />
+      <Tts text='ttsMock.text' color={Colors.primary} testId='ttsMock.text' />
     </>
   )
   const ttsBtn = getByTestId('ttsMock.text')
@@ -284,13 +284,13 @@ it('start 2 different tts processes successively', async () => {
   const { Tts } = useTts()
   const render1 = render(
     <>
-      <Tts text='ttsMock.text1' color={Colors.primary} id='ttsMock.text1' />
+      <Tts text='ttsMock.text1' color={Colors.primary} testId='ttsMock.text1' />
     </>
   )
 
   const render2 = render(
     <>
-      <Tts text='ttsMock.text2' color={Colors.primary} id='ttsMock.text2' />
+      <Tts text='ttsMock.text2' color={Colors.primary} testId='ttsMock.text2' />
     </>
   )
 
