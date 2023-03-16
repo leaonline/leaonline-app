@@ -3,7 +3,8 @@ import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
 
 const window = Dimensions.get('window')
-const { width, height } = Dimensions.get('screen')
+const screen = Dimensions.get('screen')
+const { width, height } = screen
 const ratio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const isLarge = width * ratio > 1300

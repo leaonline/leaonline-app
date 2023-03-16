@@ -1,11 +1,14 @@
 import React, { useCallback, useReducer, useRef } from 'react'
-import { Animated, Pressable, View } from 'react-native'
+import { Animated, PixelRatio, Pressable, View } from 'react-native'
 import { Svg, G, Path, Line } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { Layout } from '../../../constants/Layout'
+import { Loading } from '../../../components/Loading'
 
 const defaultPosition = { x: 0, y: 0 }
 const initialState = () => ({
+  width: null,
+  height: null,
+  graphics: null,
   selected: false,
   arrow: false,
   keyboard: false
@@ -13,6 +16,8 @@ const initialState = () => ({
 
 const reducer = (prev, next) => {
   switch (next.type) {
+    case 'layout':
+      return { ...prev, width: next.width, height: next.height, graphics: next.graphics }
     case 'select':
       return { ...prev, selected: true }
     case 'arrow':
@@ -20,7 +25,12 @@ const reducer = (prev, next) => {
     case 'keyboard':
       return { ...prev, keyboard: true }
     case 'reset':
-      return initialState()
+      return {
+        ...prev,
+        selected: false,
+        arrow: false,
+        keyboard: false
+      }
   }
 }
 
@@ -29,13 +39,32 @@ export const ClozeTextInstructions = props => {
   const handAnimation = useRef({ animation: null, running: false })
   const [state, dispatch] = useReducer(reducer, initialState(), undefined)
   const { selected, arrow, keyboard } = state
+  const isReady = state.width !== null && state.height !== null && state.graphics !== null
+
+  const onContainerLayout = event => {
+    const { width, height } = event.nativeEvent.layout
+    const size = PixelRatio.roundToNearestPixel(width / 5)
+    const y = (height - size) / 2 // vertically center
+    const textX = width / 2 - (size / 2)
+    const arrowX = (width / 2) + (size / 2)
+    const phoneX = width - size
+    const graphics = {
+      y,
+      size,
+      handToX: textX - size,
+      textX,
+      arrowX,
+      phoneX
+    }
+    dispatch({ type: 'layout', width, height, graphics })
+  }
 
   const runAnimation = useCallback(() => {
     if (handAnimation.current.running === false) {
       return
     }
     const anim = handAnimation.current.animation ?? Animated.timing(handPosition, {
-      toValue: { x: props.width / 2 - 30, y: 0 },
+      toValue: { x: state.graphics.handToX, y: state.graphics.y },
       duration: 1000,
       useNativeDriver: false
     })
@@ -63,9 +92,11 @@ export const ClozeTextInstructions = props => {
         }
       }, 1750)
     })
-  }, [])
+  }, [state.width, state.height, state.graphics])
 
   const toggleAnimation = () => {
+    if (!isReady) { return }
+
     if (handAnimation.current.running) {
       handAnimation.current.running = false
       handAnimation.current.animation.stop()
@@ -78,65 +109,90 @@ export const ClozeTextInstructions = props => {
     }
   }
 
+  const renderContent = () => {
+    if (!isReady) {
+      return (
+        <Loading color={props.color} />
+      )
+    }
+    return (
+      <>
+        <Animated.View
+          style={[
+            handPosition.getLayout(),
+            styles.svgContainer
+          ]}
+          direction='alternate'
+          easing='linear'
+          iterationCount='infinite'
+          useNativeDriver
+        >
+          <HandMove
+            width={state.graphics.size}
+            height={state.graphics.size}
+          />
+        </Animated.View>
+        <Animated.View
+          style={[
+            {
+              left: state.graphics.textX,
+              top: state.graphics.y
+            },
+            styles.svgContainer
+          ]}
+          direction='alternate'
+          easing='linear'
+          iterationCount='infinite'
+          useNativeDriver
+        >
+          <ColorListImg
+            width={state.graphics.size}
+            height={state.graphics.size}
+            selected={selected}
+          />
+        </Animated.View>
+        <View
+          style={[
+            {
+              left: state.graphics.arrowX,
+              top: state.graphics.y
+            },
+            styles.svgContainer
+          ]}
+        >
+          <Arrow
+            width={state.graphics.size}
+            height={state.graphics.size}
+            show={arrow}
+          />
+        </View>
+        <View
+          style={[
+            {
+              left: state.graphics.phoneX,
+              top: state.graphics.y
+            },
+            styles.svgContainer
+          ]}
+        >
+          <Mobile
+            width={state.graphics.size}
+            height={state.graphics.size}
+            keyboard={keyboard}
+          />
+        </View>
+      </>
+    )
+  }
+
   return (
-    <Pressable accessibilityRole='button' onPress={toggleAnimation} style={styles.container}>
-      <Animated.View
-        style={[
-          handPosition.getLayout(),
-          styles.svgContainer
-        ]}
-        direction='alternate'
-        easing='linear'
-        iterationCount='infinite'
-        useNativeDriver
-      >
-        <HandMove width={Layout.withRatio(25)} height={Layout.withRatio(25)} />
-      </Animated.View>
-      <Animated.View
-        style={[
-          {
-            left: props.width / 2 - 30,
-            top: 0
-          },
-          styles.svgContainer
-        ]}
-        direction='alternate'
-        easing='linear'
-        iterationCount='infinite'
-        useNativeDriver
-      >
-        <ColorListImg width={Layout.withRatio(30)} height={Layout.withRatio(30)} selected={selected} />
-      </Animated.View>
-      <View
-        style={[
-          {
-            left: props.width - Layout.withRatio(50),
-            top: 0
-          },
-          styles.svgContainer
-        ]}
-      >
-        <Arrow
-          width={Layout.withRatio(25)}
-          height={Layout.withRatio(30)}
-          show={arrow}
-        />
-      </View>
-      <View
-        style={[
-          {
-            left: props.width - Layout.withRatio(50),
-            top: 0
-          },
-          styles.svgContainer
-        ]}
-      >
-        <Mobile
-          width={Layout.withRatio(30)}
-          height={Layout.withRatio(30)}
-          keyboard={keyboard}
-        />
-      </View>
+    <Pressable
+      accessibilityRole='button'
+      onPress={toggleAnimation}
+      onLayout={onContainerLayout}
+      style={[styles.container, { height: props.height }]}
+    >
+      {renderContent()}
     </Pressable>
   )
 }
@@ -260,13 +316,15 @@ const HandMove = props => {
 
 const styles = createStyleSheet({
   container: {
+    flex: 0,
     borderColor: '#00f',
     flexDirection: 'row',
     flexGrow: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   svgContainer: {
+    position: 'absolute',
     flex: 0,
     justifyContent: 'center',
     alignSelf: 'center'
