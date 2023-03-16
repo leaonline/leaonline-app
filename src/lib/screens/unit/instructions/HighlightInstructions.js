@@ -16,7 +16,7 @@ export const HighlightInstructions = props => {
       return
     }
     const anim = handAnimation.current.animation ?? Animated.timing(handPosition, {
-      toValue: { x: props.width / 2 - 30, y: 0 },
+      toValue: { x: props.width / 2 + 7, y: 0 },
       duration: 1000,
       useNativeDriver: false
     })
@@ -90,31 +90,31 @@ const ColorListImg = props => {
         <G id='Ebene_1-2' data-name='Ebene 1'>
           <G id='Gruppe_291' data-name='Gruppe 291'>
             <Path
-              id='Pfad_172-3' data-name='Pfad 172-3' fill='#183b5d'
+              id='Pfad_172-3' data-name='Pfad 172-3' stroke='#183b5d'
               d='M11.53,24.28H.61c-.34,0-.61.54-.61,1.21v2.43c0,.67.27,1.22.61,1.22H11.53c.34,0,.61-.55.61-1.22V25.49C12.14,24.82,11.87,24.28,11.53,24.28Z'
             />
           </G>
           <G id='Gruppe_292' data-name='Gruppe 292'>
             <Path
-              id='Rechteck_183-3' data-name='Rechteck 183-3' fill={props.selected ? '#5bb984' : '#183b5d'}
+              id='Rechteck_183-3' data-name='Rechteck 183-3' stroke={props.selected ? '#5bb984' : '#183b5d'} fill={props.selected ? '#5bb984' : undefined}
               d='M24.73,0H44.15a2.43,2.43,0,0,1,2.43,2.43h0a2.43,2.43,0,0,1-2.43,2.43H24.73A2.43,2.43,0,0,1,22.3,2.43h0A2.43,2.43,0,0,1,24.73,0Z'
             />
           </G>
           <G id='Gruppe_293' data-name='Gruppe 293'>
             <Path
-              id='Pfad_173-3' data-name='Pfad 173-3' fill='#183b5d'
+              id='Pfad_173-3' data-name='Pfad 173-3' stroke='#183b5d'
               d='M44.25,12.14H2.33C1,12.14,0,12.68,0,13.35v2.43C0,16.45,1,17,2.33,17H44.25c1.29,0,2.33-.55,2.33-1.22V13.35C46.58,12.68,45.53,12.14,44.25,12.14Z'
             />
           </G>
           <G id='Gruppe_297' data-name='Gruppe 297'>
             <Path
-              id='Rechteck_183-4' data-name='Rechteck 183-4' fill='#183b5d'
+              id='Rechteck_183-4' data-name='Rechteck 183-4' stroke='#183b5d'
               d='M2.43,0H17.26a2.43,2.43,0,0,1,2.43,2.43h0a2.43,2.43,0,0,1-2.43,2.43H2.43A2.43,2.43,0,0,1,0,2.43H0A2.43,2.43,0,0,1,2.43,0Z'
             />
           </G>
           <G id='Gruppe_298' data-name='Gruppe 298'>
             <Path
-              id='Pfad_173-4' data-name='Pfad 173-4' fill='#183b5d'
+              id='Pfad_173-4' data-name='Pfad 173-4' stroke='#183b5d'
               d='M45,24.28H17a1.43,1.43,0,0,0-1.56,1.21v2.43A1.43,1.43,0,0,0,17,29.14H45a1.43,1.43,0,0,0,1.56-1.22V25.49A1.43,1.43,0,0,0,45,24.28Z'
             />
           </G>

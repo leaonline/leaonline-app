@@ -6,7 +6,7 @@ Highlight.icon = 'highlighter'
 Highlight.isItem = true
 
 Highlight.subtypes = {
-  default: 'default'
+  default: 'highlightDefault'
 }
 
 Highlight.getSubtype = () => Highlight.subtypes.default

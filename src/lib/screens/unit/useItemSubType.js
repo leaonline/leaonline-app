@@ -22,7 +22,7 @@ export const useItemSubType = ({ unitDoc, page }) => {
     if (currentSubtype) {
       setSubtype(currentSubtype)
     }
-  }, [unitDoc])
+  }, [unitDoc, page])
 
   return { subtype }
 }

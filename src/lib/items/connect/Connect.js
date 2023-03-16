@@ -6,7 +6,7 @@ Connect.icon = 'tasks'
 Connect.isItem = true
 
 Connect.subtypes = {
-  default: 'default'
+  default: 'connectDefault'
 }
 
 Connect.getSubtype = () => Connect.subtypes.default

@@ -132,6 +132,7 @@ export const UnitRenderer = props => {
           subtype={itemSubtype.subtype}
           text={instructions.value}
           color={dimensionColor}
+          page={page}
         />
       </FadePanel>
     )
