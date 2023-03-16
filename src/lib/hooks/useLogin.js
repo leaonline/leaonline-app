@@ -1,6 +1,7 @@
 import { useReducer, useEffect, useMemo } from 'react'
 import Meteor from '@meteorrn/core'
 import { loadSettingsFromUserProfile } from '../env/loadSettingsFromUserProfile'
+import { useConnection } from './useConnection'
 
 /** @private */
 const initialState = {
@@ -77,16 +78,18 @@ const Data = Meteor.getData()
  * }}
  */
 export const useLogin = () => {
+  const { connected } = useConnection()
   const [state, dispatch] = useReducer(reducer, initialState, undefined)
 
   Meteor.useTracker(() => {
+    if (!connected) { return }
     const user = Meteor.user()
 
     if (!state.profileLoaded && user) {
       loadSettingsFromUserProfile(user)
       dispatch({ type: 'PROFILE_LOADED' })
     }
-  }, [])
+  }, [connected])
 
   // Case 1: restore token already exists
   // MeteorRN loads the token on connection automatically,
@@ -98,7 +101,7 @@ export const useLogin = () => {
     // There may be the situation where the auth token
     // is immediately available. If so, we can safely
     // dispatch and don't need any further information.
-    if (authToken && !state.isDeleted) {
+    if (connected && authToken && !state.isDeleted) {
       handleOnLogin()
     }
 
@@ -110,7 +113,7 @@ export const useLogin = () => {
       Data.on('onLogin', handleOnLogin)
       return () => Data.off('onLogin', handleOnLogin)
     }
-  }, [])
+  }, [connected])
 
   // the auth can be referenced via useContext in the several
   // screens later on

@@ -4,3 +4,9 @@ Highlight.name = 'highlight'
 Highlight.label = 'item.highlight.title'
 Highlight.icon = 'highlighter'
 Highlight.isItem = true
+
+Highlight.subtypes = {
+  default: 'default'
+}
+
+Highlight.getSubtype = () => Highlight.subtypes.default

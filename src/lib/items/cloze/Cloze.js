@@ -37,3 +37,15 @@ Cloze.flavor = {
     value: 4
   }
 }
+
+Cloze.subtypes = {
+  text: 'clozeText',
+  select: 'clozeSelect'
+}
+
+Cloze.getSubtype = value => {
+  const hasSelect = value.text.includes('{{select')
+  return hasSelect
+    ? Cloze.subtypes.select
+    : Cloze.subtypes.text
+}

@@ -1,3 +1,9 @@
+import { ItemRegistry } from '../../items/ItemRegistry'
+import { Cloze } from '../../items/cloze/Cloze'
+import { Choice } from '../../items/choice/Choice'
+import { Highlight } from '../../items/highlight/Highlight'
+import { Connect } from '../../items/connect/Connect'
+
 import { UnitContentElementFactory } from '../../components/factories/UnitContentElementFactory'
 import { PlainTextRenderer } from '../../components/renderer/text/PlainTextRenderer'
 import { MarkdownRenderer } from '../../components/renderer/text/Markdown'
@@ -12,6 +18,17 @@ import { scoreCloze } from '../../items/cloze/scoring'
 import { scoreChoice } from '../../items/choice/scoring'
 import { scoreConnect } from '../../items/connect/scoreConnect'
 import { ConnectItemRenderer } from '../../items/connect/ConnectItemRenderer'
+
+// /////////////////////////////////////////////////////////////////////////////
+//
+// Items
+//
+// /////////////////////////////////////////////////////////////////////////////
+ItemRegistry.register(Choice.name, Choice)
+ItemRegistry.register(Cloze.name, Cloze)
+ItemRegistry.register(Connect.name, Connect)
+ItemRegistry.register(Highlight.name, Highlight)
+
 // /////////////////////////////////////////////////////////////////////////////
 //
 // display elements

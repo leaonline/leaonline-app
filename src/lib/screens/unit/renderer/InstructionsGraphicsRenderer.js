@@ -12,8 +12,8 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
  */
 export const InstructionsGraphicsRenderer = (props) => {
   const { Tts } = useTts()
-  const { hash, text } = props
-  const Instruction = InstructionAnimations.get(hash)
+  const { text, subtype } = props
+  const Instruction = InstructionAnimations.get(subtype)
 
   if (!Instruction) {
     return (

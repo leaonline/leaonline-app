@@ -17,3 +17,15 @@ Choice.flavors = {
     label: 'item.choice.multiple'
   }
 }
+
+Choice.subtypes = {
+  choiceText: 'choiceText',
+  choiceImage: 'choiceImage'
+}
+
+Choice.getSubtype = value => {
+  const hasImage = value.choices.some(c => !!c.image)
+  return hasImage
+    ? 'choiceImage'
+    : 'choiceText'
+}

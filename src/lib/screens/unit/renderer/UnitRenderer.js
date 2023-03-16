@@ -14,6 +14,7 @@ import { useKeyboardVisibilityHandler } from '../../../hooks/useKeyboardVisibili
 import { Sound } from '../../../env/Sound'
 import { unitCardStyles } from './unitCardStyles'
 import { ContentRenderer } from './ContentRenderer'
+import { useItemSubType } from '../useItemSubType'
 
 const PureContentRenderer = React.memo(ContentRenderer)
 
@@ -49,6 +50,7 @@ export const UnitRenderer = props => {
     taskPageAction
   } = props
   const unitId = unitDoc?._id
+  const itemSubtype = useItemSubType({ unitDoc, page })
 
   // We need to know the Keyboard state in order to show or hide elements.
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
@@ -126,7 +128,11 @@ export const UnitRenderer = props => {
             type='font-awesome-5'
           />
         </LeaText>
-        <InstructionsGraphicsRenderer hash={instructions.hash} text={instructions.value} color={dimensionColor} />
+        <InstructionsGraphicsRenderer
+          subtype={itemSubtype.subtype}
+          text={instructions.value}
+          color={dimensionColor}
+        />
       </FadePanel>
     )
   }
