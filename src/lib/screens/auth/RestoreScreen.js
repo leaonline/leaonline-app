@@ -71,15 +71,6 @@ export const RestoreScreen = (props) => {
           target: `${RestoreScreen.name}`,
           type: 'restored'
         })
-
-        setTimeout(() => {
-          try {
-            props.navigation.navigate('home')
-          }
-          catch (e) {
-            Log.error(e)
-          }
-        }, 400)
       }
     })
   }

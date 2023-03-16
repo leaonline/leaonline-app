@@ -29,7 +29,7 @@ const reducer = (prevState, nextState) => {
     case 'SIGN_IN':
       return {
         ...prevState,
-        isSignOut: false,
+        isSignout: false,
         isDeleted: false,
         userToken: nextState.token
       }
@@ -96,7 +96,9 @@ export const useLogin = () => {
   // in case it exists, but we need to "know" that for our auth workflow
   useEffect(() => {
     const authToken = Meteor.getAuthToken()
-    const handleOnLogin = () => dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
+    const handleOnLogin = () => {
+      dispatch({ type: 'RESTORE_TOKEN', token: Meteor.getAuthToken() })
+    }
 
     // There may be the situation where the auth token
     // is immediately available. If so, we can safely
