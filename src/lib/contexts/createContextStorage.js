@@ -9,6 +9,8 @@ export const createContextStorage = ({ name }) => {
   return new ContextStorage({ name })
 }
 
+export const clearContextStorage = async (cb) => AsyncStorage.clear(cb)
+
 class ContextStorage {
   constructor ({ name }) {
     this.key = `contexts-${name}`

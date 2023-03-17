@@ -11,6 +11,8 @@ export const useItemSubType = ({ unitDoc, page }) => {
     }
 
     const item = unitDoc.pages[page].content.find(entry => entry.type === 'item')
+    if (!isDefined(item?.subtype)) { return }
+
     const ItemDef = ItemRegistry.get(item.subtype)
 
     if (!isDefined(ItemDef) || !isDefined(ItemDef.getSubtype)) {

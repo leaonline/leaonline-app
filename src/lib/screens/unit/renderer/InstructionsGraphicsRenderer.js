@@ -49,7 +49,7 @@ const InstructionsGraphicsRendererOriginal = (props) => {
   return (
     <View style={styles.container}>
       <Tts ttsText={text} color={color} dontShowText />
-      <Instruction color={color} height={100} />
+      <Instruction color={color} height={100} width={200} />
     </View>
   )
 }

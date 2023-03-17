@@ -16,6 +16,9 @@ import { loadAccountData } from './loadAccountData'
 import { Markdown } from '../../../components/MarkdownWithTTS'
 import { Icon } from 'react-native-elements'
 import { AppTerminate } from '../../../infrastructure/app/AppTerminate'
+import { clearContextStorage } from '../../../contexts/createContextStorage'
+import { Log } from '../../../infrastructure/Log'
+import { Sync } from '../../../infrastructure/sync/Sync'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -120,9 +123,10 @@ export const AccountInfo = (props) => {
           handler: () => {
             const onSuccess = () => {
               lastAction.current = 'signedOut'
-              setTimeout(() => {
-                setModalContent(closeModal)
-              }, 500)
+              Sync.reset()
+              clearContextStorage(onError)
+                .catch(Log.error)
+                .then(() => setModalContent(closeModal))
             }
             signOut({ onError, onSuccess })
           }
@@ -153,9 +157,10 @@ export const AccountInfo = (props) => {
           handler: () => {
             const onSuccess = () => {
               lastAction.current = 'deleted'
-              setTimeout(() => {
-                setModalContent(closeModal)
-              }, 500)
+              Sync.reset()
+              clearContextStorage(onError)
+                .catch(Log.error)
+                .then(() => setModalContent(closeModal))
             }
             deleteAccount({ onError, onSuccess })
           }
