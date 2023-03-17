@@ -1,3 +1,4 @@
+import './validateSchema'
 import '../api/accounts/tests'
 import '../api/collections/tests'
 import '../api/crypto/tests'

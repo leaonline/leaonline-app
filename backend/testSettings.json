@@ -1,4 +1,18 @@
 {
+  "app": {
+    "name": "lea.App-Backend"
+  },
+  "defaultLang": "de",
+  "isStaging": true,
+  "oauth": {
+    "clientId": "Lb5soRv7RH2g8inRc",
+    "secret": "Y4yNeHM3bniSogeWacRcYZ3S5yz3TCuW",
+    "dialogUrl": "http://localhost:9090/oauth/authorize",
+    "accessTokenUrl": "http://localhost:9090/oauth/token",
+    "authorizeUrl": "http://localhost:9090/oauth/authorize",
+    "identityUrl": "http://localhost:9090/oauth/ident",
+    "redirectUrl": "http://localhost:8080/_oauth/lea"
+  },
   "useFixtures": true,
   "remotes": {
     "content": {
@@ -8,12 +22,17 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": false,
+        "field": true,
         "unit": true,
-        "unitSet": false,
-        "dimension": false,
-        "level": false,
-        "testCycle": false
+        "unitSet": true,
+        "dimension": true,
+        "level": true,
+        "testCycle": true,
+        "mapIcons": true,
+        "feedback": true,
+        "order":true,
+        "legal":true,
+        "achievements":true
       },
       "remap": {
         "active": true,
@@ -42,6 +61,12 @@
     "outputFormat": "hex"
   },
   "log": {
-    "level": 1
-  }
+    "level": 0
+  },
+  "email": {
+    "notify": ["admin@example.com"],
+    "replyTo": "noreply@example.com",
+    "from": "system@example.com"
+  },
+  "public": {}
 }

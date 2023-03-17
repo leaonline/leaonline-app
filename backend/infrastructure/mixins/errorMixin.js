@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { normalizeError } from '../../api/errors/normalizeError'
 import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
 
@@ -31,7 +32,7 @@ const sendError = ({ name, isMethod, error, userId, isPublication }) => {
     error,
     userId,
     method: isMethod ? name : undefined,
-    publication: isPublication ? name : undefined,
+    publication: isPublication ? name : undefined
   })
 
   notifyUsersAboutError(normalizedError)
