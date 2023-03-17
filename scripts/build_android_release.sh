@@ -18,7 +18,7 @@ BUILD_PATH=$(realpath "$1")
 GIT_HASH=$(git rev-parse --short HEAD)
 
 # use timestamp as essential part of the filemname
-TIMESTAMP=$(date +%F-%T)
+TIMESTAMP=$(date +%F-%T | sed -r 's/[:]+/-/g')
 
 # this is our final filename
 FILENAME="lea-app-$TIMESTAMP-$GIT_HASH.aab"
