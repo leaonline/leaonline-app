@@ -122,6 +122,8 @@ dist
 # specific assets that may not comply
 # with license or bloat the repo
 src/lib/assets/fonts/
+!src/lib/assets/fonts/OpenSans-Regular.ttf
+!src/lib/assets/fonts/OFL.txt
 src/lib/assets/linked/
 
 # deployment folders
