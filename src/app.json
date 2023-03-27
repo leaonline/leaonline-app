@@ -1,9 +1,11 @@
 {
   "expo": {
-    "name": "leaonline",
+    "name": "lea.App",
     "slug": "leaonline",
     "version": "1.0.1",
     "orientation": "portrait",
+    "privacy": "public",
+    "jsEngine": "hermes",
     "icon": "./lib/assets/icons/favicon-1024.png",
     "splash": {
       "image": "./lib/assets/splash.png",
@@ -21,7 +23,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.testCompany.leaonline"
+      "bundleIdentifier": "de.uni-bremen.leaonline",
+      "infoPlist": {
+        "UIViewControllerBasedStatusBarAppearance": "YES"
+      }
     },
     "android": {
       "adaptiveIcon": {

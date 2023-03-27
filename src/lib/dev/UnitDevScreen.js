@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useRef } from 'react'
+import React, { useContext, useMemo, useReducer, useRef } from 'react'
 import { useDocs } from '../meteor/useDocs'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { loadDevUnit } from './loadDevUnit'
@@ -11,6 +11,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { getDimensionColor } from '../screens/unit/getDimensionColor'
 import { Log } from '../infrastructure/Log'
+import { unitPageHasItem } from '../screens/unit/unitPageHasItem'
 
 const initialState = () => ({
   page: 0,
@@ -61,6 +62,9 @@ export const UnitDevScreen = props => {
   })
 
   const unitDoc = unitDocs?.data
+  const hasItem = useMemo(() => {
+    return unitPageHasItem({ unitDoc, page })
+  }, [unitDoc, page])
   const dimensionColor = getDimensionColor(dimension)
 
   const submitResponse = async ({ responses, data }) => {
@@ -111,6 +115,7 @@ export const UnitDevScreen = props => {
           tts={t('unitScreen.actions.check')}
           color={Colors.primary}
           icon='edit'
+          disabled={!hasItem}
           onPress={checkScore}
                                  />}
         {showCorrectResponse && <ActionButton

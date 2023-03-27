@@ -9,6 +9,7 @@ import Meteor from '@meteorrn/core'
  * @param onSuccess {function}
  */
 export const updateUserProfile = ({ voice, speed, onError, onSuccess }) => {
+  // TODO use Config.methods
   Meteor.call('users.methods.updateProfile', { voice, speed }, (err) => {
     if (err) {
       return onError(err)

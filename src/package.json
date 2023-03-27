@@ -14,7 +14,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.16.0",
     "@expo/vector-icons": "^13.0.0",
-    "@meteorrn/core": "git+ssh://git@github.com/ToyboxZach/meteor-react-native.git#Merge",
+    "@meteorrn/core": "2.4.0",
     "@meteorrn/minimongo": "1.0.1",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/netinfo": "9.3.0",

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext, useReducer } from 'react'
+import React, { useEffect, useRef, useContext, useReducer, useMemo } from 'react'
 import { Log } from '../../infrastructure/Log'
 import { Colors } from '../../constants/Colors'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -19,6 +19,7 @@ import { checkResponse } from './createResponseDoc'
 import { UnitSetRenderer } from './renderer/UnitSetRenderer'
 import './registerComponents'
 import './registerInstructions'
+import { unitPageHasItem } from './unitPageHasItem'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { UserProgress } from '../../contexts/UserProgress'
@@ -152,7 +153,9 @@ export const UnitScreen = props => {
 
   const { unitSetDoc, unitDoc, sessionDoc } = docs.data
   const dimensionColor = getDimensionColor(dimension)
-
+  const hasItem = useMemo(() => {
+    return unitPageHasItem({ unitDoc, page })
+  },  [unitDoc, page])
   // ---------------------------------------------------------------------------
   // finish --> NAVIGATION
   // ---------------------------------------------------------------------------
@@ -309,7 +312,9 @@ export const UnitScreen = props => {
     const hasNextPage = page < unitDoc.pages.length - 1
     const isLast = (session.progress ?? 0) === (session.unitSet?.progress ?? 1)
 
-    if (!showCorrectResponse) {
+    // XXX: some items have no item on a page so we can't
+    // check their score and thus need to skip the check btn
+    if (!showCorrectResponse && hasItem) {
       return (
         <ActionButton
           block

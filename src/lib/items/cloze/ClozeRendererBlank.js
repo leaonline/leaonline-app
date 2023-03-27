@@ -113,6 +113,7 @@ export const ClozeRendererBlank = props => {
         // prevent various type assistance functionalities
         autoCorrect={false}
         autoCapitalize='none'
+        autoComplete='off'
         contextMenuHidden
         importantForAutofill='no' // android
         textContentType='none' // ios

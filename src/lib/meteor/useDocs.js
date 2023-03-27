@@ -3,6 +3,8 @@ import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 
 const MAX_ATTEMPTS = 3
 
+// TODO move to hooks folder
+
 /**
  * This method is a common wrapper for data loading on any of our Screens.
  * It wraps a (potentially async) loading function with three states:

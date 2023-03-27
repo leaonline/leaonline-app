@@ -118,7 +118,7 @@ export const UnitRenderer = props => {
 
     return (
       <FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
-        <LeaText style={styles.pageText}>
+          <View style={styles.pageText}>
           <Icon
             testID='info-icon'
             reverse
@@ -127,7 +127,7 @@ export const UnitRenderer = props => {
             name='info'
             type='font-awesome-5'
           />
-        </LeaText>
+          </View>
         <InstructionsGraphicsRenderer
           subtype={itemSubtype.subtype}
           text={instructions.value}
@@ -259,6 +259,6 @@ const styles = createStyleSheet({
     marginRight: 4,
     alignItems: 'stretch'
   }
-})
+}, true)
 
 const dropShadow = Layout.dropShadow()
