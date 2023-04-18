@@ -83,13 +83,20 @@ export const loadAchievementsData = async () => {
       copy.competencies = {}
 
       fields.forEach(fieldDoc => {
-        const fieldMaxCompetencies = maxCompetencies.get(fieldDoc._id)
-        const fieldUserCompetencies = userCompetencies.get(fieldDoc._id)
+        const hasAchievements = Achievements.collection().find({
+          fieldId: fieldDoc._id,
+          dimensionId: dimensionDoc._id
+        }).count() > 0
 
-        copy.competencies[fieldDoc._id] = {
-          title: fieldDoc.title,
-          icon: dimensionDoc.icon,
-          value: 100 * (fieldUserCompetencies / fieldMaxCompetencies)
+        if (hasAchievements) {
+          const fieldMaxCompetencies = maxCompetencies.get(fieldDoc._id)
+          const fieldUserCompetencies = userCompetencies.get(fieldDoc._id)
+
+          copy.competencies[fieldDoc._id] = {
+            title: fieldDoc.title,
+            icon: dimensionDoc.icon,
+            value: 100 * (fieldUserCompetencies / fieldMaxCompetencies)
+          }
         }
       })
 

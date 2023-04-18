@@ -7,6 +7,7 @@ import { StaticCircularProgress } from '../../../components/progress/StaticCircu
 import { useTts } from '../../../components/Tts'
 import { Diamond } from '../../../components/progress/Diamond'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
+import { isDefined } from '../../../utils/isDefined'
 
 const RenderDimensionAchievements = props => {
   const { Tts } = useTts()
@@ -65,7 +66,15 @@ const RenderDimensionAchievements = props => {
       >
         {fields.map((fieldDoc) => {
           const diamonds = new Array(5)
-          const percent = dimensionDoc.competencies[fieldDoc._id].value
+          const fieldAchievements = dimensionDoc.competencies[fieldDoc._id]
+
+          // some combinations of dimension-field are not defined
+          // which is why we need to skip rendering at this point
+          if (!isDefined(fieldAchievements)) {
+            return null
+          }
+
+          const percent = fieldAchievements.value
 
           // 5 diamonds
           diamonds[0] = percent > 0 ? 100 : 0
