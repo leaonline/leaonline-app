@@ -59,4 +59,4 @@ const styles = createStyleSheet({
   contentElement: {
     margin: 5
   }
-}, true)
+})
