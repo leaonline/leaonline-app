@@ -23,6 +23,7 @@ import { unitPageHasItem } from './unitPageHasItem'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { UserProgress } from '../../contexts/UserProgress'
+import { isDefined } from '../../utils/isDefined'
 
 const log = Log.create('UnitScreen')
 
@@ -144,6 +145,19 @@ export const UnitScreen = props => {
     }
   }, [props.navigation])
 
+  // we try to get the docs in any way, because
+  // skipping early before useMemo can cause an error
+  // due to changed hook order!
+  const { unitSetDoc, unitDoc, sessionDoc } = (docs?.data ?? {})
+  const dimensionColor = getDimensionColor(dimension)
+  const hasItem = useMemo(() => {
+    return (
+      isDefined(unitDoc) &&
+      isDefined(page) &&
+      unitPageHasItem({ unitDoc, page })
+    )
+  },  [unitDoc, page])
+
   // ---------------------------------------------------------------------------
   // SKip early
   // ---------------------------------------------------------------------------
@@ -151,11 +165,6 @@ export const UnitScreen = props => {
     return (<ScreenBase {...docs} />)
   }
 
-  const { unitSetDoc, unitDoc, sessionDoc } = docs.data
-  const dimensionColor = getDimensionColor(dimension)
-  const hasItem = useMemo(() => {
-    return unitPageHasItem({ unitDoc, page })
-  },  [unitDoc, page])
   // ---------------------------------------------------------------------------
   // finish --> NAVIGATION
   // ---------------------------------------------------------------------------
