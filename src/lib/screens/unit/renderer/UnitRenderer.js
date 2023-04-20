@@ -118,7 +118,7 @@ export const UnitRenderer = props => {
 
     return (
       <FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
-          <View style={styles.pageText}>
+        <View style={styles.pageText}>
           <Icon
             testID='info-icon'
             reverse
@@ -127,7 +127,7 @@ export const UnitRenderer = props => {
             name='info'
             type='font-awesome-5'
           />
-          </View>
+        </View>
         <InstructionsGraphicsRenderer
           subtype={itemSubtype.subtype}
           text={instructions.value}

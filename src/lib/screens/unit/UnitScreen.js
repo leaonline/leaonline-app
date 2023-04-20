@@ -156,7 +156,7 @@ export const UnitScreen = props => {
       isDefined(page) &&
       unitPageHasItem({ unitDoc, page })
     )
-  },  [unitDoc, page])
+  }, [unitDoc, page])
 
   // ---------------------------------------------------------------------------
   // SKip early
