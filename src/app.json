@@ -2,7 +2,7 @@
   "expo": {
     "name": "lea.App",
     "slug": "leaonline",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "privacy": "public",
     "jsEngine": "hermes",
@@ -29,12 +29,17 @@
       }
     },
     "android": {
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./lib/assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.testCompany.leaonline",
-      "versionCode": 3
+      "versionCode": 3,
+      "allowBackup": false
     }
   }
 }
