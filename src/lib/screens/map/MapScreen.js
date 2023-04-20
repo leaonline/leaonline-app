@@ -47,7 +47,9 @@ export const MapScreen = props => {
     fn: () => loadMapData({
       fieldDoc: session.field,
       loadUserData: session.loadUserData,
-      onUserDataLoaded: () => sessionActions.update({ loadUserData: null })
+      onUserDataLoaded: () => {
+        sessionActions.update({ loadUserData: null })
+      }
     })
   })
 
@@ -176,9 +178,9 @@ export const MapScreen = props => {
           removeClippedSubviews
           persistentScrollbar
           keyExtractor={flatListKeyExtractor}
-          initialNumToRender={50}
-          maxToRenderPerBatch={50}
-          updateCellsBatchingPeriod={100}
+          initialNumToRender={10}
+          maxToRenderPerBatch={1}
+          updateCellsBatchingPeriod={500}
           getItemLayout={flatListGetItemLayout}
         />
       </View>
