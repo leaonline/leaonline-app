@@ -8,7 +8,7 @@
     "jsEngine": "hermes",
     "icon": "./lib/assets/icons/favicon-1024.png",
     "splash": {
-      "image": "./lib/assets/splash.png",
+      "image": "./lib/assets/splash_screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,7 +23,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "de.uni-bremen.leaonline",
+      "bundleIdentifier": "de.unibremen.leaonline",
       "infoPlist": {
         "UIViewControllerBasedStatusBarAppearance": "YES"
       }
@@ -33,7 +33,8 @@
         "foregroundImage": "./lib/assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.testCompany.leaonline"
+      "package": "com.testCompany.leaonline",
+      "versionCode": 3
     }
   }
 }
