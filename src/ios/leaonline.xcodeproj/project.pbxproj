@@ -319,8 +319,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.testCompany.leaonline";
-				PRODUCT_NAME = "leaonline";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.unibremen.leaonline";
+				PRODUCT_NAME = "leaApp";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -344,8 +344,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.testCompany.leaonline";
-				PRODUCT_NAME = "leaonline";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.unibremen.leaonline";
+				PRODUCT_NAME = "leaApp";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";
