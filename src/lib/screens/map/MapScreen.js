@@ -178,9 +178,9 @@ export const MapScreen = props => {
           removeClippedSubviews
           persistentScrollbar
           keyExtractor={flatListKeyExtractor}
-          initialNumToRender={10}
-          maxToRenderPerBatch={1}
-          updateCellsBatchingPeriod={500}
+          initialNumToRender={50}
+          maxToRenderPerBatch={50}
+          updateCellsBatchingPeriod={3000}
           getItemLayout={flatListGetItemLayout}
         />
       </View>

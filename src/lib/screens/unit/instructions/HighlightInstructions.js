@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Animated, Pressable } from 'react-native'
+import { Animated, Pressable, Vibration } from 'react-native'
 import { Svg, G, Path } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Layout } from '../../../constants/Layout'
@@ -15,6 +15,8 @@ export const HighlightInstructions = props => {
     if (handAnimation.current.running === false) {
       return
     }
+
+    Vibration.vibrate(100)
     const anim = handAnimation.current.animation ?? Animated.timing(handPosition, {
       toValue: { x: props.width / 2 + 7, y: 0 },
       duration: 1000,
@@ -27,22 +29,22 @@ export const HighlightInstructions = props => {
 
     anim.start(() => {
       setSelected(true)
-      anim.reset()
       setTimeout(() => {
-        setSelected(false)
-        if (handAnimation.current.running) {
-          runAnimation()
-        }
+        endAnimation()
       }, 750)
     })
   }, [])
 
+  const endAnimation = () => {
+    handAnimation.current.running = false
+    handAnimation.current.animation.stop()
+    handAnimation.current.animation.reset()
+    setSelected(false)
+  }
+
   const toggleAnimation = () => {
     if (handAnimation.current.running) {
-      handAnimation.current.running = false
-      handAnimation.current.animation.stop()
-      handAnimation.current.animation.reset()
-      setSelected(false)
+      endAnimation()
     }
     else {
       handAnimation.current.running = true

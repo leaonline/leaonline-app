@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useRef } from 'react'
-import { Animated, Pressable } from 'react-native'
+import { Animated, Pressable, Vibration } from 'react-native'
 import { Svg, G, Path, Line } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Layout } from '../../../constants/Layout'
@@ -9,6 +9,7 @@ const initialState = () => ({
   leftSelected: false,
   rightSelected: false
 })
+
 const reducer = (prev, next) => {
   switch (next.type) {
     case 'left':
@@ -34,7 +35,7 @@ export const ConnectInstructions = props => {
       if (value.x === props.width / 2 - 30 && !leftSelected) {
         dispatch({ type: 'left' })
       }
-      if (value.x === props.width - 60 && !rightSelected) {
+      if (value.x === props.width - 50 && !rightSelected) {
         dispatch({ type: 'right' })
       }
     })
@@ -47,22 +48,23 @@ export const ConnectInstructions = props => {
       return
     }
 
+    Vibration.vibrate(100)
     const toLeftElement = Animated.timing(handPosition, {
       toValue: { x: props.width / 2 - 30, y: 0 },
       duration: 1000,
-      useNativeDriver: false
+      useNativeDriver: true
     })
 
     const toRightElement = Animated.timing(handPosition, {
-      toValue: { x: props.width - 60, y: 30 },
+      toValue: { x: props.width - 50, y: 30 },
       duration: 1000,
-      useNativeDriver: false
+      useNativeDriver: true
     })
 
     const backToStart = Animated.timing(handPosition, {
       toValue: { x: 0, y: 0 },
       duration: 1000,
-      useNativeDriver: false
+      useNativeDriver: true
     })
 
     const anim = handAnimation.current.animation ?? Animated.sequence([
@@ -78,21 +80,20 @@ export const ConnectInstructions = props => {
     }
 
     anim.start(() => {
-      anim.reset()
-      setTimeout(() => {
-        if (handAnimation.current.running) {
-          runAnimation()
-        }
-      }, 750)
+      endAnimation()
     })
   }, [])
 
+  const endAnimation = () => {
+    handAnimation.current.animation.stop()
+    handAnimation.current.animation.reset()
+    handAnimation.current.running = false
+    dispatch({ type: 'reset' })
+  }
+
   const toggleAnimation = () => {
     if (handAnimation.current.running) {
-      handAnimation.current.animation.stop()
-      handAnimation.current.animation.reset()
-      handAnimation.current.running = false
-      dispatch({ type: 'reset' })
+      endAnimation()
     }
     else {
       handAnimation.current.running = true
@@ -101,7 +102,11 @@ export const ConnectInstructions = props => {
   }
 
   return (
-    <Pressable accessibilityRole='button' onPress={toggleAnimation} style={styles.container}>
+    <Pressable
+      accessibilityRole='button'
+      onPress={toggleAnimation}
+      style={styles.container}
+    >
       <Animated.View
         style={[
           handPosition.getLayout(),

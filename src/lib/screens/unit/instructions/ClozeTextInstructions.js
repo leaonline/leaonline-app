@@ -1,5 +1,5 @@
 import React, { useCallback, useReducer, useRef } from 'react'
-import { Animated, PixelRatio, Pressable, View } from 'react-native'
+import { Animated, PixelRatio, Pressable, Vibration, View } from 'react-native'
 import { Svg, G, Path, Line } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../../components/Loading'
@@ -63,6 +63,8 @@ export const ClozeTextInstructions = props => {
     if (handAnimation.current.running === false) {
       return
     }
+
+    Vibration.vibrate(100)
     const anim = handAnimation.current.animation ?? Animated.timing(handPosition, {
       toValue: { x: state.graphics.handToX, y: state.graphics.y },
       duration: 1000,
@@ -74,7 +76,6 @@ export const ClozeTextInstructions = props => {
     }
 
     anim.start(() => {
-      anim.reset()
       dispatch({ type: 'select' })
 
       setTimeout(() => {
@@ -86,22 +87,23 @@ export const ClozeTextInstructions = props => {
       }, 1000)
 
       setTimeout(() => {
-        dispatch({ type: 'reset' })
-        if (handAnimation.current.running) {
-          runAnimation()
-        }
+        endAnimation()
       }, 1750)
     })
   }, [state.width, state.height, state.graphics])
+
+  const endAnimation = () => {
+    handAnimation.current.running = false
+    handAnimation.current.animation.stop()
+    handAnimation.current.animation.reset()
+    dispatch({ type: 'reset' })
+  }
 
   const toggleAnimation = () => {
     if (!isReady) { return }
 
     if (handAnimation.current.running) {
-      handAnimation.current.running = false
-      handAnimation.current.animation.stop()
-      handAnimation.current.animation.reset()
-      dispatch({ type: 'reset' })
+      endAnimation()
     }
     else {
       handAnimation.current.running = true

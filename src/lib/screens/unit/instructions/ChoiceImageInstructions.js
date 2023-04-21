@@ -29,20 +29,21 @@ export const ChoiceImageInstructions = props => {
       setSelected(true)
       anim.reset()
       setTimeout(() => {
-        setSelected(false)
-        if (handAnimation.current.running) {
-          runAnimation()
-        }
+        endAnimation()
       }, 750)
     })
   }, [])
 
+  const endAnimation = () => {
+    handAnimation.current.running = false
+    handAnimation.current.animation.stop()
+    handAnimation.current.animation.reset()
+    setSelected(false)
+  }
+
   const toggleAnimation = () => {
     if (handAnimation.current.running) {
-      handAnimation.current.running = false
-      handAnimation.current.animation.stop()
-      handAnimation.current.animation.reset()
-      setSelected(false)
+      endAnimation()
     }
     else {
       handAnimation.current.running = true
