@@ -1,8 +1,7 @@
-import React, { useCallback, useReducer, useRef } from 'react'
-import { Animated, Pressable, Vibration } from 'react-native'
+import React, { useCallback, useReducer, useRef, useState } from 'react'
+import { Animated, PixelRatio, Pressable, Vibration } from 'react-native'
 import { Svg, G, Path, Rect, Circle } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { Layout } from '../../../constants/Layout'
 
 const defaultPosition = { x: 0, y: 0 }
 const initialState = () => ({
@@ -24,7 +23,13 @@ export const ClozeSelectInstructions = props => {
   const handPosition = useRef(new Animated.ValueXY(defaultPosition)).current
   const handAnimation = useRef({ animation: null, running: false })
   const [state, dispatch] = useReducer(reducer, initialState(), undefined)
+  const [size, setSize] = useState(0)
   const { selected } = state
+
+  const onContainerLayout = event => {
+    const { width } = event.nativeEvent.layout
+    setSize(PixelRatio.roundToNearestPixel(width / 5))
+  }
 
   const runAnimation = useCallback(() => {
     if (handAnimation.current.running === false) {
@@ -69,7 +74,12 @@ export const ClozeSelectInstructions = props => {
   }
 
   return (
-    <Pressable accessibilityRole='button' onPress={toggleAnimation} style={styles.container}>
+    <Pressable
+      onLayout={onContainerLayout}
+      accessibilityRole='button'
+      onPress={toggleAnimation}
+      style={styles.container}
+    >
       <Animated.View
         style={[
           handPosition.getLayout(),
@@ -80,7 +90,7 @@ export const ClozeSelectInstructions = props => {
         iterationCount='infinite'
         useNativeDriver
       >
-        <HandMove width={Layout.withRatio(25)} height={Layout.withRatio(25)} />
+        <HandMove width={size} height={size} />
       </Animated.View>
       <Animated.View
         style={[
@@ -95,7 +105,7 @@ export const ClozeSelectInstructions = props => {
         iterationCount='infinite'
         useNativeDriver
       >
-        <ColorListImg width={Layout.withRatio(30)} height={Layout.withRatio(30)} selected={selected} />
+        <ColorListImg width={size} height={size} selected={selected} />
       </Animated.View>
     </Pressable>
   )

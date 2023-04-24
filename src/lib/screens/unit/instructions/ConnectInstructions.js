@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useReducer, useRef } from 'react'
-import { Animated, Pressable, Vibration } from 'react-native'
+import { Animated, PixelRatio, Pressable, Vibration } from 'react-native'
 import { Svg, G, Path, Line } from 'react-native-svg'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { Layout } from '../../../constants/Layout'
 
 const defaultPosition = { x: 0, y: 0 }
 const initialState = () => ({
   leftSelected: false,
-  rightSelected: false
+  rightSelected: false,
+  size: 0
 })
 
 const reducer = (prev, next) => {
   switch (next.type) {
+    case 'layout':
+      return { ...prev, size: next.size }
     case 'left':
       return { ...prev, leftSelected: true }
     case 'right':
@@ -25,7 +27,12 @@ export const ConnectInstructions = props => {
   const handPosition = useRef(new Animated.ValueXY(defaultPosition)).current
   const handAnimation = useRef({ animation: null, running: false })
   const [state, dispatch] = useReducer(reducer, initialState(), undefined)
-  const { leftSelected, rightSelected } = state
+  const { leftSelected, rightSelected, size } = state
+
+  const onContainerLayout = event => {
+    const { width } = event.nativeEvent.layout
+    dispatch({ type: 'layout', size: PixelRatio.roundToNearestPixel(width / 5) })
+  }
 
   useEffect(() => {
     const listenerId = handPosition.addListener(value => {
@@ -52,19 +59,19 @@ export const ConnectInstructions = props => {
     const toLeftElement = Animated.timing(handPosition, {
       toValue: { x: props.width / 2 - 30, y: 0 },
       duration: 1000,
-      useNativeDriver: true
+      useNativeDriver: false
     })
 
     const toRightElement = Animated.timing(handPosition, {
       toValue: { x: props.width - 50, y: 30 },
       duration: 1000,
-      useNativeDriver: true
+      useNativeDriver: false
     })
 
     const backToStart = Animated.timing(handPosition, {
       toValue: { x: 0, y: 0 },
       duration: 1000,
-      useNativeDriver: true
+      useNativeDriver: false
     })
 
     const anim = handAnimation.current.animation ?? Animated.sequence([
@@ -103,6 +110,7 @@ export const ConnectInstructions = props => {
 
   return (
     <Pressable
+      onLayout={onContainerLayout}
       accessibilityRole='button'
       onPress={toggleAnimation}
       style={styles.container}
@@ -117,7 +125,7 @@ export const ConnectInstructions = props => {
         iterationCount='infinite'
         useNativeDriver
       >
-        <HandMove width={Layout.withRatio(25)} height={Layout.withRatio(25)} />
+        <HandMove width={size} height={size} />
       </Animated.View>
       <Animated.View
         style={[
@@ -133,8 +141,8 @@ export const ConnectInstructions = props => {
         useNativeDriver
       >
         <ConnectionImage
-          width={Layout.withRatio(30)}
-          height={Layout.withRatio(30)}
+          width={size}
+          height={size}
           leftSelected={leftSelected}
           rightSelected={rightSelected}
         />

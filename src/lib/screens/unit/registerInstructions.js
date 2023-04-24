@@ -8,7 +8,7 @@ import { ChoiceTextInstructions } from './instructions/ChoiceTextInstructions'
 import { ChoiceImageInstructions } from './instructions/ChoiceImageInstructions'
 import { ConnectInstructions } from './instructions/ConnectInstructions'
 import { ClozeTextInstructions } from './instructions/ClozeTextInstructions'
-import { ClozeSelectInstructions } from './instructions/ColozeSelectInstructions'
+import { ClozeSelectInstructions } from './instructions/ClozeSelectInstructions'
 
 InstructionAnimations.register(Choice.subtypes.choiceText, ChoiceTextInstructions)
 InstructionAnimations.register(Choice.subtypes.choiceImage, ChoiceImageInstructions)
