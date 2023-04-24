@@ -20,6 +20,7 @@ import { MapIcons } from '../../contexts/MapIcons'
 
 const log = Log.create('MapScreen')
 const ITEM_HEIGHT = 100
+const counter = 0.75
 
 /**
  * The MapScreen displays available "stages" (levels) of difficulty
@@ -188,7 +189,12 @@ export const MapScreen = props => {
   }
 
   return (
-    <ScreenBase {...mapDocs} loadMessage={t('mapScreen.loadData')} style={styles.container}>
+    <ScreenBase
+      {...mapDocs}
+      loadMessage={t('mapScreen.loadData')}
+      progress={counter}
+      style={styles.container}
+    >
       {renderList()}
     </ScreenBase>
   )
