@@ -132,6 +132,7 @@ const resources = {
     tts: {
       settings: 'My voice settings',
       voice: 'Voice {{value}}',
+      hello: 'Hello, I am {{name}}',
       speedText: 'I will speak for you {{value}}',
       speed: {
         slow: 'slow',
@@ -277,6 +278,7 @@ const resources = {
     tts: {
       settings: 'Meine Sprach\u00ADeinstellungen',
       voice: 'Stimme {{value}}',
+      hello: 'Hallo, ich bin {{name}}',
       speedText: 'Ich spreche den text für dich {{value}}',
       speed: {
         slow: 'Lang\u00ADsam',
