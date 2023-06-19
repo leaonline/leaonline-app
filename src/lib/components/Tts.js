@@ -396,13 +396,22 @@ export const TTSengine = {
 
 const loadVoices = (counter, onComplete) => {
   globalDebug('load voices', { counter })
-  const langPattern = /de[-_]+/g
+  const langPattern = /de[-_]+/i
 
   setTimeout(async () => {
     const voices = await Speech.getAvailableVoicesAsync()
 
     if (voices.length > 0) {
-      const filtered = voices.filter(v => langPattern.test(v.language))
+      const filtered = voices.filter(v => {
+        if (!langPattern.test(v.language)) {
+          return false
+        }
+        if (v.identifier.includes('eloquence')) {
+          return false
+        }
+        return true
+      })
+
       onComplete(filtered)
     }
     else {
