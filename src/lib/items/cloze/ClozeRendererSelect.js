@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Pressable, ScrollView, StatusBar, View } from 'react-native'
+import { Modal, Pressable, ScrollView, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { ActionButton } from '../../components/ActionButton'
 import { Colors } from '../../constants/Colors'
@@ -163,7 +163,7 @@ export const ClozeRendererSelect = props => {
       showChildInTooltip={false}
       tooltipStyle={styles.tooltip}
       contentStyle={[styles.tooltipContent, contentStyle]}
-      topAdjustment={-StatusBar.currentHeight}
+      topAdjustment={-Layout.statusBarHeight()}
       onClose={() => setShowTooltip(false)}
     >
       <Pressable accessibilityRole='button' onPress={onActivate}>

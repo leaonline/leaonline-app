@@ -24,9 +24,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.unibremen.leaonline",
-      "infoPlist": {
-        "UIViewControllerBasedStatusBarAppearance": "YES"
-      }
+      "UIViewControllerBasedStatusBarAppearance": true
     },
     "android": {
       "blockedPermissions": [
