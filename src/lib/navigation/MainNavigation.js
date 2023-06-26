@@ -3,6 +3,7 @@ import { CardStyleInterpolators } from '@react-navigation/stack'
 import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator } from '@react-navigation/stack'
 import { WelcomeScreen } from '../screens/auth/WelcomeScreen'
 import { TermsAndConditionsScreen } from '../screens/auth/TermsAndConditionsScreen'
 import { RegistrationScreen } from '../screens/auth/RegistrationScreen'
@@ -30,6 +31,7 @@ import { DeveloperScreen } from '../dev/DeveloperScreen'
 import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
+import { isIOS } from '../utils/isIOS'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -42,7 +44,9 @@ const { AppSessionProvider } = initAppSession()
  * @component
  * @returns {JSX.Element}
  */
-const Stack = createNativeStackNavigator()
+const Stack = isIOS()
+  ? createStackNavigator()
+  : createNativeStackNavigator()
 const headerStyle = { backgroundColor: Colors.light }
 const headerOptions = {
   statusBarHidden: false,

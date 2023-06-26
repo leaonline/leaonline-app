@@ -36,7 +36,6 @@
     "expo-secure-store": "~11.3.0",
     "expo-speech": "~10.3.0",
     "expo-splash-screen": "~0.16.2",
-    "expo-status-bar": "~1.4.0",
     "i18next": "^21.5.4",
     "marked": "4.2.12",
     "next-frame": "0.2.3",

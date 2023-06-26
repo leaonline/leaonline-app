@@ -72,7 +72,6 @@
     </array>
     <key>UIUserInterfaceStyle</key>
     <string>Light</string>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
   </dict>
 </plist>
