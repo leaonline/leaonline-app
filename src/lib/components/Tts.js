@@ -293,7 +293,7 @@ export const TTSengine = {
       }), timeout)
     }
     else {
-      return new Promise(resolve => resolve())
+      return Promise.resolve()
     }
   },
   /**
@@ -403,13 +403,10 @@ const loadVoices = (counter, onComplete) => {
 
     if (voices.length > 0) {
       const filtered = voices.filter(v => {
-        if (!langPattern.test(v.language)) {
-          return false
-        }
-        if (v.identifier.includes('eloquence')) {
-          return false
-        }
-        return true
+        return (
+          langPattern.test(v.language) &&
+          !(v.identifier ?? '').includes('eloquence')
+        )
       })
 
       onComplete(filtered)

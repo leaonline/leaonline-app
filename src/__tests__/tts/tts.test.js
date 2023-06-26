@@ -339,12 +339,19 @@ describe('API', function () {
     })
   })
   describe(TTSengine.getVoices.name, function () {
+    it('returns voices, if they already exist', async () => {
+      TTSengine.availableVoices = [{ foo: 'bar' }]
+      const voices = await TTSengine.getVoices()
+      expect(voices).toEqual([{ foo: 'bar' }])
+    })
     it('loads voices if not yet loaded', async () => {
-      await TTSengine.setSpeech({
+      TTSengine.availableVoices = null
+      const speechProvider = {
         async getAvailableVoicesAsync () {
           return [{ language: 'en-GB' }, { language: 'de-DE' }]
         }
-      })
+      }
+      await TTSengine.setSpeech(speechProvider)
       const voices = await TTSengine.getVoices()
       expect(voices).toEqual([{ language: 'de-DE' }])
     })
