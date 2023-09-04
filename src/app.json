@@ -23,7 +23,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "de.uni-bremen.leaonline"
+      "bundleIdentifier": "de.uni-bremen.leaonline.app"
     },
     "android": {
       "blockedPermissions": [
