@@ -34,12 +34,12 @@ export const useConnection = () => {
   const status = Meteor.useTracker(() => Meteor.status())
 
   if (status.connected && !connected) {
-    log('set connected', status)
+    log(Config.backend.url, 'connected', status)
     setConnected(true)
   }
 
   if (connected && !status.connected) {
-    log('set disconnected', status)
+    log(Config.backend.url, 'disconnected', status)
     setConnected(false)
   }
 
