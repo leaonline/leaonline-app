@@ -13,7 +13,8 @@ The lea.online app is a mobile app, developed using React-Native and Meteor.
 
 ## Get the app
 
-TBD, we will link the app store / play store links here, once we have a release
+- Android: https://play.google.com/store/apps/details?id=com.testCompany.leaonline
+- IOS: Coming soon 
 
 
 ## Development
