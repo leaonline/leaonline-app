@@ -15,7 +15,8 @@ const defaultMessage = 'promise.timedOut'
  * @param promise {Promise} the promise to race against the timeout
  * @param timeout {number=}  optional number of milliseconds until timeout, defaults to 1000ms / 1 sec
  * @param throwIfTimedOut {boolean=} optional flag to either reject (of true) or resolve (if false)
- * @param message {string=} optional message to be resolved/rejected on timeour
+ * @param message {string=} optional message to be resolved/rejected on timeout
+ * @param details {*=} optional any detail attached to the error context for better error tracing
  * @return {Promise<Awaited<unknown>>}
  */
 export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = false, message, details } = {}) => {
@@ -31,7 +32,7 @@ export const createTimedPromise = (promise, { timeout = 1000, throwIfTimedOut = 
           return reject(error)
         }
         else {
-          return resolve(message || defaultMessage)
+          return resolve(message)
         }
       }, timeout)
     })
