@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, ScrollView, View } from 'react-native'
+import { Button, ScrollView, Text, View } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import { useDocs } from '../meteor/useDocs'
 import { loadDevData } from './loadDevData'
@@ -10,6 +10,7 @@ import { Colors } from '../constants/Colors'
 import { AppSessionContext } from '../state/AppSessionContext'
 import { RouteButton } from '../components/RouteButton'
 import { resetSyncData } from './resetSyncData'
+import { Config } from '../env/Config'
 
 /**
  *
@@ -164,6 +165,12 @@ export const DeveloperScreen = props => {
       </ScreenBase>
       <View style={styles.row}>
         <RouteButton style={styles.button} block route='mapDev' text='Map Screen' icon='map-marker' />
+      </View>
+      <View style={styles.row}>
+        <Text>Server URL: {Config.backend.url}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text>Content URL: {Config.content.url}</Text>
       </View>
       <View style={styles.row}>
         <Button
