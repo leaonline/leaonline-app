@@ -1,12 +1,13 @@
 import React from 'react'
 import { useTts } from './Tts'
 import { ActionButton } from './ActionButton'
-import { Image, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
 import { i18n } from '../i18n'
 import { useTranslation } from 'react-i18next'
+import { Config } from '../env/Config'
 
 /**
  * Displays a visual component with a given error or defined message.
@@ -42,6 +43,23 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
     textBase = t(textBase)
   }
 
+  const debugError = () => {
+    //if (!Config.isDevelopment) { return null }
+
+    return (
+      <View style={styles.container} accessibilityRole='alert'>
+        <Text>{'Debugging Info'}</Text>
+        <Text>{`Type: ${error}`}</Text>
+        <Text>{`Name: ${error.name}`}</Text>
+        <Text>{`Message: ${error.message}`}</Text>
+        <Text>{`Reason: ${error.reason}`}</Text>
+        <Text>{`Details: ${error.details && JSON.stringify(error.details)}`}</Text>
+        <Text>{`Additional msg: ${message}`}</Text>
+        <Text>{`Text base: ${textBase}`}</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container} accessibilityRole='alert'>
       <Image
@@ -63,6 +81,7 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
         iconColor={Colors.danger}
         color={Colors.secondary}
       />
+      {debugError()}
       {renderConfirm()}
     </View>
   )

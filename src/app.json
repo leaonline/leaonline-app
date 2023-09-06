@@ -50,9 +50,8 @@
             "targetSdkVersion": 33,
             "buildToolsVersion": "33.0.0",
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true,
-            "newArchEnabled": true,
-
+            "enableShrinkResourcesInReleaseBuilds": false,
+            "newArchEnabled": true
           },
           "ios": {
             "deploymentTarget": "14.0"

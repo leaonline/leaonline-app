@@ -4,7 +4,6 @@ import { useSplashScreen } from './hooks/useSplashScreen'
 import { useConnection } from './hooks/useConnection'
 import { ErrorMessage } from './components/ErrorMessage'
 import { initContexts } from './startup/initContexts'
-import { initFonts } from './startup/initFonts'
 import { initTTs } from './startup/initTTS'
 import { Connecting } from './components/Connecting'
 import { ViewContainer } from './components/ViewContainer'
@@ -18,7 +17,6 @@ const initFunction = [
   initExceptionHandling,
   validateSettingsSchema,
   initContexts,
-  initFonts,
   initTTs,
   initSound
 ]
@@ -46,7 +44,7 @@ export const App = function App () {
     return (
       <CatchErrors>
         <ViewContainer onLayout={onLayoutRootView}>
-          <ErrorMessage error={error.message} onLayout={onLayoutRootView} />
+          <ErrorMessage error={error} onLayout={onLayoutRootView} />
         </ViewContainer>
       </CatchErrors>
     )

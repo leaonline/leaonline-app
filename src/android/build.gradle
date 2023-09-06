@@ -10,7 +10,8 @@ buildscript {
         frescoVersion = findProperty('expo.frescoVersion') ?: '2.5.0'
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
+        // XXX: updated to NDK 25
+        ndkVersion = "25.2.9519653"
     }
     repositories {
         google()

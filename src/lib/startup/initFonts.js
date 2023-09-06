@@ -1,11 +1,11 @@
-import * as Font from 'expo-font'
+import { useFonts } from 'expo-font'
 
 /**
  * used to load our custom font
  * @private
- * @return {Promise<void>}
+ * @return {[boolean, Error|undefined]}
  */
-export const initFonts = async () => {
+export const initFonts = () => {
   let handle = null // bad style, alternative?
 
   try {
@@ -14,11 +14,7 @@ export const initFonts = async () => {
   catch (error) {
     handle = require('../assets/fonts/OpenSans-Regular.ttf')
   }
-  finally {
-    if (handle != null) {
-      await Font.loadAsync({
-        semicolon: handle
-      })
-    }
-  }
+  return useFonts({
+    semicolon: handle
+  })
 }

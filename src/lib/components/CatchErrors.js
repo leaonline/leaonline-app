@@ -24,6 +24,7 @@ export class CatchErrors extends React.Component {
     const message = err.reason ?? err.message
     this.setState({
       error: true,
+      originalError: err,
       message,
       stack
     })
@@ -33,7 +34,7 @@ export class CatchErrors extends React.Component {
     if (this.state.error) {
       return (
         <View style={styles.container}>
-          <ErrorMessage error={this.state.error} />
+          <ErrorMessage error={this.state.originalError} message={this.state.message} />
         </View>
       )
     }
