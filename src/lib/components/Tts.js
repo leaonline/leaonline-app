@@ -8,6 +8,7 @@ import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
 import { promiseWithTimeout } from '../utils/promiseWithTimeout'
 import { SoundIcon } from './SoundIcon'
+import { isValidNumber } from '../utils/isValidNumber'
 
 /** @private **/
 let Speech = null
@@ -66,6 +67,7 @@ const TtsComponent = props => {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
+  const [boundary, setBoundary] = useState({ charIndex: -1, charLength: -1 })
   const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.secondary)
 
   const getIdleIconColor = () => props.iconColor || props.color || Colors.secondary
@@ -133,7 +135,16 @@ const TtsComponent = props => {
         // TODO call stopSpeak and update tests to fix state bug
         stopSpeak()
         setIsDone(true)
-      }
+      },
+      // XXX: incubating feature, we will not use it on the next releases
+      onBoundary: props.boundary === true && ((e) => {
+        if (isValidNumber(e.charIndex) && isValidNumber(e.charLength)) {
+          setBoundary({
+            charIndex: e.charIndex,
+            charLength: e.charLength
+          })
+        }
+      })
     })
   }, [])
   /**
@@ -145,6 +156,7 @@ const TtsComponent = props => {
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
+    setBoundary({ charIndex: -1 , charLength: -1 })
     Speech.stop()
   }
   /**
@@ -178,7 +190,27 @@ const TtsComponent = props => {
       Object.assign(textStyleProps, props.fontStyle)
     }
 
-    return (<LeaText style={textStyleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
+    // if we receive a boundary update then we need to tokenize
+    // the text and let the text component render, based on token
+    let token
+
+    if (boundary.charIndex > -1 && boundary.charLength > -1) {
+      const start = boundary.charIndex
+      const end = start + boundary.charLength
+      token = []
+
+      if (start > 0) {
+        token.push({ key: 'before', text: props.text.slice(0, start) })
+      }
+
+      token.push({ key: 'word', text: props.text.slice(start, end), style: { color: props.activeIconColor ?? Colors.primary } })
+
+      if (end < props.text.length) {
+        token.push({ key: 'after', text: props.text.slice(end, props.text.length) })
+      }
+    }
+
+    return (<LeaText style={textStyleProps} fitSize={props.fitSize} token={token}>{props.text}</LeaText>)
   }
 
   const ttsContainerStyle = { ...styles.container }
