@@ -12,13 +12,15 @@ import { initExceptionHandling } from './startup/initExceptionHandling'
 import { CatchErrors } from './components/CatchErrors'
 import { initSound } from './startup/initSound'
 import { validateSettingsSchema } from './schema/validateSettingsSchema'
+import { initFonts } from './startup/initFonts'
 
-const initFunction = [
+const initFunctions = [
+  initFonts,
   initExceptionHandling,
   validateSettingsSchema,
   initContexts,
   initTTs,
-  initSound
+  initSound,
 ]
 
 /**
@@ -28,7 +30,7 @@ const initFunction = [
  * @returns {JSX.Element}
  */
 export const App = function App () {
-  const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
+  const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunctions)
   const { connected } = useConnection()
   const renderConnectionStatus = useCallback(() => {
     if (connected) {

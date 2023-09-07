@@ -1,6 +1,7 @@
 import { Colors } from './Colors'
 import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
+import {fontIsLoaded} from '../utils/fontIsLoaded'
 
 const window = Dimensions.get('window')
 const screen = Dimensions.get('screen')
@@ -8,6 +9,7 @@ const { width, height } = screen
 const ratio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const isLarge = width * ratio > 1300
+const SEMICOLON_FONT = 'semicolon'
 
 export const Layout = {}
 
@@ -56,29 +58,43 @@ Layout.content = () => {
  * Default styles for (Text-) input
  * components.
  */
-Layout.input = () => ({
-  padding: 5,
-  fontSize: Layout.fontSize() / Layout.fontScale(),
-  fontFamily: 'semicolon',
-  color: Colors.secondary,
-  backgroundColor: '#fff',
-  borderWidth: 1,
-  borderTopLeftRadius: 4,
-  borderTopRightRadius: 4,
-  borderBottomRightRadius: 4,
-  borderBottomLeftRadius: 4
-})
+Layout.input = () => {
+  const style = {
+    padding: 5,
+    fontSize: Layout.fontSize() / Layout.fontScale(),
+    color: Colors.secondary,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4
+  }
 
-Layout.defaultFont = () => ({
-  color: Colors.secondary,
-  fontFamily: 'semicolon',
-  fontSize: Layout.fontSize() / Layout.fontScale(),
-  lineHeight: 28,
-  fontStyle: 'normal',
-  fontWeight: 'normal',
-  padding: 0,
-  margin: 0
-})
+  if (fontIsLoaded(SEMICOLON_FONT)) {
+    style.fontFamily = SEMICOLON_FONT
+  }
+
+  return style
+}
+
+Layout.defaultFont = () => {
+  const style = {
+    color: Colors.secondary,
+    fontSize: Layout.fontSize() / Layout.fontScale(),
+    lineHeight: 28,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    padding: 0,
+    margin: 0
+  }
+
+  if (fontIsLoaded(SEMICOLON_FONT)) {
+    style.fontFamily = SEMICOLON_FONT
+  }
+
+  return style
+}
 
 Layout.borderRadius = () => 15
 

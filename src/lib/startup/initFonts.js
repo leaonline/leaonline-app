@@ -1,20 +1,27 @@
-import { useFonts } from 'expo-font'
+import * as Font  from 'expo-font'
+import { Log } from '../infrastructure/Log'
 
 /**
  * used to load our custom font
  * @private
- * @return {[boolean, Error|undefined]}
+ * @return {Promise.<void>}
  */
 export const initFonts = () => {
-  let handle = null // bad style, alternative?
+  let handle
 
   try {
     handle = require('../assets/fonts/SemikolonPlus-Regular.ttf')
   }
   catch (error) {
+    Log.error(error)
     handle = require('../assets/fonts/OpenSans-Regular.ttf')
   }
-  return useFonts({
-    semicolon: handle
-  })
+
+  if (!handle) {
+    throw new Error(`Expected font handle, got ${handle}`)
+  }
+
+  const fontMap = { semicolon: handle }
+  Log.debug('load font', fontMap)
+  Font.loadAsync(fontMap)
 }

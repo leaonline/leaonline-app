@@ -2,15 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 import { START_UP_DELAY } from '../constants/App'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
-import { initFonts } from '../startup/initFonts'
+import { Log } from '../infrastructure/Log'
 
 export const useSplashScreen = (initFunctions) => {
-  const [fontsLoaded, fontLoadingError] = initFonts()
   const [appIsReady, setAppIsReady] = useState(false)
   const [error, setError] = useState(null)
 
   const onLayoutRootView = useCallback(async () => {
-    if (appIsReady && fontsLoaded) {
+    if (appIsReady) {
       // This tells the splash screen to hide immediately! If we call this after
       // `setAppIsReady`, then we may see a blank screen while the app is
       // loading its initial state and rendering its first pixels. So instead,
@@ -18,10 +17,11 @@ export const useSplashScreen = (initFunctions) => {
       // performed layout.
       await SplashScreen.hideAsync()
     }
-  }, [appIsReady, fontsLoaded])
+  }, [appIsReady])
 
   useEffect(() => {
     const onError = e => {
+      Log.error(e)
       InteractionGraph.problem({
         type: 'startup',
         error: e
@@ -52,7 +52,5 @@ export const useSplashScreen = (initFunctions) => {
     prepare().catch(onError)
   }, [])
 
-  return {
-    appIsReady, onLayoutRootView, error, fontLoadingError
-  }
+  return { appIsReady, onLayoutRootView, error }
 }
