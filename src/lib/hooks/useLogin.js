@@ -2,6 +2,7 @@ import { useReducer, useEffect, useMemo } from 'react'
 import Meteor from '@meteorrn/core'
 import { loadSettingsFromUserProfile } from '../env/loadSettingsFromUserProfile'
 import { useConnection } from './useConnection'
+import { Config } from '../env/Config'
 
 /** @private */
 const initialState = {
@@ -128,7 +129,12 @@ export const useLogin = () => {
       })
     },
     signUp: ({ voice, speed, onError, onSuccess }) => {
-      Meteor.call('users.methods.create', { voice, speed }, (err, res) => {
+      const args = { voice, speed }
+      // TODO add isDev for developer accounts
+      // if (Config.isDeveloperRelease()) {
+      //   args.isDev = true
+      // }
+      Meteor.call('users.methods.create', args, (err, res) => {
         if (err) {
           return onError(err)
         }

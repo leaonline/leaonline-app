@@ -31,6 +31,7 @@ import { UnitDevScreen } from '../dev/UnitDevScreen'
 import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
 import { getHeaderOptions } from './getHeaderOptions'
+import { LoggingScreen } from '../screens/logging/LoggingScreen'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -46,7 +47,8 @@ const { AppSessionProvider } = initAppSession()
 const Stack = createNativeStackNavigator()
 const headerStyle = { backgroundColor: Colors.light }
 const headerOptions = getHeaderOptions()
-const DevelopmentButton = createDevelopmentButton({ route: 'development' })
+const DevelopmentButton = createDevelopmentButton({ route: 'development', icon: 'keyboard' })
+const LoggingButton = createDevelopmentButton({ route: 'logging', icon: 'align-left' })
 
 export const MainNavigation = (props) => {
   useKeepAwake()
@@ -74,7 +76,7 @@ export const MainNavigation = (props) => {
             headerStyle,
             headerBackVisible: false,
             headerTitleAlign: 'center',
-            headerLeft: () => (<DevelopmentButton />),
+            headerLeft: () => (<><DevelopmentButton /><LoggingButton /></>),
             headerTitle: () => (<></>),
             headerRight
           }}
@@ -178,6 +180,20 @@ export const MainNavigation = (props) => {
           }}
         />,
         <Stack.Screen
+          name='logging'
+          key='logging'
+          component={LoggingScreen}
+          options={{
+            ...headerOptions,
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerRight
+          }}
+        />,
+        <Stack.Screen
           name='unitDev'
           key='unitDev'
           component={UnitDevScreen}
@@ -227,6 +243,7 @@ export const MainNavigation = (props) => {
             title: welcomeTitle,
             headerStyle,
             headerTitleAlign: 'center',
+            headerLeft: () => (<LoggingButton />),
             headerTitle: () => renderTitleTts(welcomeTitle)
           }}
         />
@@ -264,6 +281,19 @@ export const MainNavigation = (props) => {
             headerTitleAlign: 'center',
             headerBackTitleVisible: false,
             headerTitle: () => renderTitleTts(restoreTitle)
+          }}
+        />
+        <Stack.Screen
+          name='logging'
+          key='logging'
+          component={LoggingScreen}
+          options={{
+            ...headerOptions,
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
           }}
         />
       </>

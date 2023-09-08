@@ -413,25 +413,32 @@ export const TTSengine = {
    * Returns all available voices
    * @return {Promise<Array<Object>>}
    */
-  getVoices: () => new Promise(resolve => {
+  getVoices: () => new Promise((resolve, reject) => {
     globalDebug('get voices')
     if (TTSengine.availableVoices !== null) {
       return resolve(TTSengine.availableVoices)
     }
 
-    loadVoices(5, loaded => {
+    const onComplete = loaded => {
       TTSengine.availableVoices = loaded
       return resolve(loaded)
-    })
+    }
+
+    loadVoices({ count: 5, onComplete, onError: reject })
   })
 }
 
-const loadVoices = (counter, onComplete) => {
+const loadVoices = ({ counter, onComplete, onError }) => {
   globalDebug('load voices', { counter })
   const langPattern = /de[-_]+/i
 
   setTimeout(async () => {
-    const voices = await Speech.getAvailableVoicesAsync()
+    let voices
+    try {
+      voices = await Speech.getAvailableVoicesAsync()
+    } catch (err) {
+      return onError(err)
+    }
 
     if (voices.length > 0) {
       const filtered = voices.filter(v => {
@@ -445,7 +452,11 @@ const loadVoices = (counter, onComplete) => {
     }
     else {
       if (!counter || counter < 10) {
-        loadVoices((counter ?? 0) + 1, onComplete)
+        loadVoices({
+          count: (counter ?? 0) + 1,
+          onComplete,
+          onError
+        })
       }
       else {
         onComplete([])

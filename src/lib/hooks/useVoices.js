@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { TTSengine } from '../components/Tts'
+import { Log } from '../infrastructure/Log'
 
 export const useVoices = () => {
   const [voices, setVoices] = useState([])
@@ -9,7 +10,7 @@ export const useVoices = () => {
   useEffect(() => {
     TTSengine.getVoices()
       .catch(e => {
-        console.error(e)
+        Log.error(e)
         setVoicesLoaded(true)
       })
       .then(result => {
