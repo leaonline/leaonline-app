@@ -2,7 +2,7 @@
   "isDevelopment": false,
   "isDeveloperRelease": true,
   "backend": {
-    "url": "ws://192.168.178.22:8080/websocket",
+    "url": "wss://appbackend.lealernen.de/websocket",
     "maxTimeout": 3000,
     "interval": 250,
     "methods": {
@@ -39,7 +39,7 @@
     }
   },
   "content": {
-    "url": "http://192.168.178.22:3030"
+    "url": "https://content.lealernen.de"
   },
   "log": {
     "level": 0,

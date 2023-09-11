@@ -12,9 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -28,10 +25,6 @@
       "bundleIdentifier": "de.uni-bremen.leaonline.app"
     },
     "android": {
-      "blockedPermissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
-      ],
       "adaptiveIcon": {
         "foregroundImage": "./lib/assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -45,13 +38,9 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 33,
-            "minSdkVersion": 33,
+            "minSdkVersion": 21,
             "targetSdkVersion": 33,
-            "buildToolsVersion": "33.0.0",
-            "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": false,
-            "newArchEnabled": true
+            "newArchEnabled": false
           },
           "ios": {
             "deploymentTarget": "14.0"

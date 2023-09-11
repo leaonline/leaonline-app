@@ -1,5 +1,4 @@
 import React from 'react'
-import { CardStyleInterpolators } from '@react-navigation/stack'
 import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -302,7 +301,6 @@ export const MainNavigation = (props) => {
 
   const screenOptions = Platform.select({
     ios: {
-      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
       cancelButtonText: 'foo',
       contentStyle: {
         padding: 0,
@@ -310,7 +308,6 @@ export const MainNavigation = (props) => {
       }
     },
     android: {
-      cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
       contentStyle: {
         padding: 0,
         margin: 0

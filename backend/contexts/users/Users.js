@@ -142,6 +142,10 @@ Users.methods.create = {
     speed: {
       type: Number,
       optional: true
+    },
+    isDev: {
+      type: Boolean,
+      optional: true
     }
   },
   run: onServerExec(function () {
@@ -158,13 +162,13 @@ Users.methods.create = {
         )
       }
 
-      const { voice, speed } = options
+      const { voice, speed, isDev } = options
       const username = Random.hexString(32)
       const password = Random.secret()
       const codes = RestoreCodes.generate()
       const restore = codes.join('-')
       const newUserId = Accounts.createUser({ username, password })
-      const updateDoc = { restore, voice, speed }
+      const updateDoc = { restore, voice, speed, isDev }
 
       Meteor.users.update(newUserId, { $set: updateDoc })
 

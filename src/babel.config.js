@@ -6,6 +6,6 @@ module.exports = function (api) {
         plugins: ['transform-remove-console']
       }
     },
-    presets: ['babel-preset-expo', '@babel/react']
+    presets: ['babel-preset-expo']
   }
 }

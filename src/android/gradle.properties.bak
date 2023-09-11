@@ -10,16 +10,12 @@
 # Specifies the JVM arguments used for the daemon process.
 # The setting is particularly useful for tweaking memory settings.
 # Default value: -Xmx512m -XX:MaxMetaspaceSize=256m
-org.gradle.daemon=true
 org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m
-org.gradle.parallel=true
-org.gradle.configureondemand=true
 
 # When configured, Gradle will run in incubating parallel mode.
 # This option should only be used with decoupled projects. More details, visit
 # http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
 # org.gradle.parallel=true
-
 
 # AndroidX package structure to make it clearer which packages are bundled with the
 # Android operating system, and which are packaged with your app's APK
@@ -30,7 +26,7 @@ android.useAndroidX=true
 android.enableJetifier=true
 
 # Version of flipper SDK to use with React Native
-FLIPPER_VERSION=0.125.0
+FLIPPER_VERSION=0.182.0
 
 # Use this property to specify which architecture you want to build.
 # You can also override it from the CLI using
@@ -56,14 +52,13 @@ expo.webp.enabled=true
 # Disabled by default because iOS doesn't support animated webp
 expo.webp.animated=false
 
-# WARNING:Software Components will not be created automatically for Maven publishing from Android Gradle Plugin 8.0.
-# To opt-in to the future behavior, set the Gradle property android.disableAutomaticComponentCreation=true
-# in the `gradle.properties` file or use the new publishing DSL.
-disableAutomaticComponentCreation=true
-
 # Enable network inspector
 EX_DEV_CLIENT_NETWORK_INSPECTOR=true
 
 android.minSdkVersion=21
+android.compileSdkVersion=33
 android.targetSdkVersion=33
-android.kotlinVersion=1.8.10
+android.buildToolsVersion=33.0.0
+android.enableProguardInReleaseBuilds=true
+android.enableShrinkResourcesInReleaseBuilds=false
+android.kotlinVersion=17
