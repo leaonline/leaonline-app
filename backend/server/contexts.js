@@ -24,6 +24,8 @@ import { Order } from '../contexts/order/Order'
 import { Field } from '../contexts/content/Field'
 import { Dimension } from '../contexts/content/Dimension'
 import { Level } from '../contexts/content/Level'
+import { ServerErrors } from '../contexts/errors/ServerErrors'
+import { ClientErrors } from '../contexts/errors/ClientErrors'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -55,6 +57,8 @@ ContentServer.contexts().forEach(ctx => {
   InteractionGraph,
   Achievements,
   Order,
+  ServerErrors,
+  ClientErrors,
   Feedback].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
@@ -78,6 +82,7 @@ const methodContexts = [
   Feedback,
   InteractionGraph,
   MapIcons,
+  ClientErrors,
   Order]
 
 if (Meteor.settings.isStaging) {

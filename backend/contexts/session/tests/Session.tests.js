@@ -127,7 +127,7 @@ describe('Session', function () {
   })
   describe(Session.update.name, function () {
     it('throws if no session doc has been found', function () {
-      expect(() => Session.update({})).to.throw('docNotFound')
+      expect(() => Session.update({})).to.throw('errors.docNotFound')
     })
     it('completes a session if no next unit is found', function () {
       const userId = Random.id()

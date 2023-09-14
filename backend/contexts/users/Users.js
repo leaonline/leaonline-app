@@ -4,6 +4,8 @@ import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { RestoreCodes } from '../../api/accounts/RestoreCodes'
 import { updateUserProfile } from './updateUserProfile'
 import { removeUser } from './removeUser'
+import { getUsersCollection } from '../../api/collections/getUsersCollection'
+import { createLog } from '../../infrastructure/log/createLog'
 
 /**
  * Representation of users in the database.
@@ -19,6 +21,8 @@ const Users = {
   icon: 'users',
   representative: '_id'
 }
+
+const debug = createLog({ name: Users.name, type: 'debug' })
 
 /**
  * The db schema definitions.
@@ -108,10 +112,26 @@ Users.schema = {
   research: {
     type: Boolean,
     optional: true
-  }
+  },
+
+  isDev: {
+    type: Boolean,
+    optional: true
+  },
 
   // adding Email schema from UserEmail
   // ...UserEmail.schema()
+
+  /**
+   * We save the current device info to associate
+   * any client error with it by user-id.
+   * Device info should contain no personal data
+   */
+  device: {
+    type: Object,
+    optional: true,
+    blackbox: true
+  }
 }
 
 /**
@@ -143,10 +163,8 @@ Users.methods.create = {
       type: Number,
       optional: true
     },
-    isDev: {
-      type: Boolean,
-      optional: true
-    }
+    isDev: Users.schema.isDev,
+    device: Users.schema.device
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
@@ -162,15 +180,15 @@ Users.methods.create = {
         )
       }
 
-      const { voice, speed, isDev } = options
+      const { voice, speed, isDev, device } = options
       const username = Random.hexString(32)
       const password = Random.secret()
       const codes = RestoreCodes.generate()
       const restore = codes.join('-')
       const newUserId = Accounts.createUser({ username, password })
-      const updateDoc = { restore, voice, speed, isDev }
+      const updateDoc = { restore, voice, speed, isDev, device }
 
-      Meteor.users.update(newUserId, { $set: updateDoc })
+      getUsersCollection().update(newUserId, { $set: updateDoc })
 
       // validate the new account with the created credentials
       const credentials = { user: { username }, password }
@@ -238,17 +256,19 @@ Users.methods.restore = {
     speed: {
       type: Number,
       optional: true
-    }
+    },
+    device: Users.schema.device
   },
-  run: function ({ codes, voice, speed }) {
+  run: function ({ codes, voice, speed, device }) {
     const restore = codes.join('-')
-    const userCursor = Meteor.users.find({ restore })
+    const userCursor = getUsersCollection().find({ restore })
+    debug('restore with code', restore, '=> found', userCursor.count())
 
     if (userCursor.count() === 0) {
       throw new Meteor.Error(
         'permissionDenied',
         'restore.failed',
-        { codes }
+        { codes, restore }
       )
     }
 
@@ -257,8 +277,9 @@ Users.methods.restore = {
     const hasVoice = typeof voice === 'string'
     const hasSpeed = typeof speed === 'number'
 
-    if (hasVoice || hasSpeed) {
-      updateUserProfile({ userId, speed, voice })
+    if (hasVoice || hasSpeed || device) {
+      const updateDoc = { userId, voice, speed, device }
+      updateUserProfile(updateDoc)
     }
 
     return Accounts._loginUser(this, user._id)
@@ -270,7 +291,7 @@ Users.methods.getCodes = {
   schema: {},
   run: function () {
     const { userId } = this
-    const user = userId && Meteor.users.findOne(userId)
+    const user = userId && getUsersCollection().findOne(userId)
 
     if (!user) {
       throw new Meteor.Error(
@@ -321,7 +342,7 @@ Users.methods.getAll = {
   },
   backend: true,
   run: function () {
-    const users = Meteor.users.find({}, {
+    const users = getUsersCollection().find({}, {
       fields: {
         services: 0,
         agents: 0
@@ -343,8 +364,7 @@ Users.methods.remove = {
   backend: true,
   run: function ({ _id }) {
     const calledBy = this.userId
-    const userId = _id
-    return removeUser(userId, calledBy)
+    return removeUser(_id, calledBy)
   }
 }
 

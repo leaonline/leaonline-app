@@ -1,7 +1,10 @@
 import './validateSchema'
+
+// api
 import '../api/accounts/tests'
 import '../api/collections/tests'
 import '../api/crypto/tests'
+import '../api/errors/tests'
 import '../api/remotes/tests'
 import '../api/utils/tests'
 // contexts

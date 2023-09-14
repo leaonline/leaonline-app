@@ -1,4 +1,4 @@
-import { Meteor } from 'meteor/meteor'
+import { getUsersCollection } from '../../api/collections/getUsersCollection'
 
 /**
  * Updates a given user profile with the respective fields.
@@ -9,7 +9,7 @@ import { Meteor } from 'meteor/meteor'
  * @param options.speed {number=} the current selected speed for voices
  * @return {number} 1 if updated, 0 if not
  */
-export const updateUserProfile = ({ userId, voice, speed }) => {
+export const updateUserProfile = ({ userId, voice, speed, device }) => {
   const query = { _id: userId }
   const updateDoc = { $set: {} }
 
@@ -21,5 +21,9 @@ export const updateUserProfile = ({ userId, voice, speed }) => {
     updateDoc.$set.speed = speed
   }
 
-  return Meteor.users.update(query, updateDoc)
+  if (device) {
+    updateDoc.$set.device = device
+  }
+
+  return getUsersCollection().update(query, updateDoc)
 }
