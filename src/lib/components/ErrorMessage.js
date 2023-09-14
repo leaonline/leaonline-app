@@ -7,7 +7,6 @@ import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
 import { i18n } from '../i18n'
 import { useTranslation } from 'react-i18next'
-import { Config } from '../env/Config'
 
 /**
  * Displays a visual component with a given error or defined message.
@@ -44,11 +43,11 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   }
 
   const debugError = () => {
-    //if (!Config.isDevelopment) { return null }
+    // if (!Config.isDevelopment) { return null }
 
     return (
       <View style={styles.container} accessibilityRole='alert'>
-        <Text>{'Debugging Info'}</Text>
+        <Text>Debugging Info</Text>
         <Text>{`Type: ${error}`}</Text>
         <Text>{`Name: ${error.name}`}</Text>
         <Text>{`Message: ${error.message}`}</Text>

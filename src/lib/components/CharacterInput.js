@@ -22,6 +22,7 @@ const alphaChars = /^[A-Za-z\d]/i
  * @param props.length {number} the amount of cells to be rendered
  * @param props.disabled {boolean=} optional disabled state
  * @param props.onEnd {function=} called when the last field received and input
+ * @param props.onChange {function=} called when any field received and input
  * @param props.onNegativeEnd {function=} called when the first field received a backspace input
  * @returns {JSX.Element}
  */
@@ -62,6 +63,11 @@ export const CharacterInput = props => {
       // and update the chars list
       newChars[index] = ''
       setChars(newChars)
+
+      // notify the parent component about the change
+      if (props.onChange) {
+        props.onChange(newChars, index)
+      }
 
       // however, we don't jump back, if the current
       // char was deleted, because this indicates, that
@@ -117,6 +123,9 @@ export const CharacterInput = props => {
       if (props.onEnd) {
         props.onEnd(newChars)
       }
+    }
+    if (props.onChange) {
+      props.onChange(newChars, index)
     }
   }
 

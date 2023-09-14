@@ -110,6 +110,7 @@ InteractionGraph.problem = ({ id, target, type, message, details, error }) => {
     details: error?.details
   })
 
+  // TODO send when research confirmation is implemented
   // send()
 }
 InteractionGraph.goal = ({ type, target, message, details }) => {
@@ -120,7 +121,9 @@ InteractionGraph.goal = ({ type, target, message, details }) => {
     message,
     details
   })
-  send()
+
+  // TODO send when research confirmation is implemented
+  // send()
 }
 
 InteractionGraph.toTargetGraph = (...targets) => targets.join('::')

@@ -8,13 +8,16 @@ const settingsSchema = schema({
   isDeveloperRelease: Boolean,
   backend: schema({
     url: String,
+    reachabilityUrl: String,
     maxTimeout: Integer,
     interval: Integer,
     methods: schema({
       defaultTimeout: Integer,
+      sendError: String,
       users: schema({
         create: String,
-        delete: String
+        delete: String,
+        restore: String
       }),
       content: schema({
         map: String,

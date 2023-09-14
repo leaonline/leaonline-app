@@ -11,7 +11,8 @@ export const getLogData = async () => {
       }
       try {
         return JSON.stringify(arg)
-      } catch {
+      }
+      catch {
         return String(arg)
       }
     })

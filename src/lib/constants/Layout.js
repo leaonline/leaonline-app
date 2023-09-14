@@ -1,7 +1,7 @@
 import { Colors } from './Colors'
 import Constants from 'expo-constants'
 import { Dimensions, PixelRatio } from 'react-native'
-import {fontIsLoaded} from '../utils/fontIsLoaded'
+import { fontIsLoaded } from '../utils/fontIsLoaded'
 
 const window = Dimensions.get('window')
 const screen = Dimensions.get('screen')

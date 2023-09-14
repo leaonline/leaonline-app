@@ -104,6 +104,8 @@ android {
             keyPassword 'android'
         }
         release {
+            // this config is usually placed in ~/.gradle/gradle.properties
+            // and automatically resolved here
             if (project.hasProperty('LEA_UPLOAD_STORE_FILE')) {
                 storeFile file(LEA_UPLOAD_STORE_FILE)
                 storePassword LEA_UPLOAD_STORE_PASSWORD
@@ -114,7 +116,12 @@ android {
     }
     buildTypes {
         debug {
+            // we use a close-to-release config here
+            // so our dev-builds are closer to a prod app
             signingConfig signingConfigs.debug
+            shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
         release {
             // Caution! In production, you need to generate your own keystore file.

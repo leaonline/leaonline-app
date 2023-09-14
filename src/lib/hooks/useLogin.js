@@ -3,6 +3,9 @@ import Meteor from '@meteorrn/core'
 import { loadSettingsFromUserProfile } from '../env/loadSettingsFromUserProfile'
 import { useConnection } from './useConnection'
 import { Config } from '../env/Config'
+import { getDeviceData } from '../analystics/getDeviceData'
+import { Log } from '../infrastructure/Log'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 /** @private */
 const initialState = {
@@ -123,18 +126,30 @@ export const useLogin = () => {
   const authContext = useMemo(() => ({
     signOut: ({ onError, onSuccess }) => {
       Meteor.logout(err => {
-        if (err) { return onError(err) }
+        if (err) {
+          ErrorReporter.send({ error: err }).catch(Log.error)
+          return onError(err)
+        }
         onSuccess && onSuccess()
         dispatch({ type: 'SIGN_OUT' })
       })
     },
-    signUp: ({ voice, speed, onError, onSuccess }) => {
+    signUp: async ({ voice, speed, onError, onSuccess }) => {
       const args = { voice, speed }
-      // TODO add isDev for developer accounts
-      // if (Config.isDeveloperRelease()) {
-      //   args.isDev = true
-      // }
-      Meteor.call('users.methods.create', args, (err, res) => {
+
+      if (Config.isDeveloperRelease()) {
+        args.isDev = true
+      }
+
+      try {
+        args.device = await getDeviceData()
+      }
+      catch (e) {
+        Log.error(e)
+        await ErrorReporter.send({ error: e })
+      }
+
+      Meteor.call(Config.methods.createUser, args, (err, res) => {
         if (err) {
           return onError(err)
         }
@@ -150,8 +165,22 @@ export const useLogin = () => {
         dispatch({ type, token })
       })
     },
-    restore: ({ codes, voice, speed, onError, onSuccess }) => {
-      Meteor.call('users.methods.restore', { codes, voice, speed }, (err, res) => {
+    restore: async ({ codes, voice, speed, onError, onSuccess }) => {
+      const args = { codes, voice, speed }
+
+      try {
+        Log.debug('get device data')
+        args.device = await getDeviceData()
+      }
+      catch (e) {
+        Log.error(e)
+        e.details = { ...e.details, fn: 'getDeviceData', location: 'restore' }
+        await ErrorReporter.send({ error: e })
+      }
+
+      Log.debug('restore account', args)
+
+      Meteor.call(Config.methods.restoreUser, args, (err, res) => {
         if (err) {
           return onError(err)
         }
@@ -168,7 +197,7 @@ export const useLogin = () => {
       })
     },
     deleteAccount: ({ onError, onSuccess }) => {
-      Meteor.call('users.methods.delete', {}, (deleteError) => {
+      Meteor.call(Config.methods.deleteUser, {}, (deleteError) => {
         if (deleteError) {
           return onError(deleteError)
         }

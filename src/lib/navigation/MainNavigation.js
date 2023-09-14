@@ -292,7 +292,7 @@ export const MainNavigation = (props) => {
             headerStyle,
             headerBackVisible: false,
             headerTitleAlign: 'center',
-            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerLeft: () => (<BackButton icon='arrow-left' />)
           }}
         />
       </>

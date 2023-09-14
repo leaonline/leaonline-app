@@ -27,8 +27,6 @@ export const LeaText = props => {
     ...rest
   } = props
 
-
-
   const mergedStyle = mergeStyles(styles.default, color ? { color } : undefined, style)
   return (
     <Text
@@ -41,11 +39,16 @@ export const LeaText = props => {
       {...rest}
     >
       {token
-        ? token.map(token => (<Text key={token.key} accessibilityRole='text'
-                                    textBreakStrategy='highQuality'
-                                    android_hyphenationFrequency={hyphen}
-                                    adjustsFontSizeToFit={fitSize}
-                                    allowFontScaling={autoScale} style={token.style}>{token.text}</Text>))
+        ? token.map(token => (
+          <Text
+            key={token.key} accessibilityRole='text'
+            textBreakStrategy='highQuality'
+            android_hyphenationFrequency={hyphen}
+            adjustsFontSizeToFit={fitSize}
+            allowFontScaling={autoScale} style={token.style}
+          >
+            {token.text}
+          </Text>))
         : children}
     </Text>
   )

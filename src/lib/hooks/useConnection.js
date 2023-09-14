@@ -9,6 +9,9 @@ const log = Log.create('useConnection')
 // get detailed info about internals
 Meteor.enableVerbose()
 
+log('connect Meteor to backend at', Config.backend.url)
+log('url for reachability test is', Config.backend.reachabilityUrl)
+
 // connect with Meteor and use a secure store
 // to persist our received login token, so it's encrypted
 // and only readable for this very app
@@ -21,7 +24,8 @@ Meteor.connect(Config.backend.url, {
   },
   autoConnect: true,
   autoReconnect: true,
-  reconnectInterval: 500
+  reconnectInterval: 500,
+  reachabilityUrl: Config.backend.reachabilityUrl
 })
 
 /**

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useCallback, useContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TTSengine, useTts } from '../../components/Tts'
 import { CharacterInput } from '../../components/CharacterInput'
@@ -19,7 +19,11 @@ export const RestoreScreen = (props) => {
   const [allCodes, setAllCodes] = useState(false)
   const [checkingCode, setCheckingCode] = useState(false)
   const [error, setError] = useState(null)
-  const codes = useRef([[], [], []])
+  const codes = useRef([
+    [], // row index 0
+    [], // row index 1
+    []  // row index 2
+  ])
   const row1 = useRef([null, null])
   const row2 = useRef([null, null])
   const row3 = useRef([null, null])
@@ -35,19 +39,24 @@ export const RestoreScreen = (props) => {
     }
   }
 
-  const updateCodes = (newCodes, index) => {
-    codes.current[index] = newCodes
-    const hasAllCodes = codes.current.every(entry => entry.length === 4)
-    setAllCodes(hasAllCodes)
-
-    if (index === 0 && row2.current[0]) {
+  const updateLine = useCallback((newCodes, rowIndex) => {
+    if (rowIndex === 0 && row2.current[0]) {
       row2.current[0].focus()
     }
 
-    if (index === 1 && row3.current[0]) {
+    if (rowIndex === 1 && row3.current[0]) {
       row3.current[0].focus()
     }
-  }
+  }, [])
+
+  const updateChars = useCallback((newCodes, rowIndex) => {
+    codes.current[rowIndex] = newCodes
+    const hasAllCodes = codes.current.every(lineIsValid)
+    setAllCodes(hasAllCodes)
+    Log.debug('chars changed', rowIndex, newCodes)
+    Log.debug('chars checked', hasAllCodes, codes.current.toString())
+  }, [])
+
   const checkCodes = async () => {
     setCheckingCode(true)
     restore({
@@ -79,12 +88,12 @@ export const RestoreScreen = (props) => {
     if (!error && !checkingCode) { return }
 
     if (checkingCode) {
-      return (<Loading />)
+      return (<Loading/>)
     }
 
     // in case we get any weird 500 errors etc.
     if (!error.error.includes('permissionDenied')) {
-      return (<ErrorMessage error={error} />)
+      return (<ErrorMessage error={error}/>)
     }
 
     return (
@@ -102,17 +111,23 @@ export const RestoreScreen = (props) => {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
+        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions}/>
         <CharacterInput
-          id='row-1' refs={row1} play length={4} onEnd={newCodes => updateCodes(newCodes, 0)}
+          id="row-1" refs={row1} play length={4}
+          onChange={(chars) => updateChars(chars, 0)}
+          onEnd={line => updateLine(line, 0)}
           disabled={checkingCode}
         />
         <CharacterInput
-          id='row-2' refs={row2} play length={4} onEnd={newCodes => updateCodes(newCodes, 1)}
+          id="row-2" refs={row2} play length={4}
+          onChange={(chars) => updateChars(chars, 1)}
+          onEnd={line => updateLine(line, 1)}
           onNegativeEnd={() => jumpBack(1)} disabled={checkingCode}
         />
         <CharacterInput
-          id='row-3' refs={row3} play length={4} onEnd={newCodes => updateCodes(newCodes, 2)}
+          id="row-3" refs={row3} play length={4}
+          onChange={(chars) => updateChars(chars, 2)}
+          onEnd={line => updateLine(line, 2)}
           onNegativeEnd={() => jumpBack(2)} disabled={checkingCode}
         />
         {renderFailure()}
@@ -128,6 +143,9 @@ export const RestoreScreen = (props) => {
     </ScrollView>
   )
 }
+
+const lineIsValid = entry => entry.filter(onlyValidChars).length === 4
+const onlyValidChars = c => typeof c === 'string' && c.length > 0
 
 const styles = createStyleSheet({
   container: {

@@ -156,7 +156,7 @@ const TtsComponent = props => {
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
-    setBoundary({ charIndex: -1 , charLength: -1 })
+    setBoundary({ charIndex: -1, charLength: -1 })
     Speech.stop()
   }
   /**
@@ -436,7 +436,8 @@ const loadVoices = ({ counter, onComplete, onError }) => {
     let voices
     try {
       voices = await Speech.getAvailableVoicesAsync()
-    } catch (err) {
+    }
+    catch (err) {
       return onError(err)
     }
 

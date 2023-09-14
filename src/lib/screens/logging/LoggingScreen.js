@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React from 'react'
 import { ScreenBase } from '../BaseScreen'
 import { ScrollView, Text, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -27,7 +27,7 @@ export const LoggingScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScreenBase {...docs}  style={styles.container}>
+      <ScreenBase {...docs} style={styles.container}>
         <ScrollView contentContainerStyle={styles.listContainer}>
           {renderLogData()}
         </ScrollView>

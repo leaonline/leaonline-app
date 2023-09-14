@@ -20,7 +20,7 @@ const initFunctions = [
   validateSettingsSchema,
   initContexts,
   initTTs,
-  initSound,
+  initSound
 ]
 
 /**
