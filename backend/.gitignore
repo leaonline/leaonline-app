@@ -17,6 +17,7 @@ public/fonts/
 public/logos/
 
 .deploy
+.staging
 
 # Logs
 logs
