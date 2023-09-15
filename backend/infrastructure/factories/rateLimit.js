@@ -1,3 +1,3 @@
 export {
-  runRateLimiter, rateLimitMethods, rateLimitPublications, rateLimitAccounts
+  runRateLimiter, rateLimitMethods, rateLimitMethod, rateLimitPublications, rateLimitAccounts
 } from 'meteor/leaonline:ratelimit-factory'

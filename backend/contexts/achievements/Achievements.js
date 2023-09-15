@@ -63,6 +63,7 @@ Achievements.methods = {}
 
 Achievements.methods.getAll = {
   name: 'achievements.methods.getAll',
+  backend: true,
   schema: {
     dependencies: {
       type: Array,

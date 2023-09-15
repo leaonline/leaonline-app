@@ -310,4 +310,8 @@ describe('Session', function () {
       })
     })
   })
+
+  describe(Session.methods.getAll.name, function () {
+    it('is not impl')
+  })
 })

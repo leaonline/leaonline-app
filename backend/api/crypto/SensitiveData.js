@@ -12,7 +12,7 @@ const { algorithm, key, outputFormat } = Meteor.settings.crypto
 
 SensitiveData.validate = value => {
   if (typeof value !== 'string' || value.length < 1) {
-    throw new Error(`expected valid string with min. length of 1, got ${value}`)
+    throw new Error(`Expected valid string with min. length of 1, got ${value}`)
   }
 }
 

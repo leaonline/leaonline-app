@@ -1,6 +1,4 @@
-import { WebApp } from 'meteor/webapp'
+import { createReachabilityUrl } from '../api/endpoints/createReachabilityUrl'
 
-WebApp.rawConnectHandlers.use('/reachability', function (req, res) {
-  res.writeHead(204)
-  res.end()
-})
+const path = '/reachability' // TODO from settings
+createReachabilityUrl({ path })

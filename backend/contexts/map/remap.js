@@ -1,8 +1,8 @@
-import { getCollection } from '../api/utils/getCollection'
-import { Field } from '../contexts/content/Field'
-import { MapData } from '../contexts/map/MapData'
-import { SyncState } from '../contexts/sync/SyncState'
-import { Achievements } from '../contexts/achievements/Achievements'
+import { getCollection } from '../../api/utils/getCollection'
+import { Field } from '../content/Field'
+import { MapData } from './MapData'
+import { SyncState } from '../sync/SyncState'
+import { Achievements } from '../achievements/Achievements'
 /**
  * This invokes the MapData to recreate itself from given DB documents.
  * Also updates the sync state that is used in the app to fetch new updated data.

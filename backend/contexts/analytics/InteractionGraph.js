@@ -1,5 +1,8 @@
 import { getCollection } from '../../api/utils/getCollection'
 
+/**
+ * @deprecated
+ */
 export const InteractionGraph = {
   name: 'interactionGraph',
   icon: 'project-diagram',

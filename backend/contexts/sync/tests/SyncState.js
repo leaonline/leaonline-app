@@ -89,4 +89,8 @@ describe('SyncState', function () {
       })
     })
   })
+
+  describe(SyncState.methods.getDocs.name, function () {
+    it('is not impl')
+  })
 })
