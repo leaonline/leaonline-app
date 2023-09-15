@@ -61,7 +61,10 @@ Accounts.config({
     _id: 1,
     username: 1,
     voice: 1,
-    speed: 1
+    speed: 1,
+    isDev: 1,
+    createdAt: 1,
+    lastLogin: 1
   }
 })
 

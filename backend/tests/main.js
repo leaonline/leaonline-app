@@ -11,6 +11,7 @@ import '../api/utils/tests'
 // contexts
 import '../contexts/achievements/tests'
 import '../contexts/competencies/tests'
+import '../contexts/connection/tests'
 import '../contexts/content/tests'
 import '../contexts/errors/tests'
 import '../contexts/map/tests'
