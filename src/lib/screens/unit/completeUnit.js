@@ -17,7 +17,7 @@ export const completeUnit = async ({ sessionDoc }) => {
     args: {
       sessionId: sessionDoc._id
     },
-    failure: error => console.error(error)
+    failure: error => Log.error(error)
   })
   log({ nextUnitId })
   return nextUnitId

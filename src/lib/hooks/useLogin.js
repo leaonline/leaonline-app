@@ -146,7 +146,9 @@ export const useLogin = () => {
       }
       catch (e) {
         Log.error(e)
-        await ErrorReporter.send({ error: e })
+        ErrorReporter
+          .send({ error: e })
+          .catch(Log.error)
       }
 
       Meteor.call(Config.methods.createUser, args, (err, res) => {

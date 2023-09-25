@@ -24,6 +24,7 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { UserProgress } from '../../contexts/UserProgress'
 import { isDefined } from '../../utils/isDefined'
+import { ErrorReporter } from '../../errors/ErrorReporter'
 
 const log = Log.create('UnitScreen')
 
@@ -257,7 +258,10 @@ export const UnitScreen = props => {
         await sendResponse({ responseDoc })
       }
       catch (e) {
-        log(e.message)
+        Log.error(e)
+        ErrorReporter
+          .send({ error: e })
+          .catch(Log.error)
       }
     }
 

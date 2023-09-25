@@ -1,5 +1,6 @@
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av'
 import { Log } from '../infrastructure/Log'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 export const Sound = {}
 
@@ -37,6 +38,9 @@ Sound.play = async (name) => {
   }
   catch (error) {
     Log.error(error)
+    ErrorReporter
+      .send({ error })
+      .catch(Log.Error)
   }
 }
 
@@ -53,5 +57,8 @@ const unload = async (sound) => {
   }
   catch (error) {
     Log.error(error)
+    ErrorReporter
+      .send({ error })
+      .catch(Log.Error)
   }
 }

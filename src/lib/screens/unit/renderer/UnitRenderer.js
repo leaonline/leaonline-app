@@ -15,6 +15,7 @@ import { Sound } from '../../../env/Sound'
 import { unitCardStyles } from './unitCardStyles'
 import { ContentRenderer } from './ContentRenderer'
 import { useItemSubType } from '../useItemSubType'
+import { Log } from '../../../infrastructure/Log'
 
 const PureContentRenderer = React.memo(ContentRenderer)
 
@@ -105,7 +106,7 @@ export const UnitRenderer = props => {
           await Sound.play(WRONG_ANSWER)
         }
       }
-      handleResponse().catch(console.error)
+      handleResponse().catch(Log.error)
     }
   }, [showCorrectResponse, allTrue])
 
