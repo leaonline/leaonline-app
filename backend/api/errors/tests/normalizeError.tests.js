@@ -5,7 +5,7 @@ import { DocNotFoundError } from '../DocNotFoundError'
 
 describe(normalizeError.name, function () {
   it('normalizes a native error', () => {
-    const e = normalizeError({ error: new Error('foo')} )
+    const e = normalizeError({ error: new Error('foo') })
     const { createdAt, stack, ...rest } = e
     expect(createdAt).to.be.an.instanceOf(Date)
     expect(stack).to.include('Error: foo')
@@ -26,7 +26,7 @@ describe(normalizeError.name, function () {
         this.name = 'FooError'
       }
     }
-    const e = normalizeError({ error: new FooError('bar')} )
+    const e = normalizeError({ error: new FooError('bar') })
     const { createdAt, stack, ...rest } = e
     expect(createdAt).to.be.an.instanceOf(Date)
     expect(stack).to.include('FooError: bar')
@@ -44,8 +44,8 @@ describe(normalizeError.name, function () {
     const name = 'foo'
     const reason = 'bar'
     const details = { baz: 'moo' }
-    const err =new Meteor.Error(name, reason, details)
-    const e = normalizeError({ error: err} )
+    const err = new Meteor.Error(name, reason, details)
+    const e = normalizeError({ error: err })
     const { createdAt, stack, ...rest } = e
 
     expect(createdAt).to.be.an.instanceOf(Date)
@@ -63,8 +63,8 @@ describe(normalizeError.name, function () {
   it('normalizes a custom Meteor error', () => {
     const reason = 'bar'
     const details = { baz: 'moo' }
-    const err =new DocNotFoundError(reason, details)
-    const e = normalizeError({ error: err } )
+    const err = new DocNotFoundError(reason, details)
+    const e = normalizeError({ error: err })
     const { createdAt, stack, ...rest } = e
 
     expect(createdAt).to.be.an.instanceOf(Date)

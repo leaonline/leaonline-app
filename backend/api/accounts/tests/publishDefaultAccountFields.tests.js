@@ -17,8 +17,8 @@ describe(publishDefaultAccountFields.name, function () {
   it('filters sensitive fields', () => {
     const userId = getUsersCollection().insert({
       username: 'moo',
-      emails: [{ address: 'foo@bar.com'}],
-      services: { foo: 'bar'},
+      emails: [{ address: 'foo@bar.com' }],
+      services: { foo: 'bar' },
       device: { platform: 'superOS' }
     })
     const [userDoc] = publishDefaultAccountFields.call({ userId }).fetch()

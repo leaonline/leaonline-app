@@ -40,7 +40,7 @@ ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem 
   errorDoc.isSystem = isSystem
 
   const errorDocId = getCollection(ServerErrors.name).insert(errorDoc)
-  notifyUsersAboutError(errorDoc, { type: 'server' })
+  notifyUsersAboutError(errorDoc, 'server')
 
   return errorDocId
 }

@@ -1,12 +1,15 @@
 import { Meteor } from 'meteor/meteor'
-import { EJSON } from 'meteor/ejson'
 import { Email } from 'meteor/email'
 
 const appName = Meteor.settings.app.name
 const { notify, replyTo, from } = Meteor.settings.email
 
 export const notifyUsersAboutError = (error, type) => {
-  if (!notify?.length || !error) return
+  if (!notify?.length || typeof error !== 'object' || error === null) {
+    return
+  }
+
+  const html = getHtml(error)
 
   notify.forEach(address => {
     Email.send({
@@ -14,7 +17,13 @@ export const notifyUsersAboutError = (error, type) => {
       subject: `${appName} (${type}) [error]: ${error.message}`,
       replyTo: replyTo,
       from: from,
-      text: EJSON.stringify(error, null, 2)
+      html
     })
   })
+}
+
+const getHtml = (error) => {
+  const errorStr = JSON.stringify(error, null, 2)
+  const source = `<pre><code>${errorStr}</code></pre>`
+  return `<html lang="en"><body>${source}</body></html>`
 }

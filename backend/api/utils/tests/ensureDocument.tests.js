@@ -10,7 +10,7 @@ describe(ensureDocument.name, function () {
     restoreAll()
   })
   it('throws an error with given information', () => {
-    stub(console, 'error',  () => expect.fail()) // should not log
+    stub(console, 'error', () => expect.fail()) // should not log
     const docId = Random.id()
     const name = 'foobar'
     const details = { foo: 'bar' }
@@ -24,7 +24,7 @@ describe(ensureDocument.name, function () {
   })
   it('logs to console, if flag is true', () => {
     let logged
-    stub(console, 'error',  (err) => {
+    stub(console, 'error', (err) => {
       logged = err
     })
     const docId = Random.id()

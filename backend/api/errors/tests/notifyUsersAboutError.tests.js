@@ -10,6 +10,10 @@ import { EJSON } from 'meteor/ejson'
 
 const appName = Meteor.settings.app.name
 const { notify, replyTo, from } = Meteor.settings.email
+const getHtml = (error) => {
+  const source = `<pre><code>${JSON.stringify(error, null, 2)}</code></pre>`
+  return `<html lang="en"><body>${source}</body></html>`
+}
 
 describe(notifyUsersAboutError.name, function () {
   afterEach(() => {
@@ -17,7 +21,9 @@ describe(notifyUsersAboutError.name, function () {
   })
   it('skips if no error is given', () => {
     stub(Email, 'send', args => expect.fail())
-    notifyUsersAboutError(undefined, undefined)
+    ;[null, undefined, '', 1, () => {}].forEach(value => {
+      notifyUsersAboutError(value, undefined)
+    })
   })
   it('notifies registered users about a server error', () => {
     stub(Email, 'send', args => expect.fail())
@@ -32,10 +38,10 @@ describe(notifyUsersAboutError.name, function () {
 
         overrideStub(Email, 'send', options => {
           expect(notify).to.include(options.to)
-          expect(options.subject).to.equal( `${appName} (${type}) [error]: ${e.message}`)
+          expect(options.subject).to.equal(`${appName} (${type}) [error]: ${e.message}`)
           expect(options.replyTo).to.equal(replyTo)
           expect(options.from).to.equal(from)
-          expect(options.text).to.equal(EJSON.stringify(e, null, 2))
+          expect(options.html).to.equal(getHtml(e))
         })
         notifyUsersAboutError(e, type)
       })

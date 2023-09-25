@@ -8,10 +8,10 @@ describe(cursorToMap.name, function () {
   it('creates a map of all docs', () => {
     const collection = new Mongo.Collection(null)
     ;[
-      { foo: 'bar'},
-      { bar: 'baz'},
-      { baz: 'moo'}
-    ].forEach(doc => collection.insert(doc));
+      { foo: 'bar' },
+      { bar: 'baz' },
+      { baz: 'moo' }
+    ].forEach(doc => collection.insert(doc))
 
     const allDocs = collection.find().fetch()
     const map = cursorToMap(collection.find())

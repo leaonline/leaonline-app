@@ -77,7 +77,7 @@ ClientConnection.methods.getAll = {
   run: function ({ dependencies = {} } = {}) {
     return {
       [ClientConnection.name]: connections
-        .find({ userId: { $ne: this.userId }})
+        .find({ userId: { $ne: this.userId } })
         .fetch()
     }
   }

@@ -24,7 +24,7 @@ ClientErrors.methods.send = {
     const userId = this.userId
     const errorDoc = normalizeError({ error: options, userId, stackLength: 3 })
     const errorDocId = getCollection(ClientErrors.name).insert(errorDoc)
-    Meteor.defer(() => notifyUsersAboutError(errorDoc, { type: 'client' }))
+    Meteor.defer(() => notifyUsersAboutError(errorDoc, 'client'))
 
     return errorDocId
   }

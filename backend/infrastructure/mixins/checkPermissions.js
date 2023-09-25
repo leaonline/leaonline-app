@@ -18,13 +18,13 @@ export const checkPermissions = function (options) {
     }
 
     if (!userId) {
-      throw new Meteor.Error('errors.permissionDenied', 'errors.userNotExists', userId)
+      throw new Meteor.Error('errors.permissionDenied', 'errors.userNotExists', { userId })
     }
 
     if (backend) {
       const user = getUsersCollection().findOne(userId)
       if (!user?.services?.lea) {
-        throw new Meteor.Error('errors.permissionDenied', 'errors.backendOnly', userId)
+        throw new Meteor.Error('errors.permissionDenied', 'errors.backendOnly', { userId })
       }
     }
 
