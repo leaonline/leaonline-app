@@ -36,6 +36,7 @@ const log = createLog({ name: 'ContentServer' })
  * relevant data for running the app.
  * @category api
  * @namespace
+ * @typedef ContentServer
  */
 export const ContentServer = {}
 
@@ -45,30 +46,6 @@ export const ContentServer = {}
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
-/**
- * Returns a schema definition for a call to the content server.
- *
- * @return {{
- *   name: {type: String, allowedValues: string[]},
- *   ids: {type: Array, optional: boolean},
- *   'ids.$': String
- * }}
- */
-ContentServer.schema = () => ({
-  name: {
-    type: String,
-    allowedValues: contextNames
-  },
-  query: {
-    type: Object,
-    optional: true,
-    blackbox: true,
-    custom: function () {
-      const value = this.value
-      console.debug('custom query validation: ', value)
-    }
-  }
-})
 
 /**
  * Get all available contexts as Array
@@ -98,11 +75,12 @@ ContentServer.init = async () => {
  * is why it will throw an Error if such circumstance is present.
  *
  * @param name {string} the name of the context
+ * @param debug {boolean} flag to indicate, whether to print additional debug logs
  * @throws {ContentServerError} when not connected or context or collection do
  *   not exist or if this function is invoked within a method or pub
  * @return {Promise<{name: *, created: number, updated: number, removed: number}>}
  */
-ContentServer.sync = async ({ name, debug }) => {
+ContentServer.sync = async ({ name, debug } = {}) => {
   log('sync', name)
   ensureNotInMethodOrPub()
   ensureConnected()
@@ -129,6 +107,7 @@ ContentServer.sync = async ({ name, debug }) => {
 
   const allIds = []
   allIds.length = allDocs.length
+
   allDocs.forEach((doc, index) => {
     if (doc.isLegacy) {
       stats.skipped++
@@ -138,7 +117,7 @@ ContentServer.sync = async ({ name, debug }) => {
     const { _id: docId } = doc
     allIds[index] = docId
 
-    if (collection.find(docId).count() === 0) {
+    if (collection.find({ _id: docId }).count() === 0) {
       onBeforeUpsert({ type: 'insert', doc })
       const insertId = collection.insert(doc)
       if (debug) log(name, 'inserted', insertId)
@@ -147,8 +126,9 @@ ContentServer.sync = async ({ name, debug }) => {
 
     else {
       onBeforeUpsert({ type: 'update', doc })
-      delete doc._id
-      const updated = collection.update(docId, { $set: doc })
+      const updateDoc = { ...doc }
+      delete updateDoc._id
+      const updated = collection.update(docId, { $set: updateDoc })
       if (debug) log(name, 'updated', docId, '=', updated)
       stats.updated++
     }
@@ -185,19 +165,25 @@ const getHooks = (hooksName, ctxName) => {
     : () => {}
 }
 
-ContentServer.on = (hookName, ctxName, fn) => {
+const getSet = (hookName, ctxName) => {
   if (!hooks.has(hookName)) {
     hooks.set(hookName, new Map())
   }
-
   const map = hooks.get(hookName)
-
   if (!map.has(ctxName)) {
     map.set(ctxName, new Set())
   }
+  return  map.get(ctxName)
+}
 
-  const fns = map.get(ctxName)
+ContentServer.on = (hookName, ctxName, fn) => {
+  const fns = getSet(hookName, ctxName)
   fns.add(fn)
+}
+
+ContentServer.off = (hookName, ctxName, fn) => {
+  const fns = getSet(hookName, ctxName)
+  fns.delete(fn)
 }
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -244,11 +230,11 @@ const ensureCollectionExists = ({ name }) => {
 }
 
 const ensureNotInMethodOrPub = () => {
-  const methodInvocation = (
+  const invocation = (
     DDP._CurrentMethodInvocation.get() ||
     DDP._CurrentPublicationInvocation.get()
   )
-  if (methodInvocation) {
+  if (invocation) {
     throw new ContentServerError('methodOrPubInvocation')
   }
 }
