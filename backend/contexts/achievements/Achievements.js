@@ -76,22 +76,35 @@ Achievements.methods.getAll = {
     }
   },
   run: function ({ dependencies = {} } = {}) {
-    const allAchievements = getCollection(Achievements.name).find({}, {
-      hint: {
-        $natural: -1
-      }
-    }).fetch()
+    const allAchievements = []
+    const uniqueFields = new Set()
+    const uniqueDimensions = new Set()
+    const cursor = getCollection(Achievements.name)
+      .find({}, { hint: { $natural: -1 } })
+    allAchievements.length = cursor.count()
+
+    cursor.forEach((doc, index) => {
+      allAchievements[index] = doc
+      uniqueDimensions.add(doc.dimensionId)
+      uniqueFields.add(doc.fieldId)
+    })
 
     const data = { [Achievements.name]: allAchievements }
 
     if (dependencies[Field.name]) {
-      data[Field.name] = getCollection(Field.name).find().fetch()
+      data[Field.name] = getCollection(Field.name)
+        .find({ _id: { $in: [...uniqueFields] } })
+        .fetch()
     }
 
     if (dependencies[Dimension.name]) {
-      data[Field.name] = getCollection(Dimension.name).find().fetch()
+      data[Dimension.name] = getCollection(Dimension.name)
+        .find({ _id: { $in: [...uniqueDimensions] } })
+        .fetch()
     }
 
     return data
   }
 }
+
+const uniqueIds = ids => [...new Set([...ids])]
