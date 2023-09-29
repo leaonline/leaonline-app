@@ -22,6 +22,6 @@ export const initFonts = () => {
   }
 
   const fontMap = { semicolon: handle }
-  Log.debug('load font', fontMap)
-  Font.loadAsync(fontMap)
+
+  return Font.loadAsync(fontMap)
 }

@@ -22,7 +22,7 @@ export const RestoreScreen = (props) => {
   const codes = useRef([
     [], // row index 0
     [], // row index 1
-    []  // row index 2
+    [] // row index 2
   ])
   const row1 = useRef([null, null])
   const row2 = useRef([null, null])
@@ -88,12 +88,12 @@ export const RestoreScreen = (props) => {
     if (!error && !checkingCode) { return }
 
     if (checkingCode) {
-      return (<Loading/>)
+      return (<Loading />)
     }
 
     // in case we get any weird 500 errors etc.
     if (!error.error.includes('permissionDenied')) {
-      return (<ErrorMessage error={error}/>)
+      return (<ErrorMessage error={error} />)
     }
 
     return (
@@ -111,21 +111,21 @@ export const RestoreScreen = (props) => {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions}/>
+        <Tts block text={t('restoreScreen.instructions')} style={styles.instructions} />
         <CharacterInput
-          id="row-1" refs={row1} play length={4}
+          id='row-1' refs={row1} play length={4}
           onChange={(chars) => updateChars(chars, 0)}
           onEnd={line => updateLine(line, 0)}
           disabled={checkingCode}
         />
         <CharacterInput
-          id="row-2" refs={row2} play length={4}
+          id='row-2' refs={row2} play length={4}
           onChange={(chars) => updateChars(chars, 1)}
           onEnd={line => updateLine(line, 1)}
           onNegativeEnd={() => jumpBack(1)} disabled={checkingCode}
         />
         <CharacterInput
-          id="row-3" refs={row3} play length={4}
+          id='row-3' refs={row3} play length={4}
           onChange={(chars) => updateChars(chars, 2)}
           onEnd={line => updateLine(line, 2)}
           onNegativeEnd={() => jumpBack(2)} disabled={checkingCode}

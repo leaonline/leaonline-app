@@ -29,7 +29,7 @@ export const useSplashScreen = (initFunctions) => {
       })
       setError(e)
       ErrorReporter
-        .send({ error:e })
+        .send({ error: e })
         .catch(Log.error)
     }
     async function prepare () {

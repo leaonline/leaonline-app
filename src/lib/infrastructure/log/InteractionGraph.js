@@ -1,6 +1,6 @@
 import { simpleRandomHex } from '../../utils/simpleRandomHex'
-import { callMeteor } from '../../meteor/call'
-import Meteor from '@meteorrn/core'
+// import { callMeteor } from '../../meteor/call'
+// import Meteor from '@meteorrn/core'
 import { Log } from '../Log'
 
 /**
@@ -38,23 +38,24 @@ const queue = ({ type, subtype, id, target, message, details }) => {
   internal.stack.push(data)
 }
 
-const send = () => {
-  const user = Meteor.user()
-
-  // the data is only sent to the server,
-  // if the user has actively participated
-  // in our research programme
-  if (user?.research === true) {
-    const data = [].concat(internal.stack)
-    debug('send', data, 'graph-items')
-    internal.stack.length = 0
-    callMeteor({
-      name: 'interactionGraph.methods.send',
-      args: { data },
-      failure: e => Log.error(e)
-    }).catch(e => Log.error(e))
-  }
-}
+// TODO: uncomment when implemented
+// const send = () => {
+//   const user = Meteor.user()
+//
+//   // the data is only sent to the server,
+//   // if the user has actively participated
+//   // in our research programme
+//   if (user?.research === true) {
+//     const data = [].concat(internal.stack)
+//     debug('send', data, 'graph-items')
+//     internal.stack.length = 0
+//     callMeteor({
+//       name: 'interactionGraph.methods.send',
+//       args: { data },
+//       failure: e => Log.error(e)
+//     }).catch(e => Log.error(e))
+//   }
+// }
 
 InteractionGraph.enterApp = () => {
   queue({
