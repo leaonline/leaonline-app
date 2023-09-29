@@ -68,7 +68,7 @@ describe(Achievements.name, function () {
         const fieldId = FieldsCollection.insert({ title: 'foo' })
         const achievementsDoc = Achievements.create({ dimensionId, fieldId })
         const docs = getAll()
-        expect(docs).to.deep.equal( {
+        expect(docs).to.deep.equal({
           [Achievements.name]: [achievementsDoc]
         })
       })
@@ -84,7 +84,7 @@ describe(Achievements.name, function () {
         const achievementsDoc = Achievements.create({ dimensionId, fieldId })
         const dependencies = { [Field.name]: 1, [Dimension.name]: 1 }
         const docs = getAll({ dependencies })
-        expect(docs).to.deep.equal( {
+        expect(docs).to.deep.equal({
           [Achievements.name]: [achievementsDoc],
           [Field.name]: [fieldDoc],
           [Dimension.name]: [dimensionDoc]

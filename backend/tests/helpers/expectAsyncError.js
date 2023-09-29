@@ -9,7 +9,8 @@
 export const expectAsyncError = async (promise) => {
   try {
     await promise
-  } catch (e) {
+  }
+  catch (e) {
     return e
   }
 }

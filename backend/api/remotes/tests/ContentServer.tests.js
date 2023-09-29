@@ -111,7 +111,7 @@ describe('ContentServer', function () {
     it('adds remote docs to a collection from the content server', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' },
+        { _id: Random.id(), title: 'bar' }
       ]
       const insertDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (insertDocs))
@@ -130,7 +130,7 @@ describe('ContentServer', function () {
     it('updates existing docs with the ones from remote if their _id matches', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' },
+        { _id: Random.id(), title: 'bar' }
       ]
       const updateDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (updateDocs))
@@ -154,7 +154,7 @@ describe('ContentServer', function () {
     it('removes docs which are not in the remote collection anymore', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' },
+        { _id: Random.id(), title: 'bar' }
       ]
 
       const insertDoc = { _id: Random.id(), title: 'moo' }
@@ -182,7 +182,7 @@ describe('ContentServer', function () {
     it('skips docs marked as legacy', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar', isLegacy: true },
+        { _id: Random.id(), title: 'bar', isLegacy: true }
       ]
       const insertDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (insertDocs))
@@ -205,7 +205,7 @@ describe('ContentServer', function () {
     it('skips if no docs are to be synced', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' },
+        { _id: Random.id(), title: 'bar' }
       ]
       const updateDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => ({}))
@@ -228,7 +228,7 @@ describe('ContentServer', function () {
     })
     it('allows to hook into beforeSyncUpsert', done => {
       const docs = [
-        { _id: Random.id(), title: 'foo' },
+        { _id: Random.id(), title: 'foo' }
       ]
       const insertDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (insertDocs))
@@ -249,7 +249,7 @@ describe('ContentServer', function () {
     })
     it('allows to hook into syncEnd', done => {
       const docs = [
-        { _id: Random.id(), title: 'foo' },
+        { _id: Random.id(), title: 'foo' }
       ]
       const insertDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (insertDocs))

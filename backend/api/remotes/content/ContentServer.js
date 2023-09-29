@@ -46,7 +46,6 @@ export const ContentServer = {}
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
-
 /**
  * Get all available contexts as Array
  * @return {Array<Object>}
@@ -173,7 +172,7 @@ const getSet = (hookName, ctxName) => {
   if (!map.has(ctxName)) {
     map.set(ctxName, new Set())
   }
-  return  map.get(ctxName)
+  return map.get(ctxName)
 }
 
 ContentServer.on = (hookName, ctxName, fn) => {

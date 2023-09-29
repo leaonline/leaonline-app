@@ -87,7 +87,7 @@ describe('ContentConnection', () => {
     it('returns all docs from remote if given', async () => {
       const docs = [
         { _id: Random.id() },
-        { _id: Random.id() },
+        { _id: Random.id() }
       ]
       const connection = {
         call (methodName, params, cb) {
