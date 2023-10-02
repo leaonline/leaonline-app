@@ -1,4 +1,4 @@
-import { isSafeInteger } from '../isSafeInteger'
+import { isSafeInteger } from '../number/isSafeInteger'
 
 /**
  * creates a random integer between min and max

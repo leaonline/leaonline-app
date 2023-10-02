@@ -1,4 +1,4 @@
-import { isValidNumber } from '../../utils/isValidNumber'
+import { isValidNumber } from '../../utils/number/isValidNumber'
 /**
  * Due to the diamond's form we often see
  * very low values (below .3) or high values (> .75)

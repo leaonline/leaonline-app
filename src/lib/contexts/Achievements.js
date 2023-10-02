@@ -4,6 +4,7 @@ export const Achievements = {
   name: 'achievements'
 }
 
+// FIXME the thresholds should come from the settings/env
 Achievements.trophies = {
   silver: {
     src: require('../assets/images/trophy-silver.png'),

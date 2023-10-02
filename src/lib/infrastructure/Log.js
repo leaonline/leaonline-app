@@ -2,7 +2,10 @@ import { Config } from '../env/Config'
 import { ConsoleLogger } from './log/ConsoleLogger'
 import { Colors } from '../constants/Colors'
 
+// TODO move to /log
 export const Log = {}
+
+Log.name = 'Log'
 
 let logLevel = Config.debug.logLevel
 let logTarget = ConsoleLogger

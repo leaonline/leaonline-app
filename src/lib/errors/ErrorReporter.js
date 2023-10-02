@@ -5,6 +5,8 @@ import { Log } from '../infrastructure/Log'
 
 export const ErrorReporter = {}
 
+ErrorReporter.name = 'ErrorReporter'
+
 ErrorReporter.send = async ({ error, isFatal, stack }) => {
   const errorDoc = normalizeError({ error, stackLength: 3, stack })
   errorDoc.isFatal = isFatal

@@ -1,4 +1,4 @@
-import { hasOwnProp } from '../utils/hasOwnProp'
+import { hasOwnProp } from '../utils/object/hasOwnProp'
 
 export class MeteorError extends Error {
   /**

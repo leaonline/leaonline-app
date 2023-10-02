@@ -1,5 +1,6 @@
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 
+// TODO rename file to scoreCloze
 export const scoreCloze = function scoreCloze (itemDoc, responseDoc) {
   const { scoring } = itemDoc
 

@@ -6,6 +6,8 @@ import { ErrorReporter } from '../../errors/ErrorReporter'
 
 const debug = Log.create('useSync', 'debug')
 
+// FIXME move to hooks folder!
+
 export const useSync = () => {
   const [syncRequired, setSyncRequired] = useState(false)
   const [progress, setProgress] = useState(0)

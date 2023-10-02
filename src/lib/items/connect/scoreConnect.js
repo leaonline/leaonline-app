@@ -1,5 +1,5 @@
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
-import { toInteger } from '../../utils/toInteger'
+import { toInteger } from '../../utils/number/toInteger'
 
 export const scoreConnect = function (itemDoc = {}, responseDoc = {}) {
   const { scoring } = itemDoc

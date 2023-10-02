@@ -10,6 +10,8 @@ import { createSessionValidator } from '../startup/createSessionValidator'
  */
 export const AppSession = {}
 
+AppSession.name = 'AppSession'
+
 const debug = Log.create('AppSession', 'debug')
 
 /**

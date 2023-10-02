@@ -6,9 +6,11 @@ import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
-import { promiseWithTimeout } from '../utils/promiseWithTimeout'
 import { SoundIcon } from './SoundIcon'
-import { isValidNumber } from '../utils/isValidNumber'
+import { isValidNumber } from '../utils/number/isValidNumber'
+import { createTimedPromise } from '../utils/createTimedPromise'
+
+// TODO we should extract TTSEngine into an own testable entity
 
 /** @private **/
 let Speech = null
@@ -313,7 +315,7 @@ export const TTSengine = {
     Speech = speechProvider
 
     if (speakImmediately) {
-      return promiseWithTimeout(new Promise((resolve) => {
+      return createTimedPromise(new Promise((resolve) => {
         Speech.speak(text, {
           language: 'ger',
           pitch: 1,
@@ -322,7 +324,7 @@ export const TTSengine = {
           onDone: resolve,
           onError: resolve
         })
-      }), timeout)
+      }), { timeout })
     }
     else {
       return Promise.resolve()

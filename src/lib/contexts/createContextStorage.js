@@ -1,7 +1,7 @@
 import Meteor from '@meteorrn/core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getCollection } from '../infrastructure/collections/collections'
-import { toArrayIfNot } from '../utils/toArrayIfNot'
+import { toArrayIfNot } from '../utils/array/toArrayIfNot'
 
 const { EJSON } = Meteor
 

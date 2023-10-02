@@ -7,7 +7,7 @@
 export const clearObject = obj => {
   const type = typeof obj
 
-  if (type !== 'object') {
+  if (type !== 'object' || obj === null || Array.isArray(obj)) {
     throw new Error(`Expected objected, got ${type}`)
   }
 

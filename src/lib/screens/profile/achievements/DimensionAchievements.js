@@ -7,7 +7,7 @@ import { StaticCircularProgress } from '../../../components/progress/StaticCircu
 import { useTts } from '../../../components/Tts'
 import { Diamond } from '../../../components/progress/Diamond'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
-import { isDefined } from '../../../utils/isDefined'
+import { isDefined } from '../../../utils/object/isDefined'
 
 const RenderDimensionAchievements = props => {
   const { Tts } = useTts()
