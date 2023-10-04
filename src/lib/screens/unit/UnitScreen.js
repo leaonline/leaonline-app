@@ -177,7 +177,7 @@ export const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
-    UserProgress.update({
+    const updateDoc = {
       fieldId: session.field?._id,
       unitSetDoc: {
         _id: unitSetDoc._id,
@@ -185,7 +185,15 @@ export const UnitScreen = props => {
         progress: unitSetDoc.progress,
         competencies: 0
       }
-    })
+    }
+
+    try {
+      await UserProgress.update(updateDoc)
+    }
+    catch (e) {
+      Log.error(e)
+      await ErrorReporter.send({ error: e })
+    }
 
     await sessionActions.multi({
       progress: session.progress + 1,

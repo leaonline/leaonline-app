@@ -1,5 +1,6 @@
 import { Dimension } from '../../lib/contexts/Dimension'
+import { createContextBaseTests } from '../../__testHelpers__/createContextBaseTests'
 
 describe(Dimension.name, function () {
-  test.todo('it is not impl')
+  createContextBaseTests({ ctx: Dimension })
 })

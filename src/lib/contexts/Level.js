@@ -1,13 +1,12 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Level = {
   name: 'level',
   isLocal: false
 }
 
-Level.collection = () => {
-  throw new Error('is not initialized')
-}
+Level.collection = collectionNotInitialized(Level)
 
 Level.storage = createContextStorage(Level)
 

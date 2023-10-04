@@ -1,4 +1,5 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Achievements = {
   name: 'achievements'
@@ -20,10 +21,7 @@ Achievements.trophies = {
   }
 }
 
-Achievements.collection = () => {
-  throw new Error(`Collection ${Achievements.name} not initialized`)
-}
-
+Achievements.collection = collectionNotInitialized(Achievements)
 Achievements.storage = createContextStorage(Achievements)
 
 Achievements.init = async () => {

@@ -1,5 +1,6 @@
 import { Legal } from '../../lib/contexts/Legal'
+import { createContextBaseTests } from '../../__testHelpers__/createContextBaseTests'
 
 describe(Legal.name, function () {
-  test.todo('it is not impl')
+  createContextBaseTests({ ctx: Legal })
 })

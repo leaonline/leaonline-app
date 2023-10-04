@@ -3,19 +3,19 @@ import { Config } from '../../env/Config'
 import { createContextStorage } from '../../contexts/createContextStorage'
 import { ContextRepository } from '../ContextRepository'
 import { Log } from '../Log'
+import { collectionNotInitialized } from '../../contexts/collectionNotInitialized'
 
 /**
  * Helps in keeping collections synced.
  */
 export const Sync = {
-  name: 'sync'
+  name: 'sync',
+  isLocal: true,
 }
 
 const debug = Log.create(Sync.name, 'debug')
 
-Sync.collection = () => {
-  throw new Error(`Collection ${Sync.name} is not initialized`)
-}
+Sync.collection = collectionNotInitialized(Sync)
 
 Sync.storage = createContextStorage(Sync)
 
@@ -29,7 +29,7 @@ Sync.init = async () => {
   await Sync.storage.loadIntoCollection()
 
   if (Sync.collection().find().count() === 0) {
-    Sync.collection().insert({})
+    await Sync.collection().insert({})
   }
 
   internal.initialized = true
@@ -172,28 +172,28 @@ Sync.syncContext = async ({ name, collection, storage }) => {
   debug('syncContext received', docs?.length, 'docs')
   if (Array.isArray(docs) && docs.length > 0) {
     const ids = new Set()
-    collection.find().forEach(doc => {
-      debug('remove', doc._id)
-      collection.remove({ _id: doc._id })
-    })
 
-    if (collection.find().count() > 0) {
-      throw new Error('Collection is not clean')
-    }
+    for (const doc of docs) {
+      const { _id, ...updateDoc } = doc
+      const found = collection.find({ _id }).count() > 0
 
-    docs.forEach(doc => {
-      ids.add(doc._id)
-
-      if (collection.find({ _id: doc._id }).count() === 0) {
-        collection.insert(doc)
+      if (!found) {
+        await collection.insert(doc)
       }
       else {
-        collection.update(doc._id, { $set: doc })
+        await collection.update(_id, { $set: updateDoc })
       }
-    })
 
-    const removed = collection.remove({ _id: { $nin: [...ids] } })
-    debug('removed', removed, 'outdated docs')
+      ids.add(_id)
+    }
+
+    const toRemove = collection.find({ _id: { $nin: [...ids] } }).fetch()
+
+    for (const removeDoc of toRemove) {
+      await collection.remove({ _id: removeDoc._id })
+    }
+
+    debug('removed', toRemove.length, 'outdated docs')
     const count = collection.find().count()
 
     if (count !== docs.length) {

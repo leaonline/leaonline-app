@@ -2,14 +2,13 @@ import React from 'react'
 import { Colors } from '../constants/Colors'
 import { createContextStorage } from './createContextStorage'
 import { Icon } from 'react-native-elements'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const MapIcons = {
   name: 'mapIcons'
 }
 
-MapIcons.collection = () => {
-  throw new Error('MapIcons is not intialized')
-}
+MapIcons.collection = collectionNotInitialized(MapIcons)
 
 MapIcons.storage = createContextStorage(MapIcons)
 

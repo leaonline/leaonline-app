@@ -1,13 +1,12 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Field = {
   name: 'field',
   isLocal: false
 }
 
-Field.collection = () => {
-  throw new Error('is not initialized')
-}
+Field.collection = collectionNotInitialized(Field)
 
 Field.storage = createContextStorage(Field)
 
