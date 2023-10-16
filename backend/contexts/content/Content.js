@@ -102,6 +102,7 @@ Content.methods.unit = {
     import { Unit } from '../content/Unit'
 
     return function ({ unitId }) {
+      // TODO return unit only in staging mode
       return getCollection(Unit.name).findOne({ _id: unitId })
     }
   })

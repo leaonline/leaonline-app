@@ -8,6 +8,7 @@ describe(asyncTimeout.name, function () {
     await asyncTimeout(150)
     const end = performance.now()
     const val = Math.round(end - start)
-    expect(val).to.be.greaterThanOrEqual(150)
+    expect(val).to.be.greaterThanOrEqual(145)
+    expect(val).to.be.lessThanOrEqual(155)
   })
 })

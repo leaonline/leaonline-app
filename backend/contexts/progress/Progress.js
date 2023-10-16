@@ -2,6 +2,8 @@ import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
 import { Field } from '../content/Field'
+import { createIdSet } from '../../api/utils/createIdSet'
+import { onDependencies } from '../utils/onDependencies'
 
 /**
  * Progress represents a user's progress for a given field.
@@ -92,15 +94,15 @@ Progress.update = ({ userId, fieldId, unitSetId, dimensionId, progress, competen
   // otherwise push a completely new entry to the unitSets list
   const updateDoc = index > -1
     ? {
-        $set: {
-          [`unitSets.${index}`]: unitSetDoc
-        }
+      $set: {
+        [`unitSets.${index}`]: unitSetDoc
       }
+    }
     : {
-        $push: {
-          unitSets: unitSetDoc
-        }
+      $push: {
+        unitSets: unitSetDoc
       }
+    }
 
   log('unit set', { unitSetDoc, index, updateDoc })
   return ProgressCollection.update(progressDoc._id, updateDoc)
@@ -136,17 +138,14 @@ Progress.methods.getAll = {
   },
   backend: true,
   run: function ({ dependencies } = {}) {
-    const docs = getCollection(Progress.name).find({}, {
-      hint: {
-        $natural: -1
-      }
-    }).fetch()
-
+    const options = { hint: { $natural: -1 } }
+    const docs = getCollection(Progress.name).find({}, options).fetch()
     const data = { [Progress.name]: docs }
 
-    if (dependencies) {
-      data[Field.name] = getCollection(Field.name).find().fetch()
-    }
+    onDependencies()
+      .output(data)
+      .add(Field, 'fieldId')
+      .run({ dependencies, docs })
 
     return data
   }

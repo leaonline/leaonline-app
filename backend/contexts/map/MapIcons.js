@@ -1,6 +1,8 @@
 import { Field } from '../content/Field'
 import { getCollection } from '../../api/utils/getCollection'
 import { SyncState } from '../sync/SyncState'
+import { createIdSet } from '../../api/utils/createIdSet'
+import { onDependencies } from '../utils/onDependencies'
 
 export const MapIcons = {
   name: 'mapIcons',
@@ -92,9 +94,15 @@ MapIcons.methods.getAll = {
     }
   },
   backend: true,
-  run: function () {
-    const data = { [MapIcons.name]: getCollection(MapIcons.name).find().fetch() }
-    data[Field.name] = getCollection(Field.name).find().fetch()
+  run: function ({ dependencies } = {}) {
+    const docs = getCollection(MapIcons.name).find().fetch()
+    const data = { [MapIcons.name]: docs }
+
+    onDependencies()
+      .add(Field, 'fieldId')
+      .output(data)
+      .run({ dependencies, docs })
+
     return data
   }
 }

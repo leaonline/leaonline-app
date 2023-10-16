@@ -8,6 +8,7 @@ import { Progress } from '../progress/Progress'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
 import { ensureDocument } from '../../api/utils/ensureDocument'
+import { onDependencies } from '../utils/onDependencies'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -34,7 +35,11 @@ Session.schema = {
     type: String
   },
   unitSet: {
-    type: String
+    type: String,
+    dependency: {
+      collection: UnitSet.name,
+      field: UnitSet.representative
+    }
   },
   fieldId: {
     type: String,
@@ -60,11 +65,19 @@ Session.schema = {
   },
   unit: {
     type: String,
-    optional: true
+    optional: true,
+    dependency: {
+      collection: Unit.name,
+      field: Unit.representative
+    }
   },
   nextUnit: {
     type: String,
-    optional: true
+    optional: true,
+    dependency: {
+      collection: Unit.name,
+      field: Unit.representative
+    }
   },
   startedAt: {
     type: Date,
@@ -348,24 +361,26 @@ Session.methods.getAll = {
     }
   },
   backend: true,
-  run: function ({ dependencies }) {
-    const docs = getCollection(Session.name).find({}, {
-      hint: {
-        $natural: -1
-      }
-    }).fetch()
+  run: onServerExec(() => {
+    const resolveDependencies = onDependencies()
+      .add(UnitSet, 'unitSet')
+      .add(Unit, 'unit', 'nextUnit')
+      .add(Field, 'fieldId')
+      .add(Dimension, 'dimensionId')
 
-    const data = { [Session.name]: docs }
+    return function ({ dependencies } = {}) {
+      const docs = getCollection(Session.name).find({}, {
+        hint: {
+          $natural: -1
+        }
+      }).fetch()
 
-    if (dependencies) {
-      Object.values(dependencies).forEach(dep => {
-        console.debug(dep)
-        const { name } = dep
-        const collection = getCollection(name)
-        data[name] = collection.find().fetch()
-      })
+      const data = { [Session.name]: docs }
+      resolveDependencies
+        .output(data)
+        .run({ docs, dependencies })
+
+      return data
     }
-
-    return data
-  }
+  })
 }

@@ -2,6 +2,7 @@
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { ClientConnection } from '../ClientConnection'
+import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
 
 describe(ClientConnection.name, function () {
   afterEach(() => {
@@ -59,15 +60,9 @@ describe(ClientConnection.name, function () {
     })
   })
   describe('methods', function () {
-    describe(ClientConnection.methods.getAll.name, function () {
-      it('returns all docs', () => {
-        for (let i = 0; i < 10; i++) {
-          ClientConnection.collection().insert({ userId: Random.id() })
-        }
-        const userId = Random.id()
-        const allDocs = ClientConnection.methods.getAll.run.call({ userId })
-        expect(allDocs[ClientConnection.name].length).to.equal(ClientConnection.collection().find().count())
-      })
+    testGetAllMethod(ClientConnection, {
+      factory: () => ({ id: Random.id(), userId: Random.id() }),
+      collection: ClientConnection.collection(),
     })
   })
 })

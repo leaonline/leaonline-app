@@ -12,18 +12,21 @@ import {
   restoreCollections,
   stubCollection
 } from '../../../tests/helpers/stubCollection'
+import { Unit } from '../Unit'
 
 const FieldCollection = initTestCollection(Field)
 const DimensionCollection = initTestCollection(Dimension)
 const LevelCollection = initTestCollection(Level)
 const MapCollection = initTestCollection(MapData)
 const SessionCollection = initTestCollection(Session)
+const UnitCollection = initTestCollection(Unit)
 const allCollections = [
   FieldCollection,
   DimensionCollection,
   LevelCollection,
   MapCollection,
-  SessionCollection
+  SessionCollection,
+  UnitCollection
 ]
 describe('Content', function () {
   before(function () {
@@ -76,13 +79,13 @@ describe('Content', function () {
     })
   })
   describe(Content.methods.session.name, function () {
-    const unit = Content.methods.session.run
+    const run = Content.methods.session.run
 
-    it('returns the current unit screen data', function () {
+    it('returns the current session screen data', function () {
       const unitSetId = Random.id()
       const userId = Random.id()
       const sessionId = SessionCollection.insert({ userId, unitSet: unitSetId })
-      const { sessionDoc, unitDoc, unitSetDoc } = unit.call({ userId }, { unitSetId })
+      const { sessionDoc, unitDoc, unitSetDoc } = run.call({ userId }, { unitSetId })
       expect(sessionDoc).to.deep.equal({
         _id: sessionId,
         userId,
@@ -90,6 +93,16 @@ describe('Content', function () {
       })
       expect(unitDoc).to.equal(undefined)
       expect(unitSetDoc).to.equal(undefined)
+    })
+  })
+  describe(Content.methods.unit.name, function () {
+    const run = Content.methods.unit.run
+
+    it('returns a specific unit doc', function () {
+      const unitId = UnitCollection.insert({ title: Random.id() })
+      const doc = UnitCollection.findOne(unitId)
+      expect(doc).to.not.equal(undefined)
+      expect(run({ unitId })).to.deep.equal(doc)
     })
   })
 })

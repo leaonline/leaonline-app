@@ -6,6 +6,7 @@ import { updateUserProfile } from './updateUserProfile'
 import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
+import { safeWhile } from '../../api/utils/safeWhile'
 
 /**
  * Representation of users in the database.
@@ -172,6 +173,9 @@ Users.methods.create = {
     return function (options = {}) {
       const { userId } = this
 
+      // creating a new user should either be possible
+      // without an existing account
+      // or if the caller is actually a backenduser
       if (userId) {
         throw new Meteor.Error(
           'createUser.error',
@@ -180,11 +184,18 @@ Users.methods.create = {
         )
       }
 
+      const collection = getUsersCollection()
       const { voice, speed, isDev, device } = options
       const username = Random.hexString(32)
       const password = Random.secret()
-      const codes = RestoreCodes.generate()
-      const restore = codes.join('-')
+      const restore = safeWhile((count) => {
+        const codes = RestoreCodes.generate()
+        const r = codes.join('-')
+        const hasCodes = collection.find({ restore: r }).count() > 0
+        if (!hasCodes) {
+          return r
+        }
+      })
       const newUserId = Accounts.createUser({ username, password })
       const updateDoc = { restore, voice, speed, isDev, device }
 
@@ -224,15 +235,15 @@ Users.methods.updateProfile = {
       optional: true
     }
   },
-  run: function ({ voice, speed }) {
+  run: function ({ voice, speed } = {}) {
     const { userId } = this
     const nothingToUpdate = typeof voice !== 'string' && typeof speed !== 'number'
 
-    if (!userId || nothingToUpdate) {
+    if (nothingToUpdate) {
       throw new Meteor.Error(
         'permissionDenied',
         'updateProfile.failed',
-        { userId }
+        { userId, voice, speed }
       )
     }
 
@@ -262,13 +273,14 @@ Users.methods.restore = {
   run: function ({ codes, voice, speed, device }) {
     const restore = codes.join('-')
     const userCursor = getUsersCollection().find({ restore })
-    debug('restore with code', restore, '=> found', userCursor.count())
+    const count = userCursor.count()
+    debug('restore with code', restore, '=> found', count)
 
-    if (userCursor.count() === 0) {
+    if (count !== 1) {
       throw new Meteor.Error(
         'permissionDenied',
         'restore.failed',
-        { codes, restore }
+        { codes, restore, count }
       )
     }
 
@@ -286,21 +298,16 @@ Users.methods.restore = {
   }
 }
 
+/**
+ * Returns the current user's restore codes
+ * @type {{schema: {}, name: string, run: (function(): *)}}
+ */
 Users.methods.getCodes = {
   name: 'users.methods.getCodes',
   schema: {},
   run: function () {
     const { userId } = this
-    const user = userId && getUsersCollection().findOne(userId)
-
-    if (!user) {
-      throw new Meteor.Error(
-        'permissionDenied',
-        'getCodes.failed',
-        { userId }
-      )
-    }
-
+    const user = getUsersCollection().findOne(userId)
     return user.restore
   }
 }
@@ -364,7 +371,11 @@ Users.methods.remove = {
   backend: true,
   run: function ({ _id }) {
     const calledBy = this.userId
-    return removeUser(_id, calledBy)
+    try {
+      return removeUser(_id, calledBy)?.userRemoved
+    } catch (e) {
+      return 0
+    }
   }
 }
 

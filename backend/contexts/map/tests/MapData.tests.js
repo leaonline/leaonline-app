@@ -9,13 +9,11 @@ import { TestCycle } from '../../content/TestCycle'
 import { UnitSet } from '../../content/UnitSet'
 import { Level } from '../../content/Level'
 import { Unit } from '../../content/Unit'
-import {
-  restoreCollections,
-  stubCollection
-} from '../../../tests/helpers/stubCollection'
 import mapFixtures from './fixtures'
 import { getCollection } from '../../../api/utils/getCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
+import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
+import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 
 const MapCollection = initTestCollection(MapData)
 const FieldCollection = initTestCollection(Field)
@@ -37,21 +35,15 @@ const allCollections = [
 const dimensionsOrder = Meteor.settings.remotes.content.remap.dimensions.order
 
 const mockDocuments = () => {
-  allCollections.forEach(c => c.remove({}))
   Object.entries(mapFixtures).forEach(([name, docs]) => {
     const collection = getCollection(name)
     docs.forEach(doc => collection.insert(doc))
-    // console.debug('fixures', name, collection.find().count())
   })
 }
 
 describe('MapData', function () {
-  before(function () {
-    stubCollection(allCollections)
-  })
-  after(function () {
-    restoreCollections()
-  })
+  setupAndTeardown(allCollections)
+
   describe(MapData.create.name, function () {
     // throws errors; this is the case when crucial
     // or fundmental data is not avialable.
@@ -189,6 +181,12 @@ describe('MapData', function () {
       const testCycleDoc = TestCycleCollection.findOne({ field: fieldDoc._id })
       expect(testCycleDoc.progress).to.equal(countedMaxProgress)
       expect(milestone.progress).to.equal(countedMaxProgress)
+    })
+  })
+
+  describe('methods', function () {
+    testGetAllMethod(MapData, {
+      factory: () => ({ field: Random.id(), levels: [Random.id()], dimensions: [{ _id: Random.id() }] })
     })
   })
 })

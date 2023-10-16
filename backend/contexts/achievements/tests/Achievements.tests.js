@@ -8,10 +8,21 @@ import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { SyncState } from '../../sync/SyncState'
 import { Field } from '../../content/Field'
 import { Dimension } from '../../content/Dimension'
+import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
+import { createIdSet } from '../../../api/utils/createIdSet'
 
 const AchievementsCollection = initTestCollection(Achievements)
 const FieldsCollection = initTestCollection(Field)
 const DimensionCollection = initTestCollection(Dimension)
+
+const createDoc = (options = {}) => {
+  return {
+    fieldId: options.fieldId ?? Random.id(),
+    dimensionId: options.dimensionId ?? Random.id(),
+    maxProgress: options.maxProgress ?? 0,
+    maxCompetencies: options.maxCompetencies ?? 0
+  }
+}
 
 describe(Achievements.name, function () {
   before(() => {
@@ -61,35 +72,32 @@ describe(Achievements.name, function () {
   })
 
   describe('methods', function () {
-    describe(Achievements.methods.getAll.name, function () {
-      const getAll = Achievements.methods.getAll.run
-      it('returns all achievements without dependencies', () => {
-        const dimensionId = DimensionCollection.insert({ title: 'foo' })
-        const fieldId = FieldsCollection.insert({ title: 'foo' })
-        const achievementsDoc = Achievements.create({ dimensionId, fieldId })
-        const docs = getAll()
-        expect(docs).to.deep.equal({
-          [Achievements.name]: [achievementsDoc]
-        })
-      })
-      it('returns all achivements including dependencies', () => {
-        const dimensionId = DimensionCollection.insert({ title: 'foo' })
-        const dimensionDoc = DimensionCollection.findOne(dimensionId)
-        const fieldId = FieldsCollection.insert({ title: 'foo' })
-
-        // should not be in there
-        FieldsCollection.insert({ title: 'bar' })
-
-        const fieldDoc = FieldsCollection.findOne(fieldId)
-        const achievementsDoc = Achievements.create({ dimensionId, fieldId })
-        const dependencies = { [Field.name]: 1, [Dimension.name]: 1 }
-        const docs = getAll({ dependencies })
-        expect(docs).to.deep.equal({
-          [Achievements.name]: [achievementsDoc],
-          [Field.name]: [fieldDoc],
-          [Dimension.name]: [dimensionDoc]
-        })
-      })
+    testGetAllMethod(Achievements, {
+      factory: withDeps => {
+        const fieldId = withDeps
+          ? FieldsCollection.findOne()._id
+          : Random.id()
+        const dimensionId = withDeps
+          ? DimensionCollection.findOne()._id
+          : Random.id()
+        return createDoc({ fieldId, dimensionId })
+      },
+      dependencies: {
+        [Field.name]: {
+          factory: () => ({ title: Random.id(), shortCode: 'hi' }),
+          selector: ({ docs }) => {
+            const ids = [...createIdSet(docs, 'fieldId')]
+            return { _id: { $in: ids }}
+          }
+        },
+        [Dimension.name]: {
+          factory: () => ({ title: Random.id() }),
+          selector: ({ docs }) => {
+            const ids = [...createIdSet(docs, 'dimensionId')]
+            return { _id: { $in: ids }}
+          }
+        }
+      }
     })
   })
 })

@@ -2,6 +2,7 @@ import { getCollection } from '../../api/utils/getCollection'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
 import { SyncState } from '../sync/SyncState'
+import { onDependencies } from '../utils/onDependencies'
 
 /**
  * Contains documents of all possible field <-> dimension
@@ -76,35 +77,15 @@ Achievements.methods.getAll = {
     }
   },
   run: function ({ dependencies = {} } = {}) {
-    const allAchievements = []
-    const uniqueFields = new Set()
-    const uniqueDimensions = new Set()
-    const cursor = getCollection(Achievements.name)
-      .find({}, { hint: { $natural: -1 } })
-    allAchievements.length = cursor.count()
+    const docs = getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetch()
+    const data = { [Achievements.name]: docs }
 
-    cursor.forEach((doc, index) => {
-      allAchievements[index] = doc
-      uniqueDimensions.add(doc.dimensionId)
-      uniqueFields.add(doc.fieldId)
-    })
-
-    const data = { [Achievements.name]: allAchievements }
-
-    if (dependencies[Field.name]) {
-      data[Field.name] = getCollection(Field.name)
-        .find({ _id: { $in: [...uniqueFields] } })
-        .fetch()
-    }
-
-    if (dependencies[Dimension.name]) {
-      data[Dimension.name] = getCollection(Dimension.name)
-        .find({ _id: { $in: [...uniqueDimensions] } })
-        .fetch()
-    }
+    onDependencies()
+      .output(data)
+      .add(Field, 'fieldId')
+      .add(Dimension, 'dimensionId')
+      .run({ docs, dependencies })
 
     return data
   }
 }
-
-const uniqueIds = ids => [...new Set([...ids])]

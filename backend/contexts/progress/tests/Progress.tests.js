@@ -7,32 +7,49 @@ import {
   restoreCollections,
   stubCollection
 } from '../../../tests/helpers/stubCollection'
-import { createMethod } from '../../../infrastructure/factories/createMethod'
+import { testGetAllMethod, testGetMethod } from '../../../tests/helpers/backendMethods'
+import { Field } from '../../content/Field'
+import { createIdSet } from '../../../api/utils/createIdSet'
+import { createDocs } from '../../../tests/helpers/createDocs'
+import { DocumentFactories, SelectorFactories } from '../../../tests/helpers/Factories'
 
 const ProgressCollection = initTestCollection(Progress)
+const FieldCollection = initTestCollection(Field)
+
+const createDoc = (options = {}) => {
+  return  {
+    userId: options.userId ?? Random.id(),
+    fieldId: options.fieldId ?? Random.id(),
+    unitSets: [
+      {
+        _id: options.unitSetId ?? Random.id(),
+        dimensionId: options.dimensionId ?? Random.id(),
+        progress: options.progress ?? 123,
+        competencies: options.competencies ?? 456,
+        complete: options.complete ?? false
+      }
+    ]
+  }
+}
 
 describe('Progress', function () {
   before(function () {
-    stubCollection([ProgressCollection])
+    stubCollection([
+      ProgressCollection,
+      FieldCollection
+    ])
   })
   after(function () {
     restoreCollections()
   })
   beforeEach(function () {
     ProgressCollection.remove({})
+    FieldCollection.remove({})
   })
 
   describe(Progress.create.name, function () {
     it('creates a new progress doc', function () {
-      const insertDoc = {
-        userId: Random.id(),
-        fieldId: Random.id(),
-        unitSetId: Random.id(),
-        dimensionId: Random.id(),
-        progress: 123,
-        competencies: 456,
-        complete: false
-      }
+      const insertDoc = createDoc()
       const progressId = Progress.create(insertDoc)
       expect(ProgressCollection.findOne(progressId)).to.deep.equal({
         _id: progressId,
@@ -52,15 +69,7 @@ describe('Progress', function () {
   })
   describe(Progress.update.name, function () {
     it('creates a new Progress doc if non exists', function () {
-      const updateDoc = {
-        userId: Random.id(),
-        fieldId: Random.id(),
-        unitSetId: Random.id(),
-        dimensionId: Random.id(),
-        progress: 123,
-        competencies: 456,
-        complete: false
-      }
+      const updateDoc = createDoc()
       const progressId = Progress.update(updateDoc)
       expect(ProgressCollection.findOne(progressId)).to.deep.equal({
         _id: progressId,
@@ -78,15 +87,7 @@ describe('Progress', function () {
       })
     })
     it('updates an existing Progress doc', function () {
-      const insertDoc = {
-        userId: Random.id(),
-        fieldId: Random.id(),
-        unitSetId: Random.id(),
-        dimensionId: Random.id(),
-        progress: 123,
-        competencies: 456,
-        complete: false
-      }
+      const insertDoc = createDoc()
       const progressId = Progress.create(insertDoc)
 
       // update existing unit set
@@ -150,18 +151,40 @@ describe('Progress', function () {
       })
     })
   })
-  describe(Progress.methods.get.name, function () {
-    const method = createMethod(Progress.methods.get)
+  testGetMethod(Progress)
+  testGetAllMethod(Progress, {
+    factory: (withDeps) => {
+      const fieldDoc = withDeps && FieldCollection.findOne()
+      const fieldId = withDeps ? fieldDoc._id : Random.id()
+      return createDoc({ fieldId })
+    },
+    dependencies: {
+      [Field.name]: {
+        selector:SelectorFactories.idSelector('fieldId'),
+        factory: DocumentFactories.get(Field.name)
+      }
+    },
+  })
+  describe(Progress.methods.my.name, function () {
+    const run = Progress.methods.my.run
 
-    it('returns the progress doc by current user and given field', function () {
+    it('returns only the user\'s docs', () => {
       const userId = Random.id()
-      const fieldId = Random.id()
-      const progressId = ProgressCollection.insert({ userId, fieldId })
-      expect(method._execute({ userId }, { fieldId })).to.deep.equal({
-        _id: progressId,
-        userId,
-        fieldId
+      const docs = createDocs({
+        factory: () => createDoc({ userId }),
+        collection: ProgressCollection
       })
+
+      const others =createDocs({
+        factory: () => createDoc({ userId: Random.id() }),
+        collection: ProgressCollection
+      })
+      const all = docs.length + others.length
+      expect(ProgressCollection.find().count()).to.equal(all)
+      const my = run.call({ userId })
+      expect(my.length).to.equal(docs.length)
+      expect(my.length).to.be.lessThan(all)
+      expect(my).to.deep.equal(docs)
     })
   })
 })
