@@ -46,7 +46,7 @@ leaonline:collection-factory@1.0.4
 leaonline:corelib@1.0.0
 leaonline:ddp-login@2.0.2
 leaonline:ddp-login-handler@2.0.0
-leaonline:method-factory@1.1.0
+leaonline:method-factory@1.1.1
 leaonline:publication-factory@1.1.1
 leaonline:ratelimit-factory@1.0.0
 leaonline:service-registry@1.0.0

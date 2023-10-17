@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "lea.App-Backend"
+    "name": "lea.App-Backend",
+    "token": "01234567890123456789012345678901"
   },
   "defaultLang": "de",
   "isStaging": true,

@@ -8,7 +8,8 @@ import { Dimension } from '../content/Dimension'
 export const UnitSetAppraisal = {
   name: 'unitSetAppraisal',
   label: 'unitSetAppraisal.title',
-  icon: 'thumbs-up'
+  icon: 'thumbs-up',
+  representative: 'dimensionId'
 }
 
 UnitSetAppraisal.schema = {
@@ -31,9 +32,6 @@ UnitSetAppraisal.schema = {
       collection: Dimension.name,
       field: Dimension.representative
     }
-  },
-  stage: {
-    type: Number
   },
   unitSetId: {
     type: String,
@@ -63,17 +61,10 @@ UnitSetAppraisal.methods = {}
 UnitSetAppraisal.methods.send = {
   name: 'unitSetAppraisal.methods.send',
   schema: {
-    unitSetId: {
-      type: String
-    },
-    stage: {
-      type: Number
-    },
-    response: {
-      type: Number
-    }
+    unitSetId: UnitSetAppraisal.schema.unitSetId,
+    response: UnitSetAppraisal.schema.response
   },
-  run: function ({ unitSetId, stage, response }) {
+  run: function ({ unitSetId, response }) {
     const { userId } = this
     const createdAt = new Date()
     const unitSetDoc = getCollection(UnitSet.name).findOne(unitSetId)
@@ -91,7 +82,6 @@ UnitSetAppraisal.methods.send = {
       unitSetId,
       fieldId,
       dimensionId,
-      stage,
       response
     }
     return getCollection(UnitSetAppraisal.name).insert(insertDoc)

@@ -27,6 +27,7 @@ import { Level } from '../contexts/content/Level'
 import { ServerErrors } from '../contexts/errors/ServerErrors'
 import { ClientErrors } from '../contexts/errors/ClientErrors'
 import { ClientConnection } from '../contexts/connection/ClientConnection'
+import { UnitSetAppraisal } from '../contexts/appraisal/UnitSetAppraisal'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -60,6 +61,7 @@ ContentServer.contexts().forEach(ctx => {
   Order,
   ServerErrors,
   ClientErrors,
+  UnitSetAppraisal,
   Feedback].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
@@ -85,6 +87,7 @@ const methodContexts = [
   MapIcons,
   ClientErrors,
   ClientConnection,
+  UnitSetAppraisal,
   Order]
 
 if (Meteor.settings.isStaging) {
@@ -123,6 +126,7 @@ ServiceRegistry.register(Legal)
 ServiceRegistry.register(Feedback)
 ServiceRegistry.register(Order)
 ServiceRegistry.register(ClientConnection)
+ServiceRegistry.register(UnitSetAppraisal)
 // add dependencies to sc,
 // otherwise many docs won't load
 // in editor backend

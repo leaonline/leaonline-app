@@ -10,7 +10,6 @@ import { RestoreCodes } from '../../../api/accounts/RestoreCodes'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
 import { iterate } from '../../../tests/helpers/iterate'
 import { coin } from '../../../tests/helpers/coin'
-import { c } from 'sinon/lib/sinon/spy-formatters'
 
 const createUser = (options = {}) => {
   const doc = {
