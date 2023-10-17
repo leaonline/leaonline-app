@@ -1,9 +1,10 @@
 {
   "isDevelopment": false,
   "isDeveloperRelease": true,
+  "appToken": "01234567890123456789012345678901",
   "backend": {
-    "url": "wss://appstaging.lealernen.de/websocket",
-    "reachabilityUrl": "https://appstaging.lealernen.de/reachability",
+    "url": "ws://192.168.178.22:8080/websocket",
+    "reachabilityUrl": "http://192.168.178.22:8080/reachability",
     "maxTimeout": 3000,
     "interval": 250,
     "methods": {
@@ -38,11 +39,14 @@
       },
       "dev": {
         "get": "devData.methods.get"
+      },
+      "appraisal": {
+        "unitSet": "unitSetAppraisal.methods.send"
       }
     }
   },
   "content": {
-    "url": "https://content.lealernen.de"
+    "url": "http://192.168.178.22:3030"
   },
   "log": {
     "level": 0,

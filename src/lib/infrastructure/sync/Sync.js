@@ -10,7 +10,7 @@ import { collectionNotInitialized } from '../../contexts/collectionNotInitialize
  */
 export const Sync = {
   name: 'sync',
-  isLocal: true,
+  isLocal: true
 }
 
 const debug = Log.create(Sync.name, 'debug')

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Sync } from '../../infrastructure/sync/Sync'
-import { Log } from '../../infrastructure/Log'
-import { asyncTimeout } from '../../utils/asyncTimeout'
-import { ErrorReporter } from '../../errors/ErrorReporter'
+import { Sync } from '../infrastructure/sync/Sync'
+import { Log } from '../infrastructure/Log'
+import { asyncTimeout } from '../utils/asyncTimeout'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 const debug = Log.create('useSync', 'debug')
 

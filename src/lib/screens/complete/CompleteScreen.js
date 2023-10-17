@@ -16,6 +16,10 @@ import { Log } from '../../infrastructure/Log'
 import { generateFeedback } from './generateFeedback'
 import { Colors } from '../../constants/Colors'
 import { LeaText } from '../../components/LeaText'
+import { LeaButtonGroup } from '../../components/LeaButtonGroup'
+import { Fill } from '../../components/layout/Fill'
+import { Appraisal } from '../../contexts/Appraisal'
+import { ErrorReporter } from '../../errors/ErrorReporter'
 
 const COMPLETE = 'complete'
 
@@ -36,6 +40,7 @@ Sound.load(COMPLETE, () => require('../../assets/audio/trophy_animation.mp3'))
 export const CompleteScreen = props => {
   const [percent, setPercent] = useState(-1)
   const [phrase, setPhrase] = useState()
+  const [appraisal, setAppraisal] = useState(-1)
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
@@ -85,9 +90,24 @@ export const CompleteScreen = props => {
     setPercent(feedback.percent)
   }, [docs.data, session.competencies])
 
-  const moveToMap = () => {
+  const moveToMap = async () => {
+    if (appraisal > -1) {
+      try {
+        const appraisalDoc = {
+          unitSetId: session.unitSet._id,
+          response: appraisal
+        }
+        const insertId = await Appraisal.sendUnitSet(appraisalDoc)
+        Log.debug('appraisal sent', insertId)
+      }
+      catch (e) {
+        Log.error(e)
+        await ErrorReporter.send({ error: e })
+      }
+    }
+
     // clear session variables: unit unitSet progress
-    sessionActions.multi({
+    await sessionActions.multi({
       unit: null,
       unitSet: null,
       progress: null,
@@ -138,6 +158,24 @@ export const CompleteScreen = props => {
       <View style={{ flex: 2 }}>
         <Celebrate percent={percent > -1 ? percent : null} />
       </View>
+
+      <View style={styles.section}>
+        <Tts
+          align='center'
+          block
+          text='Wie hat dir die Aufgabe gefallen?'
+          color={Colors.secondary}
+          iconColor={Colors.secondary}
+          style={styles.phrase}
+        />
+        <LeaButtonGroup
+          background={Colors.secondary}
+          data={['😞', '😕', '😐', '🙂', '😍']}
+          onPress={(value, index) => setAppraisal(index)}
+        />
+      </View>
+      <Fill />
+
       <ActionButton block color={dimensionColor} title={t('completeScreen.continue')} onPress={moveToMap} />
     </ScreenBase>
   )

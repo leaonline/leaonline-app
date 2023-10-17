@@ -6,6 +6,7 @@ const Integer = SimpleSchema.Integer
 const settingsSchema = schema({
   isDevelopment: Boolean,
   isDeveloperRelease: Boolean,
+  appToken: String,
   backend: schema({
     url: String,
     reachabilityUrl: String,
@@ -43,6 +44,9 @@ const settingsSchema = schema({
       }),
       dev: schema({
         get: String
+      }),
+      appraisal: schema({
+        unitSet: String
       })
     })
   }),
