@@ -1,3 +1,4 @@
+import { Mongo } from 'meteor/mongo'
 import { createLog } from '../../infrastructure/log/createLog'
 
 export const ClientConnection = {

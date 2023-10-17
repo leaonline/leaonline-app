@@ -66,7 +66,9 @@ ContentConnection.get = ({ name, ids = [], log }) => {
     if (log) log('call', methodName)
     contentConnection.call(methodName, params, (err, res) => {
       if (err) {
-        if (log) (err.message)
+        if (log) {
+          log(err.message)
+        }
         return resolve([])
       }
 

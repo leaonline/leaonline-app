@@ -6,7 +6,6 @@ import { notifyUsersAboutError } from '../notifyUsersAboutError'
 import { stub, restoreAll, overrideStub } from '../../../tests/helpers/stubUtils'
 import { DocNotFoundError } from '../DocNotFoundError'
 import { normalizeError } from '../normalizeError'
-import { EJSON } from 'meteor/ejson'
 
 const appName = Meteor.settings.app.name
 const { notify, replyTo, from } = Meteor.settings.email

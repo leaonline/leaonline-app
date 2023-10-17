@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { normalizeError } from '../normalizeError'
 import { DocNotFoundError } from '../DocNotFoundError'

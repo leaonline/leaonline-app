@@ -9,7 +9,6 @@ import {
 } from '../../../tests/helpers/stubCollection'
 import { testGetAllMethod, testGetMethod } from '../../../tests/helpers/backendMethods'
 import { Field } from '../../content/Field'
-import { createIdSet } from '../../../api/utils/createIdSet'
 import { createDocs } from '../../../tests/helpers/createDocs'
 import { DocumentFactories, SelectorFactories } from '../../../tests/helpers/Factories'
 
@@ -17,7 +16,7 @@ const ProgressCollection = initTestCollection(Progress)
 const FieldCollection = initTestCollection(Field)
 
 const createDoc = (options = {}) => {
-  return  {
+  return {
     userId: options.userId ?? Random.id(),
     fieldId: options.fieldId ?? Random.id(),
     unitSets: [
@@ -160,10 +159,10 @@ describe('Progress', function () {
     },
     dependencies: {
       [Field.name]: {
-        selector:SelectorFactories.idSelector('fieldId'),
+        selector: SelectorFactories.idSelector('fieldId'),
         factory: DocumentFactories.get(Field.name)
       }
-    },
+    }
   })
   describe(Progress.methods.my.name, function () {
     const run = Progress.methods.my.run
@@ -175,7 +174,7 @@ describe('Progress', function () {
         collection: ProgressCollection
       })
 
-      const others =createDocs({
+      const others = createDocs({
         factory: () => createDoc({ userId: Random.id() }),
         collection: ProgressCollection
       })

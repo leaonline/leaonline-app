@@ -25,5 +25,5 @@ export const SelectorFactories = {}
 
 SelectorFactories.idSelector = (...fieldNames) => ({ docs }) => {
   const ids = [...createIdSet(docs, fieldNames)]
-  return { _id: { $in: ids }}
+  return { _id: { $in: ids } }
 }

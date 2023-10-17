@@ -373,7 +373,8 @@ Users.methods.remove = {
     const calledBy = this.userId
     try {
       return removeUser(_id, calledBy)?.userRemoved
-    } catch (e) {
+    }
+    catch (e) {
       return 0
     }
   }

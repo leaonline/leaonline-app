@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { checkPermissions } from '../checkPermissions'

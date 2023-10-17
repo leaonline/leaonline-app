@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { HTTP } from 'meteor/jkuester:http'
 import { createReachabilityUrl } from '../createReachabilityUrl'

@@ -360,9 +360,8 @@ describe('Session', function () {
         [Unit.name]: {
           factory: DocumentFactories.get(Unit.name),
           selector: SelectorFactories.idSelector('unit', 'nextUnit')
-        },
+        }
       }
     })
   })
-
 })

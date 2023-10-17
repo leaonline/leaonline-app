@@ -6,7 +6,7 @@ schemaOptions.push('autoform')
 
 SimpleSchema.extendOptions(schemaOptions)
 
-const defaultOptions =   {
+const defaultOptions = {
   clean: {
     autoConvert: true,
     extendAutoValueContext: {},
@@ -14,10 +14,10 @@ const defaultOptions =   {
     getAutoValues: true,
     removeEmptyStrings: true,
     removeNullsFromArrays: false,
-    trimStrings: true,
+    trimStrings: true
   },
   humanizeAutoLabels: false,
-  requiredByDefault: true,
+  requiredByDefault: true
 }
 
 /**
@@ -29,7 +29,7 @@ const defaultOptions =   {
  * @return {SimpleSchema}
  */
 export const createSchema = (schema, options) => {
-  const finalOptions = { defaultOptions,  ...options }
+  const finalOptions = { defaultOptions, ...options }
   return new SimpleSchema(schema, finalOptions)
 }
 

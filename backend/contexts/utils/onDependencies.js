@@ -6,7 +6,7 @@ class DependencyBuilder {
     this.added = new Map()
     return this
   }
-  
+
   add (ctx, ...fieldNames) {
     if (!this.added.has(ctx.name)) {
       this.added.set(ctx.name, fieldNames)
@@ -14,12 +14,12 @@ class DependencyBuilder {
     return this
   }
 
-  output(target) {
+  output (target) {
     this.destination = target
     return this
   }
 
-  run({ docs, dependencies }) {
+  run ({ docs, dependencies }) {
     if (!docs?.length || !dependencies?.length) {
       return
     }
@@ -30,7 +30,7 @@ class DependencyBuilder {
       if (fieldNames) {
         const collection = getCollection(name)
         const $in = [...createIdSet(docs, ...fieldNames)]
-        const selector = { _id: { $in }}
+        const selector = { _id: { $in } }
         this.destination[name] = collection.find(selector).fetch()
       }
     })

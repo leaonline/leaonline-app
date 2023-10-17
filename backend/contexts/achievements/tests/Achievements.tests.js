@@ -87,14 +87,14 @@ describe(Achievements.name, function () {
           factory: () => ({ title: Random.id(), shortCode: 'hi' }),
           selector: ({ docs }) => {
             const ids = [...createIdSet(docs, 'fieldId')]
-            return { _id: { $in: ids }}
+            return { _id: { $in: ids } }
           }
         },
         [Dimension.name]: {
           factory: () => ({ title: Random.id() }),
           selector: ({ docs }) => {
             const ids = [...createIdSet(docs, 'dimensionId')]
-            return { _id: { $in: ids }}
+            return { _id: { $in: ids } }
           }
         }
       }

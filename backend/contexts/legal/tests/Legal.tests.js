@@ -21,7 +21,7 @@ describe(Legal.name, function () {
     testGetMethod(Legal, ({ run }) => {
       const validNames = ['imprint', 'privacy', 'terms', 'contact']
       const invalidNames = ['imprint2', '__proto__']
-      const emptyNameArgs = [undefined, {}, { name: undefined }, { name: null} , { name: false }, { name: ''}]
+      const emptyNameArgs = [undefined, {}, { name: undefined }, { name: null }, { name: false }, { name: '' }]
       it('returns nothing if no doc exists', () => {
         const test = name => {
           const doc = run({ name })

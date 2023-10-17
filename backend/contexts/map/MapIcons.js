@@ -1,7 +1,6 @@
 import { Field } from '../content/Field'
 import { getCollection } from '../../api/utils/getCollection'
 import { SyncState } from '../sync/SyncState'
-import { createIdSet } from '../../api/utils/createIdSet'
 import { onDependencies } from '../utils/onDependencies'
 
 export const MapIcons = {

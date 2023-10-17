@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 import { Random } from 'meteor/random'
 import { getCollection } from '../../api/utils/getCollection'
 import { expect } from 'chai'
@@ -20,8 +21,6 @@ const stubSyncUpdate = ({ ctx, expectSync }) => {
     }
   }
 }
-
-
 
 export const testInsert = (ctx, { factory, expectSync = false }) => {
   const method = ctx.methods.insert || ctx.methods.create
@@ -53,7 +52,7 @@ export const testInsert = (ctx, { factory, expectSync = false }) => {
   })
 }
 
-export const testUpdate = (ctx, { factory, expectSync = false}) => {
+export const testUpdate = (ctx, { factory, expectSync = false }) => {
   const method = ctx.methods.update
   const run = method.run
 
@@ -124,7 +123,6 @@ export const testGetMethod = (ctx, customFns) => {
   const run = method.run
 
   describe(method.name, function () {
-
     it('returns a single doc by _id', () => {
       const _id = Random.id()
       expect(run({ _id })).to.equal(undefined)

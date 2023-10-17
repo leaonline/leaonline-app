@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 import { restoreAll } from './stubUtils'
 import { restoreCollections, stubCollection } from './stubCollection'
 

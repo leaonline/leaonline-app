@@ -2,7 +2,6 @@ import { getCollection } from '../../api/utils/getCollection'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { createLog } from '../../infrastructure/log/createLog'
 import { Field } from '../content/Field'
-import { createIdSet } from '../../api/utils/createIdSet'
 import { onDependencies } from '../utils/onDependencies'
 
 /**
@@ -94,15 +93,15 @@ Progress.update = ({ userId, fieldId, unitSetId, dimensionId, progress, competen
   // otherwise push a completely new entry to the unitSets list
   const updateDoc = index > -1
     ? {
-      $set: {
-        [`unitSets.${index}`]: unitSetDoc
+        $set: {
+          [`unitSets.${index}`]: unitSetDoc
+        }
       }
-    }
     : {
-      $push: {
-        unitSets: unitSetDoc
+        $push: {
+          unitSets: unitSetDoc
+        }
       }
-    }
 
   log('unit set', { unitSetDoc, index, updateDoc })
   return ProgressCollection.update(progressDoc._id, updateDoc)

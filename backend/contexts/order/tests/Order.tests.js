@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { coin } from '../../../tests/helpers/coin'
 import { Order } from '../Order'
 import { Random } from 'meteor/random'
-import { testGetMethod, testInsert, testUpdate } from '../../../tests/helpers/backendMethods'
+import { testGetMethod, testUpdate } from '../../../tests/helpers/backendMethods'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 

@@ -1,7 +1,8 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import { Users } from '../Users'
 import { Random } from 'meteor/random'
+import { Users } from '../Users'
+import { Accounts } from 'meteor/accounts-base'
 import { testGetAllMethod, testRemove } from '../../../tests/helpers/backendMethods'
 import { getUsersCollection } from '../../../api/collections/getUsersCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
@@ -17,7 +18,7 @@ const createUser = (options = {}) => {
     createdAt: options.createdAt ?? new Date(),
     restore: options.restore ?? Random.id(),
     voice: options.voice ?? Random.id(),
-    speed: options.speed ?? 1,
+    speed: options.speed ?? 1
   }
 
   if (options.lastLogin) {
@@ -47,7 +48,6 @@ describe('Users', function () {
         })
       })
       it('creates a new user and logs them in', () => {
-        const fakeCredentials = '01234567890123456789012345678901'
         let runLoginHandlersCalled = false
         let loginUserCalled = false
         stub(RestoreCodes, 'generate', () => ['foo', 'bar', 'baz', Random.id(4)])
@@ -95,7 +95,7 @@ describe('Users', function () {
               fn: () => run.call(env, options),
               name: 'permissionDenied',
               reason: 'updateProfile.failed',
-              details: { userId, voice, speed },
+              details: { userId, voice, speed }
             })
           })
       })
@@ -103,18 +103,18 @@ describe('Users', function () {
         [
           { voice: 'foo' },
           { voice: 'foo', speed: 1 },
-          { speed: 1 },
+          { speed: 1 }
         ]
           .forEach(options => {
-          const userId = UsersCollection.insert({})
-          const env = { userId }
-          run.call(env, options)
-          const doc = UsersCollection.findOne(userId)
-          expect(doc).to.deep.equal({
-            _id: userId,
-            ...options
+            const userId = UsersCollection.insert({})
+            const env = { userId }
+            run.call(env, options)
+            const doc = UsersCollection.findOne(userId)
+            expect(doc).to.deep.equal({
+              _id: userId,
+              ...options
+            })
           })
-        })
       })
     })
     describe(Users.methods.getCodes.name, function () {
@@ -136,7 +136,7 @@ describe('Users', function () {
           [],
           ['foo'],
           ['foo', 'bar'],
-          ['foo', 'bar', 'baz'],
+          ['foo', 'bar', 'baz']
         ].forEach(codes => {
           const restore = codes.join('-')
           expectThrown({
@@ -161,7 +161,7 @@ describe('Users', function () {
         ;[
           { voice: 'foo' },
           { speed: 1 },
-          { device: { vendor: 'foo' }}
+          { device: { vendor: 'foo' } }
         ].forEach((options, index) => {
           const codes = ['foo', 'bar', 'baz', `${index}`]
           const restore = `foo-bar-baz-${index}`
@@ -175,7 +175,7 @@ describe('Users', function () {
         })
       })
     })
-    testRemove(Users,   {
+    testRemove(Users, {
       factory: createUser,
       expectSync: false,
       collection: UsersCollection
@@ -184,6 +184,5 @@ describe('Users', function () {
       factory: createUser,
       collection: UsersCollection
     })
-
   })
 })

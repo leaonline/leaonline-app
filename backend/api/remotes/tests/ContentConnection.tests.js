@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
+import { DDP } from 'meteor/ddp-client'
 import { ContentConnection } from '../content/ContentConnection'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { expectAsyncError } from '../../../tests/helpers/expectAsyncError'

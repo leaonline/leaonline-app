@@ -12,7 +12,7 @@ Meteor.startup(() => {
       console.warn(reply)
       console.warn(input)
       const details = { ...reply, ...input }
-      const isMethod = data.name.includes('methods')
+      const isMethod = input.name.includes('methods')
       const reason = isMethod
         ? 'rateLimit.method.tooManyRequests'
         : 'rateLimit.publication.tooManyRequests'

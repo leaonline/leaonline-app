@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+import { Meteor } from 'meteor/meteor'
+import { Mongo } from 'meteor/mongo'
 import { expect } from 'chai'
 import { DDP } from 'meteor/ddp'
 import { Random } from 'meteor/random'
@@ -207,7 +209,6 @@ describe('ContentServer', function () {
         { _id: Random.id(), title: 'foo' },
         { _id: Random.id(), title: 'bar' }
       ]
-      const updateDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => ({}))
       docs.forEach(doc => UnitCollection.insert(doc))
       expect(UnitCollection.find().fetch()).to.deep.equal(docs)

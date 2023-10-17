@@ -39,7 +39,7 @@ describe(removeUser.name, function () {
       responsesRemoved: 1,
       sessionsRemoved: 1,
       progressRemoved: 1,
-      userRemoved: 1,
+      userRemoved: 1
     })
   })
 })

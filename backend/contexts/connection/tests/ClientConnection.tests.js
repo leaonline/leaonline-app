@@ -62,7 +62,7 @@ describe(ClientConnection.name, function () {
   describe('methods', function () {
     testGetAllMethod(ClientConnection, {
       factory: () => ({ id: Random.id(), userId: Random.id() }),
-      collection: ClientConnection.collection(),
+      collection: ClientConnection.collection()
     })
   })
 })

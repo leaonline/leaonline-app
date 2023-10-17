@@ -32,7 +32,7 @@ export const removeUser = function (userId, calledBy) {
     responsesRemoved,
     sessionsRemoved,
     progressRemoved,
-    userRemoved,
+    userRemoved
   }
 }
 

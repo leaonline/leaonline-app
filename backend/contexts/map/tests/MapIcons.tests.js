@@ -57,7 +57,7 @@ describe(MapIcons.name, function () {
           },
           factory: () => ({ title: Random.id(), shortCode: 'al' })
         }
-      },
+      }
     })
   })
 })

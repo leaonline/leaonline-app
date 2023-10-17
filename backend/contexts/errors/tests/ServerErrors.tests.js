@@ -51,5 +51,6 @@ describe(ServerErrors.name, function () {
       isSystem: undefined,
       userId: options.userId
     })
+    expect(emailSent).to.equal(true)
   })
 })

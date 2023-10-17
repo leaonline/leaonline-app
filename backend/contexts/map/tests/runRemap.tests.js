@@ -27,7 +27,7 @@ describe(runRemap.name, function () {
   })
 
   it('skips if active is not explicitly true', () => {
-    ;[undefined, {}, { active: undefined}, { active: null }, { active: false}, { active: 1}]
+    ;[undefined, {}, { active: undefined }, { active: null }, { active: false }, { active: 1 }]
       .forEach(options => {
         expect(runRemap(options)).to.equal(false)
       })
@@ -39,11 +39,11 @@ describe(runRemap.name, function () {
   it('creates a map data for each field', () => {
     const dimensionDocs = [
       { _id: Random.id(), maxProgress: 0, maxCompetencies: 0 },
-      { _id: Random.id(), maxProgress: 0, maxCompetencies: 0 },
+      { _id: Random.id(), maxProgress: 0, maxCompetencies: 0 }
     ]
     const mapDocs = [{}, {}, {}].map(doc => {
       const fieldId = FieldCollection.insert(doc)
-       return {
+      return {
         _id: Random.id(),
         field: fieldId,
         dimensions: dimensionDocs,
@@ -64,7 +64,7 @@ describe(runRemap.name, function () {
   })
   it('creates/updates achievements for each dimension of a given map after it is created', () => {
     const dimensionDocs = [
-      { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 },
+      { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 }
     ]
     const fieldId = FieldCollection.insert({})
     const mapDoc = {
@@ -82,14 +82,16 @@ describe(runRemap.name, function () {
 
     stub(MapData, 'create', () => true)
     stub(MapData, 'get', () => mapDoc)
-    stub(Achievements, 'update', () => updateCalled = true)
+    stub(Achievements, 'update', () => {
+      updateCalled = true
+    })
     stub(SyncState, 'update', expect.fail)
     expect(runRemap(options)).to.equal(true)
     expect(updateCalled).to.equal(true)
   })
   it('syncs if dryRun is explicitly false', () => {
     const dimensionDocs = [
-      { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 },
+      { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 }
     ]
     const fieldId = FieldCollection.insert({})
     const mapDoc = {
