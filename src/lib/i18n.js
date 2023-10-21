@@ -169,7 +169,7 @@ const resources = {
       continue: 'Weiter'
     },
     connecting: {
-      title: 'Du bist nicht mit dem Internet verbunden.'
+      title: 'Du bist aktuell nicht mit dem lea. System verbunden. Bitte prüfe deine Internetverbindung.'
     },
     actions: {
       back: 'Zurück',

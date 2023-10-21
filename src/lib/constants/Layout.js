@@ -104,7 +104,8 @@ Layout.button = () => ({
   borderColor: Colors.white
 })
 
-Layout.dropShadow = ({ ios = true, android = true } = {}) => {
+Layout.dropShadow = (options = {}) => {
+  const { ios = true, android = true } = options
   const styles = {
     shadowColor: '#000'
   }
@@ -115,7 +116,7 @@ Layout.dropShadow = ({ ios = true, android = true } = {}) => {
     styles.shadowRadius = 12
   }
   if (android) {
-    styles.elevation = 2
+    styles.elevation = options.elevation ?? 2
   }
 
   return styles
