@@ -178,13 +178,13 @@ const resources = {
     },
     alert: {
       title: 'Stop',
-      navText: 'Bitte warten Sie bis zu Ende gesprochen wurde oder beenden Sie es vorzeitig',
-      checkBox: 'Sie müssen die Allgemeinen Geschäfts\u00ADbedingungen akzeptieren, um fortzufahren',
+      navText: 'Bitte warte bis zu Ende gesprochen wurde oder beende vorzeitig',
+      checkBox: 'Du musst die Allge\u00ADmeinen Geschäfts\u00ADbedingungen akzeptieren, um fortzufahren',
       approve: 'Ok'
     },
     welcomeScreen: {
       title: 'Willkommen',
-      text: 'Herzlich Willkommen zu lea\u00AD.online! Bitte stelle zunächst die Sprach\u00ADausgabe ein.',
+      text: 'Herzlich Willkommen zu lea.online! Bitte stelle zunächst die Sprach\u00ADausgabe ein.',
       continue: 'Wenn du damit zufrieden bist, tippe auf "weiter".'
     },
     registrationScreen: {
@@ -195,7 +195,7 @@ const resources = {
       headerTitle: 'Nutzungs\u00ADbedingungen',
       text: 'Bitte nimm dir kurz etwas Zeit für unsere Nutzungs\u00ADbedingungen.',
       checkBoxText: 'Ich habe die Nutzungs\u00ADbedingungen verstanden und stimme ihnen zu.',
-      agreeResearch: 'Optional: Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu.',
+      agreeResearch: 'Ich stimme der Nutzung meiner Daten für Forschung und Entwicklung zu. Die Zustimmung ist optional.',
       newUser: 'Ich bin neu',
       restoreWithCode: 'Ich habe einen Anmelde\u00ADcode',
       showTerms: 'Nutzungs\u00ADbedingungen anzeigen',
@@ -233,10 +233,10 @@ const resources = {
       },
       deleteAccount: {
         title: 'Profil löschen',
-        instructions: 'Dein Profil wird zusammen mit deinen Antworten und deinem Fortschritt endgültig gelöscht. Sie können danach nicht wiederher\u00ADgestellt werden. Möchtest dein Profil jetzt löschen?'
+        instructions: 'Achtung! Dein Profil wird zusammen mit deinen Antworten und deinem Fortschritt endgültig gelöscht. Sie können danach nicht wiederher\u00ADgestellt werden. Möchtest du dein Profil jetzt löschen?'
       },
       close: {
-        successful: 'Dein Konto wurde erfolgreich {{action}}!',
+        successful: 'Dein Konto wurde erfolgreich {{action}}.',
         deleted: 'gelöscht',
         signedOut: 'abgemeldet',
         next: 'Du kannst nun die App schließen oder neustarten.',
