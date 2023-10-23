@@ -91,7 +91,8 @@ export const UnitScreen = props => {
         unit: null,
         unitSet: null,
         progress: null,
-        page: null
+        page: null,
+        loadUserData: true
       })
 
       const navState = props.navigation.getState()
