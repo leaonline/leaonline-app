@@ -21,9 +21,11 @@ const debug = Log.create(UserProgress.name, 'debug')
  */
 UserProgress.collection = collectionNotInitialized(UserProgress)
 
-const progressDocSchema = createSchema({
+const unitSetDocSchema = createSchema({
   _id: String,
-  dimensionId: String,
+  dimensionId: {
+    type: String
+  },
   progress: {
     type: Number,
     min: 0
@@ -48,6 +50,8 @@ const progressDocSchema = createSchema({
  * @return {Promise<boolean>} true if update was done on collection, false if skipped
  */
 UserProgress.update = async ({ fieldId, unitSetDoc }) => {
+  const unitSetId = unitSetDoc?._id
+  debug('update', { fieldId, unitSetId })
   const collection = UserProgress.collection()
   const progressDoc = fieldId && collection.findOne({ fieldId })
 
@@ -55,11 +59,13 @@ UserProgress.update = async ({ fieldId, unitSetDoc }) => {
   // for example on the first unitSet story complete on a new field
   // where the doc yet has to be created on the server and fetched
   if (!progressDoc) {
+    debug('no progress doc found, skip update')
     return false
   }
 
-  check(unitSetDoc, progressDocSchema)
-  const unitSetId = unitSetDoc._id
+  debug('check unit set doc schema:')
+  debug(unitSetDoc)
+  check(unitSetDoc, unitSetDocSchema)
 
   // if we found a unit set, then we only update the data at the given index
   // otherwise push a completely new entry to the unitSets list

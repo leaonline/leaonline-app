@@ -1,4 +1,5 @@
-const SimpleSchema = require('simpl-schema')
+const mod = require('simpl-schema')
+const SimpleSchema = mod.default
 
 const schema = x => new SimpleSchema(x)
 const Integer = SimpleSchema.Integer

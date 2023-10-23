@@ -5,12 +5,14 @@ export const check = (target, schema) => {
   // if we already have a simple schema instance we
   // immediately delegate validation to this one
   if (isSchemaInstance(schema)) {
-    return schema.validate(target)
+    schema.validate(target)
+    return
   }
 
   if (typeof schema === 'object') {
-    return createSchema(schema).validate(target)
+    createSchema(schema).validate(target)
+    return
   }
 
-  return createSchema({ target: schema }).validate({ target })
+  createSchema({ target: schema }).validate({ target })
 }

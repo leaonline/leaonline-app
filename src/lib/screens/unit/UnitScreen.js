@@ -182,7 +182,7 @@ export const UnitScreen = props => {
       fieldId: session.field?._id,
       unitSetDoc: {
         _id: unitSetDoc._id,
-        dimensionId: unitSetDoc.dimensionId,
+        dimensionId: sessionDoc.dimensionId,
         progress: unitSetDoc.progress,
         competencies: 0
       }
