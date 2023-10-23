@@ -4,11 +4,11 @@ import { UserProgress } from '../contexts/UserProgress'
 import { Log } from '../infrastructure/Log'
 import { ErrorReporter } from '../errors/ErrorReporter'
 
-export const useProgress = ({ fieldId }) => {
+export const useProgress = ({ fieldId, loadUserData }) => {
   const [progressDoc, setProgressDoc] = useState(null)
 
   useFocusEffect(useCallback(() => {
-    UserProgress.get({ fieldId })
+    UserProgress.get({ fieldId, force: loadUserData })
       .catch(error => {
         Log.error(error)
         ErrorReporter
@@ -20,7 +20,7 @@ export const useProgress = ({ fieldId }) => {
           setProgressDoc(doc)
         }
       })
-  }, [fieldId]))
+  }, [fieldId, loadUserData]))
 
   return { progressDoc }
 }

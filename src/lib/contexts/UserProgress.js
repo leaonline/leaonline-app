@@ -98,14 +98,17 @@ UserProgress.fetchFromServer = async ({ fieldId }) => {
   return collection.findOne({ _id })
 }
 
-UserProgress.get = async ({ fieldId } = {}) => {
-  debug('get', { fieldId })
+UserProgress.get = async ({ fieldId, force } = {}) => {
+  debug('get', { fieldId, force })
   if (!fieldId) { return }
 
-  let doc = UserProgress.collection().findOne({ fieldId })
+  let doc
 
-  if (!doc) {
-    debug('get found no doc by field, try to fetch from server')
+  if (!force) {
+    doc = UserProgress.collection().findOne({ fieldId })
+  }
+
+  if (!doc || force) {
     doc = await UserProgress.fetchFromServer({ fieldId })
   }
 

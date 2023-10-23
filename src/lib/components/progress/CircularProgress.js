@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { StyleSheet, View, TextInput, Animated } from 'react-native'
 import PropTypes from 'prop-types'
 import Svg, { G, Circle, Defs, LinearGradient, Stop } from 'react-native-svg'
-import { createStyleSheet } from '../styles/createStyleSheet'
+import { createStyleSheet } from '../../styles/createStyleSheet'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedInput = Animated.createAnimatedComponent(TextInput)

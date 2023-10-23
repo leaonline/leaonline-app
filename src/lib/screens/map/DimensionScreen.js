@@ -13,10 +13,12 @@ import { BackButton } from '../../components/BackButton'
 import { View } from 'react-native'
 import { Colors } from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
+import { CircularProgress } from '../../components/progress/CircularProgress'
 import { Fill } from '../../components/layout/Fill'
 import { ActionButton } from '../../components/ActionButton'
 import { useProgress } from '../../hooks/useProgress'
 import { useScreenIsActive } from '../../hooks/screenIsActive'
+import { Log } from '../../infrastructure/Log'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -37,12 +39,20 @@ export const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const { progressDoc } = useProgress({ fieldId: session.field?._id })
+  const { progressDoc } = useProgress({
+    fieldId: session.field?._id,
+    loadUserData: session.loadUserData
+  })
   const docs = useDocs({
     fn: () => loadDimensionData(session.stage),
     runArgs: [session.stage],
     allArgsRequired: true
   })
+
+  useEffect(() => {
+    Log.debug('Progress changed')
+    Log.print(progressDoc)
+  }, [session.stage])
 
   const { isActive } = useScreenIsActive()
 
@@ -100,7 +110,7 @@ export const DimensionScreen = props => {
             icon={unitSet.dimension.icon}
             onPress={() => selectUnitSet(unitSet)}
           />
-          <StaticCircularProgress
+          <CircularProgress
             value={progress ?? 0}
             maxValue={100}
             textColor={color}
