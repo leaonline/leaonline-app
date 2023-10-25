@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation Home</title>
+  <title>lea.online App-Backend Documentation SensitiveData</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,17 +90,227 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Namespace</p>
+                    <h1>SensitiveData</h1>
                 </header>
                 
 
 
 
+
+<section>
+
+<header>
+    
+        <h2>SensitiveData</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Represents User Email encrypt/decrypt functionality</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="api_crypto_SensitiveData.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_crypto_SensitiveData.js.html">api/crypto/SensitiveData.js</a>, <a href="api_crypto_SensitiveData.js.html#line9">line 9</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".decrypt">
+        <a class="href-link" href="#.decrypt">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                decrypt<span class="signature">(data)</span><span class="type-signature"> &rarr; {string}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Decrypts and existing user email</p>
+    </div>
     
 
 
-    <h3> </h3>
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="api_crypto_SensitiveData.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_crypto_SensitiveData.js.html">api/crypto/SensitiveData.js</a>, <a href="api_crypto_SensitiveData.js.html#line40">line 40</a>
+            </span>
+        </p>
+    
+</dl>
 
 
 
@@ -111,42 +321,227 @@
 
 
 
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">string</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".encrypt">
+        <a class="href-link" href="#.encrypt">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                encrypt<span class="signature">(data)</span><span class="type-signature"> &rarr; {string}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Encrypt an existing use ermail</p>
+    </div>
     
 
 
 
 
-    <section>
-        <article><h1>lea.online app backend</h1>
-<p>This is the server code, handling all relevant data and logic for operating
-the app.</p>
-<h2>Architecture overview</h2>
-<ul>
-<li>
-<p>The client registers to an account, including restore codes and an optional
-email address, reflected by the <code>Users</code> model.</p>
-</li>
-<li>
-<p>The <code>Map</code> is a read-optimized version of the playable content.</p>
-</li>
-<li>
-<p>The <code>Session</code> tracks the current state of the user's app usage.</p>
-</li>
-<li>
-<p>The <code>Progress</code> tracks the user's progress of the stages and milestones on the
-map.</p>
-</li>
-<li>
-<p>The <code>Response</code> stores all responses and scores of a given item.</p>
-</li>
-<li>
-<p>The <code>Sync</code> stores a hash, distributed to clients to indicate that content has
-been out of sync and should resync.</p>
-</li>
-</ul></article>
-    </section>
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="api_crypto_SensitiveData.js.html" class="button">View Source</a>
+            <span>
+                <a href="api_crypto_SensitiveData.js.html">api/crypto/SensitiveData.js</a>, <a href="api_crypto_SensitiveData.js.html#line24">line 24</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">string</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

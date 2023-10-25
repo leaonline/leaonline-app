@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation Home</title>
+  <title>lea.online App-Backend Documentation api/crypto/SensitiveData.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,63 +92,69 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>api/crypto/SensitiveData.js</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>lea.online app backend</h1>
-<p>This is the server code, handling all relevant data and logic for operating
-the app.</p>
-<h2>Architecture overview</h2>
-<ul>
-<li>
-<p>The client registers to an account, including restore codes and an optional
-email address, reflected by the <code>Users</code> model.</p>
-</li>
-<li>
-<p>The <code>Map</code> is a read-optimized version of the playable content.</p>
-</li>
-<li>
-<p>The <code>Session</code> tracks the current state of the user's app usage.</p>
-</li>
-<li>
-<p>The <code>Progress</code> tracks the user's progress of the stages and milestones on the
-map.</p>
-</li>
-<li>
-<p>The <code>Response</code> stores all responses and scores of a given item.</p>
-</li>
-<li>
-<p>The <code>Sync</code> stores a hash, distributed to clients to indicate that content has
-been out of sync and should resync.</p>
-</li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Meteor } from 'meteor/meteor'
+import crypto from 'node:crypto'
+
+/**
+ * Represents User Email encrypt/decrypt functionality
+ * @category api
+ * @namespace
+ */
+const SensitiveData = {}
+
+const { algorithm, key, outputFormat } = Meteor.settings.crypto
+
+SensitiveData.validate = value => {
+  if (typeof value !== 'string' || value.length &lt; 1) {
+    throw new Error(`Expected valid string with min. length of 1, got ${value}`)
+  }
+}
+
+/**
+ * Encrypt an existing use ermail
+ * @param data {string}
+ * @return {string}
+ */
+SensitiveData.encrypt = (data) => {
+  SensitiveData.validate(data)
+  const iv = crypto.randomBytes(16).toString('hex').slice(0, 16)
+  const cipher = crypto.createCipheriv(algorithm, key, iv)
+  let encrypted = cipher.update(data, 'utf8', outputFormat)
+  encrypted += cipher.final(outputFormat)
+  encrypted += ':'
+  encrypted += iv
+  return encrypted
+}
+
+/**
+ * Decrypts and existing user email
+ * @param data {string}
+ * @return {string}
+ */
+SensitiveData.decrypt = (data) => {
+  const fields = data.split(':')
+  const iv = fields[1]
+  const encrypted = fields[0]
+  const decipher = crypto.createDecipheriv(algorithm, key, iv)
+  let decrypted = decipher.update(encrypted, outputFormat, 'utf-8')
+  decrypted += decipher.final('utf8')
+  return decrypted
+}
+
+export { SensitiveData }
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

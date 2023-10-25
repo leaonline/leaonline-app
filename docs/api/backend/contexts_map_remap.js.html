@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation Home</title>
+  <title>lea.online App-Backend Documentation contexts/map/remap.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,63 +92,71 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>contexts/map/remap.js</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>lea.online app backend</h1>
-<p>This is the server code, handling all relevant data and logic for operating
-the app.</p>
-<h2>Architecture overview</h2>
-<ul>
-<li>
-<p>The client registers to an account, including restore codes and an optional
-email address, reflected by the <code>Users</code> model.</p>
-</li>
-<li>
-<p>The <code>Map</code> is a read-optimized version of the playable content.</p>
-</li>
-<li>
-<p>The <code>Session</code> tracks the current state of the user's app usage.</p>
-</li>
-<li>
-<p>The <code>Progress</code> tracks the user's progress of the stages and milestones on the
-map.</p>
-</li>
-<li>
-<p>The <code>Response</code> stores all responses and scores of a given item.</p>
-</li>
-<li>
-<p>The <code>Sync</code> stores a hash, distributed to clients to indicate that content has
-been out of sync and should resync.</p>
-</li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
+import { Field } from '../content/Field'
+import { MapData } from './MapData'
+import { SyncState } from '../sync/SyncState'
+import { Achievements } from '../achievements/Achievements'
+
+/**
+ * This invokes the MapData to recreate itself from given DB documents.
+ * Also updates the sync state that is used in the app to fetch new updated data.
+ *
+ * @param active {boolean} determines, whether the remap should be executed
+ * @param dryRun {boolean} determines, whether the remap result should be saved as new Map data
+ * @param dimensions {object} determines dimensions order
+ * @param dimensions.order {string[]}
+ * @return {boolean}
+ */
+export const runRemap = ({ active, dryRun, dimensions } = {}) => {
+  if (active !== true) {
+    return false
+  }
+
+  // after sync we need to recompute the map data
+  // for all fields we have received or updated
+  const fields = getCollection(Field.name).find()
+
+  if (fields.count() === 0) {
+    return false
+  }
+
+  // create map data for each field
+  for (const field of fields) {
+    const fieldId = field._id
+    MapData.create({ field: fieldId, dryRun, dimensionsOrder: dimensions.order })
+
+    const mapDoc = MapData.get({ field: fieldId })
+    mapDoc.dimensions.forEach(entry => {
+      const dimensionId = entry._id
+      const { maxProgress, maxCompetencies } = entry
+
+      if (maxCompetencies > 0 &amp;&amp; maxProgress > 0) {
+        Achievements.update({ dimensionId, fieldId, maxProgress, maxCompetencies })
+      }
+    })
+  }
+
+  // let the clients know, that we have updated the data
+  if (dryRun === false) {
+    SyncState.update(MapData.name)
+  }
+
+  return true
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

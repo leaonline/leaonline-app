@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation Home</title>
+  <title>lea.online App-Backend Documentation api/utils/ensureDocument.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,63 +92,40 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>api/utils/ensureDocument.js</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>lea.online app backend</h1>
-<p>This is the server code, handling all relevant data and logic for operating
-the app.</p>
-<h2>Architecture overview</h2>
-<ul>
-<li>
-<p>The client registers to an account, including restore codes and an optional
-email address, reflected by the <code>Users</code> model.</p>
-</li>
-<li>
-<p>The <code>Map</code> is a read-optimized version of the playable content.</p>
-</li>
-<li>
-<p>The <code>Session</code> tracks the current state of the user's app usage.</p>
-</li>
-<li>
-<p>The <code>Progress</code> tracks the user's progress of the stages and milestones on the
-map.</p>
-</li>
-<li>
-<p>The <code>Response</code> stores all responses and scores of a given item.</p>
-</li>
-<li>
-<p>The <code>Sync</code> stores a hash, distributed to clients to indicate that content has
-been out of sync and should resync.</p>
-</li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { DocNotFoundError } from '../errors/DocNotFoundError'
+
+/**
+ * Throws if a given document does not exist, including additional info
+ * @param name {string=} additional contextual name
+ * @param document {object=} the document to test
+ * @param docId {string=} doc _id, if known, of the expected doc
+ * @param details {object=} additional context information
+ * @param logToConsole {boolean=} logs the error to the console, if desired
+ */
+export const ensureDocument = ({ name, document, docId, details, logToConsole }) => {
+  if (typeof document === 'undefined' || document === null) {
+    const e = new DocNotFoundError('document.notFoundById', { name, docId, ...details })
+
+    if (logToConsole) {
+      console.error(e)
+    }
+
+    throw e
+  }
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

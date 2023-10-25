@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation Home</title>
+  <title>lea.online App-Backend Documentation contexts/errors/ServerErrors.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,63 +92,65 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p></p>
-                    <h1>Home</h1>
+                    <p>Source</p>
+                    <h1>contexts/errors/ServerErrors.js</h1>
                 </header>
                 
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>lea.online app backend</h1>
-<p>This is the server code, handling all relevant data and logic for operating
-the app.</p>
-<h2>Architecture overview</h2>
-<ul>
-<li>
-<p>The client registers to an account, including restore codes and an optional
-email address, reflected by the <code>Users</code> model.</p>
-</li>
-<li>
-<p>The <code>Map</code> is a read-optimized version of the playable content.</p>
-</li>
-<li>
-<p>The <code>Session</code> tracks the current state of the user's app usage.</p>
-</li>
-<li>
-<p>The <code>Progress</code> tracks the user's progress of the stages and milestones on the
-map.</p>
-</li>
-<li>
-<p>The <code>Response</code> stores all responses and scores of a given item.</p>
-</li>
-<li>
-<p>The <code>Sync</code> stores a hash, distributed to clients to indicate that content has
-been out of sync and should resync.</p>
-</li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { normalizeError } from '../../api/errors/normalizeError'
+import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
+import { getCollection } from '../../api/utils/getCollection'
+import { ErrorBaseSchema } from './ErrorBaseSchema'
+
+export const ServerErrors = {
+  name: 'serverErrors'
+}
+
+ServerErrors.schema = {
+  ...ErrorBaseSchema,
+  method: {
+    type: String,
+    optional: true
+  },
+  publication: {
+    type: String,
+    optional: true
+  },
+  isSystem: {
+    type: Boolean,
+    optional: true
+  }
+}
+
+/**
+ *
+ * @param error {Error|Meteor.Error} the error instance
+ * @param name {string} name of the method or publication
+ * @param userId {string=} the user who created this error
+ * @param isMethod {boolean=}
+ * @param isPublication {boolean=}
+ * @param isSystem {boolean=}
+ */
+ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem }) => {
+  const errorDoc = normalizeError({ error, userId })
+
+  errorDoc.method = isMethod ? name : undefined
+  errorDoc.publication = isPublication ? name : undefined
+  errorDoc.isSystem = isSystem
+
+  const errorDocId = getCollection(ServerErrors.name).insert(errorDoc)
+  notifyUsersAboutError(errorDoc, 'server')
+
+  return errorDocId
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
