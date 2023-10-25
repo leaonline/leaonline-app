@@ -12,7 +12,7 @@ describe(createReachabilityUrl.name, () => {
     await asyncTimeout(50)
 
     const url = Meteor.absoluteUrl(path)
-    const response = HTTP.call('head', url)
+    const response = HTTP.call('get', url)
     expect(response.statusCode).to.equal(204)
 
     expect(() => createReachabilityUrl({ path }))
