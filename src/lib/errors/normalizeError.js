@@ -36,5 +36,5 @@ const getDetails = details => {
     return { details }
   }
 
-  return  { details }
+  return { details }
 }
