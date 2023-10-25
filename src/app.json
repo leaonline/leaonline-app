@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.testCompany.leaonline",
-      "versionCode": 4,
+      "versionCode": 5,
       "allowBackup": false
     },
     "plugins": [
