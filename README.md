@@ -2,13 +2,12 @@
 
 [![Test suite](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml)
 [![Lint Test](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml)
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub](https://img.shields.io/github/license/leaonline/leaonline-app)
 
 ## About
 
 The lea.online app is a mobile app, developed using React-Native and Meteor.
-
 
 ## Get the app
 
