@@ -3,11 +3,14 @@ import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { HTTP } from 'meteor/jkuester:http'
 import { createReachabilityUrl } from '../createReachabilityUrl'
+import { asyncTimeout } from '../../utils/asyncTimeout'
 
-describe(createReachabilityUrl.name, function () {
-  it('creates a reachability url for a given path', () => {
+describe(createReachabilityUrl.name, () => {
+  it('creates a reachability url for a given path', async () => {
     const path = '/foo-bar-baz'
     createReachabilityUrl({ path })
+    await asyncTimeout(50)
+
     const url = Meteor.absoluteUrl(path)
     const response = HTTP.call('head', url)
     expect(response.statusCode).to.equal(204)
