@@ -3,6 +3,7 @@
 set -e
 
 BUILD_TYPE=$3
+LEA_ROOT_PATH=$(pwd)
 
 # first of all validate settings schema
 cat $2 > ./src/lib/settings.json
@@ -23,9 +24,7 @@ TIMESTAMP=$(date +%F-%T | sed -r 's/[:]+/-/g')
 # this is our final filename
 FILENAME="lea-app-$TIMESTAMP-$GIT_HASH.apk"
 
-cd ./src/android/
-
-
+cd "$LEA_ROOT_PATH/src/android/"
 
 if [ "$BUILD_TYPE" != 'release' ]; then
   echo "start building debug release"
@@ -46,4 +45,4 @@ fi
 
 
 echo "attempt to restore settings"
-git restore ./src/lib/settings.json
+git restore "$LEA_ROOT_PATH/src/lib/settings.json"

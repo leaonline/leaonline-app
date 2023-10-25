@@ -13,7 +13,6 @@ import { BackButton } from '../../components/BackButton'
 import { View } from 'react-native'
 import { Colors } from '../../constants/Colors'
 import { StaticCircularProgress } from '../../components/progress/StaticCircularProgress'
-import { CircularProgress } from '../../components/progress/CircularProgress'
 import { Fill } from '../../components/layout/Fill'
 import { ActionButton } from '../../components/ActionButton'
 import { useProgress } from '../../hooks/useProgress'
@@ -110,7 +109,7 @@ export const DimensionScreen = props => {
             icon={unitSet.dimension.icon}
             onPress={() => selectUnitSet(unitSet)}
           />
-          <CircularProgress
+          <StaticCircularProgress
             value={progress ?? 0}
             maxValue={100}
             textColor={color}
