@@ -18,6 +18,9 @@ const createData = () => [
 ].sort()
 
 describe(createContextStorage.name, function () {
+  beforeAll(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+  })
   it('creates a new storage instance', () => {
     const ctx = createCtx()
     const storage = createContextStorage(ctx)

@@ -1,3 +1,5 @@
+import { isWord } from './isWord'
+
 /**
  * Creates a simple tokenizer to split strings by a given pattern, defined by a
  * open-pattern and close-pattern. No AST scanning etc. required.
@@ -7,7 +9,7 @@
  * @returns {function(string):Array<Object>} An array of token-objects
  */
 export const createSimpleTokenizer = (openPattern, closePattern) => value => {
-  if (typeof value !== 'string' || value.length === 0) {
+  if (!isWord(value)) {
     return []
   }
 

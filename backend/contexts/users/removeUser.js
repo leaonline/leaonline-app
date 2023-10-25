@@ -2,11 +2,12 @@ import { Meteor } from 'meteor/meteor'
 import { getCollection } from '../../api/utils/getCollection'
 import { Session } from '../session/Session'
 import { Progress } from '../progress/Progress'
-import { createLog } from '../../infrastructure/log/createLog'
 import { Response } from '../response/Response'
+import { createLog } from '../../infrastructure/log/createLog'
+import { getUsersCollection } from '../../api/collections/getUsersCollection'
 
 /**
- * Removes a given user plus all her associated sessions, responses and feedbacks.
+ * Removes a given user plus all their associated sessions, responses and feedbacks.
  * @param userId {String}
  * @param calledBy {String}
  * @return {{responsesRemoved: Number, sessionsRemoved: Number, userRemoved: Number}}
@@ -25,7 +26,7 @@ export const removeUser = function (userId, calledBy) {
   const responsesRemoved = getCollection(Response.name).remove({ userId })
   const sessionsRemoved = getCollection(Session.name).remove({ userId })
   const progressRemoved = getCollection(Progress.name).remove({ userId })
-  const userRemoved = Meteor.users.remove({ _id: userId })
+  const userRemoved = getUsersCollection().remove({ _id: userId })
 
   return {
     responsesRemoved,

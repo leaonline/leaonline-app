@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { isDefined } from '../../utils/isDefined'
+import { isDefined } from '../../utils/object/isDefined'
 import { ItemRegistry } from '../../items/ItemRegistry'
 
 export const useItemSubType = ({ unitDoc, page }) => {

@@ -16,9 +16,9 @@ const contentUrl = Meteor.settings.remotes.content.url
  * @param log {function} log function
  * @return {Promise<void>}
  */
-ContentConnection.connect = ({ log }) => {
+ContentConnection.connect = ({ log } = {}) => {
   return new Promise((resolve, reject) => {
-    log('establish connection to', contentUrl)
+    if (log) log('establish connection to', contentUrl)
     contentConnection = DDP.connect(contentUrl, {
       retry: false,
       onConnected: err => {
@@ -27,7 +27,7 @@ ContentConnection.connect = ({ log }) => {
           return reject(err)
         }
 
-        log('connection established with', contentUrl)
+        if (log) log('connection established with', contentUrl)
         resolve()
       }
     })
@@ -38,9 +38,10 @@ ContentConnection.connect = ({ log }) => {
  * Returns, whether the connection is fully established
  * @return {boolean}
  */
-ContentConnection.isConnected = () => contentConnection
-  ? contentConnection.status().status === 'connected'
-  : false
+ContentConnection.isConnected = () =>
+  typeof contentConnection?.status === 'function'
+    ? contentConnection.status()?.status === 'connected'
+    : false
 
 /**
  * Get doc(s) from a collection
@@ -62,10 +63,12 @@ ContentConnection.get = ({ name, ids = [], log }) => {
       params.ids = ids
     }
 
-    log('call', methodName)
+    if (log) log('call', methodName)
     contentConnection.call(methodName, params, (err, res) => {
       if (err) {
-        log(err.message)
+        if (log) {
+          log(err.message)
+        }
         return resolve([])
       }
 

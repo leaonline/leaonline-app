@@ -1,4 +1,5 @@
-const SimpleSchema = require('simpl-schema')
+const sspkg = require('simpl-schema')
+const SimpleSchema = sspkg.default
 const settingsSchemaModule = require('./lib/settingsSchema.js')
 const fs = require('fs')
 const path = require('path')

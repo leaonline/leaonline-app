@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
+import { ErrorReporter } from '../errors/ErrorReporter'
+import { Log } from '../infrastructure/Log'
 
 const MAX_ATTEMPTS = 3
 
@@ -52,6 +54,8 @@ export const useDocs = ({ fn, runArgs = [], debug = false, allArgsRequired = fal
     }
 
     load().catch(e => {
+      e.details = { attempts, env: useDocs.name, fn: String(fn) }
+      ErrorReporter.send({ error: e }).catch(Log.error)
       InteractionGraph.problem({
         type: 'loadFailed',
         target: useDocs.name,

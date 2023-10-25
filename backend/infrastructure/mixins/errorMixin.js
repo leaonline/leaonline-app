@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { normalizeError } from '../../api/errors/normalizeError'
-import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
+import { ServerErrors } from '../../contexts/errors/ServerErrors'
 
 export const errorMixin = options => {
   const { name } = options
@@ -15,9 +14,11 @@ export const errorMixin = options => {
     }
     catch (runtimeError) {
       console.error(runtimeError)
-      Meteor.defer(() => sendError({
-        name, isMethod, error: runtimeError, userId, isPublication
-      }))
+      Meteor.defer(() => {
+        ServerErrors.handle({
+          name, isMethod, error: runtimeError, userId, isPublication
+        })
+      })
 
       // finally throw original runtime error
       throw runtimeError
@@ -25,15 +26,4 @@ export const errorMixin = options => {
   }
 
   return options
-}
-
-const sendError = ({ name, isMethod, error, userId, isPublication }) => {
-  const normalizedError = normalizeError({
-    error,
-    userId,
-    method: isMethod ? name : undefined,
-    publication: isPublication ? name : undefined
-  })
-
-  notifyUsersAboutError(normalizedError)
 }

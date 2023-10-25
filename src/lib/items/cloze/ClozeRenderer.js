@@ -11,7 +11,7 @@ import { ClozeRendererSelect } from './ClozeRendererSelect'
 import { useTts } from '../../components/Tts'
 import { LeaText } from '../../components/LeaText'
 import { ClozeRendererBlank } from './ClozeRendererBlank'
-import { isDefined } from '../../utils/isDefined'
+import { isDefined } from '../../utils/object/isDefined'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { createScoringSummaryForInput } from './createScoringSummaryForInput'
 

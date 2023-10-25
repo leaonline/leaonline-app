@@ -1,4 +1,4 @@
-import { toInteger } from '../../utils/toInteger'
+import { toInteger } from '../../utils/number/toInteger'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
 import { Scoring } from '../../scoring/Scoring'
 

@@ -84,7 +84,7 @@ Order.init = () => {
 
   if (OrderCollection.find().count() === 0) {
     OrderCollection.insert({
-      dimensions: [],
+      field: [],
       fields: []
     })
   }

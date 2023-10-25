@@ -2,6 +2,9 @@
 
 set -e
 
+BUILD_TYPE=$3
+LEA_ROOT_PATH=$(pwd)
+
 # first of all validate settings schema
 cat $2 > ./src/lib/settings.json
 node ./src/prePublish.js || {
@@ -21,14 +24,25 @@ TIMESTAMP=$(date +%F-%T | sed -r 's/[:]+/-/g')
 # this is our final filename
 FILENAME="lea-app-$TIMESTAMP-$GIT_HASH.apk"
 
-cd ./src/android/
+cd "$LEA_ROOT_PATH/src/android/"
 
-echo "start building"
-./gradlew assembleRelease
+if [ "$BUILD_TYPE" != 'release' ]; then
+  echo "start building debug release"
+  ./gradlew assembleDebug
+else
+  echo "start building production-like release"
+	./gradlew assembleRelease
+fi
 
 echo "move build to $BUILD_PATH/$FILENAME"
 mkdir -p "$BUILD_PATH"
-mv ./app/build/outputs/apk/release/app-release.apk "$BUILD_PATH/$FILENAME"
+
+if [ "$BUILD_TYPE" != 'release' ]; then
+  mv ./app/build/outputs/apk/debug/app-debug.apk "$BUILD_PATH/$FILENAME"
+else
+  mv ./app/build/outputs/apk/release/app-release.apk "$BUILD_PATH/$FILENAME"
+fi
 
 
-git restore src/lib/settings.json
+echo "attempt to restore settings"
+git restore "$LEA_ROOT_PATH/src/lib/settings.json"

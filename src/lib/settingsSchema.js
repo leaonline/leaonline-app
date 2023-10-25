@@ -1,4 +1,5 @@
-const SimpleSchema = require('simpl-schema')
+const mod = require('simpl-schema')
+const SimpleSchema = mod.default
 
 const schema = x => new SimpleSchema(x)
 const Integer = SimpleSchema.Integer
@@ -6,15 +7,19 @@ const Integer = SimpleSchema.Integer
 const settingsSchema = schema({
   isDevelopment: Boolean,
   isDeveloperRelease: Boolean,
+  appToken: String,
   backend: schema({
     url: String,
+    reachabilityUrl: String,
     maxTimeout: Integer,
     interval: Integer,
     methods: schema({
       defaultTimeout: Integer,
+      sendError: String,
       users: schema({
         create: String,
-        delete: String
+        delete: String,
+        restore: String
       }),
       content: schema({
         map: String,
@@ -40,6 +45,9 @@ const settingsSchema = schema({
       }),
       dev: schema({
         get: String
+      }),
+      appraisal: schema({
+        unitSet: String
       })
     })
   }),

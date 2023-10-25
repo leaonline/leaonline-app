@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor'
 import { ContentServer } from '../api/remotes/content/ContentServer'
 import { SyncState } from '../contexts/sync/SyncState'
-import { createLog } from '../infrastructure/log/createLog'
-import { runRemap } from './remap'
+import { runRemap } from '../contexts/map/remap'
 import { useFixtures } from '../fixtures/useFixtures'
+import { ClientConnection } from '../contexts/connection/ClientConnection'
 
 const { sync, remap } = Meteor.settings.remotes.content
 
@@ -27,9 +27,4 @@ Meteor.startup(async () => {
   runRemap(remap)
 })
 
-const log = createLog({ name: 'connection' })
-
-Meteor.onConnection(function (connection) {
-  log('client connected', JSON.stringify(connection))
-  // TODO: save/log client connection but keep sensitive data encrypted
-})
+Meteor.onConnection(ClientConnection.onConnected)

@@ -17,6 +17,7 @@ import { Fill } from '../../components/layout/Fill'
 import { ActionButton } from '../../components/ActionButton'
 import { useProgress } from '../../hooks/useProgress'
 import { useScreenIsActive } from '../../hooks/screenIsActive'
+import { Log } from '../../infrastructure/Log'
 
 /**
  * On this screen the users select a current Dimension to work with,
@@ -37,12 +38,20 @@ export const DimensionScreen = props => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const [session, sessionActions] = useContext(AppSessionContext)
-  const { progressDoc } = useProgress({ fieldId: session.field?._id })
+  const { progressDoc } = useProgress({
+    fieldId: session.field?._id,
+    loadUserData: session.loadUserData
+  })
   const docs = useDocs({
     fn: () => loadDimensionData(session.stage),
     runArgs: [session.stage],
     allArgsRequired: true
   })
+
+  useEffect(() => {
+    Log.debug('Progress changed')
+    Log.print(progressDoc)
+  }, [session.stage])
 
   const { isActive } = useScreenIsActive()
 

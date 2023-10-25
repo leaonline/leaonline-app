@@ -31,6 +31,10 @@ export const LeaButtonGroup = props => {
   const selectedButtonStyle = {}
   const radius = Layout.borderRadius()
 
+  if (props.background) {
+    selectedButtonStyle.backgroundColor = props.background
+  }
+
   if (isFirstButton) {
     selectedButtonStyle.borderTopLeftRadius = radius
     selectedButtonStyle.borderBottomLeftRadius = radius

@@ -6,7 +6,7 @@ import { Config } from '../env/Config'
 import { NullComponent } from '../components/NullComponent'
 import { createRoutableComponent } from '../components/factories/createRoutableComponent'
 
-export const createDevelopmentButton = ({ route }) => {
+export const createDevelopmentButton = ({ route, icon }) => {
   if (!Config.isDeveloperRelease()) {
     return NullComponent
   }
@@ -21,7 +21,7 @@ export const createDevelopmentButton = ({ route }) => {
   const Component = props => (
     <Pressable accessibilityRole='button' android_ripple={rippleConfig} onPress={props.onPress} style={props.style}>
       <Icon
-        name='keyboard'
+        name={icon}
         type='font-awesome-5'
         color={Colors.gray}
         reverse

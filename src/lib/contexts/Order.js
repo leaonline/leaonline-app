@@ -1,12 +1,11 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Order = {
   name: 'order'
 }
 
-Order.collection = () => {
-  throw new Error(`Collection ${Order.name} not yet initialized`)
-}
+Order.collection = collectionNotInitialized(Order)
 
 Order.storage = createContextStorage(Order)
 

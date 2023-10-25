@@ -5,7 +5,7 @@
  * @param ids {string[]}
  * @return {function(a, b):number}
  */
-export const byOrderedIds = (ids) => (a, b) => {
+export const byOrderedIds = (ids = []) => (a, b) => {
   const indexA = ids.indexOf(a._id)
   const indexB = ids.indexOf(b._id)
 

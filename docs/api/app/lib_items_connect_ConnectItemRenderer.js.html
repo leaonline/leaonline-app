@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/items/connect/ConnectItemRenderer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/items/connect/ConnectItemRenderer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useRef, useState, useEffect } from 'react'
+import {
+  ActivityIndicator,
+  Pressable,
+  View
+} from 'react-native'
+import { createStyleSheet } from '../../styles/createStyleSheet'
+import { LeaText } from '../../components/LeaText'
+import { Colors } from '../../constants/Colors'
+import { Svg, Path, Circle } from 'react-native-svg'
+import { UndefinedScore } from '../../scoring/UndefinedScore'
+import { clearObject } from '../../utils/object/clearObject'
+import { ImageRenderer } from '../../components/renderer/media/ImageRenderer'
+
+/**
+ * Renders a connect item, where users have to connect
+ * left elements with right elements.
+ *
+ * Multiple connections per element are possible.
+ * Workflow:
+ *
+ * User selects a left element to make it `active`.
+ * Selecting it again without other interaction will
+ * deactivate the element. Selecting another left element
+ * will switch the `active`state to the new selected one.
+ *
+ * Selecting a right element will establish a connection,
+ * represented by a line. If the left-right pair is
+ * selected again, they will be disconnected.
+ *
+ *
+ * @param props
+ * @return {JSX.Element}
+ * @constructor
+ */
+export const ConnectItemRenderer = props => {
+  const [complete, setComplete] = useState(false)
+  const [selected, setSelected] = useState({})
+  const [highlighted, setHighlighted] = useState(initialHighlighted())
+  const [compared, setCompared] = useState(initialCompared())
+  const svgContainer = useRef({}).current
+  const leftDots = useRef({}).current
+  const rightDots = useRef({}).current
+  const [active, setActive] = useState(null)
+  const activeStyle = {
+    backgroundColor: props.dimensionColor,
+    borderColor: props.dimensionColor
+  }
+
+  // on contentId changed, do:
+  //
+  // 1. submit an initial response with undefined data
+  //    to indicate this item has "started"
+  //
+  // 2. clear all selections when the content id changes
+  //    which happens, for example, if we move to the next page
+  //
+  // 3. clear all connections
+  useEffect(() => {
+    setComplete(false)
+    setActive(null)
+    setSelected({})
+    setCompared(initialCompared())
+    setHighlighted(initialHighlighted())
+    clearObject(svgContainer)
+    clearObject(leftDots)
+    clearObject(rightDots)
+
+    props.submitResponse({
+      responses: [UndefinedScore],
+      data: props
+    })
+  }, [props.contentId])
+
+  // on showCorrectResponse, do:
+  // compare responses with the correct responses when
+  // the parent decided to activate {showCorrectResponse}
+  //
+  // this is a two-step process:
+  //
+  // 1. Iterate props.scoreResult and compare
+  //    all correct responses with selected
+  //    to build a list of "correct" connection pairs.
+  //    If a pair is in correct response but not in
+  //    selected then it is added to the "missing" list.
+  //    At the same time, add all expected correct pairs
+  //    to an "expected" list
+  //
+  // 2. Use the "expected" list and go through all selected
+  //    pairs to find connections that are not in "expected"
+  //    and are thus added to the "wrong" list.
+  //
+  // 3. save all lists in a "compared" state-object
+  useEffect(() => {
+    if (!props.showCorrectResponse || !props.scoreResult) {
+      return
+    }
+
+    const current = new Set()
+    const expected = new Set()
+    const correct = new Set()
+    const wrong = new Set()
+    const missing = new Set()
+
+    // first check all right and missing
+    props.scoreResult.forEach(entry => {
+      entry.correctResponse.forEach(({ left, right }) => {
+        const key = `${left},${right}`
+        expected.add(key)
+
+        const selection = selected[left] ?? []
+        if (selection.includes(right)) {
+          correct.add(key)
+        }
+        else {
+          missing.add(key)
+        }
+      })
+    })
+
+    // then check all wrong
+    Object.entries(selected).forEach(([left, allRight]) => {
+      allRight.forEach(right => {
+        const key = `${left},${right}`
+        current.add(key)
+
+        if (!expected.has(key)) {
+          wrong.add(key)
+        }
+      })
+    })
+
+    const newCompared = {
+      current: [...current],
+      expected: [...expected],
+      correct: [...correct],
+      wrong: [...wrong],
+      missing: [...missing]
+    }
+    setCompared(newCompared)
+  }, [props.showCorrectResponse])
+
+  // measures the layout of the "overlay" container,
+  // which is used to draw the connections in an own
+  // layer, to pass the correct coordinates and dimensions
+  // to the `Svg` elements, when connections are to be drawn
+  const onContainerLayout = (event) => {
+    // we need to measure in window, in order
+    // to get the correct coordinates;
+    // event.nativeEvent.layout would only give
+    // us the local coordinates
+    event.target.measureInWindow((x, y, w, h) => {
+      svgContainer.x = x
+      svgContainer.y = y
+      svgContainer.w = w
+      svgContainer.h = h
+    })
+  }
+
+  // measures the position of the invisible dots,
+  // which are used to get the start and end points
+  // to draw the connections
+  const onDotLayout = (event, id, isLeft) => {
+    event.target.measureInWindow((x, y) => {
+      const target = isLeft
+        ? leftDots
+        : rightDots
+      target[id] = { x, y }
+
+      if (
+        Object.keys(leftDots).length === props.value.left.length &amp;&amp;
+        Object.keys(rightDots).length === props.value.right.length
+      ) {
+        setTimeout(() => setComplete(true), 500)
+      }
+    })
+  }
+
+  const onPressLeft = ({ id }) => {
+    if (props.showCorrectResponse) {
+      return updateHighlighted(id, 'left')
+    }
+
+    if (active === id) {
+      return setActive(null)
+    }
+    else {
+      setActive(id)
+    }
+  }
+
+  const onPressRight = ({ id }) => {
+    if (props.showCorrectResponse) {
+      return updateHighlighted(id, 'right')
+    }
+
+    // if no left is active, right has no effect
+    if (active === null) {
+      return
+    }
+
+    const current = { ...selected }
+
+    // two options if active is already
+    // in selected:
+    if (current[active]) {
+      const found = current[active].findIndex(el => el === id)
+
+      // 1. if the same connection exists
+      // then we remove it
+      if (found > -1) {
+        current[active].splice(found, 1)
+
+        // if no connection is left, remove active
+        // from connections
+        if (current[active].length === 0) {
+          delete current[active]
+        }
+      }
+      // otherwise, establish the connection
+      else {
+        current[active].push(id)
+      }
+    }
+    // if not in selected, create a new structure
+    else {
+      current[active] = [id]
+    }
+
+    const responses = []
+
+    // The Response for this item is submitted in the form if
+    // a list of strings with specific pattern:
+    //
+    // '&lt;left>,&lt;right 1>,...,&lt;right n>'
+    //
+    // example:
+    // select left 1 and right 0 and 2 results in
+    // '1,0,2'
+    Object.entries(current).forEach(([left, allRight]) => {
+      const right = allRight.join(',')
+      const value = `${left},${right}`
+      responses.push(value)
+    })
+
+    props.submitResponse({
+      responses,
+      data: props
+    })
+
+    setSelected(current)
+    setActive(null)
+  }
+
+  const updateHighlighted = (id, type) => {
+    const idStr = id.toString()
+    const found = new Set()
+    const addToFound = entry => found.add(entry)
+    let byFilterFn
+
+    // on left get all outbound connections
+    if (type === 'left') {
+      byFilterFn = pair => pair.startsWith(idStr)
+    }
+
+    // on right get all inbound connections
+    if (type === 'right') {
+      byFilterFn = pair => pair.endsWith(idStr)
+    }
+
+    compared.current.filter(byFilterFn).forEach(addToFound)
+    compared.expected.filter(byFilterFn).forEach(addToFound)
+
+    const unset = (
+      highlighted.length === found.size &amp;&amp;
+      highlighted.every(pair => found.has(pair))
+    )
+    return unset
+      ? setHighlighted([])
+      : setHighlighted([...found])
+  }
+
+  const hasHighlighted = (
+    props.showCorrectResponse &amp;&amp;
+    highlighted.length > 0
+  )
+
+  const getHighlightedStyle = ({ index, type }) => {
+    const indexStr = index.toString()
+    let isIncluded
+
+    if (type === 'left') {
+      isIncluded = highlighted.some(pair => pair.startsWith(indexStr))
+    }
+
+    if (type === 'right') {
+      isIncluded = highlighted.some(pair => pair.endsWith(indexStr))
+    }
+
+    if (type === 'line') {
+      isIncluded = highlighted.some(pair => pair === index)
+      return isIncluded ? 1.0 : 0.1
+    }
+
+    return isIncluded
+      ? styles.highlightActive
+      : styles.highlightPassive
+  }
+
+  const renderLeftElements = () => {
+    return props.value.left.map(({ text, image }, index) => {
+      const nodeId = `left-${index}`
+      const isActive = active === index &amp;&amp; !props.showCorrectResponse
+      const isSelected = index in selected &amp;&amp; !props.showCorrectResponse
+      const nodeStyle = [styles.node]
+
+      if (isSelected) {
+        nodeStyle.push(styles.nodeSelected)
+      }
+
+      if (isActive) {
+        nodeStyle.push(activeStyle)
+      }
+
+      if (hasHighlighted) {
+        const highlightedStyle = getHighlightedStyle({ index, type: 'left' })
+        nodeStyle.push(highlightedStyle)
+      }
+
+      return (
+        &lt;Pressable
+          accessibilityRole='button'
+          key={nodeId}
+          style={styles.nodeContainer}
+          onPress={() => onPressLeft({ id: index })}
+        >
+          &lt;View style={nodeStyle}>
+            {
+              image
+                ? renderImage({ isSelected, image })
+                : renderText({ isSelected, text })
+            }
+          &lt;/View>
+          &lt;View
+            style={styles.dot}
+            onLayout={(event) => onDotLayout(event, index, true)}
+          />
+        &lt;/Pressable>
+      )
+    })
+  }
+
+  const renderLines = () => {
+    const allLines = []
+
+    const transformToLine = color => key => {
+      const [left, right] = key.split(',')
+      const x1 = leftDots[left].x
+      const y1 = leftDots[left].y
+      const x2 = rightDots[right].x
+      const y2 = rightDots[right].y
+      let opacity = 1.0
+
+      if (hasHighlighted) {
+        opacity = getHighlightedStyle({ index: key, type: 'line' })
+      }
+
+      allLines.push({ x1, y1, x2, y2, color, opacity })
+    }
+
+    if (props.showCorrectResponse) {
+      compared.correct.forEach(transformToLine(Colors.right))
+      compared.wrong.forEach(transformToLine(Colors.wrong))
+      compared.missing.forEach(transformToLine(Colors.secondary))
+    }
+    else {
+      Object.entries(selected).forEach(([left, allRight]) => {
+        const x1 = leftDots[left].x
+        const y1 = leftDots[left].y
+
+        allRight.forEach(right => {
+          const x2 = rightDots[right].x
+          const y2 = rightDots[right].y
+          const color = props.dimensionColor
+          const opacity = 1.0
+
+          allLines.push({ x1, y1, x2, y2, color, opacity })
+        })
+      })
+    }
+
+    return allLines.map((position, index) => {
+      const itemKey = `svg-${index}`
+      return (
+        &lt;Svg
+          key={itemKey} style={styles.svg} width={svgContainer.w} height={svgContainer.h}
+          viewBox={`${svgContainer.x} ${svgContainer.y} ${svgContainer.w} ${svgContainer.h}`}
+        >
+          &lt;Path
+            strokeWidth='4'
+            stroke={position.color}
+            strokeOpacity={position.opacity}
+            d={`M ${position.x1} ${position.y1} L ${position.x2} ${position.y2}`}
+          />
+          &lt;Circle
+            x={position.x2}
+            y={position.y2}
+            r={10}
+            fill={position.color}
+            fillOpacity={position.opacity}
+          />
+        &lt;/Svg>
+      )
+    })
+  }
+
+  const renderRightElements = () => {
+    return props.value.right.map(({ text, image }, index) => {
+      const nodeId = `right-${index}`
+      const nodeStyle = [styles.node]
+      const isSelected = (
+        !props.showCorrectResponse &amp;&amp;
+        Object.values(selected).some(list => list.includes(index))
+      )
+
+      if (isSelected) {
+        nodeStyle.push(styles.nodeSelected)
+      }
+
+      if (hasHighlighted) {
+        const highlightedStyle = getHighlightedStyle({ index, type: 'right' })
+        nodeStyle.push(highlightedStyle)
+      }
+
+      return (
+        &lt;Pressable
+          accessibilityRole='button'
+          key={nodeId}
+          style={styles.nodeContainer}
+          onPress={() => onPressRight({ id: index })}
+        >
+          &lt;View
+            style={styles.dot}
+            onLayout={(event) => onDotLayout(event, index, false)}
+          />
+          &lt;View style={nodeStyle}>
+            {
+              image
+                ? renderImage({ isSelected, image })
+                : renderText({ isSelected, text })
+            }
+          &lt;/View>
+        &lt;/Pressable>
+      )
+    })
+  }
+
+  return (
+    &lt;View style={[styles.overlay, props.style]} onLayout={onContainerLayout}>
+      {renderLines()}
+      &lt;View style={styles.container}>
+        &lt;View style={styles.leftContainer}>
+          {renderLeftElements()}
+        &lt;/View>
+        &lt;View style={styles.centerContainer}>
+          {!complete &amp;&amp; &lt;ActivityIndicator color={props.dimensionColor} />}
+        &lt;/View>
+        &lt;View style={styles.rightContainer}>
+          {renderRightElements()}
+        &lt;/View>
+      &lt;/View>
+    &lt;/View>
+  )
+}
+
+const renderText = ({ isSelected, text }) => (
+  &lt;LeaText
+    fitSize
+    autoScale={false}
+    style={isSelected ? styles.textSelected : styles.text}
+  >{text}
+  &lt;/LeaText>
+)
+
+const renderImage = ({ isSelected, image }) => {
+  return (
+    &lt;ImageRenderer
+      width={25}
+      style={isSelected ? styles.imageSelected : styles.image}
+      value={image}
+    />
+  )
+}
+
+/**
+ * @private
+ */
+const initialCompared = () => ({
+  current: [], // all set by user
+  expected: [], // all from correctResponse
+  correct: [],
+  wrong: [],
+  missing: []
+})
+
+/**
+ * @private
+ */
+const initialHighlighted = () => ([])
+
+const styles = createStyleSheet({
+  overlay: {
+    marginTop: 25,
+    borderColor: '#ff0'
+
+  },
+  svgContainer: {
+    borderColor: '#0f0'
+  },
+  svg: {
+    position: 'absolute',
+    borderColor: '#0ff'
+  },
+  container: {
+    flex: 1,
+    margin: 0,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  leftContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    flexGrow: 1
+  },
+  rightContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    flexGrow: 1
+  },
+  centerContainer: {
+    flex: 1,
+    maxWidth: '15%',
+    flexDirection: 'column',
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  nodeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  node: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexGrow: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    backgroundColor: Colors.transparent,
+    borderColor: Colors.secondary,
+    borderRadius: 5
+  },
+  nodeSelected: {
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.secondary
+  },
+  highlightActive: {
+
+  },
+  highlightPassive: {
+    opacity: 0.1
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    backgroundColor: Colors.transparent,
+    borderRadius: 15
+  },
+  textSelected: {
+    color: Colors.white
+  },
+  text: {
+  },
+  textElement: {},
+  image: {
+    width: '100%'
+  },
+  imageSelected: {
+    width: '100%'
+  }
+})
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

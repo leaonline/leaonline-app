@@ -4,24 +4,24 @@ import { expectThrowAsync } from '../../__testHelpers__/expectThrowAsync'
 
 describe(Scoring.name, function () {
   describe(Scoring.score.name, () => {
-    it('throws if an invalid itemDoc is given', () => {
-      expectThrowAsync({
+    it('throws if an invalid itemDoc is given', async () => {
+      await expectThrowAsync({
         fn: () => Scoring.score(),
-        message: 'Expected itemDoc, got undefined'
+        message: 'Expected itemDoc to have property "scoring"'
       })
-      expectThrowAsync({
+      await expectThrowAsync({
         fn: () => Scoring.score({}),
         message: 'Expected itemDoc to have property "scoring"'
       })
     })
-    it('throws if an invalid responseDoc is given', () => {
-      expectThrowAsync({
+    it('throws if an invalid responseDoc is given', async () => {
+      await expectThrowAsync({
         fn: () => Scoring.score({ scoring: [{}] }),
         message: 'Expected responseDoc, got undefined'
       })
-      expectThrowAsync({
+      await  expectThrowAsync({
         fn: () => Scoring.score({ scoring: [{}] }, {}),
-        message: 'Expected responseDoc to have Array-like property "responses"'
+        message: 'Expected responses to have Array-like property "responses"'
       })
     })
     it('throws if there is no scoring handler found by options', async () => {

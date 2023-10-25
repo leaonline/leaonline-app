@@ -20,6 +20,7 @@ export const LeaText = props => {
     color,
     children,
     style,
+    token,
     fitSize = false,
     hyphen = 'full',
     autoScale = false,
@@ -37,7 +38,18 @@ export const LeaText = props => {
       style={mergedStyle}
       {...rest}
     >
-      {children}
+      {token
+        ? token.map(token => (
+          <Text
+            key={token.key} accessibilityRole='text'
+            textBreakStrategy='highQuality'
+            android_hyphenationFrequency={hyphen}
+            adjustsFontSizeToFit={fitSize}
+            allowFontScaling={autoScale} style={token.style}
+          >
+            {token.text}
+          </Text>))
+        : children}
     </Text>
   )
 }

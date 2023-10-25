@@ -19,6 +19,7 @@ import { AppTerminate } from '../../../infrastructure/app/AppTerminate'
 import { clearContextStorage } from '../../../contexts/createContextStorage'
 import { Log } from '../../../infrastructure/Log'
 import { Sync } from '../../../infrastructure/sync/Sync'
+import { ErrorReporter } from '../../../errors/ErrorReporter'
 
 /**
  * Displays information and provides functionality about the user's account:
@@ -70,7 +71,15 @@ export const AccountInfo = (props) => {
   }), [])
 
   const buttons = useMemo(() => {
-    const onError = err => setError(err)
+    const onError = err => {
+      if (err) {
+        Log.error(err)
+        ErrorReporter
+          .send({ error: err })
+          .catch(Log.error)
+        setError(err)
+      }
+    }
     const actions = {}
 
     /**
@@ -125,8 +134,11 @@ export const AccountInfo = (props) => {
               lastAction.current = 'signedOut'
               Sync.reset()
               clearContextStorage(onError)
-                .catch(Log.error)
-                .then(() => setModalContent(closeModal))
+                .catch(onError)
+                .then(() => {
+                  setModalContent(closeModal)
+                  props.navigation.navigate('home')
+                })
             }
             signOut({ onError, onSuccess })
           }

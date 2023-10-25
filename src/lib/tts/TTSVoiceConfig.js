@@ -8,20 +8,7 @@ import { LeaButtonGroup } from '../components/LeaButtonGroup'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
-
-const setNewVoice = (voice, index) => {
-  InteractionGraph.action({
-    type: 'select',
-    target: TTSVoiceConfig.name,
-    message: 'set new voice',
-    details: {
-      index, voice: voice.identifier
-    }
-  })
-  TTSengine.stop()
-  TTSengine.setVoice(voice.identifier)
-  TTSengine.speakImmediately(`Stimme ${index + 1}`)
-}
+import { isIOS } from '../utils/isIOS'
 
 /**
  * Allows to set the voice for tts.
@@ -50,27 +37,26 @@ export const TTSVoiceConfig = props => {
     return null
   }
 
-  const handleChange = (text, index) => {
-    const newVoice = voices[index]
-    setNewVoice(newVoice, index)
+  const justNumbers = voices.length > 3
+  const handleChange = (_, index) => {
+    const voice = voices[index]
+    const text = isIOS()
+      ? voice.name
+      : getName({ voice, index, justNumbers: false, t })
+    setNewVoice({ voice, text })
 
     if (!selected) {
       setSelected(true)
     }
 
     if (props.onChange) {
-      props.onChange(newVoice)
+      props.onChange(voice)
     }
   }
 
-  const justNumbers = voices.length > 3
-  const groupData = voices
-    .map((voice, index) => {
-      const value = index + 1
-      return justNumbers
-        ? String(value)
-        : t('tts.voice', { value })
-    })
+  const groupData = voices.map((voice, index) => {
+    return getName({ voice, index, justNumbers, t })
+  })
 
   // if we haven't selected anything yet but
   // there is an initial set voice
@@ -87,6 +73,50 @@ export const TTSVoiceConfig = props => {
       onPress={handleChange}
     />
   )
+}
+
+/**
+ * Resolve the voice name for the voice,
+ * based on current OS.
+ * On iIOS every voice has a name, while
+ * on Android they are cryptic a.f. so
+ * we use only indexed names, like "Voice 1"
+ * @param voice
+ * @param index
+ * @param justNumbers
+ * @return {string|*}
+ */
+const getName = ({ voice, index, justNumbers, t }) => {
+  if (isIOS()) {
+    return voice.name
+  }
+
+  const value = index + 1
+  const name = justNumbers
+    ? String(value)
+    : t('tts.voice', { value })
+
+  return name
+}
+
+/**
+ * Sets the given voice as new voice
+ * @param voice
+ * @param index
+ * @param text
+ */
+const setNewVoice = ({ voice, index, text }) => {
+  InteractionGraph.action({
+    type: 'select',
+    target: TTSVoiceConfig.name,
+    message: 'set new voice',
+    details: {
+      index, voice: voice.identifier
+    }
+  })
+  TTSengine.stop()
+  TTSengine.setVoice(voice.identifier)
+  TTSengine.speakImmediately(text)
 }
 
 const styles = createStyleSheet({

@@ -2,7 +2,7 @@ import { Choice } from '../../../lib/items/choice/Choice'
 import { scoreChoice } from '../../../lib/items/choice/scoring'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
 import { Scoring } from '../../../lib/scoring/Scoring'
-import { toInteger } from '../../../lib/utils/toInteger'
+import { toInteger } from '../../../lib/utils/number/toInteger'
 import { isUndefinedResponse } from '../../../lib/scoring/isUndefinedResponse'
 
 const createItemDoc = ({ flavor, competency, correctResponse, requires } = {}) => {

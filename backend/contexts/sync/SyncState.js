@@ -107,8 +107,6 @@ SyncState.methods.getHashes = {
     return function () {
       const syncDoc = {}
       const names = getAppContexts()
-      console.debug('[SyncState]: get hashes', names)
-
       const docs = SyncState.get({ names })
       docs.forEach(doc => {
         syncDoc[doc.name] = doc

@@ -1,4 +1,5 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Feedback = {
   name: 'feedback',
@@ -11,9 +12,7 @@ Feedback.getFallbackDoc = () => ({
   phrases: ['feedback.fallback'] // requires i18n
 })
 
-Feedback.collection = () => {
-  throw new Error('is not initialized')
-}
+Feedback.collection = collectionNotInitialized(Feedback)
 
 Feedback.storage = createContextStorage(Feedback)
 

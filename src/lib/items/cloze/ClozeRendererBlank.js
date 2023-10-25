@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { KeyboardTypes } from '../utils/KeyboardTypes'
-import { Pressable, StatusBar, TextInput, View } from 'react-native'
+import { Pressable, TextInput, View } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Colors } from '../../constants/Colors'
 import { useTts } from '../../components/Tts'
@@ -167,7 +167,7 @@ export const ClozeRendererBlank = props => {
         showChildInTooltip={false}
         tooltipStyle={styles.tooltip}
         contentStyle={[styles.tooltipContent, contentStyle]}
-        topAdjustment={-StatusBar.currentHeight}
+        topAdjustment={-Layout.statusBarHeight()}
         onClose={() => setShowTooltip(false)}
       >
         <Pressable accessibilityRole='button' onPress={() => setShowTooltip(!showTooltip)}>

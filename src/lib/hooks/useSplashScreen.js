@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 import { START_UP_DELAY } from '../constants/App'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
+import { Log } from '../infrastructure/Log'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 export const useSplashScreen = (initFunctions) => {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -20,11 +22,15 @@ export const useSplashScreen = (initFunctions) => {
 
   useEffect(() => {
     const onError = e => {
+      Log.error(e)
       InteractionGraph.problem({
         type: 'startup',
         error: e
       })
       setError(e)
+      ErrorReporter
+        .send({ error: e })
+        .catch(Log.error)
     }
     async function prepare () {
       InteractionGraph.enterApp()
@@ -50,7 +56,5 @@ export const useSplashScreen = (initFunctions) => {
     prepare().catch(onError)
   }, [])
 
-  return {
-    appIsReady, onLayoutRootView, error
-  }
+  return { appIsReady, onLayoutRootView, error }
 }

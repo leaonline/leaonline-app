@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mapIcons  renders an icon by given index 1`] = `
+<View
+  style={
+    {
+      "overflow": "hidden",
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`mapIcons  renders an icon by given index 2`] = `
+<View
+  style={
+    {
+      "overflow": "hidden",
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`mapIcons  renders an icon by given index 3`] = `
+<View
+  style={
+    {
+      "overflow": "hidden",
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text />
+    </View>
+  </View>
+</View>
+`;

@@ -1,18 +1,8 @@
 /* global ErrorUtils */
 import { Log } from '../infrastructure/Log'
-import { Config } from '../env/Config'
-import { RemoteDDPLogger } from '../infrastructure/log/RemoteDDPLogger'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 export const initExceptionHandling = async () => {
-  if (Config.log.target) {
-    const { active, transport } = Config.log.target
-
-    if (active && transport === 'ddp') {
-      Log.setTarget(RemoteDDPLogger)
-    }
-
-    // TODO support http
-  }
   ErrorUtils.setGlobalHandler((error, isFatal) => {
     if (isFatal) {
       Log.fatal(error)
@@ -20,5 +10,7 @@ export const initExceptionHandling = async () => {
     else {
       Log.error(error)
     }
+
+    ErrorReporter.send({ error, isFatal }).catch(Log.error)
   })
 }

@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "lea.App-Backend"
+    "name": "lea.App-Backend",
+    "token": "01234567890123456789012345678901"
   },
   "defaultLang": "de",
   "isStaging": true,
@@ -22,20 +23,20 @@
         "sub": "app-backend-01234567890"
       },
       "sync": {
-        "field": true,
-        "unit": true,
-        "unitSet": true,
-        "dimension": true,
-        "level": true,
-        "testCycle": true,
-        "mapIcons": true,
-        "feedback": true,
-        "order":true,
-        "legal":true,
-        "achievements":true
+        "field": false,
+        "unit": false,
+        "unitSet": false,
+        "dimension": false,
+        "level": false,
+        "testCycle": false,
+        "mapIcons": false,
+        "feedback": false,
+        "order":false,
+        "legal":false,
+        "achievements":false
       },
       "remap": {
-        "active": true,
+        "active": false,
         "dryRun": false,
         "dimensions": {
           "order": ["W", "R", "M", "S"]

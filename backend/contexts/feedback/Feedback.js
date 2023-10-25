@@ -30,6 +30,7 @@ Feedback.schema = {
 Feedback.methods = {}
 
 const optional = { optional: true }
+
 Feedback.methods.update = {
   name: 'feedback.methods.update',
   backend: true,

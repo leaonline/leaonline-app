@@ -7,6 +7,9 @@ import {
   getOAuthDDPLoginHandler
 } from 'meteor/leaonline:ddp-login-handler'
 import { rateLimitAccounts } from '../infrastructure/factories/rateLimit'
+import { onAccountLoginHandler } from '../api/accounts/onAccountLoginHandler'
+import { publishDefaultAccountFields } from '../api/accounts/publishDefaultAccountFields'
+import { ClientConnection } from '../contexts/connection/ClientConnection'
 
 //  //////////////////////////////////////////////////////////
 //  RATE LIMIT BUILTIN ACCOUNTS
@@ -58,25 +61,20 @@ Accounts.config({
     _id: 1,
     username: 1,
     voice: 1,
-    speed: 1
+    speed: 1,
+    isDev: 1,
+    createdAt: 1,
+    lastLogin: 1
   }
 })
 
-Accounts.onLogin(function ({ allowed, user }) {
-  if (!allowed) { return }
-  const userId = user._id
-  const lastLogin = new Date()
-  Meteor.users.update(userId, { $set: { lastLogin } })
+Accounts.onLogin(info => {
+  if (!info.allowed) { return }
+  ClientConnection.onLogin(info)
+  onAccountLoginHandler(info)
 })
 
 // //////////////////////////////////////////////////////////
 // default publish fields override
 // //////////////////////////////////////////////////////////
-Meteor.publish(null, function () {
-  const { userId } = this
-
-  // skip this for non-logged in users
-  if (!userId) return this.ready()
-
-  return Meteor.users.find(userId, { fields: { email: 0, services: 0 } })
-})
+Meteor.publish(null, publishDefaultAccountFields)

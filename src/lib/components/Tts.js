@@ -6,8 +6,11 @@ import { asyncTimeout } from '../utils/asyncTimeout'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { LeaText } from './LeaText'
 import { Log } from '../infrastructure/Log'
-import { promiseWithTimeout } from '../utils/promiseWithTimeout'
 import { SoundIcon } from './SoundIcon'
+import { isValidNumber } from '../utils/number/isValidNumber'
+import { createTimedPromise } from '../utils/createTimedPromise'
+
+// TODO we should extract TTSEngine into an own testable entity
 
 /** @private **/
 let Speech = null
@@ -66,6 +69,7 @@ const TtsComponent = props => {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [speakingId, setSpeakingId] = useState(0)
+  const [boundary, setBoundary] = useState({ charIndex: -1, charLength: -1 })
   const [iconColor, setIconColor] = useState(props.iconColor || props.color || Colors.secondary)
 
   const getIdleIconColor = () => props.iconColor || props.color || Colors.secondary
@@ -133,7 +137,16 @@ const TtsComponent = props => {
         // TODO call stopSpeak and update tests to fix state bug
         stopSpeak()
         setIsDone(true)
-      }
+      },
+      // XXX: incubating feature, we will not use it on the next releases
+      onBoundary: props.boundary === true && ((e) => {
+        if (isValidNumber(e.charIndex) && isValidNumber(e.charLength)) {
+          setBoundary({
+            charIndex: e.charIndex,
+            charLength: e.charLength
+          })
+        }
+      })
     })
   }, [])
   /**
@@ -145,6 +158,7 @@ const TtsComponent = props => {
     setIsSpeaking(false)
     setSpeakingId(0)
     setIsDone(false)
+    setBoundary({ charIndex: -1, charLength: -1 })
     Speech.stop()
   }
   /**
@@ -178,7 +192,27 @@ const TtsComponent = props => {
       Object.assign(textStyleProps, props.fontStyle)
     }
 
-    return (<LeaText style={textStyleProps} fitSize={props.fitSize}>{props.text}</LeaText>)
+    // if we receive a boundary update then we need to tokenize
+    // the text and let the text component render, based on token
+    let token
+
+    if (boundary.charIndex > -1 && boundary.charLength > -1) {
+      const start = boundary.charIndex
+      const end = start + boundary.charLength
+      token = []
+
+      if (start > 0) {
+        token.push({ key: 'before', text: props.text.slice(0, start) })
+      }
+
+      token.push({ key: 'word', text: props.text.slice(start, end), style: { color: props.activeIconColor ?? Colors.primary } })
+
+      if (end < props.text.length) {
+        token.push({ key: 'after', text: props.text.slice(end, props.text.length) })
+      }
+    }
+
+    return (<LeaText style={textStyleProps} fitSize={props.fitSize} token={token}>{props.text}</LeaText>)
   }
 
   const ttsContainerStyle = { ...styles.container }
@@ -281,7 +315,7 @@ export const TTSengine = {
     Speech = speechProvider
 
     if (speakImmediately) {
-      return promiseWithTimeout(new Promise((resolve) => {
+      return createTimedPromise(new Promise((resolve) => {
         Speech.speak(text, {
           language: 'ger',
           pitch: 1,
@@ -290,10 +324,10 @@ export const TTSengine = {
           onDone: resolve,
           onError: resolve
         })
-      }), timeout)
+      }), { timeout })
     }
     else {
-      return new Promise(resolve => resolve())
+      return Promise.resolve()
     }
   },
   /**
@@ -381,33 +415,51 @@ export const TTSengine = {
    * Returns all available voices
    * @return {Promise<Array<Object>>}
    */
-  getVoices: () => new Promise(resolve => {
+  getVoices: () => new Promise((resolve, reject) => {
     globalDebug('get voices')
     if (TTSengine.availableVoices !== null) {
       return resolve(TTSengine.availableVoices)
     }
 
-    loadVoices(5, loaded => {
+    const onComplete = loaded => {
       TTSengine.availableVoices = loaded
       return resolve(loaded)
-    })
+    }
+
+    loadVoices({ count: 5, onComplete, onError: reject })
   })
 }
 
-const loadVoices = (counter, onComplete) => {
+const loadVoices = ({ counter, onComplete, onError }) => {
   globalDebug('load voices', { counter })
-  const langPattern = /de[-_]+/g
+  const langPattern = /de[-_]+/i
 
   setTimeout(async () => {
-    const voices = await Speech.getAvailableVoicesAsync()
+    let voices
+    try {
+      voices = await Speech.getAvailableVoicesAsync()
+    }
+    catch (err) {
+      return onError(err)
+    }
 
     if (voices.length > 0) {
-      const filtered = voices.filter(v => langPattern.test(v.language))
+      const filtered = voices.filter(v => {
+        return (
+          langPattern.test(v.language) &&
+          !(v.identifier ?? '').includes('eloquence')
+        )
+      })
+
       onComplete(filtered)
     }
     else {
       if (!counter || counter < 10) {
-        loadVoices((counter ?? 0) + 1, onComplete)
+        loadVoices({
+          count: (counter ?? 0) + 1,
+          onComplete,
+          onError
+        })
       }
       else {
         onComplete([])

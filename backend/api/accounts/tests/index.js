@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 describe('accounts', function () {
   import './RestoreCodes.tests'
-  import './UserEmail.tests'
+  import './onAccountLoginHandler.tests'
+  import './publishDefaultAccountFields.tests'
 })

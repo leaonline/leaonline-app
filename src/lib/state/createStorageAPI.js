@@ -1,6 +1,7 @@
 import Meteor from '@meteorrn/core'
 import nextFrame from 'next-frame'
 import { Log } from '../infrastructure/Log'
+import { ErrorReporter } from '../errors/ErrorReporter'
 
 const debug = Log.create('StorageAPI', 'debug')
 const { EJSON } = Meteor
@@ -32,6 +33,9 @@ class StorageAPI {
     }
     catch (e) {
       Log.error(e)
+      ErrorReporter
+        .send({ error: e })
+        .catch(Log.error)
     }
     return null
   }

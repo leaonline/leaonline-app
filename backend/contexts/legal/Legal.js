@@ -1,5 +1,6 @@
 import { getCollection } from '../../api/utils/getCollection'
 import { SyncState } from '../sync/SyncState'
+import { hasProp } from '../../api/utils/hasProp'
 
 export const Legal = {
   name: 'legal',
@@ -73,12 +74,11 @@ Legal.methods.get = {
   },
   run: function ({ name } = {}) {
     const config = getCollection(Legal.name).findOne()
-    console.debug('get config', name, !!config, !!config[name])
-    if (!name) {
+    if (!name || !config) {
       return config
     }
-    else {
-      return config && config[name]
+    if (hasProp(config, name)) {
+      return config[name]
     }
   }
 }

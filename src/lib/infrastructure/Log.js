@@ -1,54 +1,85 @@
 import { Config } from '../env/Config'
 import { ConsoleLogger } from './log/ConsoleLogger'
+import { Colors } from '../constants/Colors'
 
+// TODO move to /log
 export const Log = {}
+
+Log.name = 'Log'
 
 let logLevel = Config.debug.logLevel
 let logTarget = ConsoleLogger
+const stack = []
 
 Log.setTarget = (impl) => {
   logTarget = impl
 }
 
+Log.stack = async () => [].concat(stack)
+
+Log.color = type => allLevels[type]?.color
+
 const allLevels = {
   debug: {
     index: 0,
+    color: Colors.gray,
     run: (...args) => {
       if (logLevel > 0) { return }
-      logTarget.debug(timestamp(), ...args)
+      const now = timestamp()
+      stack.push(['debug', now].concat(args))
+      logTarget.debug(now, ...args)
     }
   },
   info: {
     index: 1,
+    color: Colors.info,
     run: (...args) => {
       if (logLevel > 1) { return }
-      logTarget.info(timestamp(), ...args)
+      const now = timestamp()
+      stack.push(['info', now].concat(args))
+      logTarget.info(now, ...args)
     }
   },
   log: {
     index: 2,
+    color: Colors.dark,
     run: (...args) => {
       if (logLevel > 2) { return }
-      logTarget.log(timestamp(), ...args)
+      const now = timestamp()
+      stack.push(['log', now].concat(args))
+      logTarget.log(now, ...args)
     }
   },
   warning: {
     index: 3,
+    color: Colors.warning,
     run: (...args) => {
       if (logLevel > 3) { return }
+      const now = timestamp()
+      stack.push(['warning', now].concat(args))
       logTarget.warn(timestamp(), ...args)
     }
   },
   error: {
     index: 4,
+    color: Colors.danger,
     run: (...args) => {
-      logTarget.error(timestamp(), ...args)
+      if (logLevel > 4) { return }
+      const now = timestamp()
+      stack.push(['error', now].concat(args))
+      logTarget.error(now, ...args)
     }
   },
   fatal: {
     index: 5,
+    color: '#ff0000',
     run: (...args) => {
-      logTarget.error(timestamp(), ...args)
+      if (logLevel > 5) { return }
+      const now = timestamp()
+      stack.push(['fatal', now].concat(args))
+      logTarget.fatal
+        ? logTarget.fatal(now, ...args)
+        : logTarget.error(now, ...args)
     }
   }
 }
@@ -94,7 +125,7 @@ Log.create = (name, type = 'log', force) => {
     throw new Error(`Unsupported log type: ${type}`)
   }
 
-  const logName = `${type} [${name}]:`
+  const logName = `[${name}]:`
   const logFn = allLevels[type].run
 
   if (!logFn) {

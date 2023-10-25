@@ -7,7 +7,7 @@ import { MapIcons } from '../../contexts/MapIcons'
 import nextFrame from 'next-frame'
 import { getMapCache } from './getMapCache'
 import { Order } from '../../contexts/Order'
-import { toDocId } from '../../utils/toDocId'
+import { toDocId } from '../../utils/array/toDocId'
 
 const useDebug = Config.debug.map
 const debug = useDebug

@@ -8,7 +8,7 @@ import { errorMixin } from '../mixins/errorMixin'
 const log = createLog({ name: 'createMethod' })
 const methodFactory = createMethodFactory({
   schemaFactory: createSchema,
-  mixins: [errorMixin, environmentExtensionMixin, checkPermissions]
+  mixins: [checkPermissions, errorMixin, environmentExtensionMixin]
 })
 
 export const createMethod = method => {

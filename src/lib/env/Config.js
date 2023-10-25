@@ -1,7 +1,7 @@
 /* global __DEV__ */
 import settings from '../settings.json'
 
-const { backend, content, log, debug, isDevelopment, isDeveloperRelease } = settings
+const { appToken, backend, content, log, debug, isDevelopment, isDeveloperRelease } = settings
 
 /**
  * These are the unified application globals.
@@ -15,7 +15,7 @@ export const Config = {}
 Config.isDevelopment = !!(__DEV__) || !!(isDevelopment)
 Config.isDeveloperRelease = () => isDeveloperRelease
 Config.isTest = () => process.env.JEST_WORKER_ID !== undefined
-
+Config.appToken = appToken
 /**
  * There are multiple debug options.
  * This is contrary to the "classic" debugging approach, where the app is run with environment varibles
@@ -63,6 +63,7 @@ Config.methods.defaultTimeout = backend.methods.defaultTimeout
 
 Config.methods.createUser = backend.methods.users.create
 Config.methods.deleteUser = backend.methods.users.delete
+Config.methods.restoreUser = backend.methods.users.restore
 Config.methods.getMapData = backend.methods.content.map
 Config.methods.getUnitData = backend.methods.content.session
 Config.methods.getUnitDev = backend.methods.content.unit
@@ -73,12 +74,15 @@ Config.methods.getTerms = backend.methods.terms.get
 Config.methods.getDevData = backend.methods.dev.get
 Config.methods.getSyncDoc = 'syncState.methods.getHashes'
 Config.methods.getSyncDocsForContext = 'syncState.methods.getDocs'
+Config.methods.sendError = backend.methods.sendError
+Config.methods.sendUnitSetAppraisal = backend.methods.appraisal.unitSet
 
 /**
  * This configures the connection behaviour with the backend server.
  */
 Config.backend = {}
 Config.backend.url = backend.url
+Config.backend.reachabilityUrl = backend.reachabilityUrl
 Config.backend.maxTimeout = backend.maxTimeout
 Config.backend.interval = backend.interval
 

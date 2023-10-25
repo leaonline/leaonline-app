@@ -1,6 +1,6 @@
 import { createSimpleTokenizer } from '../../utils/text/createSimpleTokenizer'
 import { ClozeHelpers } from './ClozeHelpers'
-import { isWord } from '../../utils/isWord'
+import { isWord } from '../../utils/text/isWord'
 
 export const ClozeTokenizer = {}
 

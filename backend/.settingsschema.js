@@ -3,7 +3,8 @@ const schema = def => new SimpleSchema(def)
 
 const settingsSchema = schema({
   app: schema({
-    name: String
+    name: String,
+    token: String
   }),
   isStaging: Boolean,
   defaultLang: String,

@@ -1,7 +1,7 @@
 import { Choice } from './Choice'
 import { Scoring } from '../../scoring/Scoring'
 import { isUndefinedResponse } from '../../scoring/isUndefinedResponse'
-import { toInteger } from '../../utils/toInteger'
+import { toInteger } from '../../utils/number/toInteger'
 
 export const scoreChoice = function (itemDoc, responseDoc = {}) {
   const { scoring, flavor } = itemDoc

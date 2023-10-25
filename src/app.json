@@ -2,7 +2,7 @@
   "expo": {
     "name": "lea.App",
     "slug": "leaonline",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "orientation": "portrait",
     "privacy": "public",
     "jsEngine": "hermes",
@@ -12,34 +12,41 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "packagerOpts": {
-      "assetExts": ["md"]
+      "assetExts": [
+        "md"
+      ]
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "de.unibremen.leaonline",
-      "infoPlist": {
-        "UIViewControllerBasedStatusBarAppearance": "YES"
-      }
+      "bundleIdentifier": "de.uni-bremen.leaonline.app"
     },
     "android": {
-      "blockedPermissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
-      ],
       "adaptiveIcon": {
         "foregroundImage": "./lib/assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.testCompany.leaonline",
-      "versionCode": 3,
+      "versionCode": 5,
       "allowBackup": false
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 21,
+            "targetSdkVersion": 33,
+            "newArchEnabled": false
+          },
+          "ios": {
+            "deploymentTarget": "14.0"
+          }
+        }
+      ]
+    ]
   }
 }

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/items/cloze/ClozeTokenizer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/items/cloze/ClozeTokenizer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { createSimpleTokenizer } from '../../utils/text/createSimpleTokenizer'
+import { ClozeHelpers } from './ClozeHelpers'
+import { isWord } from '../../utils/text/isWord'
+
+export const ClozeTokenizer = {}
+
+const separator = '$'
+const startPattern = '{{'
+const closePattern = '}}'
+const newLinePattern = '//'
+const optionsSeparator = '|'
+const tableSeparator = '||'
+const CELL_SKIP = '&lt;&lt;>>'
+const newLineReplacer = `${startPattern}${newLinePattern}${closePattern}`
+const newLineRegExp = /\n+/g
+const tokenize = createSimpleTokenizer(startPattern, closePattern)
+
+// =============================================================================
+// PUBLIC
+// =============================================================================
+
+/**
+ * Tokenizes a cloze text into a list of objects with rendering and item
+ * information.
+ *
+ * @param text
+ * @param isTable
+ * @return {*}
+ */
+ClozeTokenizer.tokenize = ({ text, isTable }) => {
+  let tokens
+  const tokenIndexes = []
+  let index = 0
+  const assignIndex = token => {
+    if (!Array.isArray(token.value)) {
+      return
+    }
+    token.value.forEach(value => {
+      if ('flavor' in value &amp;&amp; ClozeHelpers.isScoreableFlavor(value.flavor)) {
+        tokenIndexes.push(index)
+        value.itemIndex = index++
+      }
+    })
+  }
+
+  if (isTable) {
+    tokens = text
+      .split(newLineRegExp)
+      .map(row => {
+        const parsed = row
+          .split(tableSeparator)
+          .map(cells => tokenize(cells.trim()).map(toTokens))
+          .flat()
+          .filter(cell => cell.length > 0)
+
+        // assigned incremental indexes
+        // to flattened list
+        parsed.forEach((cell, cellIndex) => {
+          cell.index = cellIndex
+        })
+
+        return parsed
+      })
+    tokens.forEach(row => row.forEach(assignIndex))
+  }
+  else {
+    const preprocessedValue = text.replace(newLineRegExp, newLineReplacer)
+    tokens = tokenize(preprocessedValue).map(toTokens)
+    tokens.forEach(assignIndex)
+  }
+
+  return { tokens, tokenIndexes }
+}
+
+// =============================================================================
+// INTERNAL, EXPORTED ONLY FOR TESTING
+// =============================================================================
+
+const tokenizeValueEntry = createSimpleTokenizer('[', ']')
+
+const tokenizeBlanks = (flavor, value) => tokenizeValueEntry(value)
+  .filter(entry => entry.length > 0)
+  .map((token, index, arr) => {
+    if (token.isToken) {
+      token.hasPre = index > 0
+      token.hasSuf = index &lt; arr.length - 1
+      token.flavor = flavor
+    }
+    token.index = index
+    return token
+  })
+
+const tokenizeSelect = (flavor, value) => tokenizeValueEntry(value)
+  .filter(entry => entry.length > 0)
+  .map((token, index, arr) => {
+    if (token.isToken) {
+      token.value = token.value.split(optionsSeparator)
+      token.hasPre = index > 0
+      token.hasSuf = index &lt; arr.length - 1
+      token.flavor = flavor
+    }
+    token.index = index
+    return token
+  })
+
+const tokenizeText = (flavor, value) => tokenizeValueEntry(value)
+  .filter(entry => entry.length > 0)
+  .map((token, index) => {
+    if (token.isToken) {
+      token.hasPre = false
+      token.hasSuf = false
+      token.flavor = flavor
+    }
+    token.index = index
+    return token
+  })
+
+const toTokens = entry => {
+  if (entry.value.includes(CELL_SKIP)) {
+    entry.isCellSkip = true
+    return entry
+  }
+
+  // we simply indicate newlines within
+  // our brackets to avoid complex parsing
+  if (entry.value.includes('//')) {
+    entry.isNewLine = true
+    return entry
+  }
+
+  if (entry.value.length === 0) {
+    entry.isEmpty = true
+    return entry
+  }
+
+  // for normal text tokens we don't need
+  // further processing of content here
+  if (entry.value.indexOf(separator) === -1) {
+    return entry
+  }
+
+  // if this is an interactive token
+  // we process ist from the value split
+  const split = entry.value.split('$')
+  const flavorKey = split[0]
+  const flavor = ClozeHelpers.getFlavor(flavorKey)
+
+  if (!flavor) {
+    throw new Error(`Unexpected flavor - ${flavorKey}`)
+  }
+
+  entry.flavor = flavor
+  entry.value = getTokenValueForFlavor(entry.flavor, split[1])
+  entry.tts = split[2]
+
+  // optionally we can parse some configurations
+  if (split[3]) {
+    const configs = split[3].split('&amp;')
+    configs.forEach(configPair => {
+      const configSplit = configPair.split('=')
+
+      if (configSplit.length &lt; 2 || !configSplit.every(isWord)) {
+        throw new Error(`Invalid options syntax: ${configPair}`)
+      }
+
+      entry[configSplit[0]] = configSplit[1]
+    })
+  }
+
+  // a block entry has no value and is used, for example, to
+  // render a d-block tts-button to read the whole text
+  entry.isBlock = !entry.value || entry.value.length === 0
+
+  return entry
+}
+
+const getTokenValueForFlavor = (flavor, rawValue = '') => {
+  if (ClozeHelpers.isBlank(flavor)) {
+    return tokenizeBlanks(flavor, rawValue)
+  }
+
+  if (ClozeHelpers.isSelect(flavor)) {
+    return tokenizeSelect(flavor, rawValue)
+  }
+
+  if (ClozeHelpers.isEmpty(flavor)) {
+    return tokenizeBlanks(flavor, rawValue)
+  }
+
+  if (ClozeHelpers.isText(flavor)) {
+    return tokenizeText(flavor, rawValue)
+  }
+
+  throw new Error(`Unexpected flavor: ${flavor}`)
+}
+
+export {
+  tokenizeBlanks,
+  tokenizeSelect,
+  tokenizeText,
+  toTokens,
+  getTokenValueForFlavor
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

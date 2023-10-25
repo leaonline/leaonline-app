@@ -1,3 +1,7 @@
+import { Scoring } from './Scoring'
+import { ErrorReporter } from '../errors/ErrorReporter'
+import { Log } from '../infrastructure/Log'
+
 /**
  * Delegates scoring to the registered scoring routines for the respective
  * item type.
@@ -6,14 +10,15 @@
  * @param responseDoc {object}
  * @return {Promise<void>}
  */
-import { Scoring } from './Scoring'
-
 export const getScoring = async (itemDoc, responseDoc) => {
   try {
     return Scoring.score(itemDoc, responseDoc)
   }
   catch (error) {
-    console.error(error)
+    Log.error(error)
+    ErrorReporter
+      .send({ error })
+      .catch(Log.error)
     return []
   }
 }

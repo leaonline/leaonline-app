@@ -11,7 +11,7 @@ import { Layout } from '../../constants/Layout'
 import { ActionButton } from '../../components/ActionButton'
 import { Fill } from '../../components/layout/Fill'
 import { ScrollView, View } from 'react-native'
-import { useSync } from '../sync/useSync'
+import { useSync } from '../../hooks/useSync'
 import { SyncScreen } from '../sync/SyncScreen'
 import { MapIcons } from '../../contexts/MapIcons'
 

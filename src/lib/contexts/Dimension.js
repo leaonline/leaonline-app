@@ -1,13 +1,12 @@
 import { createContextStorage } from './createContextStorage'
+import { collectionNotInitialized } from './collectionNotInitialized'
 
 export const Dimension = {
   name: 'dimension',
   isLocal: false
 }
 
-Dimension.collection = () => {
-  throw new Error('is not initialized')
-}
+Dimension.collection = collectionNotInitialized(Dimension)
 
 Dimension.storage = createContextStorage(Dimension)
 

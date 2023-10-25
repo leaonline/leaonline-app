@@ -2,6 +2,7 @@ import { getCollection } from '../../api/utils/getCollection'
 import { Field } from '../content/Field'
 import { Dimension } from '../content/Dimension'
 import { SyncState } from '../sync/SyncState'
+import { onDependencies } from '../utils/onDependencies'
 
 /**
  * Contains documents of all possible field <-> dimension
@@ -63,6 +64,7 @@ Achievements.methods = {}
 
 Achievements.methods.getAll = {
   name: 'achievements.methods.getAll',
+  backend: true,
   schema: {
     dependencies: {
       type: Array,
@@ -75,21 +77,14 @@ Achievements.methods.getAll = {
     }
   },
   run: function ({ dependencies = {} } = {}) {
-    const allAchievements = getCollection(Achievements.name).find({}, {
-      hint: {
-        $natural: -1
-      }
-    }).fetch()
+    const docs = getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetch()
+    const data = { [Achievements.name]: docs }
 
-    const data = { [Achievements.name]: allAchievements }
-
-    if (dependencies[Field.name]) {
-      data[Field.name] = getCollection(Field.name).find().fetch()
-    }
-
-    if (dependencies[Dimension.name]) {
-      data[Field.name] = getCollection(Dimension.name).find().fetch()
-    }
+    onDependencies()
+      .output(data)
+      .add(Field, 'fieldId')
+      .add(Dimension, 'dimensionId')
+      .run({ docs, dependencies })
 
     return data
   }

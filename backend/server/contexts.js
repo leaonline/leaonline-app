@@ -14,7 +14,7 @@ import { Analytics } from '../contexts/analytics/Analytics'
 import { ServiceRegistry } from '../api/remotes/ServiceRegistry'
 import { Legal } from '../contexts/legal/Legal'
 import { Feedback } from '../contexts/feedback/Feedback'
-import { rateLimitMethods } from '../infrastructure/factories/rateLimit'
+import { rateLimitMethods, rateLimitMethod } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
 import { Achievements } from '../contexts/achievements/Achievements'
@@ -24,6 +24,10 @@ import { Order } from '../contexts/order/Order'
 import { Field } from '../contexts/content/Field'
 import { Dimension } from '../contexts/content/Dimension'
 import { Level } from '../contexts/content/Level'
+import { ServerErrors } from '../contexts/errors/ServerErrors'
+import { ClientErrors } from '../contexts/errors/ClientErrors'
+import { ClientConnection } from '../contexts/connection/ClientConnection'
+import { UnitSetAppraisal } from '../contexts/appraisal/UnitSetAppraisal'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -55,6 +59,9 @@ ContentServer.contexts().forEach(ctx => {
   InteractionGraph,
   Achievements,
   Order,
+  ServerErrors,
+  ClientErrors,
+  UnitSetAppraisal,
   Feedback].forEach(ctx => {
   createCollection(ctx)
   register(ctx)
@@ -78,6 +85,9 @@ const methodContexts = [
   Feedback,
   InteractionGraph,
   MapIcons,
+  ClientErrors,
+  ClientConnection,
+  UnitSetAppraisal,
   Order]
 
 if (Meteor.settings.isStaging) {
@@ -86,7 +96,13 @@ if (Meteor.settings.isStaging) {
 
 methodContexts.forEach(ctx => {
   const methods = Object.values(ctx.methods)
-  methods.forEach(method => createMethod(method))
+  methods.forEach(method => {
+    createMethod(method)
+
+    if (method.isPublic) {
+      rateLimitMethod(method)
+    }
+  })
   register(ctx)
 })
 
@@ -101,7 +117,6 @@ ServiceRegistry.init({
 
 const { defaultLang } = Meteor.settings
 ServiceRegistry.addLang(defaultLang, getServiceLang(defaultLang))
-// ServiceRegistry.register(Analytics)
 ServiceRegistry.register(Session)
 ServiceRegistry.register(MapData)
 ServiceRegistry.register(MapIcons)
@@ -110,6 +125,8 @@ ServiceRegistry.register(Users)
 ServiceRegistry.register(Legal)
 ServiceRegistry.register(Feedback)
 ServiceRegistry.register(Order)
+ServiceRegistry.register(ClientConnection)
+ServiceRegistry.register(UnitSetAppraisal)
 // add dependencies to sc,
 // otherwise many docs won't load
 // in editor backend

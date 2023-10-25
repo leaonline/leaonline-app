@@ -4,7 +4,6 @@ import { useSplashScreen } from './hooks/useSplashScreen'
 import { useConnection } from './hooks/useConnection'
 import { ErrorMessage } from './components/ErrorMessage'
 import { initContexts } from './startup/initContexts'
-import { initFonts } from './startup/initFonts'
 import { initTTs } from './startup/initTTS'
 import { Connecting } from './components/Connecting'
 import { ViewContainer } from './components/ViewContainer'
@@ -13,12 +12,13 @@ import { initExceptionHandling } from './startup/initExceptionHandling'
 import { CatchErrors } from './components/CatchErrors'
 import { initSound } from './startup/initSound'
 import { validateSettingsSchema } from './schema/validateSettingsSchema'
+import { initFonts } from './startup/initFonts'
 
-const initFunction = [
+const initFunctions = [
+  initFonts,
   initExceptionHandling,
   validateSettingsSchema,
   initContexts,
-  initFonts,
   initTTs,
   initSound
 ]
@@ -30,7 +30,7 @@ const initFunction = [
  * @returns {JSX.Element}
  */
 export const App = function App () {
-  const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunction)
+  const { appIsReady, error, onLayoutRootView } = useSplashScreen(initFunctions)
   const { connected } = useConnection()
   const renderConnectionStatus = useCallback(() => {
     if (connected) {
@@ -46,7 +46,7 @@ export const App = function App () {
     return (
       <CatchErrors>
         <ViewContainer onLayout={onLayoutRootView}>
-          <ErrorMessage error={error.message} onLayout={onLayoutRootView} />
+          <ErrorMessage error={error} onLayout={onLayoutRootView} />
         </ViewContainer>
       </CatchErrors>
     )

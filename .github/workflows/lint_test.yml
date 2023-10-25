@@ -1,4 +1,4 @@
-name: Lint Test
+name: App JS Lint
 
 on:
   push:
@@ -26,6 +26,6 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: install node modules
-      run: cd src && npm ci
+      run: cd src && npm i --legacy-peer-deps --force
     - name: run standard js
       run: cd src && npm run lint

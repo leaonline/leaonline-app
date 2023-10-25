@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/infrastructure/sync/Sync.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/infrastructure/sync/Sync.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { callMeteor } from '../../meteor/call'
+import { Config } from '../../env/Config'
+import { createContextStorage } from '../../contexts/createContextStorage'
+import { ContextRepository } from '../ContextRepository'
+import { Log } from '../Log'
+import { collectionNotInitialized } from '../../contexts/collectionNotInitialized'
+
+/**
+ * Helps in keeping collections synced.
+ */
+export const Sync = {
+  name: 'sync',
+  isLocal: true
+}
+
+const debug = Log.create(Sync.name, 'debug')
+
+Sync.collection = collectionNotInitialized(Sync)
+
+Sync.storage = createContextStorage(Sync)
+
+/**
+ * This should be called at startup.
+ * Fetches to locally stored sync doc
+ * that can be used to compare the local
+ * sync state with the server state.
+ */
+Sync.init = async () => {
+  await Sync.storage.loadIntoCollection()
+
+  if (Sync.collection().find().count() === 0) {
+    await Sync.collection().insert({})
+  }
+
+  internal.initialized = true
+}
+
+/**
+ * @private
+ */
+const internal = {
+  initialized: false,
+  syncRequired: null,
+  queue: []
+}
+
+/**
+ * @private
+ */
+const checkInit = () => {
+  if (!internal.initialized) {
+    throw new Error('Sync.init must be called first')
+  }
+}
+
+/**
+ * @private
+ */
+const checkRequired = () => {
+  if (internal.syncRequired !== true) {
+    throw new Error('Sync should not run if not required')
+  }
+}
+
+Sync.getQueue = () => [].concat(internal.queue)
+
+Sync.reset = () => {
+  internal.syncRequired = null
+  internal.queue = []
+}
+
+/**
+ * Determines, whether a sync is necessary.
+ * @async
+ * @returns {Promise&lt;boolean>}
+ */
+Sync.isRequired = async () => {
+  debug('[Sync]: run isRequired check')
+  checkInit()
+
+  if (internal.syncRequired !== null) {
+    return internal.syncRequired
+  }
+
+  const localSyncDoc = Sync.collection().findOne()
+  const serverSyncDoc = await callMeteor({
+    name: Config.methods.getSyncDoc,
+    args: {}
+  })
+
+  Object.entries(serverSyncDoc).forEach(([key, value]) => {
+    const { hash, updatedAt } = value
+    const local = localSyncDoc[key] ?? {}
+
+    if (local.hash !== hash) {
+      internal.queue.push({ key, hash, updatedAt })
+    }
+  })
+
+  const syncRequired = internal.queue.length > 0
+  internal.syncRequired = syncRequired
+  return syncRequired
+}
+
+/**
+ * Executes a sync for all queued contexts.
+ * Updates the locally stored sync doc.
+ * @throws {Error} if invoked, although no sync is required
+ */
+Sync.run = async ({ onProgress }) => {
+  debug('run')
+  checkInit()
+  checkRequired()
+
+  const localSyncDoc = Sync.collection().findOne()
+  const updateSyncDoc = {}
+
+  let current = 0
+  const max = internal.queue.length
+
+  debug('run with queue', internal.queue)
+
+  for (const entry of internal.queue) {
+    const { key, hash, updatedAt } = entry
+    debug('sync', key)
+
+    const ctx = ContextRepository.get(key)
+
+    if (!ctx) {
+      throw new Error(`Expected ctx for key ${key}`)
+    }
+
+    await Sync.syncContext({
+      name: key,
+      collection: ctx.collection(),
+      storage: ctx.storage
+    })
+
+    updateSyncDoc[key] = { updatedAt, hash }
+    current++
+
+    onProgress({ progress: current / max })
+  }
+
+  Sync.collection().update(localSyncDoc._id, {
+    $set: { ...updateSyncDoc }
+  })
+
+  await Sync.storage.saveFromCollection()
+  internal.syncRequired = false
+  internal.queue = []
+
+  return updateSyncDoc
+}
+
+/**
+ * Syncs a context by given name, collection and storage.
+ * Wipes and replaces the collection, updates the storage.
+ * @param name
+ * @param collection
+ * @param storage
+ * @returns {Promise&lt;boolean>}
+ */
+Sync.syncContext = async ({ name, collection, storage }) => {
+  checkInit()
+
+  const docs = await callMeteor({
+    name: Config.methods.getSyncDocsForContext,
+    args: { name }
+  })
+
+  debug('syncContext received', docs?.length, 'docs')
+  if (Array.isArray(docs) &amp;&amp; docs.length > 0) {
+    const ids = new Set()
+
+    for (const doc of docs) {
+      const { _id, ...updateDoc } = doc
+      const found = collection.find({ _id }).count() > 0
+
+      if (!found) {
+        await collection.insert(doc)
+      }
+      else {
+        await collection.update(_id, { $set: updateDoc })
+      }
+
+      ids.add(_id)
+    }
+
+    const toRemove = collection.find({ _id: { $nin: [...ids] } }).fetch()
+
+    for (const removeDoc of toRemove) {
+      await collection.remove({ _id: removeDoc._id })
+    }
+
+    debug('removed', toRemove.length, 'outdated docs')
+    const count = collection.find().count()
+
+    if (count !== docs.length) {
+      throw new Error(`Expected ${name} collection to be in sync by ${docs.length} docs, got ${count}!`)
+    }
+
+    await storage.saveFromCollection()
+    return true
+  }
+
+  return false
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,5 +1,4 @@
 import SimpleSchema from 'simpl-schema'
-
 /**
  * @private
  */
@@ -26,5 +25,3 @@ export const createSchema = (schema, options) => {
   const fullOptions = { ...defaultOptions, ...options }
   return new SimpleSchema(schema, fullOptions)
 }
-
-export const RegEx = { ...SimpleSchema.RegEx }

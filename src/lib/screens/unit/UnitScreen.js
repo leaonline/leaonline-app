@@ -12,7 +12,7 @@ import { completeUnit } from './completeUnit'
 import { Confirm } from '../../components/Confirm'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sendResponse'
-import { toArrayIfNot } from '../../utils/toArrayIfNot'
+import { toArrayIfNot } from '../../utils/array/toArrayIfNot'
 import { getDimensionColor } from './getDimensionColor'
 import { UnitRenderer } from './renderer/UnitRenderer'
 import { checkResponse } from './createResponseDoc'
@@ -23,7 +23,8 @@ import { unitPageHasItem } from './unitPageHasItem'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { UserProgress } from '../../contexts/UserProgress'
-import { isDefined } from '../../utils/isDefined'
+import { isDefined } from '../../utils/object/isDefined'
+import { ErrorReporter } from '../../errors/ErrorReporter'
 
 const log = Log.create('UnitScreen')
 
@@ -90,7 +91,8 @@ export const UnitScreen = props => {
         unit: null,
         unitSet: null,
         progress: null,
-        page: null
+        page: null,
+        loadUserData: true
       })
 
       const navState = props.navigation.getState()
@@ -176,15 +178,23 @@ export const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
-    UserProgress.update({
+    const updateDoc = {
       fieldId: session.field?._id,
       unitSetDoc: {
         _id: unitSetDoc._id,
-        dimensionId: unitSetDoc.dimensionId,
+        dimensionId: sessionDoc.dimensionId,
         progress: unitSetDoc.progress,
         competencies: 0
       }
-    })
+    }
+
+    try {
+      await UserProgress.update(updateDoc)
+    }
+    catch (e) {
+      Log.error(e)
+      await ErrorReporter.send({ error: e })
+    }
 
     await sessionActions.multi({
       progress: session.progress + 1,
@@ -257,7 +267,10 @@ export const UnitScreen = props => {
         await sendResponse({ responseDoc })
       }
       catch (e) {
-        log(e.message)
+        Log.error(e)
+        ErrorReporter
+          .send({ error: e })
+          .catch(Log.error)
       }
     }
 

@@ -1,6 +1,5 @@
 # lea.online App
 
-[![Build Android APK](https://github.com/leaonline/leaonline-app/actions/workflows/build_android_apk.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/build_android_apk.yml)
 [![Test suite](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/jest_test.yml)
 [![Lint Test](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
@@ -13,8 +12,8 @@ The lea.online app is a mobile app, developed using React-Native and Meteor.
 
 ## Get the app
 
-[We have released the Android app](https://play.google.com/store/apps/details?id=com.testCompany.leaonline)
-We are working on the iOS release!
+- Android: https://play.google.com/store/apps/details?id=com.testCompany.leaonline
+- IOS: Coming soon 
 
 
 ## Development
@@ -40,5 +39,3 @@ development.
 ## License
 
 This work is published unter AGPL-3.0 as stated in the [license file](./LICENSE).
-
-

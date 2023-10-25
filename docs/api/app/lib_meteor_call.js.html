@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/meteor/call.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/meteor/call.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Meteor from '@meteorrn/core'
+import { check } from '../schema/check'
+import { ensureConnected } from './ensureConnected'
+import { MeteorError } from '../errors/MeteorError'
+import { Log } from '../infrastructure/Log'
+import { createSchema } from '../schema/createSchema'
+import { Config } from '../env/Config'
+import { createTimedPromise } from '../utils/createTimedPromise'
+
+const DEFAULT_TIMEOUT = Config.methods.defaultTimeout
+
+/**
+ * Wraps a Meteor.call in a promise but also allows to hook in various
+ * stages of the request. Always returns a promise.
+ *
+ * Meteor calls are rpc-style calls to an endpoint in our Meteor server.
+ *
+ * If failure callback is provided, it will automatically server as the catch
+ * argument of the promise.
+ *
+ * Automatically resolves to {failure} when there is no active connection to
+ * the Meteor server.
+ *
+ * @param options {object} options object argument
+ * @param options.name {string} name of the Meteor method to call
+ * @param options.args {object} key/value pairs of arguments for the method call.
+ * @param options.prepare {function?} optional function to be called right before the
+ *                            request is started
+ * @param options.receive {function?} optional function to be called once any response
+ *                            has been received from the server
+ * @param options.success {function?} optional function called when response is received
+ *                            and no error is passed as first argument
+ * @param options.failure {function?} optional function called when response is received
+ *                            and the first argument is not undefined
+ * @param options.debug {boolean=} optional flag to debug internal behaviour
+ * @param options.timeout {number=} optional value to set a timeout, otherwise a default is used
+ * @return {Promise&lt;any>} a promise, resolving to anything (depending on the
+ *                        method implementation on the server)
+ */
+export const callMeteor = (options) => {
+  check(options, callMethodSchema)
+  ensureConnected()
+  const {
+    name,
+    args = undefined,
+    prepare = undefined,
+    receive = undefined,
+    success = undefined,
+    failure = undefined,
+    debug = false
+  } = options
+
+  const debugLog = debug
+    ? Log.create(name, 'debug')
+    : () => {}
+  debugLog('call with', { args })
+  const promise = call({ name, args, prepare, receive })
+
+  if (typeof success === 'function') {
+    promise.then(success)
+  }
+
+  // if we provide a failure handler
+  // then we pipe any error through it
+  // otherwise we need to prevent unhandledPromiseRejection
+  // by adding a default catch handler
+  if (typeof failure === 'function') {
+    promise.catch(failure)
+  }
+  else {
+    promise.catch(error => debugLog('error received from backend', error.message))
+  }
+
+  return promise
+}
+
+/**
+ * Options for the timed promise in `call`
+ * @private
+ * @type {{throwIfTimedOut: boolean, timeout: number}}
+ */
+const timedPromiseOptions = { timeout: DEFAULT_TIMEOUT, throwIfTimedOut: true }
+
+/**
+ * Internal actual method call. See {callMeteor} for functionality.
+ * @private
+ * @see {callMeteor}
+ */
+const call = ({ name, args, prepare, receive }) => {
+  const promise = new Promise((resolve, reject) => {
+    // inform that we are connected and about to call the server
+    if (typeof prepare === 'function') { prepare() }
+
+    Meteor.call(name, args, (error, result) => {
+      // inform that we have received
+      // something from the server
+      if (typeof receive === 'function') { receive() }
+
+      if (error) {
+        // we convert server responses to MeteorError
+        return reject(MeteorError.from(error))
+      }
+
+      return resolve(result)
+    })
+  })
+
+  const options = { ...timedPromiseOptions, details: { name, args } }
+
+  // let the promise race against a timeout to ensure
+  // our UI remains responsive in case we didn't get any
+  // response from the server
+  return createTimedPromise(promise, options)
+}
+
+const optionalFunction = { type: Function, optional: true }
+const callMethodSchema = createSchema({
+  name: String,
+  args: {
+    optional: true,
+    type: Object,
+    blackbox: true
+  },
+  prepare: optionalFunction,
+  receive: optionalFunction,
+  success: optionalFunction,
+  failure: optionalFunction,
+  debug: {
+    type: Boolean,
+    optional: true
+  }
+})
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

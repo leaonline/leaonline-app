@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/navigation/MainNavigation.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/navigation/MainNavigation.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import { AuthContext } from '../contexts/AuthContext'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { WelcomeScreen } from '../screens/auth/WelcomeScreen'
+import { TermsAndConditionsScreen } from '../screens/auth/TermsAndConditionsScreen'
+import { RegistrationScreen } from '../screens/auth/RegistrationScreen'
+import { HomeScreen } from '../screens/home/HomeScreen'
+import { MapScreen } from '../screens/map/MapScreen'
+import { DimensionScreen } from '../screens/map/DimensionScreen'
+import { UnitScreen } from '../screens/unit/UnitScreen'
+import { ProfileScreen } from '../screens/profile/ProfileScreen'
+import { AchievementsScreen } from '../screens/profile/achievements/AchievementsScreen'
+import { CompleteScreen } from '../screens/complete/CompleteScreen'
+import { useTranslation } from 'react-i18next'
+import { useLogin } from '../hooks/useLogin'
+import { useTts } from '../components/Tts'
+import { Colors } from '../constants/Colors'
+import { Platform } from 'react-native'
+import { RestoreScreen } from '../screens/auth/RestoreScreen'
+import { ProfileButton } from '../components/ProfileButton'
+import { useKeepAwake } from 'expo-keep-awake'
+import { BackButton } from '../components/BackButton'
+import { CurrentProgress } from '../components/progress/CurrentProgress'
+import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import { createDevelopmentButton } from '../dev/createDevelopmentButton'
+import { DeveloperScreen } from '../dev/DeveloperScreen'
+import { UnitDevScreen } from '../dev/UnitDevScreen'
+import { MapDevScreen } from '../dev/MapDevScreen'
+import { initAppSession } from '../startup/initAppSession'
+import { getHeaderOptions } from './getHeaderOptions'
+import { LoggingScreen } from '../screens/logging/LoggingScreen'
+
+const { AppSessionProvider } = initAppSession()
+
+/**
+ * StackNavigator navigates between screens in a push/pop fashion.
+ * We use left-to-right / right-to-left transitions as animations.
+
+ * @category  Controller
+ * @type {NativeStackNavigator}
+ * @component
+ * @returns {JSX.Element}
+ */
+const Stack = createNativeStackNavigator()
+const headerStyle = { backgroundColor: Colors.light }
+const headerOptions = getHeaderOptions()
+const DevelopmentButton = createDevelopmentButton({ route: 'development', icon: 'keyboard' })
+const LoggingButton = createDevelopmentButton({ route: 'logging', icon: 'align-left' })
+
+export const MainNavigation = (props) => {
+  useKeepAwake()
+  const { t } = useTranslation()
+  const { state, authContext } = useLogin()
+  const { Tts } = useTts()
+  const { userToken, isSignout, isDeleted } = state
+  const renderTitleTts = text => (
+    &lt;Tts align='center' fontStyle={styles.titleFont} text={text} />
+  )
+
+  const renderScreens = () => {
+    if (userToken &amp;&amp; !isSignout &amp;&amp; !isDeleted) {
+      const headerRight = () => (&lt;ProfileButton route='profile' />)
+      const mapScreenTitle = t('mapScreen.title')
+      const profileScreenTitle = t('profileScreen.headerTitle')
+      const achievementScreenTitle = t('profileScreen.achievements.title')
+      const screens = [
+        &lt;Stack.Screen
+          name='home'
+          key='home'
+          component={HomeScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;>&lt;DevelopmentButton />&lt;LoggingButton />&lt;/>),
+            headerTitle: () => (&lt;>&lt;/>),
+            headerRight
+          }}
+        />,
+        &lt;Stack.Screen
+          name='map'
+          key='map'
+          component={MapScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: mapScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight
+          }}
+        />,
+        &lt;Stack.Screen
+          name='dimension'
+          key='dimension'
+          component={DimensionScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: mapScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight
+          }}
+        />,
+        &lt;Stack.Screen
+          name='unit'
+          key='unit'
+          component={UnitScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: t('unitScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        &lt;Stack.Screen
+          name='complete'
+          key='complete'
+          component={CompleteScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: t('completeScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        &lt;Stack.Screen
+          name='profile'
+          key='profile'
+          component={ProfileScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: profileScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerTitle: () => renderTitleTts(profileScreenTitle),
+            headerRight: () => (&lt;>&lt;/>)
+          }}
+        />,
+        &lt;Stack.Screen
+          name='achievements'
+          key='achievements'
+          component={AchievementsScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: achievementScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerTitle: () => renderTitleTts(achievementScreenTitle),
+            headerRight: () => (&lt;>&lt;/>)
+          }}
+        />,
+        &lt;Stack.Screen
+          name='development'
+          key='development'
+          component={DeveloperScreen}
+          options={{
+            ...headerOptions,
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerRight
+          }}
+        />,
+        &lt;Stack.Screen
+          name='logging'
+          key='logging'
+          component={LoggingScreen}
+          options={{
+            ...headerOptions,
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerRight
+          }}
+        />,
+        &lt;Stack.Screen
+          name='unitDev'
+          key='unitDev'
+          component={UnitDevScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: t('unitScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerRight,
+            headerTitle: CurrentProgress
+          }}
+        />,
+        &lt;Stack.Screen
+          name='mapDev'
+          key='mapDev'
+          component={MapDevScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: t('mapScreen.title'),
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />),
+            headerRight,
+            headerTitle: 'Map-Dev'
+          }}
+        />
+      ]
+
+      return screens
+    }
+
+    const welcomeTitle = t('welcomeScreen.title')
+    const tcTitle = t('TandCScreen.headerTitle')
+    const registerTitle = t('registrationScreen.title')
+    const restoreTitle = t('restoreScreen.title')
+
+    return (
+      &lt;>
+        &lt;Stack.Screen
+          name='authDecision'
+          component={WelcomeScreen}
+          options={{
+            ...headerOptions,
+            title: welcomeTitle,
+            headerStyle,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;LoggingButton />),
+            headerTitle: () => renderTitleTts(welcomeTitle)
+          }}
+        />
+        &lt;Stack.Screen
+          name='termsAndConditions'
+          component={TermsAndConditionsScreen}
+          options={{
+            ...headerOptions,
+            title: tcTitle,
+            headerStyle,
+            headerTitleAlign: 'center',
+            headerBackTitleVisible: false,
+            headerTitle: () => renderTitleTts(tcTitle)
+          }}
+        />
+        &lt;Stack.Screen
+          name='registration'
+          component={RegistrationScreen}
+          options={{
+            ...headerOptions,
+            title: registerTitle,
+            headerStyle,
+            headerTitleAlign: 'center',
+            headerBackTitleVisible: false,
+            headerTitle: () => renderTitleTts(registerTitle)
+          }}
+        />
+        &lt;Stack.Screen
+          name='restore'
+          component={RestoreScreen}
+          options={{
+            ...headerOptions,
+            title: registerTitle,
+            headerStyle,
+            headerTitleAlign: 'center',
+            headerBackTitleVisible: false,
+            headerTitle: () => renderTitleTts(restoreTitle)
+          }}
+        />
+        &lt;Stack.Screen
+          name='logging'
+          key='logging'
+          component={LoggingScreen}
+          options={{
+            ...headerOptions,
+            title: 'Dev',
+            headerStyle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (&lt;BackButton icon='arrow-left' />)
+          }}
+        />
+      &lt;/>
+    )
+  }
+
+  const screenOptions = Platform.select({
+    ios: {
+      cancelButtonText: 'foo',
+      contentStyle: {
+        padding: 0,
+        margin: 0
+      }
+    },
+    android: {
+      contentStyle: {
+        padding: 0,
+        margin: 0
+      }
+    }
+  })
+
+  const screenListeners = {
+    focus: (e) => {
+      // Do something with the state
+      const screen = (e.target || '').split('-')[0]
+      InteractionGraph.enterScreen({ screen })
+    }
+  }
+
+  return (
+    &lt;AuthContext.Provider value={authContext}>
+      &lt;AppSessionProvider>
+        &lt;NavigationContainer onReady={props.onLayout}>
+          &lt;Stack.Navigator screenOptions={screenOptions} screenListeners={screenListeners}>
+            {renderScreens()}
+          &lt;/Stack.Navigator>
+        &lt;/NavigationContainer>
+      &lt;/AppSessionProvider>
+    &lt;/AuthContext.Provider>
+  )
+}
+
+const styles = createStyleSheet({
+  titleFont: {
+    fontWeight: 'bold'
+  }
+})
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

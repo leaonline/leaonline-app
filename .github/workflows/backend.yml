@@ -1,4 +1,4 @@
-name: Backend Test suite
+name: Backend Tests
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   lintcode:
-    name: Javascript lint
+    name: Backend JS lint
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -31,7 +31,7 @@ jobs:
     - run: cd backend && npm run lint:code
 
   tests:
-    name: Meteor ${{ matrix.meteor }} tests
+    name: Backend Meteor ${{ matrix.meteor }} tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout
