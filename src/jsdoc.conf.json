@@ -16,18 +16,11 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "plugins": [
-    "plugins/markdown",
-    "node_modules/better-docs/category"
+    "plugins/markdown"
   ],
-  "templates": {
-    "better-docs": {
-      "name": "React components"
-    }
-  },
   "opts": {
     "destination": "../docs/api/app",
     "recurse": true,
-    "readme": "../README.md",
-    "template": "node_modules/better-docs"
+    "readme": "../README.md"
   }
 }

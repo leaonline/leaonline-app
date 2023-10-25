@@ -4,7 +4,7 @@
  * an array with null as element, if null is given.
  *
  * @param value {*}
- * @return {*[]}
+ * @return {Array<*>}
  */
 export const toArrayIfNot = value =>
   typeof value === 'undefined'

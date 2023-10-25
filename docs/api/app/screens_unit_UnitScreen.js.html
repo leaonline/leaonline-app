@@ -1,95 +1,32 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> screens/unit/UnitScreen.js</title>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/unit/UnitScreen.js</title>
 
-  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="./build/entry.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
-  <link type="text/css" rel="stylesheet" href="">
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-  
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
+<body>
 
+<div id="main">
 
-<body class="layout small-header">
-    <div id="stickyNavbarOverlay"></div>
+    <h1 class="page-title">Source: screens/unit/UnitScreen.js</h1>
+
     
-
-<div class="top-nav">
-    <div class="inner">
-        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-        <div class="logo">
-            
-             
-                <a href="index.html">
-                    <h1 class="navbar-item">React components</h1>
-                </a>
-            
-        </div>
-        <div class="menu">
-            
-            <div class="navigation">
-                <a
-                    href="index.html"
-                    class="link"
-                >
-                    Documentation
-                </a>
-                
-                
-                
-            </div>
-        </div>
-    </div>
-</div>
-    <div id="main">
-        <div
-            class="sidebar "
-            id="sidebarNav"
-        >
-            
-            <nav>
-                
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#connectMeteor">connectMeteor</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#currentUser">currentUser</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#ensureLoggedIn">ensureLoggedIn</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#hasLogin">hasLogin</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#InstructionsGraphicsRenderer">InstructionsGraphicsRenderer</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#loggedIn">loggedIn</a></li><li><a href="global.html#loginMeteor">loginMeteor</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MemoryStorage">MemoryStorage</a></li><li><a href="global.html#MeteorLoginStorage">MeteorLoginStorage</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#promiseWithTimeout">promiseWithTimeout</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul></div><div class="category"><h2>Components</h2><h3>Classes</h3><ul><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li></ul></div><div class="category"><h2>Constants</h2><h3>Global</h3><ul><li><a href="global.html#Colors">Colors</a></li></ul></div><div class="category"><h2>Controller</h2><h3>Global</h3><ul><li><a href="global.html#Stack">Stack</a></li></ul></div><div class="category"><h2>Global</h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li></ul></div><div class="category"><h2>Screens</h2><h3>Global</h3><ul><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li></ul></div><div class="category"><h2>Utils</h2><h3>Global</h3><ul><li><a href="global.html#asyncTimeout">asyncTimeout</a></li></ul></div>
-                
-            </nav>
-        </div>
-        <div class="core" id="main-content-wrapper">
-            <div class="content">
-                <header class="page-title">
-                    <p>Source</p>
-                    <h1>screens/unit/UnitScreen.js</h1>
-                </header>
-                
 
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useEffect, useRef, useContext, useReducer } from 'react'
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useRef, useContext, useReducer, useMemo } from 'react'
 import { Log } from '../../infrastructure/Log'
 import { Colors } from '../../constants/Colors'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -103,15 +40,19 @@ import { completeUnit } from './completeUnit'
 import { Confirm } from '../../components/Confirm'
 import { shouldRenderStory } from './shouldRenderStory'
 import { sendResponse } from './sendResponse'
-import { toArrayIfNot } from '../../utils/toArrayIfNot'
+import { toArrayIfNot } from '../../utils/array/toArrayIfNot'
 import { getDimensionColor } from './getDimensionColor'
 import { UnitRenderer } from './renderer/UnitRenderer'
 import { checkResponse } from './createResponseDoc'
 import { UnitSetRenderer } from './renderer/UnitSetRenderer'
 import './registerComponents'
 import './registerInstructions'
+import { unitPageHasItem } from './unitPageHasItem'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
+import { UserProgress } from '../../contexts/UserProgress'
+import { isDefined } from '../../utils/object/isDefined'
+import { ErrorReporter } from '../../errors/ErrorReporter'
 
 const log = Log.create('UnitScreen')
 
@@ -178,7 +119,8 @@ export const UnitScreen = props => {
         unit: null,
         unitSet: null,
         progress: null,
-        page: null
+        page: null,
+        loadUserData: true
       })
 
       const navState = props.navigation.getState()
@@ -233,15 +175,25 @@ export const UnitScreen = props => {
     }
   }, [props.navigation])
 
+  // we try to get the docs in any way, because
+  // skipping early before useMemo can cause an error
+  // due to changed hook order!
+  const { unitSetDoc, unitDoc, sessionDoc } = (docs?.data ?? {})
+  const dimensionColor = getDimensionColor(dimension)
+  const hasItem = useMemo(() => {
+    return (
+      isDefined(unitDoc) &amp;&amp;
+      isDefined(page) &amp;&amp;
+      unitPageHasItem({ unitDoc, page })
+    )
+  }, [unitDoc, page])
+
   // ---------------------------------------------------------------------------
   // SKip early
   // ---------------------------------------------------------------------------
   if (!docs.data || docs.error) {
     return (&lt;ScreenBase {...docs} />)
   }
-
-  const { unitSetDoc, unitDoc, sessionDoc } = docs.data
-  const dimensionColor = getDimensionColor(dimension)
 
   // ---------------------------------------------------------------------------
   // finish --> NAVIGATION
@@ -254,79 +206,114 @@ export const UnitScreen = props => {
    */
   const finish = async () => {
     const nextUnitId = await completeUnit({ unitSetDoc, sessionDoc, unitDoc })
+    const updateDoc = {
+      fieldId: session.field?._id,
+      unitSetDoc: {
+        _id: unitSetDoc._id,
+        dimensionId: sessionDoc.dimensionId,
+        progress: unitSetDoc.progress,
+        competencies: 0
+      }
+    }
+
+    try {
+      await UserProgress.update(updateDoc)
+    }
+    catch (e) {
+      Log.error(e)
+      await ErrorReporter.send({ error: e })
+    }
+
     await sessionActions.multi({
       progress: session.progress + 1,
       unit: nextUnitId,
       page: 0
     })
+
     return nextUnitId
       ? props.navigation.push('unit')
       : props.navigation.navigate('complete')
   }
 
+  // response submission is associated with the
+  // current page and contentId to support multiple
+  // items per page
   const submitResponse = async ({ responses, data }) => {
-    log('item submit', data.contentId, responses)
-    responseRef.current[page] = { responses, data }
+    responseRef.current[page] = responseRef.current[page] ?? {}
+    responseRef.current[page][data.contentId] = { responses, data }
   }
 
   const checkScore = async () => {
-    // get scoring method
-    const currentResponse = responseRef.current[page]
-    log('check score', { currentResponse })
+    scoreRef.current[page] = scoreRef.current[page] ?? {}
 
-    const checked = await checkResponse({ currentResponse })
-    scoreRef.current[page] = checked.scoreResult
+    // get scoring method
+    const allResponses = Object.values(responseRef.current[page])
+    const allTrueValues = []
+
+    let counts = 0
+    let scores = 0
+
+    for (const currentResponse of allResponses) {
+      log('check score', { currentResponse })
+      const checked = await checkResponse({ currentResponse })
+
+      // score refs also need to save by page and contentId
+      // to support multiple items per page
+      scoreRef.current[page][currentResponse.data.contentId] = checked.scoreResult
+      allTrueValues.push(checked.allTrue)
+
+      // submit everything to the servers
+      const responseDoc = {}
+      responseDoc.sessionId = sessionDoc._id
+      responseDoc.unitSetId = unitSetDoc._id
+      responseDoc.unitId = unitDoc._id
+      responseDoc.dimensionId = dimension._id
+      responseDoc.page = page
+      responseDoc.itemId = currentResponse.data.contentId
+      responseDoc.itemType = currentResponse.data.subtype
+      responseDoc.scores = checked.scoreResult.map(entry => {
+        // some items score single values, others multiple
+        // some items have single competencies, others multiple
+        // we therefore make all these properties to arrays
+        // to comply with the server's defined schema
+        const copy = { ...entry }
+        copy.competency = toArrayIfNot(copy.competency)
+        copy.correctResponse = toArrayIfNot(copy.correctResponse)
+        copy.value = toArrayIfNot(copy.value)
+        return copy
+      })
+
+      responseDoc.scores.forEach(entry => {
+        counts += entry.competency.length
+        scores += entry.score === true
+          ? entry.competency.length
+          : 0
+      })
+
+      try {
+        log('submit response to server', responseDoc)
+        await sendResponse({ responseDoc })
+      }
+      catch (e) {
+        Log.error(e)
+        ErrorReporter
+          .send({ error: e })
+          .catch(Log.error)
+      }
+    }
+
     dispatch({
       type: 'scored',
-      allTrue: checked.allTrue,
+      allTrue: allTrueValues.every(value => value === true),
       scored: page
-    })
-
-    // submit everything (in the background)
-    const responseDoc = {}
-    responseDoc.sessionId = sessionDoc._id
-    responseDoc.unitSetId = unitSetDoc._id
-    responseDoc.unitId = unitDoc._id
-    responseDoc.dimensionId = dimension._id
-    responseDoc.page = page
-    responseDoc.itemId = currentResponse.data.contentId
-    responseDoc.itemType = currentResponse.data.subtype
-    responseDoc.scores = checked.scoreResult.map(entry => {
-      // some items score single values, others multiple
-      // some items have single competencies, others multiple
-      // we therefore make all these properties to arrays
-      // to comply with the server's defined schema
-      const copy = { ...entry }
-      copy.competency = toArrayIfNot(copy.competency)
-      copy.correctResponse = toArrayIfNot(copy.correctResponse)
-      copy.value = toArrayIfNot(copy.value)
-      return copy
-    })
-
-    let count = 0
-    let scored = 0
-
-    responseDoc.scores.forEach(entry => {
-      count += entry.competency.length
-      scored += entry.score === true
-        ? entry.competency.length
-        : 0
     })
 
     const prevCompetencies = session.competencies
     const competencies = {
       max: prevCompetencies.max,
-      count: prevCompetencies.count + count,
-      scored: prevCompetencies.scored + scored,
+      count: prevCompetencies.count + counts,
+      scored: prevCompetencies.scored + scores,
       percent: prevCompetencies.percent
-    }
-
-    try {
-      log('submit response to server', responseDoc)
-      await sendResponse({ responseDoc })
-    }
-    catch (e) {
-      log(e.message)
     }
 
     return sessionActions.update({ competencies })
@@ -375,7 +362,9 @@ export const UnitScreen = props => {
     const hasNextPage = page &lt; unitDoc.pages.length - 1
     const isLast = (session.progress ?? 0) === (session.unitSet?.progress ?? 1)
 
-    if (!showCorrectResponse) {
+    // XXX: some items have no item on a page so we can't
+    // check their score and thus need to skip the check btn
+    if (!showCorrectResponse &amp;&amp; hasItem) {
       return (
         &lt;ActionButton
           block
@@ -457,26 +446,19 @@ const styles = createStyleSheet({
 
 
 
-            </div>
-            
-            <footer class="footer">
-                <div class="content has-text-centered">
-                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
-                    <p class="sidebar-created-by">
-                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
-                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
-                    </p>
-                </div>
-            </footer>
-            
-        </div>
-        <div id="side-nav" class="side-nav">
-        </div>
-    </div>
-<script src="scripts/app.min.js"></script>
-<script>PR.prettyPrint();</script>
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:40:55 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
 <script src="scripts/linenumber.js"> </script>
-
-
 </body>
 </html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/screens/unit/renderer/UnitRenderer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/screens/unit/renderer/UnitRenderer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useRef, useEffect, useState } from 'react'
+import { ScrollView, Vibration, View } from 'react-native'
+import { FadePanel } from '../../../components/FadePanel'
+import { mergeStyles } from '../../../styles/mergeStyles'
+import { LeaText } from '../../../components/LeaText'
+import { Icon } from 'react-native-elements'
+import { Colors } from '../../../constants/Colors'
+import { createStyleSheet } from '../../../styles/createStyleSheet'
+import { InstructionsGraphicsRenderer } from './InstructionsGraphicsRenderer'
+import { useTranslation } from 'react-i18next'
+import { useTts } from '../../../components/Tts'
+import { Layout } from '../../../constants/Layout'
+import { useKeyboardVisibilityHandler } from '../../../hooks/useKeyboardVisibilityHandler'
+import { Sound } from '../../../env/Sound'
+import { unitCardStyles } from './unitCardStyles'
+import { ContentRenderer } from './ContentRenderer'
+import { useItemSubType } from '../useItemSubType'
+import { Log } from '../../../infrastructure/Log'
+
+const PureContentRenderer = React.memo(ContentRenderer)
+
+/**
+ * Renders the Unit, independent of the surrounding
+ * environment.
+ *
+ * Includes all components, necessary to display elements
+ * and interact with them but contains no neither logic
+ * for loading data, nor on processing and evaluating inputs.
+ *
+ * Still, keep in mind, that it's not a PureComponent!
+ *
+ * @param props {object}
+ * @component
+ */
+export const UnitRenderer = props => {
+  const [keyboardStatus, setKeyboardStatus] = useState(undefined)
+  const [fadeIn, setFadeIn] = useState(-1)
+  const { t } = useTranslation()
+  const { Tts } = useTts()
+  const scrollViewRef = useRef()
+  const lastScrollPos = useRef({ x: 0, y: 0 }).current
+
+  const {
+    unitDoc,
+    dimensionColor,
+    page,
+    submitResponse,
+    showCorrectResponse,
+    scoreResult,
+    allTrue,
+    taskPageAction
+  } = props
+  const unitId = unitDoc?._id
+  const itemSubtype = useItemSubType({ unitDoc, page })
+
+  // We need to know the Keyboard state in order to show or hide elements.
+  // For example: In "editing" mode of a writing item we want to hide the "check" button.
+  useKeyboardVisibilityHandler(({ status }) => {
+    if (status === 'shown') {
+      setKeyboardStatus('shown')
+    }
+    if (status === 'hidden') {
+      setKeyboardStatus('hidden')
+      // scrollViewRef.current?.scrollToEnd({ animated: true })
+      scrollViewRef.current?.scrollTo({
+        x: lastScrollPos.x,
+        y: lastScrollPos.y,
+        animated: true
+      })
+    }
+  })
+
+  const updateLastScrollPos = e => {
+    const { contentOffset } = e.nativeEvent
+    lastScrollPos.x = contentOffset.x
+    lastScrollPos.y = contentOffset.y
+  }
+
+  // we want to have our cards appearing in intervals
+  useEffect(() => {
+    let timer1
+    let timer2
+
+    if (page === 0) {
+      setFadeIn(0)
+      timer1 = setTimeout(() => setFadeIn(1), 500)
+      timer2 = setTimeout(() => setFadeIn(2), 1000)
+    }
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
+  }, [page])
+
+  useEffect(() => {
+    if (showCorrectResponse) {
+      const handleResponse = async () => {
+        if (allTrue) {
+          Vibration.vibrate(500)
+          scrollViewRef.current?.scrollToEnd({ animated: true })
+          await Sound.play(RIGHT_ANSWER)
+        }
+        else {
+          Vibration.vibrate(100)
+          await Sound.play(WRONG_ANSWER)
+        }
+      }
+      handleResponse().catch(Log.error)
+    }
+  }, [showCorrectResponse, allTrue])
+
+  const renderInstructions = () => {
+    const instructions = (unitDoc.pages[page]?.instructions ?? unitDoc.instructions)?.[0]
+
+    if (!instructions) {
+      return null
+    }
+
+    return (
+      &lt;FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
+        &lt;View style={styles.pageText}>
+          &lt;Icon
+            testID='info-icon'
+            reverse
+            color={Colors.gray}
+            size={10}
+            name='info'
+            type='font-awesome-5'
+          />
+        &lt;/View>
+        &lt;InstructionsGraphicsRenderer
+          subtype={itemSubtype.subtype}
+          text={instructions.value}
+          color={dimensionColor}
+          page={page}
+        />
+      &lt;/FadePanel>
+    )
+  }
+
+  const renderAllTrue = () => {
+    if (!showCorrectResponse || !allTrue) {
+      return null
+    }
+
+    return (
+      &lt;View style={{ ...unitCardStyles, ...styles.allTrue }}>
+        &lt;Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
+        &lt;Icon
+          testID='alltrue-icon'
+          reverse
+          color={Colors.success}
+          size={20}
+          name='thumbs-up'
+          type='font-awesome-5'
+        />
+      &lt;/View>
+    )
+  }
+
+  const renderFooter = () => {
+    if (keyboardStatus === 'shown') {
+      return null
+    }
+    return (
+      &lt;FadePanel style={styles.navigationButtons} visible={fadeIn >= 2}>
+        {taskPageAction()}
+      &lt;/FadePanel>
+    )
+  }
+
+  return (
+    &lt;ScrollView
+      ref={scrollViewRef}
+      onMomentumScrollEnd={updateLastScrollPos}
+      contentContainerStyle={styles.scrollView}
+      persistentScrollbar
+      keyboardShouldPersistTaps='always'
+    >
+      {/* 1. PART STIMULI */}
+      &lt;FadePanel style={mergeStyles(unitCardStyles, dropShadow)} visible={fadeIn >= 0}>
+        &lt;PureContentRenderer
+          elements={unitDoc.stimuli}
+          keyPrefix={`${unitId}-stimuli`}
+          dimensionColor={dimensionColor}
+        />
+      &lt;/FadePanel>
+
+      {/* 2. PART INSTRUCTIONS */}
+      {renderInstructions()}
+
+      {/* 3. PART TASK PAGE CONTENT */}
+      &lt;FadePanel
+        style={{ ...unitCardStyles, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
+        visible={fadeIn >= 2}
+      >
+        &lt;LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}&lt;/LeaText>
+
+        &lt;PureContentRenderer
+          elements={unitDoc.pages[page]?.content}
+          keyPrefix={`${unitId}-${page}`}
+          scoreResult={showCorrectResponse &amp;&amp; scoreResult}
+          showCorrectResponse={showCorrectResponse}
+          dimensionColor={dimensionColor}
+          submitResponse={submitResponse}
+        />
+      &lt;/FadePanel>
+
+      {renderAllTrue()}
+
+      {renderFooter()}
+    &lt;/ScrollView>
+  )
+}
+
+const RIGHT_ANSWER = 'rightAnswer'
+const WRONG_ANSWER = 'wrongAnswer'
+
+Sound.load(RIGHT_ANSWER, () => require('../../../assets/audio/right_answer.wav'))
+Sound.load(WRONG_ANSWER, () => require('../../../assets/audio/wrong_answer.mp3'))
+
+const styles = createStyleSheet({
+  instructionStyles: {
+    ...Layout.dropShadow(),
+    paddingTop: 0,
+    justifyContent: 'space-between'
+  },
+  pageText: {
+    alignSelf: 'center',
+    backgroundColor: Colors.gray,
+    color: Colors.white,
+    paddingLeft: 2,
+    paddingRight: 2,
+    paddingTop: 0,
+    paddingBottom: 0,
+    marginTop: 0,
+    marginBottom: 4,
+    fontSize: 16,
+    borderWidth: 0.5,
+    borderColor: Colors.gray
+  },
+  allTrue: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    alignContent: 'flex-start',
+    justifyContent: 'space-between',
+    flexShrink: 1,
+    borderColor: Colors.success,
+    backgroundColor: '#eaffee',
+    borderWidth: 4
+  },
+  scrollView: {
+    flexGrow: 1
+  },
+  navigationButtons: {
+    paddingTop: 7,
+    marginBottom: 15,
+    marginLeft: 4,
+    marginRight: 4,
+    alignItems: 'stretch'
+  }
+})
+
+const dropShadow = Layout.dropShadow()
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:39:57 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
