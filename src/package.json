@@ -9,7 +9,8 @@
     "lint": "standardx ./lib --env jest --env mocha | snazzy",
     "lint:fix": "standardx ./lib --fix --env jest --env mocha | snazzy",
     "test": "node_modules/.bin/jest --coverage",
-    "docs": "jsdoc -c jsdoc.conf.json"
+    "docs": "jsdoc -c jsdoc.conf.json",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
     "@babel/preset-react": "^7.16.0",
