@@ -19,7 +19,7 @@
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-community/netinfo": "9.3.10",
     "@react-navigation/native": "^6.1.7",
-    "@react-navigation/native-stack": "^6.9.1",
+    "@react-navigation/native-stack": "^6.9.17",
     "expo": "^49.0.9",
     "expo-av": "~13.4.1",
     "expo-build-properties": "~0.8.3",
