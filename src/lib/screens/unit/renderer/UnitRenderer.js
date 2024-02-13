@@ -8,7 +8,7 @@ import { Colors } from '../../../constants/Colors'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { InstructionsGraphicsRenderer } from './InstructionsGraphicsRenderer'
 import { useTranslation } from 'react-i18next'
-import { useTts } from '../../../components/Tts'
+import { TTSengine, useTts } from '../../../components/Tts'
 import { Layout } from '../../../constants/Layout'
 import { useKeyboardVisibilityHandler } from '../../../hooks/useKeyboardVisibilityHandler'
 import { Sound } from '../../../env/Sound'
@@ -99,10 +99,12 @@ export const UnitRenderer = props => {
         if (allTrue) {
           Vibration.vibrate(500)
           scrollViewRef.current?.scrollToEnd({ animated: true })
+          TTSengine.stop()
           await Sound.play(RIGHT_ANSWER)
         }
         else {
           Vibration.vibrate(100)
+          TTSengine.stop()
           await Sound.play(WRONG_ANSWER)
         }
       }

@@ -6,7 +6,7 @@ import { ScreenBase } from '../BaseScreen'
 import { useTranslation } from 'react-i18next'
 import { useDocs } from '../../meteor/useDocs'
 import { loadCompleteData } from './loadCompleteData'
-import { useTts } from '../../components/Tts'
+import { TTSengine, useTts } from '../../components/Tts'
 import { getDimensionColor } from '../unit/getDimensionColor'
 import { ActionButton } from '../../components/ActionButton'
 import { Celebrate } from './Celebrate'
@@ -52,6 +52,7 @@ export const CompleteScreen = props => {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     Vibration.vibrate(1000)
+    TTSengine.stop()
     Sound.play(COMPLETE).catch(Log.error)
 
     return () => Sound.unload()
