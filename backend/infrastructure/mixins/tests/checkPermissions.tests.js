@@ -6,6 +6,10 @@ import { checkPermissions } from '../checkPermissions'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 
 describe(checkPermissions.name, function () {
+  let connection
+  beforeEach(() => {
+    connection = { id: Random.id() }
+  })
   afterEach(() => {
     restoreAll()
   })
@@ -21,18 +25,28 @@ describe(checkPermissions.name, function () {
   it('throws if method/pub is not invoked by user', () => {
     stub(Meteor, 'user', () => {})
     const wrapped = checkPermissions({})
-    const thrown = expect(() => wrapped.run()).to.throw('errors.permissionDenied')
+    const thrown = expect(() => wrapped.run.call({ connection })).to.throw('errors.permissionDenied')
     thrown.with.property('reason', 'errors.userNotExists')
-    thrown.with.deep.property('details', { userId: undefined })
+    thrown.with.deep.property('details', {
+      userId: undefined,
+      isPublic: undefined,
+      backend: undefined,
+      clientConnection: connection .id
+    })
   })
   it('throws if method/pub is backend-only but not invoked by backend user', () => {
     const userId = Random.id()
 
     stub(Meteor, 'user', () => ({ _id: userId }))
     const wrapped = checkPermissions({ backend: true })
-    const thrown = expect(() => wrapped.run()).to.throw('errors.permissionDenied')
+    const thrown = expect(() => wrapped.run.call({ connection })).to.throw('errors.permissionDenied')
     thrown.with.property('reason', 'errors.backendOnly')
-    thrown.with.deep.property('details', { userId })
+    thrown.with.deep.property('details', {
+      userId,
+      isPublic: undefined,
+      backend: true,
+      clientConnection: connection .id
+    })
   })
   it('runs the method if invoked by a user', () => {
     const userId = Random.id()
