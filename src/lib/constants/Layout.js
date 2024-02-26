@@ -48,6 +48,16 @@ Layout.container = ({ margin = defaultContainerMargin } = {}) => ({
   justifyContent: 'space-around'
 })
 
+Layout.row = () => {
+  return {
+    flexDirection: 'row',
+    // alignItems: 'stretch',
+    // justifyItems: 'stretch',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  }
+}
+
 Layout.content = () => {
   return {
     padding: 20

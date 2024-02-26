@@ -2,7 +2,7 @@
   "expo": {
     "name": "lea.App",
     "slug": "leaonline",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "orientation": "portrait",
     "privacy": "public",
     "jsEngine": "hermes",
@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.testCompany.leaonline",
-      "versionCode": 6,
+      "versionCode": 7,
       "allowBackup": false
     },
     "plugins": [
@@ -46,7 +46,9 @@
             "deploymentTarget": "14.0"
           }
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store"
     ]
   }
 }

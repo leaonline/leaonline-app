@@ -3,8 +3,8 @@
   "isDeveloperRelease": true,
   "appToken": "01234567890123456789012345678901",
   "backend": {
-    "url": "ws://192.168.178.22:8080/websocket",
-    "reachabilityUrl": "http://192.168.178.22:8080/reachability",
+    "url": "ws://192.168.178.46:8080/websocket",
+    "reachabilityUrl": "http://192.168.178.46:8080/reachability",
     "maxTimeout": 3000,
     "interval": 250,
     "methods": {
