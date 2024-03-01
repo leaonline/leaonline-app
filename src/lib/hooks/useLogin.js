@@ -10,6 +10,10 @@ import { ErrorReporter } from '../errors/ErrorReporter'
 const initialState = {
   isLoading: true,
   isSignout: false,
+  /**
+   * we will shortly remove this
+   * @deprecated
+   */
   isDeleted: false,
   userToken: null
 }
@@ -196,16 +200,23 @@ export const useLogin = ({ connection }) => {
       })
     },
     deleteAccount: ({ onError, onSuccess }) => {
-      Meteor.call(Config.methods.deleteUser, {}, (deleteError) => {
+      Meteor.call(Config.methods.deleteUser, {}, async (deleteError) => {
         if (deleteError) {
           return onError(deleteError)
         }
 
         // instead of calling Meteor.logout we
         // directly invoke the logout handler
+        if (onSuccess) {
+          try {
+            await onSuccess()
+          } catch (e) {
+            onError(e)
+          }
+        }
+
         Meteor.handleLogout()
-        onSuccess && onSuccess()
-        dispatch({ type: 'DELETE' })
+        dispatch({ type: 'SIGN_OUT' })
       })
     }
   }), [])
