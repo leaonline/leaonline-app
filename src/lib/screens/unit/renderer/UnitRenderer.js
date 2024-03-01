@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { ScrollView, Vibration, View } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, Vibration, View } from 'react-native'
 import { FadePanel } from '../../../components/FadePanel'
 import { mergeStyles } from '../../../styles/mergeStyles'
 import { LeaText } from '../../../components/LeaText'
@@ -16,9 +16,10 @@ import { unitCardStyles } from './unitCardStyles'
 import { ContentRenderer } from './ContentRenderer'
 import { useItemSubType } from '../useItemSubType'
 import { Log } from '../../../infrastructure/Log'
+import { isIOS } from '../../../utils/isIOS'
 
 const PureContentRenderer = React.memo(ContentRenderer)
-
+const debug = Log.create('UnitRenderer', 'debug')
 /**
  * Renders the Unit, independent of the surrounding
  * environment.
@@ -56,6 +57,8 @@ export const UnitRenderer = props => {
   // We need to know the Keyboard state in order to show or hide elements.
   // For example: In "editing" mode of a writing item we want to hide the "check" button.
   useKeyboardVisibilityHandler(({ status }) => {
+    debug('keyboard visibility changed', status)
+
     if (status === 'shown') {
       setKeyboardStatus('shown')
     }
@@ -123,12 +126,12 @@ export const UnitRenderer = props => {
       <FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
         <View style={styles.pageText}>
           <Icon
-            testID='info-icon'
+            testID="info-icon"
             reverse
             color={Colors.gray}
             size={10}
-            name='info'
-            type='font-awesome-5'
+            name="info"
+            type="font-awesome-5"
           />
         </View>
         <InstructionsGraphicsRenderer
@@ -148,14 +151,14 @@ export const UnitRenderer = props => {
 
     return (
       <View style={{ ...unitCardStyles, ...styles.allTrue }}>
-        <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
+        <Tts color={Colors.success} align="center" iconColor={Colors.success} text={t('unitScreen.allTrue')}/>
         <Icon
-          testID='alltrue-icon'
+          testID="alltrue-icon"
           reverse
           color={Colors.success}
           size={20}
-          name='thumbs-up'
-          type='font-awesome-5'
+          name="thumbs-up"
+          type="font-awesome-5"
         />
       </View>
     )
@@ -173,46 +176,51 @@ export const UnitRenderer = props => {
   }
 
   return (
-    <ScrollView
-      ref={scrollViewRef}
-      onMomentumScrollEnd={updateLastScrollPos}
-      contentContainerStyle={styles.scrollView}
-      persistentScrollbar
-      keyboardShouldPersistTaps='always'
-    >
-      {/* 1. PART STIMULI */}
-      <FadePanel style={mergeStyles(unitCardStyles, dropShadow)} visible={fadeIn >= 0}>
-        <PureContentRenderer
-          elements={unitDoc.stimuli}
-          keyPrefix={`${unitId}-stimuli`}
-          dimensionColor={dimensionColor}
-        />
-      </FadePanel>
-
-      {/* 2. PART INSTRUCTIONS */}
-      {renderInstructions()}
-
-      {/* 3. PART TASK PAGE CONTENT */}
-      <FadePanel
-        style={{ ...unitCardStyles, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
-        visible={fadeIn >= 2}
+    <KeyboardAvoidingView keyboardVerticalOffset={50} behavior={isIOS() ? 'padding' : 'position'}>
+      <ScrollView
+        ref={scrollViewRef}
+        onMomentumScrollEnd={updateLastScrollPos}
+        contentContainerStyle={styles.scrollView}
+        persistentScrollbar
+        keyboardDismissMode="none"
+        contentInset={{ bottom: 20 }}
+        keyboardShouldPersistTaps="always"
+        automaticallyAdjustKeyboardInsets={true}
       >
-        <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
+        {/* 1. PART STIMULI */}
+        <FadePanel style={mergeStyles(unitCardStyles, dropShadow)} visible={fadeIn >= 0}>
+          <PureContentRenderer
+            elements={unitDoc.stimuli}
+            keyPrefix={`${unitId}-stimuli`}
+            dimensionColor={dimensionColor}
+          />
+        </FadePanel>
 
-        <PureContentRenderer
-          elements={unitDoc.pages[page]?.content}
-          keyPrefix={`${unitId}-${page}`}
-          scoreResult={showCorrectResponse && scoreResult}
-          showCorrectResponse={showCorrectResponse}
-          dimensionColor={dimensionColor}
-          submitResponse={submitResponse}
-        />
-      </FadePanel>
+        {/* 2. PART INSTRUCTIONS */}
+        {renderInstructions()}
 
-      {renderAllTrue()}
+        {/* 3. PART TASK PAGE CONTENT */}
+        <FadePanel
+          style={{ ...unitCardStyles, borderWidth: 3, borderColor: Colors.gray, paddingTop: 0, paddingBottom: 20 }}
+          visible={fadeIn >= 2}
+        >
+          <LeaText style={styles.pageText}>{page + 1} / {unitDoc.pages.length}</LeaText>
 
-      {renderFooter()}
-    </ScrollView>
+          <PureContentRenderer
+            elements={unitDoc.pages[page]?.content}
+            keyPrefix={`${unitId}-${page}`}
+            scoreResult={showCorrectResponse && scoreResult}
+            showCorrectResponse={showCorrectResponse}
+            dimensionColor={dimensionColor}
+            submitResponse={submitResponse}
+          />
+        </FadePanel>
+
+        {renderAllTrue()}
+
+        {renderFooter()}
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
