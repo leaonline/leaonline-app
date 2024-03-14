@@ -4,6 +4,7 @@
 [![Lint Test](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/lint_test.yml)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub](https://img.shields.io/github/license/leaonline/leaonline-app)
+[![DOI](https://zenodo.org/badge/308341102.svg)](https://zenodo.org/doi/10.5281/zenodo.10816688)
 
 ## About
 
