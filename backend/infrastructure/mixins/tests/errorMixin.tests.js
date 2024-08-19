@@ -11,14 +11,18 @@ describe(errorMixin.name, function () {
     restoreAll()
   })
   it('catches a runtime error and reports if', () => {
-    const error = new Error('expected error')
+    const message = 'expected error'
+    const error = new Error(message)
     const name = `methods.${Random.id()}`
     const userId = Random.id()
     const run = function () {
       throw error
     }
 
-    stub(console, 'error', e => expect(e).to.equal(error))
+    stub(console, 'error', (m, e) => {
+      expect(m).to.equal(`[${name}]:`)
+      expect(e.message).to.equal(message)
+    })
     stub(Meteor, 'defer', fn => fn())
     stub(ServerErrors, 'handle', (options) => {
       expect(options.name).to.equal(name)

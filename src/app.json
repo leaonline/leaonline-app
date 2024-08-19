@@ -2,7 +2,7 @@
   "expo": {
     "name": "lea.App",
     "slug": "leaonline",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "privacy": "public",
     "jsEngine": "hermes",
@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.testCompany.leaonline",
-      "versionCode": 5,
+      "versionCode": 7,
       "allowBackup": false
     },
     "plugins": [
@@ -39,14 +39,17 @@
         {
           "android": {
             "minSdkVersion": 21,
-            "targetSdkVersion": 33,
+            "targetSdkVersion": 34,
+            "compileSdkVersion": 34,
             "newArchEnabled": false
           },
           "ios": {
             "deploymentTarget": "14.0"
           }
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store"
     ]
   }
 }

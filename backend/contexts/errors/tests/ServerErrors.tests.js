@@ -49,7 +49,8 @@ describe(ServerErrors.name, function () {
       method: 'method.foobar',
       publication: undefined,
       isSystem: undefined,
-      userId: options.userId
+      userId: options.userId,
+      tag: undefined,
     })
     expect(emailSent).to.equal(true)
   })

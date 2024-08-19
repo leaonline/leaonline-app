@@ -372,6 +372,7 @@ Users.methods.remove = {
   run: function ({ _id }) {
     const calledBy = this.userId
     try {
+      Meteor.call('logout')
       return removeUser(_id, calledBy)?.userRemoved
     }
     catch (e) {

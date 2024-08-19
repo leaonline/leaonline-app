@@ -249,14 +249,15 @@ Session.update = ({ sessionId, userId }) => {
 
   if (!sessionDoc.nextUnit) {
     log('complete', sessionId)
-    SessionCollection.update(sessionId, {
-      $inc: {
-        progress: unitDoc.pages.length,
-        competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
-      },
+    const completeDoc = {
       $unset: { unit: 1, nextUnit: 1 },
       $set: { completedAt: timestamp }
-    })
+    }
+    if (unitDoc) {
+      completeDoc.$inc = get$inc({ unitDoc, sessionId, userId })
+    }
+
+    SessionCollection.update(sessionId, completeDoc)
     return null
   }
 
@@ -274,10 +275,7 @@ Session.update = ({ sessionId, userId }) => {
   // we can only update the progress if there is a unitDoc
   // on the contrary - if there is no unitDoc  then we are still in the story
   if (unitDoc) {
-    updateDoc.$inc = {
-      progress: unitDoc.pages.length,
-      competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
-    }
+    updateDoc.$inc = get$inc({ unitDoc, sessionId, userId })
   }
 
   const nextUnitId = getNextUnitId({
@@ -298,6 +296,11 @@ Session.update = ({ sessionId, userId }) => {
 
   return sessionDoc.nextUnit
 }
+
+const get$inc = ({ userId, unitDoc, sessionId }) => ({
+  progress: unitDoc.pages.length,
+  competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
+})
 
 /**
  * Meteor method definitions

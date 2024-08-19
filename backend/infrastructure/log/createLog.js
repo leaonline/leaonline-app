@@ -57,7 +57,7 @@ export const createLog = function ({ name = 'system', type = 'log', includeInTes
   const logName = `[${name}]:`
   const logType = internal[type]
   const typeName = `${type}`
-  const excludeForTest = !includeInTests && Meteor.isTest
+  const excludeForTest = Meteor.isTest && !includeInTests
 
   // if the log level is not supported, wo return a no-op fn
   if (logType.level > logLevel || excludeForTest) {

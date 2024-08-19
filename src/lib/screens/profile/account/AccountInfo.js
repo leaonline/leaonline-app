@@ -158,7 +158,7 @@ export const AccountInfo = (props) => {
       modal: {
         body: () => (
           <View style={styles.danger}>
-            <Tts block text={t('accountInfo.deleteAccount.instructions')} color={Colors.danger} />
+            <Tts block text={t('accountInfo.deleteAccount.instructions')} color={Colors.secondary} />
           </View>
         ),
         approve: {
@@ -167,12 +167,15 @@ export const AccountInfo = (props) => {
           color: Colors.danger,
           titleStyle: styles.dangerText,
           handler: () => {
-            const onSuccess = () => {
+            const onSuccess = async () => {
               lastAction.current = 'deleted'
               Sync.reset()
-              clearContextStorage(onError)
-                .catch(Log.error)
-                .then(() => setModalContent(closeModal))
+              try {
+                await clearContextStorage()
+              } catch (error) {
+                onError(error)
+              }
+              setModalContent( actions.deleteAccount.deleted)
             }
             deleteAccount({ onError, onSuccess })
           }
@@ -181,6 +184,20 @@ export const AccountInfo = (props) => {
           icon: 'times',
           label: () => t('actions.cancel'),
           handler: () => setModalContent(null)
+        }
+      },
+      deleted: {
+        body: () => (
+          <View>
+            <Tts block text={t('accountInfo.deleteAccount.successful')} color={Colors.secondary} />
+          </View>
+        ),
+        deny: {
+          icon: 'home',
+          label: () => t('actions.toHome'),
+          handler: () => {
+            setModalContent(null)
+          }
         }
       }
     }

@@ -18,18 +18,23 @@ describe(createTimedPromise.name, function () {
   })
   it('resolves to the fallback promise if it resolves not fast enough', async () => {
     const myPromise = createPromise(1250)
-    const value = await createTimedPromise(myPromise, { message: 'bar1' })
+    const message = 'bar1'
+    const timeout = 1000
+    const options = { message, timeout }
+    const value = await createTimedPromise(myPromise, options)
     expect(value).toEqual('bar1')
   })
   it('rejects the fallback promise if it resolves not fast enough and displays a custom message', () => {
     const myPromise1 = createPromise(1250)
-    const options = { message: 'bar2', throwIfTimedOut: true }
+    const message = 'bar2'
+    const timeout = 1000
+    const options = { message, timeout, throwIfTimedOut: true }
     const race = createTimedPromise(myPromise1, options)
     expect(race).rejects.toThrow('bar2');
   })
   it('rejects the fallback promise if it resolves not fast enough and displays custom details', () => {
     const myPromise2 = createPromise(1250)
-    const options = { throwIfTimedOut: true, details: { bar: 'baz1' } }
+    const options = { throwIfTimedOut: true, details: { bar: 'baz1' }, timeout: 1000 }
     const race = createTimedPromise(myPromise2, options)
     const target = expect(race).rejects
     target.toThrow('promise.timedOut')

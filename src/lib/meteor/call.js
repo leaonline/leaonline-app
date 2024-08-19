@@ -1,6 +1,6 @@
 import Meteor from '@meteorrn/core'
 import { check } from '../schema/check'
-import { ensureConnected } from './ensureConnected'
+
 import { MeteorError } from '../errors/MeteorError'
 import { Log } from '../infrastructure/Log'
 import { createSchema } from '../schema/createSchema'
@@ -39,7 +39,6 @@ const DEFAULT_TIMEOUT = Config.methods.defaultTimeout
  */
 export const callMeteor = (options) => {
   check(options, callMethodSchema)
-  ensureConnected()
   const {
     name,
     args = undefined,
@@ -87,21 +86,24 @@ const timedPromiseOptions = { timeout: DEFAULT_TIMEOUT, throwIfTimedOut: true }
  * @see {callMeteor}
  */
 const call = ({ name, args, prepare, receive }) => {
+  const isConnected = Meteor.status()?.status === 'connected'
   const promise = new Promise((resolve, reject) => {
     // inform that we are connected and about to call the server
     if (typeof prepare === 'function') { prepare() }
 
-    Meteor.call(name, args, (error, result) => {
-      // inform that we have received
-      // something from the server
-      if (typeof receive === 'function') { receive() }
+    Meteor.getData().waitDdpConnected(() => {
+      Meteor.call(name, args, (error, result) => {
+        // inform that we have received
+        // something from the server
+        if (typeof receive === 'function') { receive() }
 
-      if (error) {
-        // we convert server responses to MeteorError
-        return reject(MeteorError.from(error))
-      }
+        if (error) {
+          // we convert server responses to MeteorError
+          return reject(MeteorError.from(error))
+        }
 
-      return resolve(result)
+        return resolve(result)
+      })
     })
   })
 
@@ -110,7 +112,12 @@ const call = ({ name, args, prepare, receive }) => {
   // let the promise race against a timeout to ensure
   // our UI remains responsive in case we didn't get any
   // response from the server
-  return createTimedPromise(promise, options)
+  //
+  // XXX: if we are disconnected then we skip the timeout
+  // as we can't really know whether reconnect will be in time
+  return isConnected
+    ? createTimedPromise(promise, options)
+    : promise
 }
 
 const optionalFunction = { type: Function, optional: true }

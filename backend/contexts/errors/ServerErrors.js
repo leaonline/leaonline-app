@@ -20,6 +20,10 @@ ServerErrors.schema = {
   isSystem: {
     type: Boolean,
     optional: true
+  },
+  tag: {
+    type: String,
+    optional: true
   }
 }
 
@@ -31,13 +35,15 @@ ServerErrors.schema = {
  * @param isMethod {boolean=}
  * @param isPublication {boolean=}
  * @param isSystem {boolean=}
+ * @param tag {string=}
  */
-ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem }) => {
+ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem, tag,  }) => {
   const errorDoc = normalizeError({ error, userId })
 
   errorDoc.method = isMethod ? name : undefined
   errorDoc.publication = isPublication ? name : undefined
   errorDoc.isSystem = isSystem
+  errorDoc.tag = error.tag || tag
 
   const errorDocId = getCollection(ServerErrors.name).insert(errorDoc)
   notifyUsersAboutError(errorDoc, 'server')

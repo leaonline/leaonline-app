@@ -52,13 +52,12 @@ const LoggingButton = createDevelopmentButton({ route: 'logging', icon: 'align-l
 export const MainNavigation = (props) => {
   useKeepAwake()
   const { t } = useTranslation()
-  const { state, authContext } = useLogin()
+  const { state, authContext } = useLogin({ connection: props.connection })
   const { Tts } = useTts()
   const { userToken, isSignout, isDeleted } = state
   const renderTitleTts = text => (
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
   )
-
   const renderScreens = () => {
     if (userToken && !isSignout && !isDeleted) {
       const headerRight = () => (<ProfileButton route='profile' />)

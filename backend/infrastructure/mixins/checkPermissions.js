@@ -4,9 +4,7 @@ import { getUsersCollection } from '../../api/collections/getUsersCollection'
 export const checkPermissions = function (options) {
   const { isPublic, backend } = options
 
-  if (isPublic) {
-    return options
-  }
+  if (isPublic) { return options }
 
   const runFct = options.run
   options.run = function run (...args) {
@@ -18,13 +16,29 @@ export const checkPermissions = function (options) {
     }
 
     if (!userId) {
-      throw new Meteor.Error('errors.permissionDenied', 'errors.userNotExists', { userId })
+      throw new Meteor.Error(
+        'errors.permissionDenied',
+        'errors.userNotExists',
+        {
+          userId,
+          isPublic,
+          backend,
+          clientConnection: this.connection.id
+        })
     }
 
     if (backend) {
       const user = getUsersCollection().findOne(userId)
       if (!user?.services?.lea) {
-        throw new Meteor.Error('errors.permissionDenied', 'errors.backendOnly', { userId })
+        throw new Meteor.Error(
+          'errors.permissionDenied',
+          'errors.backendOnly',
+          {
+            userId,
+            isPublic,
+            backend,
+            clientConnection: this.connection.id
+          })
       }
     }
 
