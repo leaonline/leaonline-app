@@ -8,7 +8,7 @@ import { ClientConnection } from '../contexts/connection/ClientConnection'
 const { sync, remap } = Meteor.settings.remotes.content
 
 Meteor.startup(async () => {
-  useFixtures()
+  await useFixtures()
   await ContentServer.init()
   const contexts = ContentServer.contexts().filter(ctx => !!sync[ctx.name])
 
@@ -20,11 +20,11 @@ Meteor.startup(async () => {
 
       // let the clients know, that we have updated the data
       if (ctx.sync) {
-        SyncState.update(ctx.name)
+        await SyncState.update(ctx.name)
       }
     }
   }
-  runRemap(remap)
+  await runRemap(remap)
 })
 
 Meteor.onConnection(ClientConnection.onConnected)

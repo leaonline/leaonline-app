@@ -19,21 +19,21 @@ class DependencyBuilder {
     return this
   }
 
-  run ({ docs, dependencies }) {
+  async run ({ docs, dependencies }) {
     if (!docs?.length || !dependencies?.length) {
       return
     }
 
-    dependencies.forEach(dep => {
+    for (const dep of dependencies) {
       const { name } = dep
       const fieldNames = this.added.get(name)
       if (fieldNames) {
         const collection = getCollection(name)
-        const $in = [...createIdSet(docs, ...fieldNames)]
+        const $in = [...createIdSet(docs, fieldNames)]
         const selector = { _id: { $in } }
-        this.destination[name] = collection.find(selector).fetch()
+        this.destination[name] = await collection.find(selector).fetchAsync()
       }
-    })
+    }
   }
 }
 

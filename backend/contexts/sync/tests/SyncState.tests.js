@@ -9,21 +9,13 @@ import {
 import { createCollection } from '../../../infrastructure/factories/createCollection'
 import { asyncTimeout } from '../../../api/utils/asyncTimeout'
 import { ContextRegistry } from '../../ContextRegistry'
+import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
+import { expectThrown } from '../../../tests/helpers/expectThrown'
 
 const SyncCollection = createCollection(SyncState)
 
 describe('SyncState', function () {
-  before(function () {
-    stubCollection(SyncCollection)
-  })
-
-  after(function () {
-    restoreCollections()
-  })
-
-  afterEach(() => {
-    SyncCollection.remove({})
-  })
+  setupAndTeardown([SyncCollection])
 
   describe(SyncState.update.name, function () {
     it('updates a sync state of a given name', async function () {
@@ -32,20 +24,20 @@ describe('SyncState', function () {
       const ctx = { name, sync: true }
       SyncState.register(ctx)
       ContextRegistry.add(name, ctx)
-      expect(SyncState.get({ names })).to.deep.equal([])
+      expect(await SyncState.get({ names })).to.deep.equal([])
 
-      SyncState.update(name)
+      await SyncState.update(name)
 
-      const { _id, hash, updatedAt, version } = SyncState.get({ names })[0]
+      const [{ _id, hash, updatedAt, version }] = await SyncState.get({ names })
       expect(_id).to.be.a('string')
       expect(hash).to.be.a('string')
       expect(version).to.equal(1)
       expect(updatedAt).to.be.instanceOf(Date)
 
       await asyncTimeout(50)
-      SyncState.update(name)
+      await SyncState.update(name)
 
-      const updated = SyncState.get({ names })[0]
+      const [updated] = await SyncState.get({ names })
       expect(updated._id).to.equal(_id)
       expect(updated.hash).to.not.equal(hash)
       expect(updated.version).to.equal(2)
@@ -71,7 +63,7 @@ describe('SyncState', function () {
   })
 
   describe(SyncState.methods.getHashes.name, function () {
-    it('returns the sync states for given names', function () {
+    it('returns the sync states for given names', async function () {
       const names = [Random.id(), Random.id()]
       names.forEach(name => {
         const ctx = { name, sync: true }
@@ -81,7 +73,7 @@ describe('SyncState', function () {
       })
 
       const method = SyncState.methods.getHashes.run
-      const states = method({ names })
+      const states = await method.call({}, { names })
 
       Object.values(states).forEach(state => {
         expect(names.includes(state.name)).to.equal(true)
@@ -91,6 +83,22 @@ describe('SyncState', function () {
   })
 
   describe(SyncState.methods.getDocs.name, function () {
-    it('is not impl')
+    const run = SyncState.methods.getDocs.run
+
+    it('throws on invalid context', async function () {
+      await expectThrown({
+        fn: () => run.call({}, { name: 'foo' }),
+        message: `Attempt to sync "foo" but it's not defined for sync!`
+      })
+    })
+    it('throws on collection not exists', async function () {
+      const ctx = { name: 'bar' , sync: true }
+      SyncState.register(ctx)
+      ContextRegistry.add(ctx.name, ctx)
+      await expectThrown({
+        fn: () => run.call({}, { name: 'bar' }),
+        message: `No collection found for bar`
+      })
+    })
   })
 })

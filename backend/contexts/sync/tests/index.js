@@ -1,1 +1,1 @@
-import './SyncState'
+import './SyncState.tests'

@@ -28,7 +28,7 @@ ServerErrors.schema = {
 }
 
 /**
- *
+ * @async
  * @param error {Error|Meteor.Error} the error instance
  * @param name {string} name of the method or publication
  * @param userId {string=} the user who created this error
@@ -37,7 +37,7 @@ ServerErrors.schema = {
  * @param isSystem {boolean=}
  * @param tag {string=}
  */
-ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem, tag,  }) => {
+ServerErrors.handle = async ({ error, name, userId, isMethod, isPublication, isSystem, tag,  }) => {
   const errorDoc = normalizeError({ error, userId })
 
   errorDoc.method = isMethod ? name : undefined
@@ -45,8 +45,8 @@ ServerErrors.handle = ({ error, name, userId, isMethod, isPublication, isSystem,
   errorDoc.isSystem = isSystem
   errorDoc.tag = error.tag || tag
 
-  const errorDocId = getCollection(ServerErrors.name).insert(errorDoc)
-  notifyUsersAboutError(errorDoc, 'server')
+  const errorDocId = await getCollection(ServerErrors.name).insertAsync(errorDoc)
+  await notifyUsersAboutError(errorDoc, 'server')
 
   return errorDocId
 }

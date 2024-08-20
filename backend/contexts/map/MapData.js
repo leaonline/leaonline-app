@@ -2,6 +2,7 @@ import { getCollection } from '../../api/utils/getCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 import { cursorToMap } from '../../api/utils/cursorToMap'
+import { forEachAsync } from '../../infrastructure/async/forEachAsync'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -210,25 +211,27 @@ const checkIntegrity = ({ condition, premise }) => {
  * Do not call from a regular method that could be invoked by clients.
  * @method
  *
+ * @async
  * @param options {object}
  * @param options.field {string} the field id
- * @param options.dryRun {boolean} if false will not be saved to db
+ * @param options.dryRun {boolean?} if false will not be saved to db
  * @param options.dimensionsOrder {string[]} array of short codes to sort dimensions
+ * @return {Promise<*>}
  */
-MapData.create = (options) => {
+MapData.create = async (options) => {
   const { field, dryRun, dimensionsOrder } = options
-  const fieldDoc = getCollection('field').findOne(field)
+  const fieldDoc = await getCollection('field').findOneAsync(field)
   checkIntegrity({
     condition: fieldDoc,
     premise: `Expect field doc by _id "${field}"`
   })
 
   log('create for field', fieldDoc.title)
-  const dimensions = getCollection('dimension')
+  const dimensions = (await getCollection('dimension')
     .find()
-    .fetch()
+    .fetchAsync())
     .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
-  const levels = getCollection('level')
+  const levels = await getCollection('level')
     .find()
     .fetch()
     .sort(byLevel)
@@ -255,7 +258,7 @@ MapData.create = (options) => {
   }
 
   // for each level
-  levels.forEach((levelDoc, levelIndex) => {
+  await forEachAsync(levels, async (levelDoc, levelIndex) => {
     log('collect level (milestone)', levelDoc.title)
 
     // each level ends with a milestone
@@ -286,10 +289,10 @@ MapData.create = (options) => {
     const stages = {}
 
     // for each dimension
-    dimensions.forEach((dimensionDoc, dimensionIndex) => {
+    await forEachAsync(dimensions, async (dimensionDoc, dimensionIndex) => {
       log('collect dimension', dimensionDoc.shortCode, dimensionDoc.title)
       const dimensionId = dimensionDoc._id
-      const testCycleDoc = TestCycleCollection.findOne({
+      const testCycleDoc = await TestCycleCollection.findOneAsync({
         field: field,
         level: levelDoc._id,
         dimension: dimensionDoc._id
@@ -318,9 +321,10 @@ MapData.create = (options) => {
       // which
       let maxCompetencies = 0
 
-      const unitSetCursor = UnitSetCollection.find({ _id: { $in: unitSets } })
+      const unitSetQuery = { _id: { $in: unitSets } }
+      const unitSetCursor = UnitSetCollection.find(unitSetQuery)
       const expectedUnitSets = unitSets.length
-      const actualUnitSets = unitSetCursor.count()
+      const actualUnitSets = await UnitSetCollection.countDocuments(unitSetQuery)
 
       // If there is a mismatch between unit sets, as defined in the test cycle doc,
       // we have an integrity issue and need to throw this as error
@@ -329,57 +333,56 @@ MapData.create = (options) => {
         premise: `Expect ${expectedUnitSets} unit sets for test cycle ${testCycleDoc._id}, got ${actualUnitSets}`
       })
 
-      const unitSetMap = cursorToMap(unitSetCursor)
+      const unitSetMap = await cursorToMap(unitSetCursor)
 
-      unitSets
-        .forEach(unitSetId => {
-          const unitSetDoc = unitSetMap.get(unitSetId)
+      await forEachAsync(unitSets, async unitSetId => {
+        const unitSetDoc = unitSetMap.get(unitSetId)
 
-          checkIntegrity({
-            condition: unitSetDoc,
-            premise: `Expect unit set doc by _id ${unitSetId}`
-          })
-
-          const competencies = countCompetencies(unitSetDoc, log)
-          log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
-
-          const units = unitSetDoc.units || []
-          const unitCursor = UnitCollection.find({ _id: { $in: units } })
-          const expectedUnits = units.length
-          const actualUnits = unitCursor.count()
-
-          checkIntegrity({
-            condition: expectedUnits > 0,
-            premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
-          })
-
-          // We also require strict integrity of units in a unit set
-          checkIntegrity({
-            condition: expectedUnits === actualUnits,
-            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
-          })
-
-          // push new stage to the stage data
-          stages[dimensionId].push({
-            dimension: dimensionIndex,
-            _id: unitSetDoc._id,
-            progress: unitSetDoc.progress,
-            code: unitSetDoc.shortCode,
-            competencies: competencies
-          })
-
-          // At this point we know for sure, that there is
-          hasAtLeastOneStage = true
-          maxCompetencies += competencies
-
-          // summ progress/competencies to the max values
-          mapData.maxCompetencies += competencies
-          mapData.maxProgress += unitSetDoc.progress
-
-          // also add progress/competencies to the dimensions
-          mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
-          mapData.dimensions[dimensionIndex].maxCompetencies += competencies
+        checkIntegrity({
+          condition: unitSetDoc,
+          premise: `Expect unit set doc by _id ${unitSetId}`
         })
+
+        const competencies = await countCompetencies(unitSetDoc, log)
+        log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+
+        const units = unitSetDoc.units || []
+        const unitCursor = UnitCollection.find({ _id: { $in: units } })
+        const expectedUnits = units.length
+        const actualUnits = unitCursor.count()
+
+        checkIntegrity({
+          condition: expectedUnits > 0,
+          premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
+        })
+
+        // We also require strict integrity of units in a unit set
+        checkIntegrity({
+          condition: expectedUnits === actualUnits,
+          premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
+        })
+
+        // push new stage to the stage data
+        stages[dimensionId].push({
+          dimension: dimensionIndex,
+          _id: unitSetDoc._id,
+          progress: unitSetDoc.progress,
+          code: unitSetDoc.shortCode,
+          competencies: competencies
+        })
+
+        // At this point we know for sure, that there is
+        hasAtLeastOneStage = true
+        maxCompetencies += competencies
+
+        // summ progress/competencies to the max values
+        mapData.maxCompetencies += competencies
+        mapData.maxProgress += unitSetDoc.progress
+
+        // also add progress/competencies to the dimensions
+        mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
+        mapData.dimensions[dimensionIndex].maxCompetencies += competencies
+      })
 
       // after we have counted all competencies for this milestone
       // we can add a new entry with the maximum obtainable competencies
@@ -461,21 +464,22 @@ MapData.create = (options) => {
   if (dryRun || mapData.entries.length === 0) { return }
 
   // Otherwise, we can safely update the collection.
-  return getCollection(MapData.name).upsert({ field }, { $set: mapData })
+  return getCollection(MapData.name).upsertAsync({ field }, { $set: mapData })
 }
 
 /**
  * Counts competencies of a given unitSet.
  * @private
+ * @async
  * @param unitSet
  * @param log
  * @return {number}
  */
-const countCompetencies = (unitSet, log) => {
+const countCompetencies = async (unitSet, log) => {
   const UnitCollection = getCollection('unit')
   let count = 0
 
-  UnitCollection.find({ _id: { $in: unitSet.units } }).forEach(unitDoc => {
+  await UnitCollection.find({ _id: { $in: unitSet.units } }).forEachAsync(unitDoc => {
     count += countUnitCompetencies({ unitDoc, log })
   })
 
@@ -485,7 +489,12 @@ const countCompetencies = (unitSet, log) => {
   return count
 }
 
-MapData.get = ({ field }) => getCollection(MapData.name).findOne({ field })
+/**
+ * Returns a map data document by field (fieldId)
+ * @param field
+ * @return {object}
+ */
+MapData.get = async ({ field }) => getCollection(MapData.name).findOneAsync({ field })
 
 MapData.methods = {}
 
@@ -503,12 +512,10 @@ MapData.methods.getAll = {
     }
   },
   backend: true,
-  run: function () {
-    const docs = getCollection(MapData.name).find({}, {
-      hint: {
-        $natural: -1
-      }
-    }).fetch()
+  run: async function () {
+    const docs = await getCollection(MapData.name)
+      .find({}, { hint: { $natural: -1 } })
+      .fetchAsync()
     return { [MapData.name]: docs }
   }
 }

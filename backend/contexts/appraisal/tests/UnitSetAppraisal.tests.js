@@ -8,12 +8,14 @@ import { UnitSet } from '../../content/UnitSet'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
 import { DocumentFactories, SelectorFactories } from '../../../tests/helpers/Factories'
+import { expectThrown } from '../../../tests/helpers/expectThrown'
+import { expect } from 'chai'
 
 const UnitSetAppraisalCollection = initTestCollection(UnitSetAppraisal)
 const FieldCollection = initTestCollection(Field)
 const DimensionCollection = initTestCollection(Dimension)
 const UnitSetCollection = initTestCollection(UnitSet)
-const createDoc = ({ fieldId, dimensionId, unitSetId }) => {
+const createMockDoc = ({ fieldId, dimensionId, unitSetId }) => {
   return {
     userId: Random.id(),
     fieldId: fieldId ?? Random.id(),
@@ -34,14 +36,45 @@ describe(UnitSetAppraisal.name, () => {
   ])
   describe('methods', () => {
     describe(UnitSetAppraisal.methods.send.name, () => {
-      it('is not impl')
+      const run = UnitSetAppraisal.methods.send.run
+
+      it('throws if the unit set does not exist', async () => {
+        const unitSetId = Random.id()
+        await expectThrown({
+          fn: () => run.call({}, { unitSetId }),
+          name: 'errors.docNotFound'
+        })
+      })
+      it('adds a new appraisal', async () => {
+        const field = Random.id()
+        const dimension = Random.id()
+        const userId = Random.id()
+        const response = '3'
+        const unitSetId = await UnitSetCollection.insertAsync({ field, dimension })
+        const appraisalId = await run.call({ userId }, { unitSetId, response })
+        expect(appraisalId).to.be.a('string')
+
+        const doc = await UnitSetAppraisalCollection.findOneAsync(appraisalId)
+        expect(doc).to.be.a('object')
+        const { createdAt, ...appraisalDoc } = doc
+        expect(createdAt).to.be.instanceof(Date)
+        expect(appraisalDoc).to.deep.equal({
+          _id: appraisalId,
+          userId,
+          fieldId: field,
+          dimensionId: dimension,
+          unitSetId,
+          response
+        })
+      })
     })
+
     testGetAllMethod(UnitSetAppraisal, {
-      factory: withDeps => {
-        const fieldId = withDeps ? FieldCollection.findOne()._id : Random.id()
-        const dimensionId = withDeps ? DimensionCollection.findOne()._id : Random.id()
-        const unitSetId = withDeps ? UnitSetCollection.findOne()._id : Random.id()
-        return createDoc({ fieldId, dimensionId, unitSetId })
+      factory: async withDeps => {
+        const fieldId = withDeps ? (await FieldCollection.findOneAsync())._id : Random.id()
+        const dimensionId = withDeps ? (await DimensionCollection.findOneAsync())._id : Random.id()
+        const unitSetId = withDeps ? (await UnitSetCollection.findOneAsync())._id : Random.id()
+        return createMockDoc({ fieldId, dimensionId, unitSetId })
       },
       dependencies: {
         [Field.name]: {

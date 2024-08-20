@@ -9,7 +9,7 @@ export const errorMixin = options => {
   const isPublication = name.includes('publications')
   const runFct = options.run
 
-  options.run = function run (...args) {
+  options.run = async function run (...args) {
     const { userId } = this
     try {
       return runFct.call(this, ...args)
@@ -18,9 +18,9 @@ export const errorMixin = options => {
       const tag = runtimeError.tag || Random.id()
       runtimeError.tag = runtimeError.tag || tag
       console.error(`[${options.name}]:`, runtimeError)
-      Meteor.defer(() => {
-        const connection = ClientConnection.collection().findOne({ id: this.connection?.id })
-        ServerErrors.handle({
+      Meteor.defer(async () => {
+        const connection = await ClientConnection.collection().findOneAsync({ id: this.connection?.id })
+        await ServerErrors.handle({
           name, tag, isMethod, error: runtimeError, userId, isPublication, connection
         })
       })

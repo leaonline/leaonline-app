@@ -4,6 +4,7 @@ import { createLog } from '../../infrastructure/log/createLog'
 /**
  * Updates a given user profile with the respective fields.
  * Assumes that your Methods have validated inputs already.
+ * @async
  * @param options {object}
  * @param options.userId {string} the _id of the user document
  * @param options.voice {string=} the current selected voice
@@ -11,7 +12,7 @@ import { createLog } from '../../infrastructure/log/createLog'
  * @param options.device {object=} the current device info
  * @return {number} 1 if updated, 0 if not
  */
-export const updateUserProfile = ({ userId, voice, speed, device }) => {
+export const updateUserProfile = async ({ userId, voice, speed, device }) => {
   const query = { _id: userId }
   const updateDoc = { $set: {} }
 
@@ -32,7 +33,7 @@ export const updateUserProfile = ({ userId, voice, speed, device }) => {
     updateDoc.$set.device = device
   }
 
-  return getUsersCollection().update(query, updateDoc)
+  return getUsersCollection().updateAsync(query, updateDoc)
 }
 
 const log = createLog({

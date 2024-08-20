@@ -4,6 +4,7 @@ import { createLog } from '../infrastructure/log/createLog'
 import { SyncState } from '../contexts/sync/SyncState'
 import { Meteor } from 'meteor/meteor'
 import { ContextRegistry } from '../contexts/ContextRegistry'
+import { forEachAsync } from '../infrastructure/async/forEachAsync'
 
 const fixturesIsActive = Meteor.settings.useFixtures
 const debug = createLog({ name: 'useFixtures', type: 'debug' })
@@ -14,23 +15,25 @@ const debug = createLog({ name: 'useFixtures', type: 'debug' })
  *
  * This is useful, in case you want to start the app without using a production data dump.
  *
+ * @async
  * @category startup
  * @module useFixtures
  * @return {undefined} nothing to return
  */
-export const useFixtures = () => {
-  Object.entries(fixtures).forEach(([name, documents]) => {
+export const useFixtures = async () => {
+  const entries = Object.entries(fixtures)
+  await forEachAsync(entries,  async ([name, documents]) => {
     debug(name, 'docs:', documents.length)
     const collection = getCollection(name)
 
-    documents.forEach(doc => {
+    await forEachAsync(documents, async doc => {
       if (fixturesIsActive) {
-        const upsert = collection.upsert({ _id: doc._id }, { $set: doc })
+        const upsert = await collection.upsertAsync({ _id: doc._id }, { $set: doc })
         debug('upsert', JSON.stringify(upsert))
       }
 
       else {
-        const removed = collection.remove({ _id: doc._id })
+        const removed = await collection.removeAsync({ _id: doc._id })
         debug(name, 'removed:', removed)
       }
     })
@@ -39,7 +42,7 @@ export const useFixtures = () => {
 
     if (ctx?.sync) {
       debug(name, 'update sync state')
-      SyncState.update(name)
+      await SyncState.update(name)
     }
   })
 

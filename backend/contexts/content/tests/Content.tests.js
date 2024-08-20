@@ -36,41 +36,43 @@ describe('Content', function () {
     restoreCollections()
   })
 
-  beforeEach(function () {
-    allCollections.forEach(c => c.remove({}))
+  beforeEach(async () => {
+    for (const c of allCollections) {
+      await c.removeAsync({})
+    }
   })
 
   describe(Content.methods.home.name, function () {
     const home = Content.methods.home.run
 
-    it('returns nothing if no flag is true', function () {
-      const data = home({})
+    it('returns nothing if no flag is true', async function () {
+      const data = await home({})
       expect(data).to.deep.equal({
         field: [],
         dimension: [],
         level: []
       })
     })
-    it('returns docs if true', function () {
-      FieldCollection.insert({ title: 'foo' })
-      DimensionCollection.insert({ title: 'foo' })
-      LevelCollection.insert({ title: 'foo' })
+    it('returns docs if true',async function () {
+      await FieldCollection.insertAsync ({ title: 'foo' })
+      await DimensionCollection.insertAsync ({ title: 'foo' })
+      await LevelCollection.insertAsync ({ title: 'foo' })
 
-      const data = home({ field: true, dimension: true, level: true })
+      const data = await home.call({}, { field: true, dimension: true, level: true })
       expect(data).to.deep.equal({
-        field: [FieldCollection.findOne()],
-        dimension: [DimensionCollection.findOne()],
-        level: [LevelCollection.findOne()]
+        field: [await FieldCollection.findOneAsync()],
+        dimension: [await DimensionCollection.findOneAsync()],
+        level: [await LevelCollection.findOneAsync()]
       })
     })
   })
   describe(Content.methods.map.name, function () {
     const map = Content.methods.map.run
 
-    it('returns the current map data for a given field', function () {
-      const fieldId = FieldCollection.insert({ title: 'foo' })
-      const mapId = MapCollection.insert({ field: fieldId, foo: 'bar' })
-      const mapData = map({ fieldId })
+    it('returns the current map data for a given field', async function () {
+      const fieldId = await FieldCollection.insertAsync ({ title: 'foo' })
+      const mapId = await MapCollection.insertAsync({ field: fieldId, foo: 'bar' })
+      const mapData = await map.call({}, { fieldId })
       expect(mapData).to.deep.equal({
         _id: mapId,
         field: fieldId,
@@ -81,11 +83,11 @@ describe('Content', function () {
   describe(Content.methods.session.name, function () {
     const run = Content.methods.session.run
 
-    it('returns the current session screen data', function () {
+    it('returns the current session screen data', async function () {
       const unitSetId = Random.id()
       const userId = Random.id()
-      const sessionId = SessionCollection.insert({ userId, unitSet: unitSetId })
-      const { sessionDoc, unitDoc, unitSetDoc } = run.call({ userId }, { unitSetId })
+      const sessionId = await SessionCollection.insertAsync({ userId, unitSet: unitSetId })
+      const { sessionDoc, unitDoc, unitSetDoc } = await run.call({ userId }, { unitSetId })
       expect(sessionDoc).to.deep.equal({
         _id: sessionId,
         userId,
@@ -98,11 +100,11 @@ describe('Content', function () {
   describe(Content.methods.unit.name, function () {
     const run = Content.methods.unit.run
 
-    it('returns a specific unit doc', function () {
-      const unitId = UnitCollection.insert({ title: Random.id() })
-      const doc = UnitCollection.findOne(unitId)
+    it('returns a specific unit doc', async function () {
+      const unitId = await UnitCollection.insertAsync({ title: Random.id() })
+      const doc = await UnitCollection.findOneAsync(unitId)
       expect(doc).to.not.equal(undefined)
-      expect(run({ unitId })).to.deep.equal(doc)
+      expect(await run.call({}, { unitId })).to.deep.equal(doc)
     })
   })
 })

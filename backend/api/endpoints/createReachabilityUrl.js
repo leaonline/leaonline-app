@@ -1,7 +1,11 @@
 import { WebApp } from 'meteor/webapp'
 import { createLog } from '../../infrastructure/log/createLog'
 
-const paths = new Set()
+/**
+ * Creates a URL to handle 204 HEAD requests on a given path.
+ * This is intended for http-based reachability tests.
+ * @param path {string}
+ */
 export const createReachabilityUrl = ({ path }) => {
   if (paths.has(path)) {
     throw new Error(`Path ${path} already taken!`)
@@ -10,9 +14,14 @@ export const createReachabilityUrl = ({ path }) => {
   paths.add(path)
   const log = createLog({ name: path })
 
-  WebApp.rawConnectHandlers.use(path, function (req, res) {
+  WebApp.rawHandlers.use(path, function (req, res) {
     log('check', req.headers)
-    res.writeHead(204)
+    res.set('Access-Control-Expose-Headers', 'Content-Length')
+    res.set('Content-Length', 0)
+    res.status(204)
     res.end()
   })
 }
+
+/** @private */
+const paths = new Set()

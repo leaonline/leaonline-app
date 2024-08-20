@@ -2,11 +2,11 @@ import { Meteor } from 'meteor/meteor'
 import { Legal } from '../contexts/legal/Legal'
 import { getCollection } from '../api/utils/getCollection'
 
-Meteor.startup(() => {
+Meteor.startup(async () => {
   const collection = getCollection(Legal.name)
-  const configDoc = collection.findOne()
+  const configDoc = await collection.findOneAsync()
   if (!configDoc) {
-    collection.insert({
+    collection.insertAsync({
       imprint: 'Imprint',
       privacy: 'Privacy',
       terms: 'Terms',

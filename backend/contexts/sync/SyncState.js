@@ -48,10 +48,11 @@ SyncState.schema = {
  * ctx and saves it to the collection. Creates a new entry if none is
  * defined by {name}
  *
+ * @async
  * @param name {string}
- * @return {*} upsert result, depending on insert or update
+ * @return {Promise<object>} upsert result, depending on insert or update
  */
-SyncState.update = name => {
+SyncState.update = async name => {
   log('update', name)
   const ctx = ContextRegistry.get(name)
   checkIfSync(ctx)
@@ -59,7 +60,7 @@ SyncState.update = name => {
   const hash = Random.id(8)
   const updatedAt = new Date()
 
-  return getCollection(SyncState.name).upsert({ name }, {
+  return getCollection(SyncState.name).upsertAsync({ name }, {
     $set: { name, updatedAt, hash },
     $inc: { version: 1 }
   })
@@ -67,12 +68,13 @@ SyncState.update = name => {
 
 /**
  * Gets all sync states by given names
+ * @async
  * @param names {Array<string>}
- * @return {Array<object>} a list of documents
+ * @return {Promise<Array<object>>} a list of documents
  */
-SyncState.get = ({ names }) => getCollection(SyncState.name)
+SyncState.get = async ({ names }) => getCollection(SyncState.name)
   .find({ name: { $in: names } })
-  .fetch()
+  .fetchAsync()
 
 /**
  * Throws an error if any of the given names is not registered for sync.
@@ -104,10 +106,10 @@ SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',
   schema: {},
   run: onServerExec(function () {
-    return function () {
+    return async function () {
       const syncDoc = {}
       const names = getAppContexts()
-      const docs = SyncState.get({ names })
+      const docs = await SyncState.get({ names })
       docs.forEach(doc => {
         syncDoc[doc.name] = doc
       })
@@ -122,14 +124,14 @@ SyncState.methods.getDocs = {
     name: String
   },
   run: onServerExec(function () {
-    return function ({ name }) {
+    return async function ({ name }) {
       console.debug('[SyncState]: get', name)
       SyncState.validate([name])
       const collection = getCollection(name)
       if (!collection) {
         throw new Error(`No collection found for ${name}`)
       }
-      return collection.find().fetch()
+      return collection.find().fetchAsync()
     }
   })
 }

@@ -18,11 +18,8 @@ describe(ServerErrors.name, function () {
     restoreCollections()
     restoreAll()
   })
-  it('saves a server error', () => {
-    let emailSent = false
-    stub(Email, 'send', () => {
-      emailSent = true
-    })
+  it('saves a server error', async () => {
+    const emailSent = stub(Email, 'sendAsync', () => {})
 
     const options = {
       error: new Error('foo bar moo'),
@@ -34,8 +31,8 @@ describe(ServerErrors.name, function () {
     const stackSplit = options.error.stack.split('\n')
     stackSplit.length = 3
     const stack = stackSplit.join('\n')
-    const docId = ServerErrors.handle(options)
-    const { _id, createdAt, ...doc } = getCollection(ServerErrors.name).findOne(docId)
+    const docId = await ServerErrors.handle(options)
+    const { _id, createdAt, ...doc } = await getCollection(ServerErrors.name).findOneAsync(docId)
     expect(_id).to.be.a('string')
     expect(createdAt).to.be.instanceOf(Date)
     expect(doc).to.deep.equal({
@@ -52,6 +49,6 @@ describe(ServerErrors.name, function () {
       userId: options.userId,
       tag: undefined,
     })
-    expect(emailSent).to.equal(true)
+    expect(emailSent.calledOnce).to.equal(true)
   })
 })

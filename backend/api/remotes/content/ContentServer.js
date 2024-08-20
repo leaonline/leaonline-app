@@ -20,6 +20,7 @@ import { createLog } from '../../../infrastructure/log/createLog'
 // for better reasoning between connection and logic we have
 // all connection functionality in a separate file
 import { ContentConnection } from './ContentConnection'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 // set the lib's validator to allow validation of received unit docs
 SchemaValidator.set(function (schema) {
@@ -107,7 +108,7 @@ ContentServer.sync = async ({ name, debug } = {}) => {
   const allIds = []
   allIds.length = allDocs.length
 
-  allDocs.forEach((doc, index) => {
+  await forEachAsync(allDocs, async (doc, index) => {
     if (doc.isLegacy) {
       stats.skipped++
       return
@@ -116,28 +117,28 @@ ContentServer.sync = async ({ name, debug } = {}) => {
     const { _id: docId } = doc
     allIds[index] = docId
 
-    if (collection.find({ _id: docId }).count() === 0) {
-      onBeforeUpsert({ type: 'insert', doc })
-      const insertId = collection.insert(doc)
+    if (await collection.countDocuments({ _id: docId }) === 0) {
+      await onBeforeUpsert({ type: 'insert', doc })
+      const insertId = await collection.insertAsync(doc)
       if (debug) log(name, 'inserted', insertId)
       stats.created++
     }
 
     else {
-      onBeforeUpsert({ type: 'update', doc })
+      await onBeforeUpsert({ type: 'update', doc })
       const updateDoc = { ...doc }
       delete updateDoc._id
-      const updated = collection.update(docId, { $set: updateDoc })
+      const updated = await collection.updateAsync(docId, { $set: updateDoc })
       if (debug) log(name, 'updated', docId, '=', updated)
       stats.updated++
     }
   })
 
   // remove all docs, that are not in ids anymore
-  stats.removed = collection.remove({ _id: { $nin: allIds } })
+  stats.removed = await collection.removeAsync({ _id: { $nin: allIds } })
   log(JSON.stringify(stats))
 
-  onSyncEnd(stats)
+  await onSyncEnd(stats)
 
   return stats
 }

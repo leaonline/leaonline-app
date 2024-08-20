@@ -39,16 +39,16 @@ Content.methods.home = {
     import { Dimension } from './Dimension'
     import { Level } from './Level'
 
-    return function ({ field, dimension, level }) {
+    return async function ({ field, dimension, level }) {
       return {
         field: field
-          ? getCollection(Field.name).find().fetch()
+          ? await getCollection(Field.name).find().fetchAsync()
           : [],
         dimension: dimension
-          ? getCollection(Dimension.name).find().fetch()
+          ? await getCollection(Dimension.name).find().fetchAsync()
           : [],
         level: level
-          ? getCollection(Level.name).find().fetch()
+          ? await getCollection(Level.name).find().fetchAsync()
           : []
       }
     }
@@ -103,7 +103,7 @@ Content.methods.unit = {
 
     return function ({ unitId }) {
       // TODO return unit only in staging mode
-      return getCollection(Unit.name).findOne({ _id: unitId })
+      return getCollection(Unit.name).findOneAsync({ _id: unitId })
     }
   })
 }

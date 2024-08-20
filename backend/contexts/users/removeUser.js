@@ -8,13 +8,15 @@ import { getUsersCollection } from '../../api/collections/getUsersCollection'
 
 /**
  * Removes a given user plus all their associated sessions, responses and feedbacks.
+ * @async
  * @param userId {String}
  * @param calledBy {String}
  * @return {{responsesRemoved: Number, sessionsRemoved: Number, userRemoved: Number}}
  */
-export const removeUser = function (userId, calledBy) {
+export const removeUser = async (userId, calledBy) => {
   debug({ userId, calledBy })
-  const user = Meteor.users.findOne(userId)
+  const UsesCollection = getUsersCollection()
+  const user = await UsesCollection.findOneAsync(userId)
 
   if (!user) {
     throw new Meteor.Error('removeUser.error', 'removeUser.userDoesNotExist', {
@@ -23,10 +25,10 @@ export const removeUser = function (userId, calledBy) {
     })
   }
 
-  const responsesRemoved = getCollection(Response.name).remove({ userId })
-  const sessionsRemoved = getCollection(Session.name).remove({ userId })
-  const progressRemoved = getCollection(Progress.name).remove({ userId })
-  const userRemoved = getUsersCollection().remove({ _id: userId })
+  const responsesRemoved = await getCollection(Response.name).removeAsync({ userId })
+  const sessionsRemoved = await getCollection(Session.name).removeAsync({ userId })
+  const progressRemoved = await getCollection(Progress.name).removeAsync({ userId })
+  const userRemoved = await UsesCollection.removeAsync({ _id: userId })
 
   return {
     responsesRemoved,

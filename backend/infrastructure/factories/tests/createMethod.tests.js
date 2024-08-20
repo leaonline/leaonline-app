@@ -9,16 +9,17 @@ describe(createMethod.name, function () {
     restoreAll()
   })
 
-  it('creates a new Meteor method', function () {
+  it('creates a new Meteor method', async () => {
     createMethod({
       name: 'tests.method.exec',
+      isPublic: true,
       schema: { foo: String },
-      run: function ({ foo }) {
+      run: async function ({ foo }) {
         return `${foo}-bar`
       }
     })
     stub(Meteor, 'user', () => ({ _id: 'some-user-id' }))
-    const result = Meteor.call('tests.method.exec', { foo: 'foo' })
+    const result = await Meteor.call('tests.method.exec', { foo: 'foo' })
     expect(result).to.equal('foo-bar')
   })
 })

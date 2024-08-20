@@ -17,6 +17,7 @@ import { Level } from '../../../contexts/content/Level'
 import { TestCycle } from 'meteor/leaonline:corelib/contexts/TestCycle'
 import { ContentConnection } from '../content/ContentConnection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle]
 const contextNames = contexts.map(ctx => ctx.name)
@@ -30,9 +31,9 @@ describe('ContentServer', function () {
   after(() => {
     restoreCollections()
   })
-  afterEach(() => {
+  afterEach(async () => {
     restoreAll()
-    UnitCollection.remove({})
+    await UnitCollection.removeAsync({})
   })
 
   describe(ContentServer.contexts.name, function () {
@@ -127,7 +128,7 @@ describe('ContentServer', function () {
         removed: 0,
         skipped: 0
       })
-      expect(UnitCollection.find().fetch()).to.deep.equal(docs)
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
     })
     it('updates existing docs with the ones from remote if their _id matches', async () => {
       const docs = [
@@ -136,8 +137,8 @@ describe('ContentServer', function () {
       ]
       const updateDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (updateDocs))
-      docs.forEach(doc => UnitCollection.insert(doc))
-      expect(UnitCollection.find().fetch()).to.deep.equal(docs)
+      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
       stubConnection()
@@ -149,9 +150,8 @@ describe('ContentServer', function () {
         removed: 0,
         skipped: 0
       })
-      const cursor = UnitCollection.find()
-      expect(cursor.count()).to.equal(2)
-      expect(cursor.fetch()).to.deep.equal(docs)
+      expect(await UnitCollection.countDocuments({})).to.equal(2)
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
     })
     it('removes docs which are not in the remote collection anymore', async () => {
       const docs = [
@@ -160,12 +160,10 @@ describe('ContentServer', function () {
       ]
 
       const insertDoc = { _id: Random.id(), title: 'moo' }
-      const removeDocs = {
-        [Unit.name]: [insertDoc]
-      }
+      const removeDocs = { [Unit.name]: [insertDoc] }
       stub(ContentConnection, 'get', () => (removeDocs))
-      docs.forEach(doc => UnitCollection.insert(doc))
-      expect(UnitCollection.find().fetch()).to.deep.equal(docs)
+      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
       stubConnection()
@@ -177,9 +175,8 @@ describe('ContentServer', function () {
         removed: 2,
         skipped: 0
       })
-      const cursor = UnitCollection.find()
-      expect(cursor.count()).to.equal(1)
-      expect(cursor.fetch()).to.deep.equal([insertDoc])
+      expect(await UnitCollection.countDocuments({})).to.equal(1)
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal([insertDoc])
     })
     it('skips docs marked as legacy', async () => {
       const docs = [
@@ -188,7 +185,7 @@ describe('ContentServer', function () {
       ]
       const insertDocs = { [Unit.name]: docs }
       stub(ContentConnection, 'get', () => (insertDocs))
-      expect(UnitCollection.find().count()).to.deep.equal(0)
+      expect(await UnitCollection.countDocuments({})).to.deep.equal(0)
 
       stubInvocation()
       stubConnection()
@@ -200,9 +197,8 @@ describe('ContentServer', function () {
         removed: 0,
         skipped: 1
       })
-      const cursor = UnitCollection.find()
-      expect(cursor.count()).to.equal(1)
-      expect(cursor.fetch()).to.deep.equal([docs[0]])
+      expect(await UnitCollection.countDocuments({})).to.equal(1)
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal([docs[0]])
     })
     it('skips if no docs are to be synced', async () => {
       const docs = [
@@ -210,8 +206,8 @@ describe('ContentServer', function () {
         { _id: Random.id(), title: 'bar' }
       ]
       stub(ContentConnection, 'get', () => ({}))
-      docs.forEach(doc => UnitCollection.insert(doc))
-      expect(UnitCollection.find().fetch()).to.deep.equal(docs)
+      await forEachAsync(docs, doc => UnitCollection.insert(doc))
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
       stubConnection()
@@ -223,9 +219,8 @@ describe('ContentServer', function () {
         removed: 0,
         skipped: 0
       })
-      const cursor = UnitCollection.find()
-      expect(cursor.count()).to.equal(2)
-      expect(cursor.fetch()).to.deep.equal(docs)
+      expect(await UnitCollection.countDocuments({})).to.equal(2)
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
     })
     it('allows to hook into beforeSyncUpsert', done => {
       const docs = [
@@ -236,14 +231,13 @@ describe('ContentServer', function () {
       stubInvocation()
       stubConnection()
 
-      const fn = ({ type, doc }) => {
+      const fn = async ({ type, doc }) => {
         expect(type).to.equal('insert')
         expect(doc).to.deep.equal(docs[0])
         ContentServer.off(ContentServer.hooks.beforeSyncUpsert, Unit.name, fn)
         done()
       }
       ContentServer.on(ContentServer.hooks.beforeSyncUpsert, Unit.name, fn)
-
       ContentServer
         .sync({ name: Unit.name })
         .catch(done)
@@ -257,7 +251,7 @@ describe('ContentServer', function () {
       stubInvocation()
       stubConnection()
 
-      const fn = (stats) => {
+      const fn = async (stats) => {
         expect(stats).to.deep.equal({
           name: Unit.name,
           created: 1,

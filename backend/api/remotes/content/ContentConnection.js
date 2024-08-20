@@ -14,9 +14,10 @@ const contentUrl = Meteor.settings.remotes.content.url
 /**
  * Establishes a basic, unauthenticated connection.
  * @param log {function} log function
+ * @async
  * @return {Promise<void>}
  */
-ContentConnection.connect = ({ log } = {}) => {
+ContentConnection.connect = function connect ({ log } = {}) {
   return new Promise((resolve, reject) => {
     if (log) log('establish connection to', contentUrl)
     contentConnection = DDP.connect(contentUrl, {
@@ -38,11 +39,12 @@ ContentConnection.connect = ({ log } = {}) => {
  * Returns, whether the connection is fully established
  * @return {boolean}
  */
-ContentConnection.isConnected = () =>
-  typeof contentConnection?.status === 'function'
-    ? contentConnection.status()?.status === 'connected'
-    : false
-
+ContentConnection.isConnected = function isConnected () {
+  if (typeof contentConnection?.status !== 'function') {
+    return false
+  }
+  return contentConnection.status()?.status === 'connected'
+}
 /**
  * Get doc(s) from a collection
  * @param name {string} name of the context to get docs from
@@ -50,7 +52,7 @@ ContentConnection.isConnected = () =>
  * @param log
  * @return {Promise}
  */
-ContentConnection.get = ({ name, ids = [], log }) => {
+ContentConnection.get = function get ({ name, ids = [], log }) {
   return new Promise((resolve) => {
     const methodName = ids.length > 0
       ? `${name}.methods.get`

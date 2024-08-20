@@ -14,6 +14,8 @@ import { getCollection } from '../../../api/utils/getCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
+import { expectThrown } from '../../../tests/helpers/expectThrown'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const MapCollection = initTestCollection(MapData)
 const FieldCollection = initTestCollection(Field)
@@ -35,9 +37,9 @@ const allCollections = [
 const dimensionsOrder = Meteor.settings.remotes.content.remap.dimensions.order
 
 const mockDocuments = () => {
-  Object.entries(mapFixtures).forEach(([name, docs]) => {
+  return forEachAsync(Object.entries(mapFixtures), async ([name, docs]) => {
     const collection = getCollection(name)
-    docs.forEach(doc => collection.insert(doc))
+    await forEachAsync(docs, doc => collection.insertAsync(doc))
   })
 }
 
@@ -46,103 +48,122 @@ describe('MapData', function () {
 
   describe(MapData.create.name, function () {
     // throws errors; this is the case when crucial
-    // or fundmental data is not avialable.
+    // or fundamental data is not available.
     // such data is:
     // - field
     // - dimension(s)
     // - level(s)
 
-    it('throws if there is no field doc', function () {
+    it('throws if there is no field doc', async () => {
       const field = Random.id()
-      expect(() => MapData.create({ field, dimensionsOrder }))
-        .to.throw(`Expect field doc by _id "${field}"`)
+      await expectThrown({
+        fn: () => MapData.create({ field, dimensionsOrder }),
+        message: `Expect field doc by _id "${field}"`
+      })
     })
-    it('throws if there are no dimensions', function () {
+    it('throws if there are no dimensions', async () => {
       const field = Random.id()
-      FieldCollection.insert({ _id: field })
-      expect(() => MapData.create({ field, dimensionsOrder }))
-        .to.throw('Expect at least one dimension doc')
+      await FieldCollection.insertAsync({ _id: field })
+      await expectThrown({
+        fn: () => MapData.create({ field, dimensionsOrder }),
+        message: 'Expect at least one dimension doc'
+      })
     })
-    it('throws if there are no levels', function () {
+    it('throws if there are no levels', async () => {
       const field = Random.id()
-      FieldCollection.insert({ _id: field })
-      DimensionCollection.insert({})
-      expect(() => MapData.create({ field, dimensionsOrder }))
-        .to.throw('Expect at least one level doc')
+      await FieldCollection.insertAsync({ _id: field })
+      await DimensionCollection.insertAsync({})
+      await expectThrown({
+        fn: () => MapData.create({ field, dimensionsOrder }),
+        message: 'Expect at least one level doc'
+      })
     })
 
-    it('throws if there are no unit sets for the testcycle', function () {
-      mockDocuments()
-      const testCycleDoc = TestCycleCollection.findOne()
+    it('throws if there are no unit sets for the testcycle', async () => {
+      await mockDocuments()
+      const testCycleDoc = await TestCycleCollection.findOneAsync()
       expect(testCycleDoc.unitSets.length).to.be.above(0)
       TestCycleCollection.update(testCycleDoc._id, { $set: { unitSets: [] } })
 
-      const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
-        .to.throw(`Integrity failed: Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`)
+      const fieldDoc = await FieldCollection.findOneAsync()
+      await expectThrown({
+        fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
+        message: `Integrity failed: Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
+      })
     })
 
-    it('throws if there is a mismatch between expected and actual unit', function () {
-      mockDocuments()
-      UnitSetCollection.remove({})
-      const testCycleDoc = TestCycleCollection.findOne()
+    it('throws if there is a mismatch between expected and actual unit', async () => {
+      await mockDocuments()
+      await UnitSetCollection.removeAsync({})
+      const testCycleDoc = await TestCycleCollection.findOneAsync()
       const expected = testCycleDoc.unitSets.length
-      const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
-        .to.throw(`Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`)
+      const fieldDoc = await FieldCollection.findOneAsync()
+      await expectThrown({
+        fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
+        message: `Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`
+      })
     })
 
-    it('throws if there are no units for a unit set', function () {
-      mockDocuments()
-      const testCycleDoc = TestCycleCollection.findOne()
+    it('throws if there are no units for a unit set', async () => {
+      await mockDocuments()
+      const testCycleDoc = await TestCycleCollection.findOneAsync()
       const unitSetId = testCycleDoc.unitSets[0]
-      UnitSetCollection.update(unitSetId, { $set: { units: [] } })
+      await UnitSetCollection.updateAsync(unitSetId, { $set: { units: [] } })
 
-      const fieldDoc = FieldCollection.findOne()
-      const unitSetDoc = UnitSetCollection.findOne(unitSetId)
-      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
-        .to.throw(`Expect units for unit set ${unitSetDoc.shortCode} to be above 0`)
+      const fieldDoc = await FieldCollection.findOneAsync()
+      const unitSetDoc = await UnitSetCollection.findOneAsync(unitSetId)
+      await expectThrown({
+        fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
+        message: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0`
+      })
     })
 
-    it('throws if there is a mismatch between expected and actual units', function () {
-      mockDocuments()
-      const testCycleDoc = TestCycleCollection.findOne()
+    it('throws if there is a mismatch between expected and actual units', async () => {
+      await mockDocuments()
+      const testCycleDoc = await TestCycleCollection.findOneAsync()
       const unitSetId = testCycleDoc.unitSets[0]
-      const unitSetDoc = UnitSetCollection.findOne(unitSetId)
+      const unitSetDoc = await UnitSetCollection.findOneAsync(unitSetId)
       const expectedUnits = unitSetDoc.units.length
-      UnitCollection.remove({})
+      await UnitCollection.removeAsync({})
 
-      const fieldDoc = FieldCollection.findOne()
-      expect(() => MapData.create({ field: fieldDoc._id, dimensionsOrder }))
-        .to.throw(`Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got 0`)
+      const fieldDoc = await FieldCollection.findOneAsync()
+      await expectThrown({
+        fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
+        message: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got 0`
+      })
     })
 
-    it('does not create a map if no test cycle at all is found for given field/level/dimension', function () {
-      mockDocuments()
-      TestCycleCollection.remove(TestCycleCollection.findOne()._id)
+    it('does not create a map if no test cycle at all is found for given field/level/dimension', async () => {
+      await mockDocuments()
+      const removed = await TestCycleCollection.removeAsync({
+        _id: (await TestCycleCollection.findOneAsync())._id
+      })
+      expect(removed).to.equal(1)
 
-      const fieldDoc = FieldCollection.findOne()
-      const data = MapData.create({ field: fieldDoc._id, dimensionsOrder })
-      const mapDoc = MapData.get({ field: fieldDoc._id, dimensionsOrder })
+      const fieldDoc = await FieldCollection.findOneAsync()
+      const data = await MapData.create({ field: fieldDoc._id, dimensionsOrder })
+      const mapDoc = await MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(data).to.equal(undefined)
       expect(mapDoc).to.equal(undefined)
     })
 
-    it('creates a new Map from the data', function () {
-      mockDocuments()
+    it('creates a new Map from the data', async () => {
+      await mockDocuments()
 
-      const fieldDoc = FieldCollection.findOne()
-      MapData.create({ field: fieldDoc._id, dimensionsOrder })
+      const fieldDoc = await FieldCollection.findOneAsync()
+      await MapData.create({ field: fieldDoc._id, dimensionsOrder })
 
       const toId = doc => doc._id
-      const { dimensions, entries, field, levels, maxProgress } = MapData.get({ field: fieldDoc._id, dimensionsOrder })
+      const { dimensions, entries, field, levels, maxProgress } = await MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(field).to.equal(fieldDoc._id)
-      expect(levels).to.deep.equal(LevelCollection.find().fetch().map(toId))
+
+
+      expect(levels).to.deep.equal((await LevelCollection.find().fetchAsync()).map(toId))
       expect(dimensions.map(entry => entry._id))
-        .to.deep.equal(DimensionCollection.find().fetch().map(toId))
-      expect(entries.length).to.equal(UnitSetCollection.find().count() + 1)
+        .to.deep.equal((await DimensionCollection.find().fetchAsync()).map(toId))
+      expect(entries.length).to.equal(await UnitSetCollection.countDocuments({}) + 1)
 
       const milestone = entries.pop()
       expect(milestone.type).to.equal('milestone')
@@ -178,7 +199,7 @@ describe('MapData', function () {
       })
 
       // check testcycles overall progress
-      const testCycleDoc = TestCycleCollection.findOne({ field: fieldDoc._id })
+      const testCycleDoc = await TestCycleCollection.findOneAsync({ field: fieldDoc._id })
       expect(testCycleDoc.progress).to.equal(countedMaxProgress)
       expect(milestone.progress).to.equal(countedMaxProgress)
     })

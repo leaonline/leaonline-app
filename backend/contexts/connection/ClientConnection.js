@@ -40,24 +40,24 @@ ClientConnection.collection = () => connections
 const connections = new Mongo.Collection(null)
 const log = createLog({ name: ClientConnection.name, type: 'log' })
 
-ClientConnection.onConnected = function ({ id, onClose, clientAddress, httpHeaders = {} }) {
+ClientConnection.onConnected = async function ({ id, onClose, clientAddress, httpHeaders = {} }) {
   log('on connect', id, clientAddress, httpHeaders['user-agent'])
   const timestamp = new Date()
-  connections.upsert({ id }, { $set: { id, clientAddress, httpHeaders, timestamp } })
+  await connections.upsertAsync({ id }, { $set: { id, clientAddress, httpHeaders, timestamp } })
   onClose(() => ClientConnection.onDisconnect({ id, clientAddress, httpHeaders }))
 }
 
-ClientConnection.onDisconnect = ({ id, clientAddress, httpHeaders }) => {
+ClientConnection.onDisconnect = async ({ id, clientAddress, httpHeaders }) => {
   log('on disconnect', id, clientAddress, httpHeaders)
-  connections.remove({ id })
+  await connections.removeAsync({ id })
 }
 
-ClientConnection.onLogin = ({ connection = {}, user = {} }) => {
+ClientConnection.onLogin = async ({ connection = {}, user = {} }) => {
   log('on login', connection.id, '=>', user._id)
   const id = connection.id
   const userId = user._id
   const isDev = !!user.isDev
-  connections.update({ id }, { $set: { userId, isDev } })
+  await connections.updateAsync({ id }, { $set: { userId, isDev } })
 }
 
 ClientConnection.methods = {}
@@ -75,11 +75,11 @@ ClientConnection.methods.getAll = {
       optional: true
     }
   },
-  run: function ({ dependencies = {} } = {}) {
+  run: async function (/* { dependencies = {} } = {} */) {
+    const { userId } = this
+    const docs = await connections.find({ userId: { $ne: userId } }).fetchAsync()
     return {
-      [ClientConnection.name]: connections
-        .find({ userId: { $ne: this.userId } })
-        .fetch()
+      [ClientConnection.name]: docs
     }
   }
 }

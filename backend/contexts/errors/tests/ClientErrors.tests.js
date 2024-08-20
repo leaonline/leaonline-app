@@ -20,10 +20,7 @@ describe(ClientErrors.name, function () {
     restoreAll()
   })
   it('it stores the error', async () => {
-    let emailSent = false
-    stub(Email, 'send', () => {
-      emailSent = true
-    })
+    const emailSent = stub(Email, 'sendAsync', async () => {})
 
     const options = {
       name: 'error',
@@ -33,8 +30,8 @@ describe(ClientErrors.name, function () {
     }
 
     const userId = Random.id()
-    const docId = ClientErrors.methods.send.run.call({ userId }, options)
-    const { _id, createdAt, ...doc } = getCollection(ClientErrors.name).findOne(docId)
+    const docId = await ClientErrors.methods.send.run.call({ userId }, options)
+    const { _id, createdAt, ...doc } = await getCollection(ClientErrors.name).findOneAsync(docId)
     expect(_id).to.be.a('string')
     expect(createdAt).to.be.instanceOf(Date)
     expect(doc).to.deep.equal({
@@ -49,6 +46,6 @@ describe(ClientErrors.name, function () {
     })
 
     await asyncTimeout(20)
-    expect(emailSent).to.equal(true)
+    expect(emailSent.calledOnce).to.equal(true)
   })
 })

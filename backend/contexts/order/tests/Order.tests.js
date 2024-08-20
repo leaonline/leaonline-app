@@ -19,18 +19,18 @@ describe(Order.name, function () {
   setupAndTeardown([OrderCollection])
 
   describe(Order.init.name, () => {
-    it('creates a default doc once', () => {
-      const count = n => expect(OrderCollection.find().count()).to.equal(n)
-      count(0)
-      Order.init()
-      count(1)
-      Order.init()
-      count(1)
-      Order.init()
-      Order.init()
-      Order.init()
-      Order.init()
-      count(1)
+    it('creates a default doc once', async () => {
+      const count = async n => expect(await OrderCollection.countDocuments({})).to.equal(n)
+      await count(0)
+      await Order.init()
+      await count(1)
+      await Order.init()
+      await count(1)
+      await Order.init()
+      await Order.init()
+      await Order.init()
+      await Order.init()
+      await count(1)
     })
   })
 

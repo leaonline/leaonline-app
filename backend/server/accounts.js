@@ -19,13 +19,9 @@ rateLimitAccounts()
 //  //////////////////////////////////////////////////////////
 //  OAUTH2 SETUP
 //  //////////////////////////////////////////////////////////
-Meteor.startup(() => {
-  setupOAuth()
-})
-
-function setupOAuth () {
+Meteor.startup(async () => {
   const { oauth } = Meteor.settings
-  ServiceConfiguration.configurations.upsert(
+  await ServiceConfiguration.configurations.upsertAsync(
     { service: 'lea' },
     {
       $set: {
@@ -47,7 +43,9 @@ function setupOAuth () {
   })
 
   Accounts.registerLoginHandler(defaultDDPLoginName, loginHandler)
-}
+})
+
+
 
 // //////////////////////////////////////////////////////////
 // Default accounts settings
@@ -68,10 +66,10 @@ Accounts.config({
   }
 })
 
-Accounts.onLogin(info => {
+Accounts.onLogin(async info => {
   if (!info.allowed) { return }
-  ClientConnection.onLogin(info)
-  onAccountLoginHandler(info)
+  await ClientConnection.onLogin(info)
+  await onAccountLoginHandler(info)
 })
 
 // //////////////////////////////////////////////////////////

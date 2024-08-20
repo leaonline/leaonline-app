@@ -103,11 +103,12 @@ Session.schema = {
 
 /**
  * Creates a new Session.
+ * @async
  * @param userId {string} associated user's _id
  * @param unitSetDoc {string} associated unitSet _id
  * @return {object} the new created session document
  */
-Session.create = ({ userId, unitSetDoc }) => {
+Session.create = async function create ({ userId, unitSetDoc }) {
   log('create', { userId, unitSetId: unitSetDoc._id })
   const insertDoc = {
     userId: userId,
@@ -129,8 +130,8 @@ Session.create = ({ userId, unitSetDoc }) => {
   }
 
   const SessionCollection = getCollection(Session.name)
-  const sessionId = SessionCollection.insert(insertDoc)
-  return SessionCollection.findOne(sessionId)
+  const sessionId = await SessionCollection.insertAsync(insertDoc)
+  return SessionCollection.findOneAsync(sessionId)
 }
 
 /**
@@ -159,26 +160,27 @@ const getNextUnitId = ({ unitId, units = [] }) => {
 
 /**
  * Gets the current session doc and unitset doc for a given unit set id and user id
+ * @async
  * @param unitSet {string} the _id of the associated unitset
  * @param userId {string} the _id of the associated user
  * @return {{unitSetDoc: any, sessionDoc: any, unitDoc}}
  */
-Session.get = ({ unitSet, userId }) => {
+Session.get = async function get ({ unitSet, userId }) {
   log('get', { unitSet, userId })
-  const unitSetDoc = getCollection(UnitSet.name).findOne(unitSet)
+  const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(unitSet)
   const sessionQuery = { unitSet, userId, completedAt: { $exists: false } }
 
-  let sessionDoc = getCollection(Session.name).findOne(sessionQuery)
+  let sessionDoc = await getCollection(Session.name).findOneAsync(sessionQuery)
 
   // if we have no sessionDoc we need to create a new session!
   if (!sessionDoc) {
-    sessionDoc = Session.create({ userId, unitSetDoc })
+    sessionDoc = await Session.create({ userId, unitSetDoc })
   }
 
   let unitDoc
 
   if (sessionDoc.unit) {
-    unitDoc = getCollection(Unit.name).findOne(sessionDoc.unit)
+    unitDoc = await getCollection(Unit.name).findOneAsync(sessionDoc.unit)
   }
 
   return { sessionDoc, unitSetDoc, unitDoc }
@@ -201,17 +203,18 @@ Session.get = ({ unitSet, userId }) => {
  *    - prefetch successor of next unit id and set this as new "next" unit
  *    - return next unit id
  *
+ * @async
  * @param sessionId {string} _id of the session
  * @param userId {string} _id of the user
  * @return {null|string} null if no next unit is found por a unitId if next unit is found
  */
-Session.update = ({ sessionId, userId }) => {
+Session.update = async function update ({ sessionId, userId }) {
   log('update', { sessionId, userId })
   const SessionCollection = getCollection(Session.name)
   const UnitCollection = getCollection(Unit.name)
 
   // 1 get sessionDoc by sessionId+userId
-  const sessionDoc = SessionCollection.findOne({ _id: sessionId, userId })
+  const sessionDoc = await SessionCollection.findOneAsync({ _id: sessionId, userId })
   ensureDocument({
     document: sessionDoc,
     docId: sessionId,
@@ -220,7 +223,7 @@ Session.update = ({ sessionId, userId }) => {
   })
 
   // 2 get the current unitDoc by sessionDoc.unit
-  const unitSetDoc = getCollection(UnitSet.name).findOne(sessionDoc.unitSet)
+  const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(sessionDoc.unitSet)
   ensureDocument({
     document: unitSetDoc,
     docId: sessionDoc.unitSet,
@@ -230,7 +233,7 @@ Session.update = ({ sessionId, userId }) => {
   let unitDoc
 
   if (sessionDoc.unit) {
-    unitDoc = UnitCollection.findOne(sessionDoc.unit)
+    unitDoc = await UnitCollection.findOneAsync(sessionDoc.unit)
 
     ensureDocument({
       document: unitDoc,
@@ -254,10 +257,10 @@ Session.update = ({ sessionId, userId }) => {
       $set: { completedAt: timestamp }
     }
     if (unitDoc) {
-      completeDoc.$inc = get$inc({ unitDoc, sessionId, userId })
+      completeDoc.$inc = await get$inc({ unitDoc, sessionId, userId })
     }
 
-    SessionCollection.update(sessionId, completeDoc)
+    await SessionCollection.updateAsync(sessionId, completeDoc)
     return null
   }
 
@@ -275,7 +278,7 @@ Session.update = ({ sessionId, userId }) => {
   // we can only update the progress if there is a unitDoc
   // on the contrary - if there is no unitDoc  then we are still in the story
   if (unitDoc) {
-    updateDoc.$inc = get$inc({ unitDoc, sessionId, userId })
+    updateDoc.$inc = await get$inc({ unitDoc, sessionId, userId })
   }
 
   const nextUnitId = getNextUnitId({
@@ -292,14 +295,14 @@ Session.update = ({ sessionId, userId }) => {
   }
 
   log('update doc:', { sessionId, updateDoc })
-  SessionCollection.update(sessionId, updateDoc)
+  await SessionCollection.updateAsync(sessionId, updateDoc)
 
   return sessionDoc.nextUnit
 }
 
-const get$inc = ({ userId, unitDoc, sessionId }) => ({
+const get$inc = async ({ userId, unitDoc, sessionId }) => ({
   progress: unitDoc.pages.length,
-  competencies: Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
+  competencies: await Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
 })
 
 /**
@@ -328,14 +331,14 @@ Session.methods.update = {
     }
   },
   run: onServerExec(function () {
-    return function ({ sessionId }) {
+    return async function ({ sessionId }) {
       const { userId } = this
-      const nextUnitId = Session.update({ sessionId, userId })
+      const nextUnitId = await Session.update({ sessionId, userId })
 
       // get the updated session doc and update the user progress
-      const sessionDoc = getCollection(Session.name).findOne({ _id: sessionId })
+      const sessionDoc = await getCollection(Session.name).findOneAsync({ _id: sessionId })
 
-      Progress.update({
+      await Progress.update({
         userId: userId,
         unitSetId: sessionDoc.unitSet,
         fieldId: sessionDoc.fieldId,
@@ -371,15 +374,15 @@ Session.methods.getAll = {
       .add(Field, 'fieldId')
       .add(Dimension, 'dimensionId')
 
-    return function ({ dependencies } = {}) {
-      const docs = getCollection(Session.name).find({}, {
+    return async function ({ dependencies } = {}) {
+      const docs = await getCollection(Session.name).find({}, {
         hint: {
           $natural: -1
         }
-      }).fetch()
+      }).fetchAsync()
 
       const data = { [Session.name]: docs }
-      resolveDependencies
+      await resolveDependencies
         .output(data)
         .run({ docs, dependencies })
 

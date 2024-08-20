@@ -14,7 +14,7 @@ export const environmentExtensionMixin = function (options) {
   const log = createLog({ name: options.name, includeInTests: true })
   const runFct = options.run
 
-  options.run = function run (...args) {
+  options.run = async function run (...args) {
     // safe-assign our extensions to the environment document
     Object.assign(this, { log })
 
