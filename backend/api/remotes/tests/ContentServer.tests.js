@@ -206,7 +206,7 @@ describe('ContentServer', function () {
         { _id: Random.id(), title: 'bar' }
       ]
       stub(ContentConnection, 'get', () => ({}))
-      await forEachAsync(docs, doc => UnitCollection.insert(doc))
+      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()

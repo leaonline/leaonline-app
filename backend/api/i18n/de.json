@@ -12,7 +12,9 @@
     "restore": "Code",
     "voice": "Voice",
     "speed": "Voice-speed",
-    "lastLogin": "Zuletzt on"
+    "lastLogin": "Zuletzt on",
+    "research": "Forschung?",
+    "isDev": "Dev?"
   },
   "session": {
     "title": "Durchlauf",
@@ -43,9 +45,36 @@
     "terms": "Nutzungsbedingungen",
     "contact": "Kontakt"
   },
+  "mapIcons": {
+    "title": "Map-Icons",
+    "fieldId": "Berufsfeld"
+  },
   "feedback": {
     "title": "Feedback",
     "threshold": "Threshold",
     "phrases": "Sätze"
+  },
+  "order": {
+    "title": "Reihenfolgen",
+    "fields": "Berufsfelder",
+    "dimensions": "Dimensionen"
+  },
+  "clientConnection": {
+    "title": "Aktive Clients",
+    "id": "ID",
+    "timestamp": "Wann?",
+    "clientAddress": "IP",
+    "userId": "User-ID",
+    "isDev": "Dev-Account?",
+    "isBackend": "Core-Team?"
+  },
+  "unitSetAppraisal": {
+    "title": "User-Bewertung",
+    "createdAt":"gesendet am",
+    "userId": "User-ID",
+    "fieldId": "Berufsfeld",
+    "dimensionId": "Dimension",
+    "unitSetId": "Unit-Set",
+    "response": "Bewertung"
   }
 }

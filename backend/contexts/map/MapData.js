@@ -231,9 +231,9 @@ MapData.create = async (options) => {
     .find()
     .fetchAsync())
     .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
-  const levels = await getCollection('level')
+  const levels = (await getCollection('level')
     .find()
-    .fetch()
+    .fetchAsync())
     .sort(byLevel)
 
   checkIntegrity({
@@ -304,6 +304,8 @@ MapData.create = async (options) => {
         return warn(fieldDoc.title, 'has no TestCycle for ', dimensionDoc.title, `(${dimensionDoc._id})`, levelDoc.title, `(${levelDoc._id})`)
       }
 
+      log('continue with', fieldDoc.title, dimensionDoc.shortCode, levelDoc.title)
+
       // get unit sets with fallback in case they are undefined on some
       // test cycle docs and to prevent followup errors
       const unitSets = testCycleDoc.unitSets || []
@@ -347,9 +349,9 @@ MapData.create = async (options) => {
         log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
 
         const units = unitSetDoc.units || []
-        const unitCursor = UnitCollection.find({ _id: { $in: units } })
         const expectedUnits = units.length
-        const actualUnits = unitCursor.count()
+        const query = { _id: { $in: units } }
+        const actualUnits = await UnitCollection.countDocuments(query)
 
         checkIntegrity({
           condition: expectedUnits > 0,
@@ -464,6 +466,7 @@ MapData.create = async (options) => {
   if (dryRun || mapData.entries.length === 0) { return }
 
   // Otherwise, we can safely update the collection.
+
   return getCollection(MapData.name).upsertAsync({ field }, { $set: mapData })
 }
 

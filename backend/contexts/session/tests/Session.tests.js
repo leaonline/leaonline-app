@@ -126,7 +126,7 @@ describe('Session', function () {
       const unitId = Random.id()
       const unitSet = Random.id()
 
-      UnitCollection.insert({ _id: unitId, shortCode: 'foo' })
+      await UnitCollection.insertAsync({ _id: unitId, shortCode: 'foo' })
       await UnitSetCollection.insertAsync({
         _id: unitSet,
         field: Random.id(),

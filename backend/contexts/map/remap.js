@@ -33,9 +33,10 @@ export const runRemap = async ({ active, dryRun, dimensions } = {}) => {
 
 
   // create map data for each field
-  for (const field of fields) {
+  await forEachAsync(fields, async field => {
     const fieldId = field._id
-    await MapData.create({ field: fieldId, dryRun, dimensionsOrder: dimensions.order })
+    const result = await MapData.create({ field: fieldId, dryRun, dimensionsOrder: dimensions.order })
+    if (!result) return console.warn('runRemap: skip for field', fieldId, field.shortCode, result)
 
     const mapDoc = await MapData.get({ field: fieldId })
 
@@ -50,7 +51,7 @@ export const runRemap = async ({ active, dryRun, dimensions } = {}) => {
         await Achievements.update({ dimensionId, fieldId, maxProgress, maxCompetencies })
       }
     })
-  }
+  })
 
   // let the clients know, that we have updated the data
   if (dryRun === false) {
