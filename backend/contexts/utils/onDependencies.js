@@ -2,8 +2,10 @@ import { getCollection } from '../../api/utils/getCollection'
 import { createIdSet } from '../../api/utils/createIdSet'
 
 class DependencyBuilder {
-  constructor () {
+  constructor ({ allowEmptyDocs = false, allowEmptyDeps = false } = {}) {
     this.added = new Map()
+    this.allowEmptyDocs = allowEmptyDocs
+    this.allowEmptyDeps = allowEmptyDeps
     return this
   }
 
@@ -20,10 +22,11 @@ class DependencyBuilder {
   }
 
   async run ({ docs, dependencies }) {
-    if (!docs?.length || !dependencies?.length) {
+    const skipDocs = !docs?.length && !this.allowEmptyDocs
+    const skipDeps = !dependencies?.length && !this.allowEmptyDeps
+    if (skipDocs || skipDeps) {
       return
     }
-
     for (const dep of dependencies) {
       const { name } = dep
       const fieldNames = this.added.get(name)
@@ -37,6 +40,6 @@ class DependencyBuilder {
   }
 }
 
-export const onDependencies = () => {
-  return new DependencyBuilder()
+export const onDependencies = (options) => {
+  return new DependencyBuilder(options)
 }

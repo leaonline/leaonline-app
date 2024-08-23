@@ -53,6 +53,34 @@ UnitSetAppraisal.schema = {
     type: Number,
     min: 0,
     max: 4
+  },
+
+  /**
+   * Additional reason can help
+   * to improve on the content
+   */
+  reason: {
+    type: String,
+    optional: true
+  },
+
+  /**
+   * Additionally we want to see if the score
+   * was high or low
+   */
+  score: {
+    type: Number,
+    optional: true
+  },
+
+  /**
+   * Additionally we store the sessionId
+   * to draw potential conclusion from the
+   * response
+   */
+  sessionId: {
+    type: String,
+    optional: true
   }
 }
 

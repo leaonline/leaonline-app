@@ -94,14 +94,9 @@ MapIcons.methods.getAll = {
   },
   backend: true,
   run: async function ({ dependencies } = {}) {
-    const docs = await getCollection(MapIcons.name).find().fetchAsync()
-    const data = { [MapIcons.name]: docs }
-
-    await onDependencies()
-      .add(Field, 'fieldId')
-      .output(data)
-      .run({ dependencies, docs })
-
-    return data
+    return {
+      [MapIcons.name]: await getCollection(MapIcons.name).find().fetchAsync(),
+      [Field.name]: await getCollection(Field.name).find().fetchAsync()
+    }
   }
 }

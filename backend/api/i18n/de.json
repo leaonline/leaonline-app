@@ -36,7 +36,10 @@
     "fieldId": "Berufsfeld"
   },
   "mapData": {
-    "title": "Maps"
+    "title": "Maps",
+    "field": "Berufsfeld",
+    "maxProgress": "Max. Fortschritt",
+    "maxCompetencies": "Max. Kompetenzen"
   },
   "legal": {
     "title": "Rechtliches",

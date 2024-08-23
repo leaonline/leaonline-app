@@ -3,6 +3,8 @@ import { createLog } from '../../infrastructure/log/createLog'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 import { cursorToMap } from '../../api/utils/cursorToMap'
 import { forEachAsync } from '../../infrastructure/async/forEachAsync'
+import { Field } from '../content/Field'
+import { onDependencies } from '../utils/onDependencies'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -29,7 +31,11 @@ MapData.schema = {
    * Each map is unique for a given field.
    */
   field: {
-    type: String
+    type: String,
+    dependency: {
+      collection: Field.name,
+      field: Field.representative
+    }
   },
 
   /**
@@ -515,10 +521,15 @@ MapData.methods.getAll = {
     }
   },
   backend: true,
-  run: async function () {
+  run: async function ({ dependencies }) {
     const docs = await getCollection(MapData.name)
       .find({}, { hint: { $natural: -1 } })
       .fetchAsync()
-    return { [MapData.name]: docs }
+    const data = { [MapData.name]: docs }
+    await onDependencies()
+      .add(Field.name, 'field')
+      .output(data)
+      .run({ docs, dependencies })
+    return data
   }
 }

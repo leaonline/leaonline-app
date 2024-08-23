@@ -13,11 +13,12 @@ export const createReachabilityUrl = ({ path }) => {
 
   paths.add(path)
   const log = createLog({ name: path })
+  log('create reachability endpoint at', path)
 
-  WebApp.rawHandlers.use(path, function (req, res) {
-    log('check', req.headers)
-    res.set('Access-Control-Expose-Headers', 'Content-Length')
-    res.set('Content-Length', 0)
+  WebApp.handlers.use(path, function (req, res) {
+    log('check by', req.headers?.host)
+    res.append('Access-Control-Expose-Headers', 'Content-Length')
+    res.append('Content-Length', 0)
     res.status(204)
     res.end()
   })

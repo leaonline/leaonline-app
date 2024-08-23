@@ -46,9 +46,10 @@ Order.methods.update = {
     ...Order.schema
   },
   run: async function ({ _id, ...orderDoc }) {
+    const OrderCollection = getCollection(Order.name)
     const selector = { _id }
     const modifier = { $set: orderDoc }
-    const updated = await getCollection(Order.name).updateAsync(selector, modifier)
+    const updated = await OrderCollection.updateAsync(selector, modifier)
     await SyncState.update(Order.name)
     return updated
   }
@@ -72,8 +73,32 @@ Order.methods.get = {
       optional: true
     }
   },
-  run: async function ({ _id /*, dependencies */ }) {
+  run: async function ({ _id, dependencies }) {
     return getCollection(Order.name).findOneAsync()
+  }
+}
+
+Order.methods.getAll = {
+  name: 'order.methods.getAll',
+  backend: true,
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  run: async function ({ dependencies }) {
+    const data = {
+      [Order.name]: await getCollection(Order.name).findOneAsync()
+    }
+    data[Field.name] = await getCollection(Field.name).find().fetchAsync()
+    data[Dimension.name] = await getCollection(Dimension.name).find().fetchAsync()
+    return data
   }
 }
 

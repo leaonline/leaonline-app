@@ -1,5 +1,6 @@
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { getCollection } from '../../api/utils/getCollection'
+import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
 
 /**
  * This is a context, providing methods that simply delegate code to the
@@ -65,9 +66,21 @@ Content.methods.map = {
   },
   run: onServerExec(function () {
     import { MapData } from '../map/MapData'
-
-    return function ({ fieldId }) {
-      return MapData.get({ field: fieldId })
+    import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
+    import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
+    return async function ({ fieldId }) {
+      const mapData = await MapData.get({ field: fieldId })
+      if (!mapData) {
+        Meteor.defer(() => notifyUsersAboutError(
+          new DocNotFoundError('mapData.notFound', {
+            fieldId,
+            method: Content.methods.map.name
+          }),
+          DocNotFoundError.name
+        ))
+        return { empty: true }
+      }
+      return mapData
     }
   })
 }
