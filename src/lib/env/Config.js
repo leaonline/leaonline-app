@@ -29,6 +29,7 @@ Config.debug = {}
  * This is useful, if you want to debug positioning, padding and margin or flex layout.
  */
 Config.debug.layoutBorders = debug.layoutBorders
+Config.debug.connection = debug.connection
 
 Config.log = {}
 Config.log.level = log.level

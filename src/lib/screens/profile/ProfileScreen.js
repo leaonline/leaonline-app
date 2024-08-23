@@ -3,7 +3,6 @@ import { SafeAreaView, ScrollView, View } from 'react-native'
 import { AccountInfo } from './account/AccountInfo'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
-import { TTSSettings } from './TTSSettings'
 import { useTimeout } from '../../hooks/useTimeout'
 import { Loading } from '../../components/Loading'
 import { Colors } from '../../constants/Colors'
@@ -30,6 +29,7 @@ export const ProfileScreen = (props) => {
     return (
       <SafeAreaView style={styles.container}>
         <ActionButton
+          containerStyle={{ marginTop: 25 }}
           buttonStyle={styles.achievementsButton}
           titleStyle={styles.achievementButtonTitle}
           iconColor={Colors.secondary}
@@ -37,16 +37,15 @@ export const ProfileScreen = (props) => {
           onPress={() => props.navigation.navigate('achievements')}
           title={t('profileScreen.achievements.title')}
         />
-        <View style={styles.headline}>
-          <Tts
-            text={t('tts.settings')}
-            color={Colors.secondary}
-            align='center'
-            fontStyle={styles.headlineText}
-            id='profileScreen.tts.settings'
-          />
-        </View>
-        <TTSSettings containerStyle={styles.tts} />
+        <ActionButton
+          buttonStyle={styles.achievementsButton}
+          containerStyle={{ marginTop: 25 }}
+          titleStyle={styles.achievementButtonTitle}
+          iconColor={Colors.secondary}
+          color={Colors.white}
+          onPress={() => props.navigation.navigate('ttsprofile')}
+          title={t('tts.settings')}
+        />
         <View style={styles.headline}>
           <Tts
             text={t('accountInfo.title')}

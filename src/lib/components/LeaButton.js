@@ -70,7 +70,7 @@ export const LeaButton = props => {
       setTimeout(async () => {
         await props.onPress()
         setPressed(false)
-      }, 25)
+      }, 50)
     }
   }
 

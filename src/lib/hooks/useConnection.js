@@ -24,10 +24,6 @@ Meteor.connect(Config.backend.url, {
   NetInfo: null
 })
 
-// if (Config.logMeteorRN) {
-//   logMeteor()
-// }
-
 /**
  * Hook that handle auto-reconnect and updates state accordingly.
  * @return {{connected: boolean|null}}

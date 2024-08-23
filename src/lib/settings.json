@@ -61,13 +61,14 @@
   },
   "debug": {
     "layoutBorders": false,
-    "state": false,
-    "sync": false,
-    "home": false,
-    "map": false,
+    "state": true,
+    "sync": true,
+    "home": true,
+    "map": true,
     "unit": false,
-    "tts": false,
-    "accounts": false,
-    "AppSession": false
+    "tts": true,
+    "accounts": true,
+    "AppSession": true,
+    "connection": true
   }
 }

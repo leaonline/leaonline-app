@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -31,6 +31,7 @@ import { MapDevScreen } from '../dev/MapDevScreen'
 import { initAppSession } from '../startup/initAppSession'
 import { getHeaderOptions } from './getHeaderOptions'
 import { LoggingScreen } from '../screens/logging/LoggingScreen'
+import { TTSProfileScreen } from '../screens/profile/tts/TTSProfileScreen'
 
 const { AppSessionProvider } = initAppSession()
 
@@ -55,6 +56,7 @@ export const MainNavigation = (props) => {
   const { state, authContext } = useLogin({ connection: props.connection })
   const { Tts } = useTts()
   const { userToken, isSignout, isDeleted } = state
+
   const renderTitleTts = text => (
     <Tts align='center' fontStyle={styles.titleFont} text={text} />
   )
@@ -64,6 +66,7 @@ export const MainNavigation = (props) => {
       const mapScreenTitle = t('mapScreen.title')
       const profileScreenTitle = t('profileScreen.headerTitle')
       const achievementScreenTitle = t('profileScreen.achievements.title')
+      const ttsProfileScreenTitle = t('profileScreen.tts.title')
       const screens = [
         <Stack.Screen
           name='home'
@@ -145,6 +148,21 @@ export const MainNavigation = (props) => {
             headerTitleAlign: 'center',
             headerLeft: () => (<BackButton icon='arrow-left' />),
             headerTitle: () => renderTitleTts(profileScreenTitle),
+            headerRight: () => (<></>)
+          }}
+        />,
+        <Stack.Screen
+          name='ttsprofile'
+          key='ttsprofile'
+          component={TTSProfileScreen}
+          options={{
+            ...headerOptions,
+            headerStyle,
+            title: ttsProfileScreenTitle,
+            headerBackVisible: false,
+            headerTitleAlign: 'center',
+            headerLeft: () => (<BackButton icon='arrow-left' />),
+            headerTitle: () => renderTitleTts(ttsProfileScreenTitle),
             headerRight: () => (<></>)
           }}
         />,

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { useDocs } from '../../meteor/useDocs'
@@ -31,10 +31,16 @@ export const HomeScreen = props => {
   const { Tts } = useTts()
   const [/* session */, sessionActions] = useContext(AppSessionContext)
   const { syncRequired, complete, progress } = useSync()
-  const { data, error, loading } = useDocs({
+  const [reload, refresh] = useRefresh()
+  const { data, error, loading, loadMessage } = useDocs({
     fn: () => loadHomeData({ syncRequired, complete }),
-    runArgs: [syncRequired, complete]
+    runArgs: [syncRequired, complete],
+    maxAttempts: 1,
+    dataRequired: true,
+    message: 'homeScreen.loading',
+    reload
   })
+
   const selectField = useCallback(async value => {
     const { _id, title } = value
     MapIcons.setField(_id)
@@ -73,7 +79,13 @@ export const HomeScreen = props => {
   }
 
   return (
-    <ScreenBase data={data} loading={loading} error={error} style={styles.container}>
+    <ScreenBase
+      data={data}
+      loading={loading}
+      error={error}
+      style={styles.container}
+      loadMessage={loadMessage}
+      onRefresh={refresh}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.textContainer}>
           <Tts
@@ -91,6 +103,14 @@ export const HomeScreen = props => {
       </ScrollView>
     </ScreenBase>
   )
+}
+
+const useRefresh = () => {
+  const [reload, setReload] = useState(0)
+  const refresh = useCallback(() => {
+    setReload(reload + 1)
+  }, [reload])
+  return [reload, refresh]
 }
 
 const styles = createStyleSheet({

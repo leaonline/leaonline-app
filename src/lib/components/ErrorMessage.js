@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTts } from './Tts'
 import { ActionButton } from './ActionButton'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, Vibration, View } from 'react-native'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Colors } from '../constants/Colors'
 import { Layout } from '../constants/Layout'
@@ -25,6 +25,10 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   const { t } = useTranslation()
   const { Tts } = useTts()
 
+  useEffect(() => {
+    Vibration.vibrate(100)
+  }, [])
+
   if (!error && !message) {
     return null
   }
@@ -43,8 +47,6 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
   }
 
   const debugError = () => {
-    // if (!Config.isDevelopment) { return null }
-
     return (
       <View style={styles.container} accessibilityRole='alert'>
         <Text>Debugging Info</Text>
@@ -61,18 +63,19 @@ export const ErrorMessage = ({ error, message, label, onConfirm }) => {
 
   return (
     <View style={styles.container} accessibilityRole='alert'>
+      <Tts
+        text={textBase}
+        fontStyle={styles.headline}
+        block
+        iconColor={Colors.danger}
+        color={Colors.secondary}
+      />
       <Image
         source={image.src}
         style={styles.image}
         accessibilityRole='image'
         resizeMethod='resize'
         resizeMode='contain'
-      />
-      <Tts
-        text={textBase}
-        block
-        iconColor={Colors.danger}
-        color={Colors.secondary}
       />
       <Tts
         text={t('errors.restart')}
@@ -102,7 +105,12 @@ const styles = createStyleSheet({
     ...Layout.dropShadow()
   },
   image: {
-    flex: 1,
-    width: '100%'
+    shrink: 1,
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10
+  },
+  headline: {
+    fontWeight: 'bold'
   }
 })

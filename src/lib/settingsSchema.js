@@ -78,7 +78,8 @@ const settingsSchema = schema({
     unit: Boolean,
     tts: Boolean,
     accounts: Boolean,
-    AppSession: Boolean
+    AppSession: Boolean,
+    connection: Boolean
   })
 })
 

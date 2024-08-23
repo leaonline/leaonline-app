@@ -17,6 +17,7 @@ import { mergeStyles } from '../../styles/mergeStyles'
 import { Connector } from './components/Connector'
 import nextFrame from 'next-frame'
 import { MapIcons } from '../../contexts/MapIcons'
+import { Layout } from '../../constants/Layout'
 
 const log = Log.create('MapScreen')
 const ITEM_HEIGHT = 100
@@ -45,6 +46,7 @@ export const MapScreen = props => {
   const mapDocs = useDocs({
     runArgs: [session.field, session.loadUserData],
     allArgsRequired: true,
+    debug: true,
     fn: () => loadMapData({
       fieldDoc: session.field,
       loadUserData: session.loadUserData,
@@ -159,7 +161,11 @@ export const MapScreen = props => {
    */
   const mapData = mapDocs.data
 
+
   const renderList = () => {
+    if (mapData?.empty) {
+      return (<LeaText>{"Empty please come back later"}</LeaText>)
+    }
     if (!mapData?.entries?.length) {
       return null
     }
@@ -193,7 +199,7 @@ export const MapScreen = props => {
       {...mapDocs}
       loadMessage={t('mapScreen.loadData')}
       progress={counter}
-      style={styles.container}
+      style={mapDocs.error ? styles.failedContainer : styles.container}
     >
       {renderList()}
     </ScreenBase>
@@ -273,6 +279,9 @@ const styles = createStyleSheet({
     // ...Layout.container()
     marginLeft: 15,
     marginRight: 15
+  },
+  failedContainer: {
+    ...Layout.container()
   },
   scrollView: {
     width: '100%'

@@ -40,12 +40,18 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
 
   // 1. for the current field get map data from cache
   // or load from server, field is required at this step
-  const mapData = mapCache.has(fieldId)
-    ? mapCache.get(fieldId)
-    : await callMeteor({
+  let mapData
+
+  if (mapCache.has(fieldId)) {
+    mapData = mapCache.get(fieldId)
+  }
+
+  if (!mapData) {
+    mapData = await callMeteor({
       name: Config.methods.getMapData,
       args: { fieldId }
     })
+  }
 
   // 2. if data is incomplete return null
   // this requires dimensions, levels and entries
@@ -60,7 +66,7 @@ export const loadMapData = async ({ fieldDoc, loadUserData, onUserDataLoaded }) 
     debug('data incomplete, skip with null')
     debug({ hasData, hasDimensions, hasEntries, hasLevels })
     debug({ mapData })
-    return null
+    return { empty: true }
   }
 
   await nextFrame()

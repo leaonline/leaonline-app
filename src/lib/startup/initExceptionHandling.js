@@ -1,6 +1,7 @@
 /* global ErrorUtils */
 import { Log } from '../infrastructure/Log'
 import { ErrorReporter } from '../errors/ErrorReporter'
+import ErrorUtils from 'react-native/Libraries/vendor/core/ErrorUtils'
 
 export const initExceptionHandling = async () => {
   ErrorUtils.setGlobalHandler((error, isFatal) => {

@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useVoices } from '../hooks/useVoices'
 import { View } from 'react-native'
 import { Loading } from '../components/Loading'
 import { createStyleSheet } from '../styles/createStyleSheet'
 import { Layout } from '../constants/Layout'
-import { LeaButtonGroup } from '../components/LeaButtonGroup'
 import { TTSengine } from '../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 import { isIOS } from '../utils/isIOS'
+import { LeaButton } from '../components/LeaButton'
+import { Colors } from '../constants/Colors'
+import { mergeStyles } from '../styles/mergeStyles'
 
 /**
  * Allows to set the voice for tts.
@@ -21,7 +23,17 @@ import { isIOS } from '../utils/isIOS'
 export const TTSVoiceConfig = props => {
   const { t } = useTranslation()
   const { voices, voicesLoaded, currentVoice } = useVoices()
-  const [selected, setSelected] = useState(false)
+  const [selected, setSelected] = useState(-1)
+
+  // set a default voice
+  useEffect(() => {
+    if (selected === -1) {
+      const index = voices.findIndex(v => v.identifier === currentVoice )
+      if (index > -1) {
+        setSelected(index)
+      }
+    }
+  }, [voices, currentVoice])
 
   if (!voicesLoaded) {
     return (
@@ -38,15 +50,15 @@ export const TTSVoiceConfig = props => {
   }
 
   const justNumbers = voices.length > 3
-  const handleChange = (_, index) => {
+  const handleChange = (index) => {
     const voice = voices[index]
     const text = isIOS()
       ? voice.name
       : getName({ voice, index, justNumbers: false, t })
     setNewVoice({ voice, text })
 
-    if (!selected) {
-      setSelected(true)
+    if (selected !== index) {
+      setSelected(index)
     }
 
     if (props.onChange) {
@@ -54,26 +66,31 @@ export const TTSVoiceConfig = props => {
     }
   }
 
-  const groupData = voices.map((voice, index) => {
-    return getName({ voice, index, justNumbers, t })
-  })
-
   // if we haven't selected anything yet but
   // there is an initial set voice
   // we set its index to being active
-  const activeIndex = selected
-    ? null
-    : voices.findIndex(voice => voice.identifier === currentVoice)
-
   return (
-    <LeaButtonGroup
-      active={activeIndex}
-      data={groupData}
-      style={props.style}
-      onPress={handleChange}
-    />
+    <View style={props.style}>
+      {voices.map((voice, index) => {
+        const name = getName({ voice, index, justNumbers, t })
+        const buttonStyle = {
+          backgroundColor: index === selected ? Colors.primary : Colors.white
+        }
+        return (
+          <View style={styles.container} key={index}>
+            <LeaButton
+              title={name}
+              onPress={() => handleChange(index)}
+              icon='user'
+              color={index === selected ? Colors.white : Colors.primary}
+              buttonStyle={mergeStyles(styles.entry, buttonStyle)}/>
+          </View>
+        )
+      })}
+    </View>
   )
 }
+
 
 /**
  * Resolve the voice name for the voice,
@@ -92,9 +109,11 @@ const getName = ({ voice, index, justNumbers, t }) => {
   }
 
   const value = index + 1
+  const plain = t('tts.voice', { value })
+
   const name = justNumbers
-    ? String(value)
-    : t('tts.voice', { value })
+    ? plain
+    : t('tts.hello', { name: plain })
 
   return name
 }
@@ -120,5 +139,11 @@ const setNewVoice = ({ voice, index, text }) => {
 }
 
 const styles = createStyleSheet({
-  container: Layout.container()
+  container: Layout.container(),
+  row: {
+    flex: 1
+  },
+  entry: {
+    padding: 20
+  }
 })

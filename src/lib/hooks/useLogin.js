@@ -57,8 +57,6 @@ const reducer = (prevState, nextState) => {
   }
 }
 
-/** @private */
-const Data = Meteor.getData()
 
 /**
  * Provides a state and authentication context for components to decide, whether
@@ -92,7 +90,11 @@ export const useLogin = ({ connection }) => {
   useEffect(() => {
     if (!connected || !user || state.profileLoaded) { return }
 
-    loadSettingsFromUserProfile(user)
+    try {
+      loadSettingsFromUserProfile(user)
+    } catch (e) {
+      ErrorReporter.send({ error: e }).catch(Log.error)
+    }
     dispatch({ type: 'PROFILE_LOADED' })
   }, [connected, user])
 
@@ -117,8 +119,8 @@ export const useLogin = ({ connection }) => {
     // Note, that 'onLogin'  is only fired, when the
     // package has successfully restored the login via token!
     else {
-      Data.on('onLogin', handleOnLogin)
-      return () => Data.off('onLogin', handleOnLogin)
+      Meteor.getData().on('onLogin', handleOnLogin)
+      return () => Meteor.getData().off('onLogin', handleOnLogin)
     }
   }, [connected])
 
@@ -221,5 +223,5 @@ export const useLogin = ({ connection }) => {
     }
   }), [])
 
-  return { state, authContext }
+  return { state, user, authContext }
 }

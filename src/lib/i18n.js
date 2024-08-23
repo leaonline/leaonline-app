@@ -15,7 +15,8 @@ const resources = {
     },
     errors: {
       restart: 'Please restart the app.',
-      fallback: 'An unknown error occurred.'
+      fallback: 'An unknown error occurred.',
+      noDataReceived: 'No data has been loaded.'
     },
     common: {
       yes: 'Yes',
@@ -66,13 +67,19 @@ const resources = {
     },
     homeScreen: {
       title: 'Home',
-      text: 'Welcome! Please select a topic.'
+      text: 'Welcome! Please select a topic.',
+      loading: 'Loading fields'
     },
     profileScreen: {
       headerTitle: 'My account',
       progress: 'Overall progress',
       achievements: {
         title: 'My achievements'
+      },
+      tts: {
+        title: 'Language settings',
+        voice: 'Select voice',
+        speed: 'Select speed'
       }
     },
     accountInfo: {
@@ -160,8 +167,9 @@ const resources = {
       timedOut: 'Konnte Inhalte nicht laden.'
     },
     errors: {
-      restart: 'Bitte schließe die App und starte sie neu.',
-      fallback: 'Es ist ein unerwarteter Fehler aufgetreten.'
+      restart: 'Bitte wische mit dem Finger nach unten, um die Seite neu zu laden. Falls das nicht hilft, schließe die App und starte sie neu. Das lea. Team wurde über das Problem informiert.',
+      fallback: 'Es ist ein unerwarteter Fehler aufgetreten.',
+      noDataReceived: 'Daten konnten nicht geladen werden.'
     },
     common: {
       yes: 'Ja',
@@ -214,13 +222,19 @@ const resources = {
     },
     homeScreen: {
       title: 'Start\u00ADseite',
-      text: 'Herzlich Willkommen! Bitte wähle einen Bereich.'
+      text: 'Herzlich Willkommen! Bitte wähle einen Bereich.',
+      loading: 'Berufsfelder werden geladen'
     },
     profileScreen: {
       headerTitle: 'Mein Profil',
       progress: 'Gesamter Fortschritt',
       achievements: {
         title: 'Meine Erfolge'
+      },
+      tts: {
+        title: 'Sprachausgabe',
+        voice: 'Stimme auswählen',
+        speed: 'Sprachtempo auswählen'
       }
     },
     accountInfo: {

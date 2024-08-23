@@ -174,7 +174,7 @@ CircularProgress.propTypes = {
   inActiveStrokeWidth: PropTypes.number,
   showProgressValue: PropTypes.bool
 }
-
+/*
 CircularProgress.defaultProps = {
   value: 0,
   initialValue: 0,
@@ -195,5 +195,5 @@ CircularProgress.defaultProps = {
   inActiveStrokeWidth: 10,
   showProgressValue: true
 }
-
+*/
 export { CircularProgress }

@@ -41,26 +41,27 @@ const runHandlers = name => {
  * Tts stands for Text-To-Speech. It contains an icon and the text to be spoken.
  *
  * @category Components
- * @param {string} props.text: The displayed and spoken text
- * @param {string} props.ttsText: The spoken text, use this if it differs from written text
- * @param {boolean} props.dontShowText: Determines whether the text is displayed (Default 'true')
- * @param {boolean} props.smallButton: Changes the button size from 20 to 15 (Default 'false')
- * @param {boolean=} props.block: Makes the container flexGrow. If this causes problems, use style instead.
- * @param {boolean=} props.asButton: Makes the container a block-sized button
- * @param {boolean=} props.disabled: Makes the button disabled
- * @param {string=} props.color: The color of the icon and the text, in hexadecimal format. Default: Colors.secondary
+ * @param props {object}
+ * @param props.text {string} The displayed and spoken text
+ * @param props.ttsText {string}  The spoken text, use this if it differs from written text
+ * @param props.dontShowText {boolean}  Determines whether the text is displayed (Default 'true')
+ * @param props.smallButton {boolean} Changes the button size from 20 to 15 (Default 'false')
+ * @param props.block {boolean=} Makes the container flexGrow. If this causes problems, use style instead.
+ * @param props.asButton {boolean=} Makes the container a block-sized button
+ * @param props.disabled {boolean=} Makes the button disabled
+ * @param props.color {string=} The color of the icon and the text, in hexadecimal format. Default: Colors.secondary
  *   (examples in ./constants/Colors.js)
- * @param {string=} props.iconColor: The color of the icon in hexadecimal format. Default: Colors.secondary   (examples
+ * @param props.iconColor {string=} The color of the icon in hexadecimal format. Default: Colors.secondary   (examples
  *   in ./constants/Colors.js)
- * @param {string=} props.activeIconColor: The color of the icon when speaking is active
- * @param {number} props.shrink: The parameter to shrink the text. Default: 1
- * @param {number} props.fontSize: The parameter to change the font size of the text. Default: 18
- * @param {string} props.fontStyle: The parameter to change the font style of the text. Default: 'normal' ('italic')
- * @param {object=} props.style: The parameter to change the font style of the text. Default: 'normal' ('italic')
- * @param {string} props.align Defines the vertical alignment of the button and text
- * @param {number} props.paddingTop: Determines the top padding of the text. Default: 8
- * @param {number} props.speed: Determines the speed rate of the voice to speak. Default: 1.0
- * @param {string|number} props.id: The parameter to identify the buttons
+ * @param props.activeIconColor {string=} The color of the icon when speaking is active
+ * @param props.shrink {number} The parameter to shrink the text. Default: 1
+ * @param props.fontSize {number} The parameter to change the font size of the text. Default: 18
+ * @param props.fontStyle {string} The parameter to change the font style of the text. Default: 'normal' ('italic')
+ * @param props.style {object=} The parameter to change the font style of the text. Default: 'normal' ('italic')
+ * @param props.align {string} Defines the vertical alignment of the button and text
+ * @param props.paddingTop {number} Determines the top padding of the text. Default: 8
+ * @param props.speed {number} Determines the speed rate of the voice to speak. Default: 1.0
+ * @param props.id {string|number} The parameter to identify the buttons
  * @returns {JSX.Element}
  * @component
  */

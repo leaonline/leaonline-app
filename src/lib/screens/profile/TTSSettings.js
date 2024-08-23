@@ -7,8 +7,13 @@ import { View } from 'react-native'
 import { mergeStyles } from '../../styles/mergeStyles'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
+import { Colors } from '../../constants/Colors'
+import { useTts } from '../../components/Tts'
+import { useTranslation } from 'react-i18next'
 
 export const TTSSettings = (props) => {
+  const { Tts } = useTts()
+  const { t } = useTranslation()
   const [error, setError] = useState(null)
   const updateConfig = async ({ voice, speed }) => {
     const onError = err => setError(err)
@@ -34,10 +39,28 @@ export const TTSSettings = (props) => {
 
   return (
     <View style={containerStyle}>
+      <View style={styles.row}>
+        <Tts
+          text={t('profileScreen.tts.voice')}
+          color={Colors.secondary}
+          align="center"
+          fontStyle={styles.headlineText}
+          id="profileScreen.tts.voice"
+        />
+      </View>
       <TTSVoiceConfig
         style={styles.panel}
         onChange={voice => updateConfig({ voice })}
       />
+      <View style={styles.row}>
+        <Tts
+          text={t('profileScreen.tts.speed')}
+          color={Colors.secondary}
+          align="center"
+          fontStyle={styles.headlineText}
+          id="profileScreen.tts.speed"
+        />
+      </View>
       <TTSSpeedConfig
         style={styles.panel}
         onChange={speed => updateConfig({ speed })}
@@ -52,5 +75,10 @@ const styles = createStyleSheet({
   panel: {
     marginTop: 25,
     marginBottom: 25
+  },
+  row: {
+    padding: 25,
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
