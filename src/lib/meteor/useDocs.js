@@ -66,7 +66,7 @@ export const useDocs = ({
       // enable states to take effect
       // in consuming components, so users
       // are aware we are (re-)loading
-      await asyncTimeout(3000)
+      await asyncTimeout(300)
 
       while (attempts < maxAttempts) {
         try {

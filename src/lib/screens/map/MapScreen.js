@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { View, FlatList } from 'react-native'
+import { View, FlatList, Text } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { useDocs } from '../../meteor/useDocs'
 import { loadMapData } from './loadMapData'
+import { useRefresh } from '../../hooks/useRefresh'
 import { Log } from '../../infrastructure/Log'
 import { useTranslation } from 'react-i18next'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -20,7 +21,7 @@ import { MapIcons } from '../../contexts/MapIcons'
 import { Layout } from '../../constants/Layout'
 
 const log = Log.create('MapScreen')
-const ITEM_HEIGHT = 100
+const STAGE_SIZE = 100
 const counter = 0.75
 
 /**
@@ -41,19 +42,24 @@ export const MapScreen = props => {
   const { Tts } = useTts()
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
   const [activeStage, setActiveStage] = useState(-1)
+  const [initialIndex, setInitialIndex] = useState(0)
+  const [listData, setListData] = useState([])
+  const [reload, refresh] = useRefresh()
   const [connectorWidth, setConnectorWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = useDocs({
     runArgs: [session.field, session.loadUserData],
     allArgsRequired: true,
-    debug: true,
     fn: () => loadMapData({
       fieldDoc: session.field,
       loadUserData: session.loadUserData,
       onUserDataLoaded: () => {
         sessionActions.update({ loadUserData: null })
       }
-    })
+    }),
+    dataRequired: true,
+    reload,
+    message: 'mapScreen.loadData'
   })
 
   useEffect(() => {
@@ -70,11 +76,27 @@ export const MapScreen = props => {
     })
   }, [props.navigation, sessionActions])
 
+  useEffect(() => {
+    const progressIndex = mapDocs?.data?.progressIndex
+    const entries = mapDocs?.data?.entries
+
+    if (progressIndex && progressIndex !== initialIndex) {
+      setInitialIndex(progressIndex)
+    }
+
+    if (entries && listData.length === 0) {
+      setListData(entries)
+    }
+  }, [mapDocs])
+
   const onListLayoutDetected = useCallback((event) => {
+    console.debug('on list layout detected', event.nativeEvent.layout)
     const { width } = event.nativeEvent.layout
-    setStageConnectorWidth(width - ITEM_HEIGHT - (ITEM_HEIGHT / 2))
-    setConnectorWidth((width / 2) - ITEM_HEIGHT)
-  }, [setStageConnectorWidth, setConnectorWidth])
+    if (!stageConnectorWidth) {
+      setStageConnectorWidth(width - STAGE_SIZE - (STAGE_SIZE / 2))
+      setConnectorWidth((width / 2) - STAGE_SIZE)
+    }
+  }, [])
 
   const selectStage = useCallback(async (stage, index) => {
     setActiveStage(index)
@@ -90,6 +112,14 @@ export const MapScreen = props => {
   }, [mapDocs])
 
   const renderListItem = useCallback(({ index, item: entry }) => {
+    return (
+      <View style={styles.stage} key={index}>
+        <Text style={styles.text}>{entry.type + ' ' + entry.label + ' ' + index + ' ' + initialIndex}</Text>
+      </View>
+    )
+  }, [connectorWidth])
+
+  const renderListItem2 = useCallback(({ index, item: entry }) => {
     if (entry.type === 'stage') {
       const isActive = activeStage === index
       return renderStage({
@@ -160,58 +190,48 @@ export const MapScreen = props => {
    * }
    */
   const mapData = mapDocs.data
-
-
   const renderList = () => {
-    if (mapData?.empty) {
-      return (<LeaText>{"Empty please come back later"}</LeaText>)
-    }
-    if (!mapData?.entries?.length) {
+    if (!listData || !stageConnectorWidth) {
       return null
     }
-
-    // return mapData.entries.map((item, index) => renderListItem({ index, item }))
-
     return (
-      <View style={styles.scrollView}>
-        <FlatList
-          data={mapData.entries}
-          renderItem={renderListItem}
-          onLayout={onListLayoutDetected}
-          inverted
-          decelerationRate='fast'
-          disableIntervalMomentum
-          initialScrollIndex={mapData.progressIndex ?? 0}
-          removeClippedSubviews
-          persistentScrollbar
-          keyExtractor={flatListKeyExtractor}
-          initialNumToRender={50}
-          maxToRenderPerBatch={50}
-          updateCellsBatchingPeriod={3000}
-          getItemLayout={flatListGetItemLayout}
-        />
-      </View>
+      <FlatList
+        data={listData}
+        renderItem={renderListItem2}
+        inverted
+        decelerationRate='fast'
+        disableIntervalMomentum
+        initialScrollIndex={initialIndex}
+        removeClippedSubviews={true}
+        persistentScrollbar
+        keyExtractor={flatListKeyExtractor}
+        initialNumToRender={10}
+        maxToRenderPerBatch={3}
+        updateCellsBatchingPeriod={50}
+        getItemLayout={flatListGetItemLayout}
+      />
     )
   }
-
   return (
     <ScreenBase
       {...mapDocs}
-      loadMessage={t('mapScreen.loadData')}
       progress={counter}
+      onRefresh={refresh}
       style={mapDocs.error ? styles.failedContainer : styles.container}
     >
-      {renderList()}
+      <View style={styles.scrollView} onLayout={onListLayoutDetected}>
+        {renderList()}
+      </View>
     </ScreenBase>
   )
 }
 
 const flatListGetItemLayout = (data, index) => {
-  const entry = data[index]
-  const length = entry && ['stage', 'milestone'].includes(entry.type)
-    ? ITEM_HEIGHT + 10
-    : 59
-  return { length, offset: length * index, index }
+  // const entry = data[index]
+  // const length = entry && ['stage', 'milestone'].includes(entry.type)
+  //   ? ITEM_HEIGHT + 10
+  //   : 59
+  return { length: STAGE_SIZE, offset: STAGE_SIZE * index, index }
 }
 const flatListKeyExtractor = (item) => item.entryKey
 
@@ -225,8 +245,8 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, di
     <View style={stageStyle}>
       {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
       <Stage
-        width={ITEM_HEIGHT}
-        height={ITEM_HEIGHT}
+        width={STAGE_SIZE}
+        height={STAGE_SIZE}
         onPress={() => selectStage(stage, index)}
         unitSets={stage.unitSets}
         dimensions={dimensions}
@@ -291,7 +311,8 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: ITEM_HEIGHT
+    height: STAGE_SIZE,
+    borderColor: 'blue'
   },
   connector: {
     flexGrow: 1

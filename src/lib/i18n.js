@@ -107,7 +107,7 @@ const resources = {
     },
     mapScreen: {
       stage: 'Stage',
-      loadData: 'Loading data',
+      loadData: 'Loading Overview Map',
       notAvailable: 'The overview cannot be downloaded currently.'
     },
     dimensionScreen: {
@@ -262,7 +262,7 @@ const resources = {
     },
     mapScreen: {
       stage: 'Level',
-      loadData: 'Daten werden geladen',
+      loadData: 'Übersicht wird geladen',
       notAvailable: 'Die Übersicht kann derzeit nicht geladen werden.'
     },
     dimensionScreen: {

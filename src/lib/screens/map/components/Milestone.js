@@ -54,19 +54,22 @@ const getStars = (value) => {
   const xOffsetLeft = ((value - 1) * 9) / 2
 
   for (let i = 0; i < value; i++) {
-    stars[i] = renderStar(i, xOffsetLeft)
+    stars[i] = (<MilestoneStar index={i} xOffsetLeft={xOffsetLeft} />)
   }
 
   return stars
 }
 
-const renderStar = (index, xOffsetLeft) => (
-  <Path
-    key={`milestone-star-${index}`}
-    translateX={(index * 9) - xOffsetLeft}
-    id='Pfad_123-2' data-name='Pfad 123-2' fill='white'
-    d='M25.37,32.76l-1,2-2.25.32a.5.5,0,0,0-.42.56.48.48,0,0,0,.15.28l1.62,1.59-.38,2.24a.49.49,0,0,0,.4.57.54.54,0,0,0,.31,0l2-1.06,2,1.06a.5.5,0,0,0,.66-.21.49.49,0,0,0,.05-.31l-.39-2.24L29.78,36a.48.48,0,0,0,0-.69.51.51,0,0,0-.28-.15l-2.25-.32-1-2a.48.48,0,0,0-.66-.22.43.43,0,0,0-.22.22Z'
-  />
-)
+const MilestoneStar = React.memo((props) => {
+  const { index, xOffsetLeft } = props
+  return (
+    <Path
+      key={`milestone-star-${index}`}
+      translateX={(index * 9) - xOffsetLeft}
+      id='Pfad_123-2' data-name='Pfad 123-2' fill='white'
+      d='M25.37,32.76l-1,2-2.25.32a.5.5,0,0,0-.42.56.48.48,0,0,0,.15.28l1.62,1.59-.38,2.24a.49.49,0,0,0,.4.57.54.54,0,0,0,.31,0l2-1.06,2,1.06a.5.5,0,0,0,.66-.21.49.49,0,0,0,.05-.31l-.39-2.24L29.78,36a.48.48,0,0,0,0-.69.51.51,0,0,0-.28-.15l-2.25-.32-1-2a.48.48,0,0,0-.66-.22.43.43,0,0,0-.22.22Z'
+    />
+  )
+})
 
 export const Milestone = React.memo(MilestoneComponent)

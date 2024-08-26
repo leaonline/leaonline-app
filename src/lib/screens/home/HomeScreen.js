@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
+import { useRefresh } from '../../hooks/useRefresh'
 import { useDocs } from '../../meteor/useDocs'
 import { loadHomeData } from './loadHomeData'
 import { createStyleSheet } from '../../styles/createStyleSheet'
@@ -103,14 +104,6 @@ export const HomeScreen = props => {
       </ScrollView>
     </ScreenBase>
   )
-}
-
-const useRefresh = () => {
-  const [reload, setReload] = useState(0)
-  const refresh = useCallback(() => {
-    setReload(reload + 1)
-  }, [reload])
-  return [reload, refresh]
 }
 
 const styles = createStyleSheet({
