@@ -48,7 +48,7 @@ MapIcons.render = (index) => {
 
   const name = internal.icons[index]
   return (
-    <Icon
+    <MemoIcon
       color={Colors.gray}
       size={50}
       name={name}
@@ -57,3 +57,5 @@ MapIcons.render = (index) => {
     />
   )
 }
+
+const MemoIcon = React.memo(Icon)

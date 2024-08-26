@@ -43,6 +43,7 @@ export const MapScreen = props => {
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
   const [activeStage, setActiveStage] = useState(-1)
   const [initialIndex, setInitialIndex] = useState(0)
+  const [extraData, setExtraData] = useState(new Date())
   const [listData, setListData] = useState([])
   const [reload, refresh] = useRefresh()
   const [connectorWidth, setConnectorWidth] = useState(null)
@@ -66,13 +67,13 @@ export const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
+      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
     })
   }, [session.field, props.navigation])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.update({ field: null })} />)
+      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.update({ field: null })}/>)
     })
   }, [props.navigation, sessionActions])
 
@@ -90,7 +91,6 @@ export const MapScreen = props => {
   }, [mapDocs])
 
   const onListLayoutDetected = useCallback((event) => {
-    console.debug('on list layout detected', event.nativeEvent.layout)
     const { width } = event.nativeEvent.layout
     if (!stageConnectorWidth) {
       setStageConnectorWidth(width - STAGE_SIZE - (STAGE_SIZE / 2))
@@ -111,18 +111,10 @@ export const MapScreen = props => {
     props.navigation.navigate('dimension')
   }, [mapDocs])
 
-  const renderListItem = useCallback(({ index, item: entry }) => {
-    return (
-      <View style={styles.stage} key={index}>
-        <Text style={styles.text}>{entry.type + ' ' + entry.label + ' ' + index + ' ' + initialIndex}</Text>
-      </View>
-    )
-  }, [connectorWidth])
-
   const renderListItem2 = useCallback(({ index, item: entry }) => {
     if (entry.type === 'stage') {
       const isActive = activeStage === index
-      return renderStage({
+      const stageData = {
         index,
         stage: entry,
         connectorWidth: stageConnectorWidth,
@@ -130,19 +122,20 @@ export const MapScreen = props => {
         isActive,
         dimensionOrder: mapData?.dimensionOrder,
         dimensions: mapData?.dimensions
-      })
+      }
+      return (<MapStage {...stageData} />)
     }
 
     if (entry.type === 'milestone') {
-      return renderMilestone({ milestone: entry, connectorWidth })
+      return (<MapMilestone milestone={entry} connectorWidth={connectorWidth}/>)
     }
 
     if (entry.type === 'finish') {
       return (
         <View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
-          <MapFinish />
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
+          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth}/>
+          <MapFinish/>
+          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth}/>
         </View>
       )
     }
@@ -150,9 +143,9 @@ export const MapScreen = props => {
     if (entry.type === 'start') {
       return (
         <View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth}/>
           {MapIcons.render(0)}
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
+          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth}/>
         </View>
       )
     }
@@ -199,7 +192,7 @@ export const MapScreen = props => {
         data={listData}
         renderItem={renderListItem2}
         inverted
-        decelerationRate='fast'
+        decelerationRate="fast"
         disableIntervalMomentum
         initialScrollIndex={initialIndex}
         removeClippedSubviews={true}
@@ -235,7 +228,7 @@ const flatListGetItemLayout = (data, index) => {
 }
 const flatListKeyExtractor = (item) => item.entryKey
 
-const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, dimensionOrder, isActive }) => {
+const MapStage = React.memo(({ index, stage, selectStage, connectorWidth, dimensions, dimensionOrder, isActive }) => {
   const progress = 100 * (stage.userProgress || 0) / stage.progress
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
@@ -243,7 +236,7 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, di
 
   return (
     <View style={stageStyle}>
-      {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
+      <MapConnector connectorId={viewPosition.left} listWidth={connectorWidth} withIcon={viewPosition.icon}/>
       <Stage
         width={STAGE_SIZE}
         height={STAGE_SIZE}
@@ -255,36 +248,37 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, di
         progress={progress}
         isActive={isActive}
       />
-      {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
+      <MapConnector connectorId={viewPosition.right} listWidth={connectorWidth} withIcon={viewPosition.icon}/>
     </View>
   )
-}
+})
 
-const renderMilestone = ({ milestone, connectorWidth }) => {
+const MapMilestone = React.memo(({ milestone, connectorWidth }) => {
   const progress = 100 * milestone.userProgress / milestone.maxProgress
   return (
     <View style={styles.stage}>
-      {renderConnector(milestone.viewPosition.left, connectorWidth)}
-      <Milestone progress={progress} level={milestone.level + 1} />
-      {renderConnector(milestone.viewPosition.right, connectorWidth)}
+      <MapConnector connectorId={milestone.viewPosition.left} listWidth={connectorWidth}/>
+      <Milestone progress={progress} level={milestone.level + 1}/>
+      <MapConnector connectorId={milestone.viewPosition.right} listWidth={connectorWidth}/>
     </View>
   )
-}
+})
 
-const renderConnector = (connectorId, listWidth, withIcon = -1) => {
+const MapConnector = React.memo(({ connectorId, listWidth, withIcon = -1 }) => {
   if (connectorId === 'fill') {
     return (
-      <LeaText style={{ width: listWidth ?? '100%' }} />
+      <LeaText style={{ width: listWidth ?? '100%' }}/>
     )
   }
 
   if (listWidth !== null && connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon}/>)
   }
 
   return null
-}
+})
+
 const positionMap = {
   center: 'center',
   left: 'flex-start',
