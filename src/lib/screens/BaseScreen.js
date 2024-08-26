@@ -28,7 +28,8 @@ const RenderScreenBase = (props) => {
     setRefreshing(true)
     try {
       await props.onRefresh()
-    } catch (e) {
+    }
+    catch (e) {
       Log.error(e)
     }
     setRefreshing(false)
@@ -37,7 +38,7 @@ const RenderScreenBase = (props) => {
   if (props.loading) {
     return (
       <SafeAreaView style={props.style}>
-        <Loading text={props.loadMessage}/>
+        <Loading text={props.loadMessage} />
         {linearProgress(props.progress)}
       </SafeAreaView>
     )
@@ -48,10 +49,11 @@ const RenderScreenBase = (props) => {
       <SafeAreaView style={props.style}>
         <ScrollView
           refreshControl={
-            props.onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+            props.onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          contentContainerStyle={styles.scrollContainer}>
-          <ErrorMessage error={props.error}/>
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <ErrorMessage error={props.error} />
         </ScrollView>
       </SafeAreaView>
     )
@@ -65,10 +67,11 @@ const RenderScreenBase = (props) => {
       <SafeAreaView style={props.style}>
         <ScrollView
           refreshControl={
-            props.onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+            props.onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          contentContainerStyle={styles.scrollContainer}>
-          <ErrorMessage error={new Error('screenBase.notData')}/>
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <ErrorMessage error={new Error('screenBase.notData')} />
         </ScrollView>
       </SafeAreaView>
     )
@@ -91,7 +94,7 @@ const linearProgress = progress => {
   }
 
   return (
-    <LinearProgress color={Colors.primary} value={progress} variant="determinate"/>
+    <LinearProgress color={Colors.primary} value={progress} variant='determinate' />
   )
 }
 

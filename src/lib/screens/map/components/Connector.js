@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Svg, { G, Path } from 'react-native-svg'
 import { Colors } from '../../../constants/Colors'
 import { MapIcons } from '../../../contexts/MapIcons'
@@ -20,7 +20,6 @@ import { memoize } from '../../../utils/memoize'
  * @component
  */
 const ConnectorComponent = props => {
-  // TODO put in effect + state
   const { from, to, width = 100, height = 100 } = props
   const path = usePath(from, to, width, height)
 

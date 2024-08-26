@@ -28,7 +28,7 @@ export const TTSVoiceConfig = props => {
   // set a default voice
   useEffect(() => {
     if (selected === -1) {
-      const index = voices.findIndex(v => v.identifier === currentVoice )
+      const index = voices.findIndex(v => v.identifier === currentVoice)
       if (index > -1) {
         setSelected(index)
       }
@@ -83,14 +83,14 @@ export const TTSVoiceConfig = props => {
               onPress={() => handleChange(index)}
               icon='user'
               color={index === selected ? Colors.white : Colors.primary}
-              buttonStyle={mergeStyles(styles.entry, buttonStyle)}/>
+              buttonStyle={mergeStyles(styles.entry, buttonStyle)}
+            />
           </View>
         )
       })}
     </View>
   )
 }
-
 
 /**
  * Resolve the voice name for the voice,

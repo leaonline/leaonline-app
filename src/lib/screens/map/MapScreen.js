@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { View, FlatList, Text } from 'react-native'
+import { View, FlatList } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { useDocs } from '../../meteor/useDocs'
 import { loadMapData } from './loadMapData'
@@ -43,7 +43,6 @@ export const MapScreen = props => {
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
   const [activeStage, setActiveStage] = useState(-1)
   const [initialIndex, setInitialIndex] = useState(0)
-  const [extraData, setExtraData] = useState(new Date())
   const [listData, setListData] = useState([])
   const [reload, refresh] = useRefresh()
   const [connectorWidth, setConnectorWidth] = useState(null)
@@ -67,13 +66,13 @@ export const MapScreen = props => {
     const mapScreenTitle = session.field?.title ?? t('mapScreen.title')
     props.navigation.setOptions({
       title: mapScreenTitle,
-      headerTitle: () => (<Tts align="center" text={mapScreenTitle}/>)
+      headerTitle: () => (<Tts align='center' text={mapScreenTitle} />)
     })
   }, [session.field, props.navigation])
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () => (<BackButton icon="arrow-left" onPress={() => sessionActions.update({ field: null })}/>)
+      headerLeft: () => (<BackButton icon='arrow-left' onPress={() => sessionActions.update({ field: null })} />)
     })
   }, [props.navigation, sessionActions])
 
@@ -127,15 +126,15 @@ export const MapScreen = props => {
     }
 
     if (entry.type === 'milestone') {
-      return (<MapMilestone milestone={entry} connectorWidth={connectorWidth}/>)
+      return (<MapMilestone milestone={entry} connectorWidth={connectorWidth} />)
     }
 
     if (entry.type === 'finish') {
       return (
         <View style={styles.stage}>
-          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth}/>
-          <MapFinish/>
-          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth}/>
+          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth} />
+          <MapFinish />
+          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth} />
         </View>
       )
     }
@@ -143,9 +142,9 @@ export const MapScreen = props => {
     if (entry.type === 'start') {
       return (
         <View style={styles.stage}>
-          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth}/>
+          <MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth} />
           {MapIcons.render(0)}
-          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth}/>
+          <MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth} />
         </View>
       )
     }
@@ -192,10 +191,10 @@ export const MapScreen = props => {
         data={listData}
         renderItem={renderListItem2}
         inverted
-        decelerationRate="fast"
+        decelerationRate='fast'
         disableIntervalMomentum
         initialScrollIndex={initialIndex}
-        removeClippedSubviews={true}
+        removeClippedSubviews
         persistentScrollbar
         keyExtractor={flatListKeyExtractor}
         initialNumToRender={10}
@@ -236,7 +235,7 @@ const MapStage = React.memo(({ index, stage, selectStage, connectorWidth, dimens
 
   return (
     <View style={stageStyle}>
-      <MapConnector connectorId={viewPosition.left} listWidth={connectorWidth} withIcon={viewPosition.icon}/>
+      <MapConnector connectorId={viewPosition.left} listWidth={connectorWidth} withIcon={viewPosition.icon} />
       <Stage
         width={STAGE_SIZE}
         height={STAGE_SIZE}
@@ -248,7 +247,7 @@ const MapStage = React.memo(({ index, stage, selectStage, connectorWidth, dimens
         progress={progress}
         isActive={isActive}
       />
-      <MapConnector connectorId={viewPosition.right} listWidth={connectorWidth} withIcon={viewPosition.icon}/>
+      <MapConnector connectorId={viewPosition.right} listWidth={connectorWidth} withIcon={viewPosition.icon} />
     </View>
   )
 })
@@ -257,9 +256,9 @@ const MapMilestone = React.memo(({ milestone, connectorWidth }) => {
   const progress = 100 * milestone.userProgress / milestone.maxProgress
   return (
     <View style={styles.stage}>
-      <MapConnector connectorId={milestone.viewPosition.left} listWidth={connectorWidth}/>
-      <Milestone progress={progress} level={milestone.level + 1}/>
-      <MapConnector connectorId={milestone.viewPosition.right} listWidth={connectorWidth}/>
+      <MapConnector connectorId={milestone.viewPosition.left} listWidth={connectorWidth} />
+      <Milestone progress={progress} level={milestone.level + 1} />
+      <MapConnector connectorId={milestone.viewPosition.right} listWidth={connectorWidth} />
     </View>
   )
 })
@@ -267,13 +266,13 @@ const MapMilestone = React.memo(({ milestone, connectorWidth }) => {
 const MapConnector = React.memo(({ connectorId, listWidth, withIcon = -1 }) => {
   if (connectorId === 'fill') {
     return (
-      <LeaText style={{ width: listWidth ?? '100%' }}/>
+      <LeaText style={{ width: listWidth ?? '100%' }} />
     )
   }
 
   if (listWidth !== null && connectorId) {
     const [from, to] = connectorId.split('2')
-    return (<Connector from={from} to={to} width={listWidth} icon={withIcon}/>)
+    return (<Connector from={from} to={to} width={listWidth} icon={withIcon} />)
   }
 
   return null

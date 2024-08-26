@@ -16,7 +16,8 @@ export const useSync = () => {
       let isRequired = false
       try {
         isRequired = await Sync.isRequired()
-      } catch (e) {
+      }
+      catch (e) {
         Log.error(e)
       }
       debug({ isRequired })

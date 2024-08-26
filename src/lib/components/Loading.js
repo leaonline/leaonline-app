@@ -28,7 +28,8 @@ export const Loading = ({ text, color, style, timeOut = 700 }) => {
     let timer
     if (timeOut > 0) {
       timer = setTimeout(() => setShowText(true), timeOut)
-    } else {
+    }
+    else {
       setShowText(true)
     }
     // prevent memleak

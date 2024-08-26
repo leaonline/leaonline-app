@@ -43,9 +43,9 @@ export const TTSSettings = (props) => {
         <Tts
           text={t('profileScreen.tts.voice')}
           color={Colors.secondary}
-          align="center"
+          align='center'
           fontStyle={styles.headlineText}
-          id="profileScreen.tts.voice"
+          id='profileScreen.tts.voice'
         />
       </View>
       <TTSVoiceConfig
@@ -56,9 +56,9 @@ export const TTSSettings = (props) => {
         <Tts
           text={t('profileScreen.tts.speed')}
           color={Colors.secondary}
-          align="center"
+          align='center'
           fontStyle={styles.headlineText}
-          id="profileScreen.tts.speed"
+          id='profileScreen.tts.speed'
         />
       </View>
       <TTSSpeedConfig

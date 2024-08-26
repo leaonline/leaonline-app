@@ -172,10 +172,11 @@ export const AccountInfo = (props) => {
               Sync.reset()
               try {
                 await clearContextStorage()
-              } catch (error) {
+              }
+              catch (error) {
                 onError(error)
               }
-              setModalContent( actions.deleteAccount.deleted)
+              setModalContent(actions.deleteAccount.deleted)
             }
             deleteAccount({ onError, onSuccess })
           }

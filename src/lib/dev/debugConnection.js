@@ -1,3 +1,4 @@
+/* global fetch AbortController */
 import Meteor from '@meteorrn/core'
 import { onDev } from './onDev'
 import { Log } from '../infrastructure/Log'
@@ -14,7 +15,7 @@ export const debugConnection = ({ reachability = false, data = false, ddp = fals
       const logReachability = createLog('DEBUG_CONNECTION::reachability')
 
       const controller = new AbortController()
-      setTimeout(() => controller.abort(), 5000);
+      setTimeout(() => controller.abort(), 5000)
       logReachability('fetch HEAD request to', Config.backend.reachabilityUrl)
       fetch(Config.backend.reachabilityUrl, {
         method: 'HEAD',

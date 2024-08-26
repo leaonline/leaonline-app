@@ -126,12 +126,12 @@ export const UnitRenderer = props => {
       <FadePanel style={mergeStyles(unitCardStyles, styles.instructionStyles)} visible={fadeIn >= 1}>
         <View style={styles.pageText}>
           <Icon
-            testID="info-icon"
+            testID='info-icon'
             reverse
             color={Colors.gray}
             size={10}
-            name="info"
-            type="font-awesome-5"
+            name='info'
+            type='font-awesome-5'
           />
         </View>
         <InstructionsGraphicsRenderer
@@ -151,14 +151,14 @@ export const UnitRenderer = props => {
 
     return (
       <View style={{ ...unitCardStyles, ...styles.allTrue }}>
-        <Tts color={Colors.success} align="center" iconColor={Colors.success} text={t('unitScreen.allTrue')}/>
+        <Tts color={Colors.success} align='center' iconColor={Colors.success} text={t('unitScreen.allTrue')} />
         <Icon
-          testID="alltrue-icon"
+          testID='alltrue-icon'
           reverse
           color={Colors.success}
           size={20}
-          name="thumbs-up"
-          type="font-awesome-5"
+          name='thumbs-up'
+          type='font-awesome-5'
         />
       </View>
     )
@@ -182,10 +182,10 @@ export const UnitRenderer = props => {
         onMomentumScrollEnd={updateLastScrollPos}
         contentContainerStyle={styles.scrollView}
         persistentScrollbar
-        keyboardDismissMode="none"
+        keyboardDismissMode='none'
         contentInset={{ bottom: 20 }}
-        keyboardShouldPersistTaps="always"
-        automaticallyAdjustKeyboardInsets={true}
+        keyboardShouldPersistTaps='always'
+        automaticallyAdjustKeyboardInsets
       >
         {/* 1. PART STIMULI */}
         <FadePanel style={mergeStyles(unitCardStyles, dropShadow)} visible={fadeIn >= 0}>

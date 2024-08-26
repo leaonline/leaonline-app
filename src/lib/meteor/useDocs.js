@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { InteractionGraph } from '../infrastructure/log/InteractionGraph'
 import { ErrorReporter } from '../errors/ErrorReporter'
 import { Log } from '../infrastructure/Log'
 import { isDefined } from '../utils/object/isDefined'
@@ -55,7 +54,6 @@ export const useDocs = ({
       return
     }
 
-
     const loadWrapper = async () => {
       let error
       let attempts = 0
@@ -71,9 +69,11 @@ export const useDocs = ({
       while (attempts < maxAttempts) {
         try {
           return await load()
-        } catch (e) {
+        }
+        catch (e) {
           error = e
-        } finally {
+        }
+        finally {
           attempts++
         }
       }

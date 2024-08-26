@@ -57,7 +57,6 @@ const reducer = (prevState, nextState) => {
   }
 }
 
-
 /**
  * Provides a state and authentication context for components to decide, whether
  * the user is authenticated and also to run several authentication actions.
@@ -92,7 +91,8 @@ export const useLogin = ({ connection }) => {
 
     try {
       loadSettingsFromUserProfile(user)
-    } catch (e) {
+    }
+    catch (e) {
       ErrorReporter.send({ error: e }).catch(Log.error)
     }
     dispatch({ type: 'PROFILE_LOADED' })
@@ -212,7 +212,8 @@ export const useLogin = ({ connection }) => {
         if (onSuccess) {
           try {
             await onSuccess()
-          } catch (e) {
+          }
+          catch (e) {
             onError(e)
           }
         }

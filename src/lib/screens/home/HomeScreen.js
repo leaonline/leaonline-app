@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { useTts } from '../../components/Tts'
 import { useTranslation } from 'react-i18next'
 import { useRefresh } from '../../hooks/useRefresh'
@@ -86,7 +86,8 @@ export const HomeScreen = props => {
       error={error}
       style={styles.container}
       loadMessage={loadMessage}
-      onRefresh={refresh}>
+      onRefresh={refresh}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.textContainer}>
           <Tts
