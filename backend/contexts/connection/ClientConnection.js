@@ -1,6 +1,10 @@
 import { Mongo } from 'meteor/mongo'
 import { createLog } from '../../infrastructure/log/createLog'
 
+/**
+ * Stores active connection with mobile clients.
+ * Data is only stored in RAM and is cleared on restart.
+ */
 export const ClientConnection = {
   name: 'clientConnection',
   label: 'clientConnection.title',
@@ -35,11 +39,23 @@ ClientConnection.schema = {
   }
 }
 
+/**
+ * Returns the underlying MongoDB connection.
+ * @return {Mongo.Collection}
+ */
 ClientConnection.collection = () => connections
 
 const connections = new Mongo.Collection(null)
 const log = createLog({ name: ClientConnection.name, type: 'log' })
 
+/**
+ * Stores the current connection's credentials in the DB until clients disconnect.
+ * @param id
+ * @param onClose
+ * @param clientAddress
+ * @param httpHeaders
+ * @return {Promise<void>}
+ */
 ClientConnection.onConnected = async function ({ id, onClose, clientAddress, httpHeaders = {} }) {
   log('on connect', id, clientAddress, httpHeaders['user-agent'])
   const timestamp = new Date()
@@ -47,11 +63,25 @@ ClientConnection.onConnected = async function ({ id, onClose, clientAddress, htt
   onClose(() => ClientConnection.onDisconnect({ id, clientAddress, httpHeaders }))
 }
 
+/**
+ * Registers a handler to remote the DB entry when clients disconnect from the server
+ * @param id
+ * @param clientAddress
+ * @param httpHeaders
+ * @return {Promise<void>}
+ */
 ClientConnection.onDisconnect = async ({ id, clientAddress, httpHeaders }) => {
   log('on disconnect', id, clientAddress, httpHeaders)
   await connections.removeAsync({ id })
 }
 
+/**
+ * Registers a handler that updates the entry
+ * when clients have authenticated successfully
+ * @param connection
+ * @param user
+ * @return {Promise<void>}
+ */
 ClientConnection.onLogin = async ({ connection = {}, user = {} }) => {
   log('on login', connection.id, '=>', user._id)
   const id = connection.id

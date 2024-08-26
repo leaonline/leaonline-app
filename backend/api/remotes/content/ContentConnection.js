@@ -17,21 +17,32 @@ const contentUrl = Meteor.settings.remotes.content.url
  * @async
  * @return {Promise<void>}
  */
-ContentConnection.connect = function connect ({ log } = {}) {
+ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
   return new Promise((resolve, reject) => {
     if (log) log('establish connection to', contentUrl)
+    let connected = false
+    let timer
     contentConnection = DDP.connect(contentUrl, {
       retry: false,
       onConnected: err => {
         if (err) {
-          console.error(err)
+          clearTimeout(timer)
           return reject(err)
         }
 
-        if (log) log('connection established with', contentUrl)
+        if (log) log('connection established with', contentUrl, contentConnection)
+        connected = true
+        clearTimeout(timer)
         resolve()
       }
     })
+    setTimeout(() => {
+      clearTimeout(timer)
+      if (!connected) {
+        contentConnection.disconnect()
+        reject(new Meteor.Error('errors.notConnected', 'remote.timeOut', { contentUrl, timeout }))
+      }
+    }, timeout)
   })
 }
 

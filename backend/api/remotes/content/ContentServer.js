@@ -58,7 +58,11 @@ ContentServer.contexts = () => [].concat(contexts)
  * @return {Promise<ContentServer>}
  */
 ContentServer.init = async () => {
-  await ContentConnection.connect({ log })
+  try {
+    await ContentConnection.connect({ log })
+  } catch(e) {
+    console.error(e)
+  }
   return ContentServer
 }
 
@@ -143,6 +147,10 @@ ContentServer.sync = async ({ name, debug } = {}) => {
   return stats
 }
 
+/**
+ * Current supported hooks.
+ * @type {{beforeSyncUpsert: string, syncEnd: string}}
+ */
 ContentServer.hooks = {
   beforeSyncUpsert: 'beforeSyncUpsert',
   syncEnd: 'syncEnd'
@@ -176,15 +184,34 @@ const getSet = (hookName, ctxName) => {
   return map.get(ctxName)
 }
 
+/**
+ * Registers a hook for a given sync-stage.
+ * @param hookName {string} one of {ContentServer.hooks}
+ * @param ctxName {string}
+ * @param fn {function}
+ */
 ContentServer.on = (hookName, ctxName, fn) => {
   const fns = getSet(hookName, ctxName)
   fns.add(fn)
 }
 
+/**
+ * Un-registers a hook
+ * @param hookName {string} one of {ContentServer.hooks}
+ * @param ctxName {string} name of the ctx in scope
+ * @param fn {function}
+ */
 ContentServer.off = (hookName, ctxName, fn) => {
   const fns = getSet(hookName, ctxName)
   fns.delete(fn)
 }
+
+/**
+ * Checks, whether a sync is possible with the
+ * remote content server.
+ * @return {boolean} true, if sync is possible, otherwise false
+ */
+ContentServer.canSync = () => canSync()
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
@@ -197,10 +224,18 @@ ContentServer.off = (hookName, ctxName, fn) => {
  * @throws {ContentServerError} if collection does not exist
  */
 const ensureConnected = () => {
-  if (!ContentConnection.isConnected()) {
+  if (!canSync()) {
     throw new ContentServerError('notConnected')
   }
 }
+
+/**
+ * Sync can only work if there is an active connection
+ * with the remove content server.
+ * @private
+ * @return {boolean}
+ */
+const canSync = () => ContentConnection.isConnected()
 
 /**
  * Throws if context name is not supported
