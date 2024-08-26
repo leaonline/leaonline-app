@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import {safeWhile} from '../safeWhile'
+import { safeWhile } from '../safeWhile'
 
 describe(safeWhile.name, () => {
   it('cancels on non-undefined falsey', () => {

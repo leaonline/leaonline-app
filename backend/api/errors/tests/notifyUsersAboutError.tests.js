@@ -26,7 +26,7 @@ describe(notifyUsersAboutError.name, function () {
       await notifyUsersAboutError(value, undefined)
     }
   })
-  it('notifies registered users about a server error',async () => {
+  it('notifies registered users about a server error', async () => {
     stub(Email, 'sendAsync', expect.fail)
     const values = [
       new Error('foo'),

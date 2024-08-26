@@ -7,7 +7,7 @@ describe(createIdSet.name, () => {
     const docs = [
       { id: '1', foo: 'bar', bar: 'baz', baz: 'moo' },
       { id: '2', foo: 'moo', bar: undefined, baz: 'moo' },
-      { id: '3', foo: 'moo', bar: 'foo', baz: 'moo' },
+      { id: '3', foo: 'moo', bar: 'foo', baz: 'moo' }
     ]
     const set = [...createIdSet(docs, ['foo', 'bar'])]
     expect(set).to.deep.equal(['bar', 'baz', 'moo', 'foo'])

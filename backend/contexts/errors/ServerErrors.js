@@ -37,7 +37,7 @@ ServerErrors.schema = {
  * @param isSystem {boolean=}
  * @param tag {string=}
  */
-ServerErrors.handle = async ({ error, name, userId, isMethod, isPublication, isSystem, tag,  }) => {
+ServerErrors.handle = async ({ error, name, userId, isMethod, isPublication, isSystem, tag }) => {
   const errorDoc = normalizeError({ error, userId })
 
   errorDoc.method = isMethod ? name : undefined

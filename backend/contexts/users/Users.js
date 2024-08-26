@@ -6,7 +6,7 @@ import { updateUserProfile } from './updateUserProfile'
 import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
-import { safeWhile, safeWhileAsync } from '../../api/utils/safeWhile'
+import { safeWhileAsync } from '../../api/utils/safeWhile'
 
 /**
  * Representation of users in the database.
@@ -336,9 +336,9 @@ Users.methods.delete = {
   })
 }
 
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // BACKEND METHODS
-//-----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 /**
  * Backend-method to get all users.

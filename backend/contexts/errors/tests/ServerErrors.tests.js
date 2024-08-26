@@ -47,7 +47,7 @@ describe(ServerErrors.name, function () {
       publication: undefined,
       isSystem: undefined,
       userId: options.userId,
-      tag: undefined,
+      tag: undefined
     })
     expect(emailSent.calledOnce).to.equal(true)
   })

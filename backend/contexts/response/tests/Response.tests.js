@@ -3,10 +3,6 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { Response } from '../Response'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
-import {
-  restoreCollections,
-  stubCollection
-} from '../../../tests/helpers/stubCollection'
 import { createMethod } from '../../../infrastructure/factories/createMethod'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 

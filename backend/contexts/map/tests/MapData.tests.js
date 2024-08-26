@@ -159,7 +159,6 @@ describe('MapData', function () {
 
       expect(field).to.equal(fieldDoc._id)
 
-
       expect(levels).to.deep.equal((await LevelCollection.find().fetchAsync()).map(toId))
       expect(dimensions.map(entry => entry._id))
         .to.deep.equal((await DimensionCollection.find().fetchAsync()).map(toId))

@@ -9,7 +9,7 @@ export const checkPermissions = function (options) {
 
   const runFct = options.run
   options.run = async function run (...args) {
-    let userId = this.userId
+    const userId = this.userId
 
     if (!userId) {
       throw new Meteor.Error(

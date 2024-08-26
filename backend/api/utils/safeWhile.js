@@ -1,6 +1,6 @@
 /**
  * runs a while loop until finished or until a count has been exceeded
- * 
+ *
  * @param fn
  * @param maxCount
  * @return {*}

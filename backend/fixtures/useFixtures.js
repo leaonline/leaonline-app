@@ -22,7 +22,7 @@ const debug = createLog({ name: 'useFixtures', type: 'debug' })
  */
 export const useFixtures = async () => {
   const entries = Object.entries(fixtures)
-  await forEachAsync(entries,  async ([name, documents]) => {
+  await forEachAsync(entries, async ([name, documents]) => {
     debug(name, 'docs:', documents.length)
     const collection = getCollection(name)
 

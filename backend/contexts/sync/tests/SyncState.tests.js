@@ -2,10 +2,6 @@
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { SyncState } from '../SyncState'
-import {
-  restoreCollections,
-  stubCollection
-} from '../../../tests/helpers/stubCollection'
 import { createCollection } from '../../../infrastructure/factories/createCollection'
 import { asyncTimeout } from '../../../api/utils/asyncTimeout'
 import { ContextRegistry } from '../../ContextRegistry'
@@ -88,16 +84,16 @@ describe('SyncState', function () {
     it('throws on invalid context', async function () {
       await expectThrown({
         fn: () => run.call({}, { name: 'foo' }),
-        message: `Attempt to sync "foo" but it's not defined for sync!`
+        message: 'Attempt to sync "foo" but it\'s not defined for sync!'
       })
     })
     it('throws on collection not exists', async function () {
-      const ctx = { name: 'bar' , sync: true }
+      const ctx = { name: 'bar', sync: true }
       SyncState.register(ctx)
       ContextRegistry.add(ctx.name, ctx)
       await expectThrown({
         fn: () => run.call({}, { name: 'bar' }),
-        message: `No collection found for bar`
+        message: 'No collection found for bar'
       })
     })
   })

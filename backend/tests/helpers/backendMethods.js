@@ -7,7 +7,6 @@ import { SyncState } from '../../contexts/sync/SyncState'
 import { randomIntInclusive } from './randomIntInclusive'
 import { createTestDocs } from './createTestDocs'
 import { iterateAsync } from './iterate'
-import { forEachAsync } from '../../infrastructure/async/forEachAsync'
 
 const stubSyncUpdate = ({ ctx, expectSync }) => {
   let syncCalled = false
@@ -111,7 +110,8 @@ export const testRemove = (ctx, { factory, expectSync = false, collection, env =
         try {
           const removed = await run.call(env, { _id: fakeId })
           expect(removed).to.equal(0)
-        } catch (e) {
+        }
+        catch (e) {
           // all good here
         }
 
@@ -128,7 +128,7 @@ export const testRemove = (ctx, { factory, expectSync = false, collection, env =
   })
 }
 
-export const testGetMethod = (ctx, customFns, { env = {}} = {}) => {
+export const testGetMethod = (ctx, customFns, { env = {} } = {}) => {
   const method = ctx.methods.get
   const run = method.run
 

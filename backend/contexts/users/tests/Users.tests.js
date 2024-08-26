@@ -9,7 +9,7 @@ import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 import { stub } from '../../../tests/helpers/stubUtils'
 import { RestoreCodes } from '../../../api/accounts/RestoreCodes'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
-import { iterate, iterateAsync } from '../../../tests/helpers/iterate'
+import { iterateAsync } from '../../../tests/helpers/iterate'
 import { coin } from '../../../tests/helpers/coin'
 import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 

@@ -60,7 +60,8 @@ ContentServer.contexts = () => [].concat(contexts)
 ContentServer.init = async () => {
   try {
     await ContentConnection.connect({ log })
-  } catch(e) {
+  }
+  catch (e) {
     console.error(e)
   }
   return ContentServer

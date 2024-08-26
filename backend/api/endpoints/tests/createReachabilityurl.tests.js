@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* global fetch */
 import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { createReachabilityUrl } from '../createReachabilityUrl'

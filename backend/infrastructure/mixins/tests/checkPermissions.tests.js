@@ -62,7 +62,7 @@ describe(checkPermissions.name, function () {
   })
   it('runs the backend method if invoked by a backend user', async () => {
     const userId = Random.id()
-    const lea  = { id: Random.id(), accessToken: Random.id() }
+    const lea = { id: Random.id(), accessToken: Random.id() }
     const user = ({ _id: userId, services: { lea } })
     stub(Meteor.users, 'findOneAsync', async () => user)
 

@@ -1,6 +1,5 @@
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
 import { getCollection } from '../../api/utils/getCollection'
-import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
 
 /**
  * This is a context, providing methods that simply delegate code to the
@@ -65,9 +64,11 @@ Content.methods.map = {
     fieldId: String
   },
   run: onServerExec(function () {
+    import { Meteor } from 'meteor/meteor'
     import { MapData } from '../map/MapData'
     import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
     import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
+
     return async function ({ fieldId }) {
       const mapData = await MapData.get({ field: fieldId })
       if (!mapData) {

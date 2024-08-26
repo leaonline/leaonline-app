@@ -31,8 +31,8 @@ describe(runRemap.name, function () {
   it('skips if active is not explicitly true', async () => {
     const allOptions = [undefined, {}, { active: undefined }, { active: null }, { active: false }, { active: 1 }]
     await forEachAsync(allOptions, async options => {
-        expect(await runRemap(options)).to.equal(false)
-      })
+      expect(await runRemap(options)).to.equal(false)
+    })
   })
   it('skips if no fields are found', async () => {
     const options = { active: true }
@@ -108,7 +108,7 @@ describe(runRemap.name, function () {
     stub(MapData, 'create', async () => true)
     stub(MapData, 'get', async () => mapDoc)
     stub(Achievements, 'update', async () => true)
-    const updateCalled = stub(SyncState, 'update', async  (name) => {
+    const updateCalled = stub(SyncState, 'update', async (name) => {
       expect(name).to.equal(MapData.name)
     })
     expect(await runRemap(options)).to.equal(true)

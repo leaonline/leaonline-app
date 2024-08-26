@@ -13,7 +13,8 @@ export const errorMixin = options => {
     const { userId } = this
     try {
       return runFct.call(this, ...args)
-    } catch (runtimeError) {
+    }
+    catch (runtimeError) {
       // we create a tag in order to later identify errors within logs
       const tag = runtimeError.tag || Random.id()
       runtimeError.tag = runtimeError.tag || tag

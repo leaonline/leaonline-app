@@ -2,7 +2,6 @@
 import { coin } from '../../../tests/helpers/coin'
 import { Feedback } from '../Feedback'
 import { testGetAllMethod, testGetMethod, testInsert, testUpdate } from '../../../tests/helpers/backendMethods'
-import { restoreCollections, stubCollection } from '../../../tests/helpers/stubCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 

@@ -13,8 +13,9 @@ import { expect } from 'chai'
 export const expectThrown = async ({ fn, name, message, reason, details }) => {
   try {
     await fn()
-    expect.fail(`Expected fn to throw!`)
-  } catch (e) {
+    expect.fail('Expected fn to throw!')
+  }
+  catch (e) {
     if (name) expect(e.error ?? e.name).to.include(name)
     if (message) expect(e.message).to.include(message)
     if (reason) expect(e.reason).to.include(reason)

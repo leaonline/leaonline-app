@@ -53,10 +53,10 @@ describe('Content', function () {
         level: []
       })
     })
-    it('returns docs if true',async function () {
-      await FieldCollection.insertAsync ({ title: 'foo' })
-      await DimensionCollection.insertAsync ({ title: 'foo' })
-      await LevelCollection.insertAsync ({ title: 'foo' })
+    it('returns docs if true', async function () {
+      await FieldCollection.insertAsync({ title: 'foo' })
+      await DimensionCollection.insertAsync({ title: 'foo' })
+      await LevelCollection.insertAsync({ title: 'foo' })
 
       const data = await home.call({}, { field: true, dimension: true, level: true })
       expect(data).to.deep.equal({
@@ -70,7 +70,7 @@ describe('Content', function () {
     const map = Content.methods.map.run
 
     it('returns the current map data for a given field', async function () {
-      const fieldId = await FieldCollection.insertAsync ({ title: 'foo' })
+      const fieldId = await FieldCollection.insertAsync({ title: 'foo' })
       const mapId = await MapCollection.insertAsync({ field: fieldId, foo: 'bar' })
       const mapData = await map.call({}, { fieldId })
       expect(mapData).to.deep.equal({

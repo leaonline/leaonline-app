@@ -31,7 +31,6 @@ export const runRemap = async ({ active, dryRun, dimensions } = {}) => {
   // for all fields we have received or updated
   const fields = await FieldsCollection.find().fetchAsync()
 
-
   // create map data for each field
   await forEachAsync(fields, async field => {
     const fieldId = field._id
