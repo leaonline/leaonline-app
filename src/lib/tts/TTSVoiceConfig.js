@@ -139,11 +139,14 @@ const setNewVoice = ({ voice, index, text }) => {
 }
 
 const styles = createStyleSheet({
-  container: Layout.container(),
+  container: {
+    ...Layout.container(),
+    margin: 20
+  },
   row: {
     flex: 1
   },
   entry: {
     padding: 20
   }
-})
+}, true)

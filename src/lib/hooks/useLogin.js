@@ -137,8 +137,18 @@ export const useLogin = ({ connection }) => {
         dispatch({ type: 'SIGN_OUT' })
       })
     },
-    signUp: async ({ voice, speed, onError, onSuccess }) => {
-      const args = { voice, speed }
+
+    /**
+     * Registers a new user account on the backend server
+     * @param termsAndConditionsIsChecked {boolean?}
+     * @param voice {string?} identifier of the selected voice
+     * @param speed {number?} speed value for voice
+     * @param onError {function}
+     * @param onSuccess {function}
+     * @return {Promise<void>}
+     */
+    signUp: async ({ termsAndConditionsIsChecked, voice, speed, onError, onSuccess }) => {
+      const args = { voice, speed, termsAndConditionsIsChecked }
 
       if (Config.isDeveloperRelease()) {
         args.isDev = true

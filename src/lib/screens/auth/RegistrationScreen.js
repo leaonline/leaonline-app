@@ -9,7 +9,7 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { Loading } from '../../components/Loading'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
-
+import { useRoute } from '@react-navigation/native';
 /**
  * Screen for registering a new user.
  * This screen should automatically run without further actions required.
@@ -17,10 +17,11 @@ import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
  * @component
  * @returns {JSX.Element}
  */
-export const RegistrationScreen = () => {
+export const RegistrationScreen = (props) => {
   const { t } = useTranslation()
   const { Tts } = useTts()
   const { user } = useUser()
+  const route = useRoute()
   const { signUp } = useContext(AuthContext)
   const [error, setError] = useState(null)
 
@@ -41,7 +42,14 @@ export const RegistrationScreen = () => {
         type: 'registered'
       })
 
-      setTimeout(() => signUp({ voice, speed, onError, onSuccess }), 1000)
+      const { termsAndConditionsIsChecked } = (route ?? {})
+      setTimeout(() => signUp({
+        termsAndConditionsIsChecked,
+        voice,
+        speed,
+        onError,
+        onSuccess
+      }), 1000)
     }
   }, [user])
 

@@ -16,6 +16,7 @@ import { Markdown } from '../../components/MarkdownWithTTS'
 
 const initialState = {
   termsAndConditionsIsChecked: false,
+  researchIsChecked: false,
   highlightCheckbox: false,
   modalOpen: false
 }
@@ -61,8 +62,13 @@ export const TermsAndConditionsScreen = props => {
     InteractionGraph.action({
       type: 'select', target: checkboxHandler.name, details: { type, value: currentValue }
     })
+
     const options = { type, [type]: !currentValue }
     dispatch(options)
+
+    if (type === 'research') {
+      dispatch({ type: 'research', research: true })
+    }
 
     if (type === 'terms' && !currentValue) {
       dispatch({ type: 'highlight', highlight: false })
