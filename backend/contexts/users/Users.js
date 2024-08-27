@@ -7,6 +7,7 @@ import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { safeWhileAsync } from '../../api/utils/safeWhile'
+import { ServerErrors } from '../errors/ServerErrors'
 
 /**
  * Representation of users in the database.
@@ -111,7 +112,7 @@ Users.schema = {
    * has been completed
    */
   research: {
-    type: Boolean,
+    type: Date,
     optional: true
   },
 
@@ -132,6 +133,19 @@ Users.schema = {
     type: Object,
     optional: true,
     blackbox: true
+  },
+
+  /**
+   * With beginning of 1.2.0 we store
+   * the explicit date of when the terms have been
+   * agreed on. This is a foundation for
+   * further updates that could include the need
+   * for users to agree on an updated/renewed version
+   * of the TOC
+   */
+  terms: {
+    type: Date,
+    optional: true
   }
 }
 
@@ -164,6 +178,10 @@ Users.methods.create = {
       type: Number,
       optional: true
     },
+    termsAndConditionsIsChecked: {
+      type: Boolean,
+      optional: true
+    },
     isDev: Users.schema.isDev,
     device: Users.schema.device
   },
@@ -185,7 +203,11 @@ Users.methods.create = {
       }
 
       const collection = getUsersCollection()
-      const { voice, speed, isDev, device } = options
+      const { voice, speed, termsAndConditionsIsChecked, researchEmail, isDev, device } = options
+
+      // since older app versions do not send this flag
+      // we can't 100% require this to be present
+      const terms = termsAndConditionsIsChecked ? new Date() : undefined
       const username = Random.hexString(32)
       const password = Random.secret()
       const restore = await safeWhileAsync(async () => {
@@ -197,7 +219,7 @@ Users.methods.create = {
         }
       })
       const newUserId = await Accounts.createUserAsync({ username, password })
-      const updateDoc = { restore, voice, speed, isDev, device }
+      const updateDoc = { restore, voice, speed, terms, isDev, device }
 
       await getUsersCollection().updateAsync(newUserId, { $set: updateDoc })
 
@@ -388,6 +410,24 @@ Users.methods.remove = {
     const removed = await removeUser(_id, userId)
     return removed?.userRemoved
   }
+}
+
+Users.methods.inviteForResearch = {
+  name: 'users.methods.inviteForResearch',
+  schema: {
+    email: {
+      type: String
+    }
+  },
+  backend: true,
+  run: onServerExec(() => {
+    import { inviteForResearch } from './inviteForResearch'
+
+    return async function ({ email }) {
+      const { userId } = this
+      return inviteForResearch({ userId, email })
+    }
+  })
 }
 
 export { Users }
