@@ -56,6 +56,9 @@ export const ChoiceTextInstructions = props => {
       handAnimation.current.running = true
       runAnimation()
     }
+    if (props.onPress) {
+      props.onPress({ running: handAnimation.current.running })
+    }
   }
 
   return (

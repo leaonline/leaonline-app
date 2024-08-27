@@ -179,7 +179,7 @@ const resources = {
     connecting: {
       done: 'Du bist wieder verbunden! 🎉',
       backend: 'Du bist aktuell nicht mit dem lea-System verbunden. ',
-      www: 'Du bist aktuell nicht mit dem Internet verbunden. Bitte prüfe deine Internetverbindung.'
+      www: 'Du bist aktuell nicht mit dem Internet verbunden. Bitte prüfe deine Internet\u00ADverbindung.'
     },
     actions: {
       back: 'Zurück',

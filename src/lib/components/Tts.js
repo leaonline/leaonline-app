@@ -61,6 +61,7 @@ const runHandlers = name => {
  * @param props.align {string} Defines the vertical alignment of the button and text
  * @param props.paddingTop {number} Determines the top padding of the text. Default: 8
  * @param props.speed {number} Determines the speed rate of the voice to speak. Default: 1.0
+ * @param props.buttonRef {Component?} optional ref passed to connect to button
  * @param props.id {string|number} The parameter to identify the buttons
  * @returns {JSX.Element}
  * @component
@@ -258,6 +259,7 @@ const TtsComponent = props => {
     }
     return (
       <Button
+        ref={props.buttonRef}
         accessibilityRole='button'
         testID={props.testId}
         containerStyle={ttsContainerStyle}

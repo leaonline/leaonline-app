@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Vibration, View } from 'react-native'
 import { InstructionAnimations } from '../instructions/InstructionAnimations'
-import { useTts } from '../../../components/Tts'
+import { useTts, TTSengine } from '../../../components/Tts'
 import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../../components/Loading'
 
@@ -30,6 +30,11 @@ const InstructionsGraphicsRendererOriginal = (props) => {
     return () => clearTimeout(timer)
   }, [text, subtype, page])
 
+  const onInstructionPress = useCallback(() => {
+    Vibration.vibrate(100)
+    TTSengine.speakImmediately(text)
+  }, [text])
+
   if (loading) {
     return (
       <View style={styles.loadContainer}>
@@ -49,7 +54,9 @@ const InstructionsGraphicsRendererOriginal = (props) => {
   return (
     <View style={styles.container}>
       <Tts ttsText={text} color={color} dontShowText />
-      <Instruction color={color} height={100} width={200} />
+      <View style={styles.instructionWrapper}>
+        <Instruction color={color} height={100} width={200} onPress={onInstructionPress} />
+      </View>
     </View>
   )
 }
@@ -69,5 +76,11 @@ const styles = createStyleSheet({
   tts: {
     margin: 0,
     padding: 0
+  },
+  instructionWrapper: {
+    flex: 1,
+    paddingLeft: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
   }
 })

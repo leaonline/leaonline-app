@@ -1,5 +1,5 @@
 {
-  "isDevelopment": false,
+  "isDevelopment": true,
   "isDeveloperRelease": true,
   "appToken": "01234567890123456789012345678901",
   "backend": {
@@ -61,14 +61,14 @@
   },
   "debug": {
     "layoutBorders": false,
-    "state": true,
-    "sync": true,
-    "home": true,
-    "map": true,
+    "state": false,
+    "sync": false,
+    "home": false,
+    "map": false,
     "unit": false,
-    "tts": true,
-    "accounts": true,
-    "AppSession": true,
-    "connection": true
+    "tts": false,
+    "accounts": false,
+    "AppSession": false,
+    "connection": false
   }
 }

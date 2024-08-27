@@ -5,6 +5,12 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 
 const defaultPosition = { x: 0, y: 0 }
 
+/**
+ *
+ * @param props
+ * @return {Element}
+ * @constructor
+ */
 export const ChoiceImageInstructions = props => {
   const handPosition = useRef(new Animated.ValueXY(defaultPosition)).current
   const handAnimation = useRef({ animation: null, running: false })
@@ -53,6 +59,9 @@ export const ChoiceImageInstructions = props => {
     else {
       handAnimation.current.running = true
       runAnimation()
+    }
+    if (props.onPress) {
+      props.onPress({ running: handAnimation.current.running })
     }
   }
 
