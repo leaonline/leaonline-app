@@ -21,13 +21,22 @@ ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
   return new Promise((resolve, reject) => {
     if (log) log('establish connection to', contentUrl)
     let connected = false
-    let timer
+    const onError = err => {
+      clearTimeout(timer)
+      contentConnection?.disconnect()
+      return reject(err)
+    }
+    const timer = setTimeout(() => {
+      if (!connected) {
+        return onError(new Meteor.Error('errors.notConnected', 'remote.timeOut', { contentUrl, timeout }))
+      }
+      clearTimeout(timer)
+    }, timeout)
     contentConnection = DDP.connect(contentUrl, {
       retry: false,
       onConnected: err => {
         if (err) {
-          clearTimeout(timer)
-          return reject(err)
+          return onError(err)
         }
 
         if (log) log('connection established with', contentUrl, contentConnection)
@@ -36,13 +45,6 @@ ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
         resolve()
       }
     })
-    setTimeout(() => {
-      clearTimeout(timer)
-      if (!connected) {
-        contentConnection.disconnect()
-        reject(new Meteor.Error('errors.notConnected', 'remote.timeOut', { contentUrl, timeout }))
-      }
-    }, timeout)
   })
 }
 

@@ -521,7 +521,7 @@ MapData.methods.getAll = {
     }
   },
   backend: true,
-  run: async function ({ dependencies }) {
+  run: async function ({ dependencies } = {}) {
     const docs = await getCollection(MapData.name)
       .find({}, { hint: { $natural: -1 } })
       .fetchAsync()
