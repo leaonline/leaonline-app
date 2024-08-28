@@ -38,10 +38,12 @@ export const ImageRenderer = props => {
       Log.error(error)
       setLoadComplete(true)
       setError(error)
+      if (props.onError) { props.onError(error) }
     },
     onLoadEnd: event => {
       debug('load end from', urlReplaced)
       setTimeout(() => setLoadComplete(true), 300)
+      if (props.onLoaded) { props.onLoaded() }
     },
     // other potential events:
     // onLayout: event => console.debug('layout', event.nativeEvent),

@@ -1,18 +1,18 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import {
-  ActivityIndicator,
   Pressable,
   View
 } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { LeaText } from '../../components/LeaText'
 import { Colors } from '../../constants/Colors'
-import { Svg, Path, Circle, G } from 'react-native-svg'
+import { Svg, Circle, G } from 'react-native-svg'
 import { UndefinedScore } from '../../scoring/UndefinedScore'
 import { clearObject } from '../../utils/object/clearObject'
 import { ImageRenderer } from '../../components/renderer/media/ImageRenderer'
 import { Layout } from '../../constants/Layout'
 import { Log } from '../../infrastructure/Log'
+import { DashedLine } from '../../components/animated/DashedLine'
 
 const debug = Log.create('ConnectItemRenderer', 'debug')
 
@@ -174,28 +174,24 @@ export const ConnectItemRenderer = props => {
   // measures the position of the invisible dots,
   // which are used to get the start and end points
   // to draw the connections
-  const onDotLayout = (event, id, isLeft) => {
+  const onDotLayout = useCallback((event, id, isLeft) => {
     const stamp = Date.now()
-    debug('dot layout', isLeft ? 'L' : 'R', id, event.nativeEvent.layout, Layout.ratio(), stamp)
+    const target = isLeft
+      ? leftDots
+      : rightDots
+
+    debug('dot layout', isLeft ? 'L' : 'R', id, event.nativeEvent.layout, event.target.key)
     event.target.measureInWindow((x, y, w, h) => {
-      const centerX = x + (w / 2)
+      const centerX = isLeft ? w + 5 : x
       const centerY = y + (h / 2)
       debug('dot measure', isLeft ? 'L' : 'R', id, { x, y, w, h, centerX, centerY }, stamp)
-      const target = isLeft
-        ? leftDots
-        : rightDots
+
       target[id] = { x: centerX, y: centerY }
-
-      if (
-        Object.keys(leftDots).length === props.value.left.length &&
-        Object.keys(rightDots).length === props.value.right.length
-      ) {
-        setTimeout(() => setComplete(true), 500)
-      }
     })
-  }
+  }, [])
 
-  const onPressLeft = ({ id }) => {
+  const onPressLeft = useCallback(({ id }) => {
+    if (!complete) { setComplete(true) }
     if (props.showCorrectResponse) {
       return updateHighlighted(id, 'left')
     }
@@ -206,7 +202,7 @@ export const ConnectItemRenderer = props => {
     else {
       setActive(id)
     }
-  }
+  }, [active, props.showCorrectResponse])
 
   const onPressRight = ({ id }) => {
     if (props.showCorrectResponse) {
@@ -266,6 +262,8 @@ export const ConnectItemRenderer = props => {
       responses,
       data: props
     })
+
+    if (!complete) { setComplete(true) }
 
     setSelected(current)
     setActive(null)
@@ -347,13 +345,11 @@ export const ConnectItemRenderer = props => {
 
       return (
         <Pressable
-          accessibilityRole='button'
+          accessibilityRole="button"
           key={`left-${index}`}
           style={styles.nodeContainer}
           onPress={() => onPressLeft({ id: index })}
-          onLayout={e => {
-            onDotLayout(e, index, true)
-          }}
+          onLayout={e => !complete && onDotLayout(e, index, true)}
         >
           <View style={nodeStyle}>
             {
@@ -369,8 +365,9 @@ export const ConnectItemRenderer = props => {
 
   const renderLines = () => {
     const allLines = []
+    console.debug({ selected })
 
-    const transformToLine = color => key => {
+    const transformToLine = (color, responseType) => key => {
       const [left, right] = key.split(',')
       const x1 = leftDots[left].x
       const y1 = leftDots[left].y
@@ -382,7 +379,7 @@ export const ConnectItemRenderer = props => {
         opacity = getHighlightedStyle({ index: key, type: 'line' })
       }
 
-      allLines.push({ x1, y1, x2, y2, color, opacity })
+      allLines.push({ x1, y1, x2, y2, color, opacity, responseType })
     }
 
     if (props.showCorrectResponse) {
@@ -400,44 +397,28 @@ export const ConnectItemRenderer = props => {
           const y2 = rightDots[right].y
           const color = props.dimensionColor
           const opacity = 1.0
-
           allLines.push({ x1, y1, x2, y2, color, opacity })
         })
       })
     }
 
-
-    return (
-      <Svg
-        style={styles.svg} width={svgContainer.w} height={svgContainer.h}
-        viewBox={`${svgContainer.x} ${svgContainer.y} ${svgContainer.w} ${svgContainer.h}`}
-      >
-        {
-          allLines.map((position, index) => {
-            const path = `M ${position.x1} ${position.y1} L ${position.x2} ${position.y2}`
-            const lineKey = `svg-line-${index}`
-            return (
-              <G key={lineKey}>
-                <Path
-                  strokeWidth='4'
-                  stroke={position.color}
-                  strokeOpacity={position.opacity}
-                  d={path}
-                />
-
-                <Circle
-                  x={position.x2}
-                  y={position.y2}
-                  r={10}
-                  fill={position.color}
-                  fillOpacity={position.opacity}
-                />
-              </G>
-            )
-          })
-        }
-      </Svg>
-    )
+    return allLines.map((position, index) => {
+      const lineKey = `svg-line-${index}`
+      console.debug('render', position.x1, position.y1, position.x2, position.y2)
+      return (
+        <Connection
+          key={lineKey}
+          invert={true}
+          width="4"
+          color={position.color}
+          opacity={position.opacity}
+          startX={position.x1}
+          startY={position.y1}
+          endX={position.x2}
+          endY={position.y2}
+        />
+      )
+    })
   }
 
   const renderRightElements = () => {
@@ -459,13 +440,11 @@ export const ConnectItemRenderer = props => {
 
       return (
         <Pressable
-          accessibilityRole='button'
+          accessibilityRole="button"
           key={`right-${index}`}
           style={styles.nodeContainer}
           onPress={() => onPressRight({ id: index })}
-          onLayout={e => {
-            onDotLayout(e, index, false)
-          }}
+          onLayout={e => !complete && onDotLayout(e, index, false)}
         >
           <View style={nodeStyle}>
             {
@@ -481,14 +460,19 @@ export const ConnectItemRenderer = props => {
 
   return (
     <View style={[styles.overlay, props.style]} onLayout={onContainerLayout}>
-      {renderLines()}
+      <Svg
+        style={styles.svg}
+        width={svgContainer.w}
+        height={svgContainer.h}
+        viewBox={`${svgContainer.x} ${svgContainer.y} ${svgContainer.w} ${svgContainer.h}`}
+      >
+        {renderLines()}
+      </Svg>
       <View style={styles.container}>
         <View style={styles.leftContainer}>
           {renderLeftElements()}
         </View>
-        <View style={styles.centerContainer}>
-          {!complete && <ActivityIndicator color={props.dimensionColor} />}
-        </View>
+        <View style={styles.centerContainer}/>
         <View style={styles.rightContainer}>
           {renderRightElements()}
         </View>
@@ -496,6 +480,35 @@ export const ConnectItemRenderer = props => {
     </View>
   )
 }
+
+const Connection = React.memo(props => {
+  const path = `M ${props.startX} ${props.startY} L ${props.endX} ${props.endY}`
+  return (
+    <G>
+      <Circle
+        x={props.startX}
+        y={props.startY}
+        r={5}
+        fill={props.color}
+        fillOpacity={props.opacity}
+      />
+      <DashedLine
+        invert={props.invert}
+        width={props.width}
+        color={props.color}
+        opacity={props.opacity}
+        path={path}
+      />
+      <Circle
+        x={props.endX}
+        y={props.endY}
+        r={5}
+        fill={props.color}
+        fillOpacity={props.opacity}
+      />
+    </G>
+  )
+})
 
 const renderText = ({ isSelected, text }) => (
   <LeaText
@@ -535,14 +548,14 @@ const initialHighlighted = () => ([])
 const styles = createStyleSheet({
   overlay: {
     marginTop: 25,
-    borderColor: '#ff0',
+    borderColor: '#ff0'
   },
   svgContainer: {
     borderColor: '#0f0'
   },
   svg: {
     position: 'absolute',
-    borderColor: '#0ff',
+    borderColor: '#0ff'
   },
   container: {
     flex: 1,
@@ -576,10 +589,10 @@ const styles = createStyleSheet({
     justifyContent: 'center'
   },
   node: {
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginTop: 10,
+    marginBottom: 10,
     flexGrow: 1,
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.white,
     borderColor: Colors.secondary,
@@ -590,17 +603,14 @@ const styles = createStyleSheet({
     backgroundColor: Colors.secondary,
     borderColor: Colors.secondary
   },
-  highlightActive: {
-
-  },
+  highlightActive: {},
   highlightPassive: {
     opacity: 0.1
   },
   textSelected: {
     color: Colors.white
   },
-  text: {
-  },
+  text: {},
   textElement: {},
   image: {
     width: '100%'
