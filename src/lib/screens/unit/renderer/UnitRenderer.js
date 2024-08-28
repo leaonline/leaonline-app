@@ -270,6 +270,6 @@ const styles = createStyleSheet({
     marginRight: 4,
     alignItems: 'stretch'
   }
-}, true)
+})
 
 const dropShadow = Layout.dropShadow()

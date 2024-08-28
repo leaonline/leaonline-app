@@ -16,7 +16,8 @@ const resources = {
     errors: {
       restart: 'Please restart the app.',
       fallback: 'An unknown error occurred.',
-      noDataReceived: 'No data has been loaded.'
+      noDataReceived: 'No data has been loaded.',
+      imageFailed: 'Image failed to load'
     },
     common: {
       yes: 'Yes',
@@ -169,7 +170,8 @@ const resources = {
     errors: {
       restart: 'Bitte wische mit dem Finger nach unten, um die Seite neu zu laden. Falls das nicht hilft, schließe die App und starte sie neu. Das lea. Team wurde über das Problem informiert.',
       fallback: 'Es ist ein unerwarteter Fehler aufgetreten.',
-      noDataReceived: 'Daten konnten nicht geladen werden.'
+      noDataReceived: 'Daten konnten nicht geladen werden.',
+      imageFailed: 'Bild konnte nicht geladen werden'
     },
     common: {
       yes: 'Ja',

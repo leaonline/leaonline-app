@@ -5,6 +5,10 @@ import { createStyleSheet } from '../../../styles/createStyleSheet'
 import { Loading } from '../../Loading'
 import { ContentServer } from '../../../remotes/ContentServer'
 import { mergeStyles } from '../../../styles/mergeStyles'
+import { Colors } from '../../../constants/Colors'
+import { Icon } from 'react-native-elements'
+import { useTts } from '../../Tts'
+import { useTranslation } from 'react-i18next'
 
 const win = Dimensions.get('window')
 const debug = Log.create('ImageRenderer', 'debug', true)
@@ -19,6 +23,8 @@ const debug = Log.create('ImageRenderer', 'debug', true)
  * @constructor
  */
 export const ImageRenderer = props => {
+  const { Tts } = useTts()
+  const { t } = useTranslation()
   const widthRatio = props.width
     ? Number.parseInt(props.width) / 12
     : 1
@@ -44,10 +50,6 @@ export const ImageRenderer = props => {
     resizeMethod: 'auto'
   }
 
-  if (error) {
-    return null
-  }
-
   const loader = () => loadComplete
     ? null
     : (<Loading />)
@@ -55,7 +57,15 @@ export const ImageRenderer = props => {
   return (
     <View style={styles.imageContainer}>
       {loader()}
-      <Image {...imageProps} accessibilityRole='image' resizeMode='center' />
+      {error
+        ? (
+          <View style={styles.fallback}>
+              <Tts text={t('errors.imageFailed')} color={Colors.gray} dontShowText />
+              <Icon name="image" size={48} color={Colors.gray} />
+          </View>
+        )
+        : (<Image {...imageProps} accessibilityRole='image' resizeMode='center' />)
+      }
     </View>
   )
 }
@@ -68,5 +78,14 @@ const styles = createStyleSheet({
   imageContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start'
+  },
+  fallback: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 100,
+    minHeight: 100,
+    borderWidth: 1,
+    borderColor: Colors.gray
   }
 })

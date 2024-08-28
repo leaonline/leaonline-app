@@ -149,4 +149,4 @@ const styles = createStyleSheet({
   entry: {
     padding: 20
   }
-}, true)
+})
