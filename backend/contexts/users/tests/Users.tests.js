@@ -70,10 +70,11 @@ describe('Users', function () {
           const isDev = coin()
           const device = coin() ? { vendor: 'foo' } : undefined
           const newUserId = await run.call({}, { voice, speed, isDev, device })
+          const terms = undefined
           const userDoc = await getUsersCollection().findOneAsync(newUserId)
           const { username, restore, createdAt, services, ...doc } = userDoc
           expect(doc).to.deep.equal({
-            _id: newUserId, voice, speed, isDev, device
+            _id: newUserId, voice, speed, isDev, device, terms
           })
           expect(createdAt).to.be.instanceOf(Date)
           expect(username).to.be.a('string')

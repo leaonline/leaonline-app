@@ -7,7 +7,6 @@ import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { safeWhileAsync } from '../../api/utils/safeWhile'
-import { ServerErrors } from '../errors/ServerErrors'
 
 /**
  * Representation of users in the database.
@@ -203,7 +202,7 @@ Users.methods.create = {
       }
 
       const collection = getUsersCollection()
-      const { voice, speed, termsAndConditionsIsChecked, researchEmail, isDev, device } = options
+      const { voice, speed, termsAndConditionsIsChecked, /* researchEmail, */ isDev, device } = options
 
       // since older app versions do not send this flag
       // we can't 100% require this to be present
