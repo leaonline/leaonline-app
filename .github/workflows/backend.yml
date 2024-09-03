@@ -21,7 +21,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'backend/package-lock.json'
 
-      - run: cd backend && npm ci
+      - run: cd backend && npm ci --legacy-peer-deps --force
       - run: cd backend && npm run lint:code
 
   tests:
