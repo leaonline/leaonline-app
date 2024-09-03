@@ -10,7 +10,6 @@ import { Svg, Circle, G } from 'react-native-svg'
 import { UndefinedScore } from '../../scoring/UndefinedScore'
 import { clearObject } from '../../utils/object/clearObject'
 import { ImageRenderer } from '../../components/renderer/media/ImageRenderer'
-import { Layout } from '../../constants/Layout'
 import { Log } from '../../infrastructure/Log'
 import { DashedLine } from '../../components/animated/DashedLine'
 

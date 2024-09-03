@@ -9,14 +9,14 @@ export const DashedLine = props => {
 
   useEffect(() => {
     Animated.loop(
-    Animated.timing(offset, {
-      toValue: props.invert ? 0 : 100,
-      duration: 5000,
-      useNativeDriver: true,
-      isInteraction: false,
-      easing: Easing.linear
-    })).start()
-  }, [offset]);
+      Animated.timing(offset, {
+        toValue: props.invert ? 0 : 100,
+        duration: 5000,
+        useNativeDriver: true,
+        isInteraction: false,
+        easing: Easing.linear
+      })).start()
+  }, [offset])
 
   return (
     <AnimatedPath

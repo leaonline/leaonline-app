@@ -101,7 +101,7 @@ export const useConnection = () => {
   return {
     connected,
     www,
-    backend,
+    backend
   }
 }
 

@@ -28,7 +28,7 @@ export const BackButton = (props) => {
       hitSlop={10}
       android_ripple={rippleConfig}
     >
-      <Icon name={props.icon}  color={Colors.secondary} size={18} />
+      <Icon name={props.icon} color={Colors.secondary} size={18} />
     </Pressable>
   )
 }

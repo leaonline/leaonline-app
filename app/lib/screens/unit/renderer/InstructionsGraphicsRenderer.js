@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Vibration, View } from 'react-native'
 import { InstructionAnimations } from '../instructions/InstructionAnimations'
 import { useTts, TTSengine } from '../../../components/Tts'
@@ -81,6 +81,6 @@ const styles = createStyleSheet({
     flex: 1,
     paddingLeft: 20,
     paddingTop: 15,
-    paddingBottom: 15,
+    paddingBottom: 15
   }
 })

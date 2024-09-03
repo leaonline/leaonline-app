@@ -3,6 +3,8 @@ import { Colors } from '../constants/Colors'
 import { createContextStorage } from './createContextStorage'
 import Icon from '@expo/vector-icons/FontAwesome6'
 import { collectionNotInitialized } from './collectionNotInitialized'
+import { createStyleSheet } from '../styles/createStyleSheet'
+import { View } from 'react-native'
 
 export const MapIcons = {
   name: 'mapIcons'
@@ -48,13 +50,24 @@ MapIcons.render = (index) => {
 
   const name = internal.icons[index]
   return (
+    <View style={styles.container}>
     <Icon
       color={Colors.gray}
       size={50}
       name={name}
       reverse={false}
+      style={styles.icon}
     />
+    </View>
   )
 }
 
-const MemoIcon = React.memo(Icon)
+const styles = createStyleSheet({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  icon: {
+    flex: 0
+  }
+})
