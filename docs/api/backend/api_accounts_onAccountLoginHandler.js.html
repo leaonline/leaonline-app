@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation contexts/achievements/Achievements.js</title>
+  <title>lea.online App-Backend Documentation api/accounts/onAccountLoginHandler.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>contexts/achievements/Achievements.js</h1>
+                    <h1>api/accounts/onAccountLoginHandler.js</h1>
                 </header>
                 
 
@@ -102,96 +102,16 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
-import { Field } from '../content/Field'
-import { Dimension } from '../content/Dimension'
-import { SyncState } from '../sync/SyncState'
-import { onDependencies } from '../utils/onDependencies'
+            <pre class="prettyprint source linenums"><code>import { getUsersCollection } from '../collections/getUsersCollection'
 
 /**
- * Contains documents of all possible field &lt;-> dimension
- * combinations with the maximum achievable progress and
- * competencies.
+ * Adds a lastLogin to the current user
+ * @param user
  */
-export const Achievements = {
-  name: 'achievements',
-  label: 'achievements.title',
-  icon: 'trophy',
-  sync: true
-}
-
-Achievements.schema = {
-  dimensionId: {
-    type: String,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
-    }
-  },
-  fieldId: {
-    type: String,
-    dependency: {
-      collection: Field.name,
-      field: Field.representative
-    }
-  },
-  maxProgress: {
-    type: Number
-  },
-  maxCompetencies: {
-    type: Number
-  }
-}
-
-Achievements.create = async function create ({ dimensionId, fieldId }) {
-  const collection = getCollection(Achievements.name)
-  const achievementId = await collection.insertAsync({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
-  return collection.findOneAsync(achievementId)
-}
-
-Achievements.update = async function update ({ dimensionId, fieldId, maxProgress, maxCompetencies }) {
-  const collection = getCollection(Achievements.name)
-  const query = { dimensionId, fieldId }
-  let achievementDoc = await collection.findOneAsync(query)
-
-  if (!achievementDoc) {
-    achievementDoc = await Achievements.create(query)
-  }
-
-  const updated = await collection.updateAsync(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
-  await SyncState.update(Achievements.name)
-
-  return updated
-}
-
-Achievements.methods = {}
-
-Achievements.methods.getAll = {
-  name: 'achievements.methods.getAll',
-  backend: true,
-  schema: {
-    dependencies: {
-      type: Array,
-      optional: true
-    },
-    'dependencies.$': {
-      type: Object,
-      blackbox: true,
-      optional: true
-    }
-  },
-  run: async function ({ dependencies = {} } = {}) {
-    const docs = await getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetchAsync()
-    const data = { [Achievements.name]: docs }
-
-    await onDependencies()
-      .output(data)
-      .add(Field, 'fieldId')
-      .add(Dimension, 'dimensionId')
-      .run({ docs, dependencies })
-
-    return data
-  }
+export const onAccountLoginHandler = async function ({ user }) {
+  const userId = user._id
+  const lastLogin = new Date()
+  await getUsersCollection().updateAsync(userId, { $set: { lastLogin } })
 }
 </code></pre>
         </article>

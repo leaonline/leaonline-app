@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation contexts/achievements/Achievements.js</title>
+  <title>lea.online App-Backend Documentation api/utils/safeWhile.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>contexts/achievements/Achievements.js</h1>
+                    <h1>api/utils/safeWhile.js</h1>
                 </header>
                 
 
@@ -102,95 +102,30 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
-import { Field } from '../content/Field'
-import { Dimension } from '../content/Dimension'
-import { SyncState } from '../sync/SyncState'
-import { onDependencies } from '../utils/onDependencies'
-
-/**
- * Contains documents of all possible field &lt;-> dimension
- * combinations with the maximum achievable progress and
- * competencies.
+            <pre class="prettyprint source linenums"><code>/**
+ * runs a while loop until finished or until a count has been exceeded
+ *
+ * @param fn
+ * @param maxCount
+ * @return {*}
  */
-export const Achievements = {
-  name: 'achievements',
-  label: 'achievements.title',
-  icon: 'trophy',
-  sync: true
-}
-
-Achievements.schema = {
-  dimensionId: {
-    type: String,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
+export const safeWhile = (fn, maxCount = 50) => {
+  let count = 0
+  let value
+  while (((value = fn(count)) || true) &amp;&amp; count++ &lt; maxCount) {
+    if (value !== undefined) {
+      return value
     }
-  },
-  fieldId: {
-    type: String,
-    dependency: {
-      collection: Field.name,
-      field: Field.representative
-    }
-  },
-  maxProgress: {
-    type: Number
-  },
-  maxCompetencies: {
-    type: Number
   }
 }
 
-Achievements.create = async function create ({ dimensionId, fieldId }) {
-  const collection = getCollection(Achievements.name)
-  const achievementId = await collection.insertAsync({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
-  return collection.findOneAsync(achievementId)
-}
-
-Achievements.update = async function update ({ dimensionId, fieldId, maxProgress, maxCompetencies }) {
-  const collection = getCollection(Achievements.name)
-  const query = { dimensionId, fieldId }
-  let achievementDoc = await collection.findOneAsync(query)
-
-  if (!achievementDoc) {
-    achievementDoc = await Achievements.create(query)
-  }
-
-  const updated = await collection.updateAsync(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
-  await SyncState.update(Achievements.name)
-
-  return updated
-}
-
-Achievements.methods = {}
-
-Achievements.methods.getAll = {
-  name: 'achievements.methods.getAll',
-  backend: true,
-  schema: {
-    dependencies: {
-      type: Array,
-      optional: true
-    },
-    'dependencies.$': {
-      type: Object,
-      blackbox: true,
-      optional: true
+export const safeWhileAsync = async (fn, maxCount = 50) => {
+  let count = 0
+  let value
+  while (((value = await fn(count)) || true) &amp;&amp; count++ &lt; maxCount) {
+    if (value !== undefined) {
+      return value
     }
-  },
-  run: async function ({ dependencies = {} } = {}) {
-    const docs = await getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetchAsync()
-    const data = { [Achievements.name]: docs }
-
-    await onDependencies()
-      .output(data)
-      .add(Field, 'fieldId')
-      .add(Dimension, 'dimensionId')
-      .run({ docs, dependencies })
-
-    return data
   }
 }
 </code></pre>

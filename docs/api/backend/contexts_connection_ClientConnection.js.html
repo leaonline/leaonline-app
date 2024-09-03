@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>lea.online App-Backend Documentation contexts/achievements/Achievements.js</title>
+  <title>lea.online App-Backend Documentation contexts/connection/ClientConnection.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -93,7 +93,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>contexts/achievements/Achievements.js</h1>
+                    <h1>contexts/connection/ClientConnection.js</h1>
                 </header>
                 
 
@@ -102,72 +102,101 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { getCollection } from '../../api/utils/getCollection'
-import { Field } from '../content/Field'
-import { Dimension } from '../content/Dimension'
-import { SyncState } from '../sync/SyncState'
-import { onDependencies } from '../utils/onDependencies'
+            <pre class="prettyprint source linenums"><code>import { Mongo } from 'meteor/mongo'
+import { createLog } from '../../infrastructure/log/createLog'
 
 /**
- * Contains documents of all possible field &lt;-> dimension
- * combinations with the maximum achievable progress and
- * competencies.
+ * Stores active connection with mobile clients.
+ * Data is only stored in RAM and is cleared on restart.
  */
-export const Achievements = {
-  name: 'achievements',
-  label: 'achievements.title',
-  icon: 'trophy',
-  sync: true
+export const ClientConnection = {
+  name: 'clientConnection',
+  label: 'clientConnection.title',
+  icon: 'mobile'
 }
 
-Achievements.schema = {
-  dimensionId: {
+ClientConnection.schema = {
+  id: {
+    type: String
+  },
+  timestamp: {
+    type: Date
+  },
+  clientAddress: {
+    type: String
+  },
+  headers: {
+    type: Object,
+    blackbox: true
+  },
+  userId: {
     type: String,
-    dependency: {
-      collection: Dimension.name,
-      field: Dimension.representative
-    }
+    optional: true
   },
-  fieldId: {
+  isDev: {
     type: String,
-    dependency: {
-      collection: Field.name,
-      field: Field.representative
-    }
+    optional: true
   },
-  maxProgress: {
-    type: Number
-  },
-  maxCompetencies: {
-    type: Number
+  isBackend: {
+    type: String,
+    optional: true
   }
 }
 
-Achievements.create = async function create ({ dimensionId, fieldId }) {
-  const collection = getCollection(Achievements.name)
-  const achievementId = await collection.insertAsync({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
-  return collection.findOneAsync(achievementId)
+/**
+ * Returns the underlying MongoDB connection.
+ * @return {Mongo.Collection}
+ */
+ClientConnection.collection = () => connections
+
+const connections = new Mongo.Collection(null)
+const log = createLog({ name: ClientConnection.name, type: 'log' })
+
+/**
+ * Stores the current connection's credentials in the DB until clients disconnect.
+ * @param id
+ * @param onClose
+ * @param clientAddress
+ * @param httpHeaders
+ * @return {Promise&lt;void>}
+ */
+ClientConnection.onConnected = async function ({ id, onClose, clientAddress, httpHeaders = {} }) {
+  log('on connect', id, clientAddress, httpHeaders['user-agent'])
+  const timestamp = new Date()
+  await connections.upsertAsync({ id }, { $set: { id, clientAddress, httpHeaders, timestamp } })
+  onClose(() => ClientConnection.onDisconnect({ id, clientAddress, httpHeaders }))
 }
 
-Achievements.update = async function update ({ dimensionId, fieldId, maxProgress, maxCompetencies }) {
-  const collection = getCollection(Achievements.name)
-  const query = { dimensionId, fieldId }
-  let achievementDoc = await collection.findOneAsync(query)
-
-  if (!achievementDoc) {
-    achievementDoc = await Achievements.create(query)
-  }
-
-  const updated = await collection.updateAsync(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
-  await SyncState.update(Achievements.name)
-
-  return updated
+/**
+ * Registers a handler to remote the DB entry when clients disconnect from the server
+ * @param id
+ * @param clientAddress
+ * @param httpHeaders
+ * @return {Promise&lt;void>}
+ */
+ClientConnection.onDisconnect = async ({ id, clientAddress, httpHeaders }) => {
+  log('on disconnect', id, clientAddress, httpHeaders)
+  await connections.removeAsync({ id })
 }
 
-Achievements.methods = {}
+/**
+ * Registers a handler that updates the entry
+ * when clients have authenticated successfully
+ * @param connection
+ * @param user
+ * @return {Promise&lt;void>}
+ */
+ClientConnection.onLogin = async ({ connection = {}, user = {} }) => {
+  log('on login', connection.id, '=>', user._id)
+  const id = connection.id
+  const userId = user._id
+  const isDev = !!user.isDev
+  await connections.updateAsync({ id }, { $set: { userId, isDev } })
+}
 
-Achievements.methods.getAll = {
-  name: 'achievements.methods.getAll',
+ClientConnection.methods = {}
+ClientConnection.methods.getAll = {
+  name: 'clientConnection.methods.all',
   backend: true,
   schema: {
     dependencies: {
@@ -180,17 +209,12 @@ Achievements.methods.getAll = {
       optional: true
     }
   },
-  run: async function ({ dependencies = {} } = {}) {
-    const docs = await getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetchAsync()
-    const data = { [Achievements.name]: docs }
-
-    await onDependencies()
-      .output(data)
-      .add(Field, 'fieldId')
-      .add(Dimension, 'dimensionId')
-      .run({ docs, dependencies })
-
-    return data
+  run: async function (/* { dependencies = {} } = {} */) {
+    const { userId } = this
+    const docs = await connections.find({ userId: { $ne: userId } }).fetchAsync()
+    return {
+      [ClientConnection.name]: docs
+    }
   }
 }
 </code></pre>
