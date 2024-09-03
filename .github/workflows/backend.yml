@@ -1,4 +1,4 @@
-name: Backend Tests
+name: Backend
 
 on:
   push:
@@ -21,11 +21,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'backend/package-lock.json'
 
-      - run: cd backend && npm install
+      - run: cd backend && npm ci
       - run: cd backend && npm run lint:code
 
   tests:
-    name: Backend Meteor ${{ matrix.meteor }} tests
+    name: Backend Meteor Tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -53,15 +53,6 @@ jobs:
           key: v3-meteor-${{ hashFiles('.meteor/versions') }}
           restore-keys: |
             v3-meteor-
-
-      - name: Cache NPM dependencies
-        id: cache-meteor-npm
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: v1-npm-${{ hashFiles('backend/package-lock.json') }}
-          restore-keys: |
-            v1-npm-
 
       - name: Cache Meteor build
         id: cache-meteor-build

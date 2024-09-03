@@ -1,4 +1,4 @@
-name: App Testsuite
+name: App
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           cache-dependency-path: 'app/package-lock.json'
 
       - name: install node modules
-        run: cd app && npm i --legacy-peer-deps --force
+        run: cd app && npm ci --legacy-peer-deps --force
       - name: run standard js
         run: cd app && npm run lint
 
@@ -61,6 +61,6 @@ jobs:
           cache-dependency-path: 'app/package-lock.json'
 
       - name: install node modules
-        run: cd app && npm i --legacy-peer-deps --force
+        run: cd app && npm ci --legacy-peer-deps --force
       - name: run jsdoc
-        run: cd app && npm run docs
+        run: cd app && npm run build:docs
