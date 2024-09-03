@@ -31,6 +31,7 @@ import { View, FlatList } from 'react-native'
 import { createStyleSheet } from '../../styles/createStyleSheet'
 import { useDocs } from '../../meteor/useDocs'
 import { loadMapData } from './loadMapData'
+import { useRefresh } from '../../hooks/useRefresh'
 import { Log } from '../../infrastructure/Log'
 import { useTranslation } from 'react-i18next'
 import { AppSessionContext } from '../../state/AppSessionContext'
@@ -45,9 +46,10 @@ import { mergeStyles } from '../../styles/mergeStyles'
 import { Connector } from './components/Connector'
 import nextFrame from 'next-frame'
 import { MapIcons } from '../../contexts/MapIcons'
+import { Layout } from '../../constants/Layout'
 
 const log = Log.create('MapScreen')
-const ITEM_HEIGHT = 100
+const STAGE_SIZE = 100
 const counter = 0.75
 
 /**
@@ -68,6 +70,9 @@ export const MapScreen = props => {
   const { Tts } = useTts()
   const [stageConnectorWidth, setStageConnectorWidth] = useState(null)
   const [activeStage, setActiveStage] = useState(-1)
+  const [initialIndex, setInitialIndex] = useState(0)
+  const [listData, setListData] = useState([])
+  const [reload, refresh] = useRefresh()
   const [connectorWidth, setConnectorWidth] = useState(null)
   const [session, sessionActions] = useContext(AppSessionContext)
   const mapDocs = useDocs({
@@ -79,7 +84,10 @@ export const MapScreen = props => {
       onUserDataLoaded: () => {
         sessionActions.update({ loadUserData: null })
       }
-    })
+    }),
+    dataRequired: true,
+    reload,
+    message: 'mapScreen.loadData'
   })
 
   useEffect(() => {
@@ -96,11 +104,26 @@ export const MapScreen = props => {
     })
   }, [props.navigation, sessionActions])
 
+  useEffect(() => {
+    const progressIndex = mapDocs?.data?.progressIndex
+    const entries = mapDocs?.data?.entries
+
+    if (progressIndex &amp;&amp; progressIndex !== initialIndex) {
+      setInitialIndex(progressIndex)
+    }
+
+    if (entries &amp;&amp; listData.length === 0) {
+      setListData(entries)
+    }
+  }, [mapDocs])
+
   const onListLayoutDetected = useCallback((event) => {
     const { width } = event.nativeEvent.layout
-    setStageConnectorWidth(width - ITEM_HEIGHT - (ITEM_HEIGHT / 2))
-    setConnectorWidth((width / 2) - ITEM_HEIGHT)
-  }, [setStageConnectorWidth, setConnectorWidth])
+    if (!stageConnectorWidth) {
+      setStageConnectorWidth(width - STAGE_SIZE - (STAGE_SIZE / 2))
+      setConnectorWidth((width / 2) - STAGE_SIZE)
+    }
+  }, [])
 
   const selectStage = useCallback(async (stage, index) => {
     setActiveStage(index)
@@ -115,10 +138,10 @@ export const MapScreen = props => {
     props.navigation.navigate('dimension')
   }, [mapDocs])
 
-  const renderListItem = useCallback(({ index, item: entry }) => {
+  const renderListItem2 = useCallback(({ index, item: entry }) => {
     if (entry.type === 'stage') {
       const isActive = activeStage === index
-      return renderStage({
+      const stageData = {
         index,
         stage: entry,
         connectorWidth: stageConnectorWidth,
@@ -126,19 +149,20 @@ export const MapScreen = props => {
         isActive,
         dimensionOrder: mapData?.dimensionOrder,
         dimensions: mapData?.dimensions
-      })
+      }
+      return (&lt;MapStage {...stageData} />)
     }
 
     if (entry.type === 'milestone') {
-      return renderMilestone({ milestone: entry, connectorWidth })
+      return (&lt;MapMilestone milestone={entry} connectorWidth={connectorWidth} />)
     }
 
     if (entry.type === 'finish') {
       return (
         &lt;View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          &lt;MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth} />
           &lt;MapFinish />
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
+          &lt;MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth} />
         &lt;/View>
       )
     }
@@ -146,9 +170,9 @@ export const MapScreen = props => {
     if (entry.type === 'start') {
       return (
         &lt;View style={styles.stage}>
-          {renderConnector(entry.viewPosition.left, connectorWidth)}
+          &lt;MapConnector connectorId={entry.viewPosition.left} listWidth={connectorWidth} />
           {MapIcons.render(0)}
-          {renderConnector(entry.viewPosition.right, connectorWidth)}
+          &lt;MapConnector connectorId={entry.viewPosition.right} listWidth={connectorWidth} />
         &lt;/View>
       )
     }
@@ -186,58 +210,52 @@ export const MapScreen = props => {
    * }
    */
   const mapData = mapDocs.data
-
   const renderList = () => {
-    if (!mapData?.entries?.length) {
+    if (!listData || !stageConnectorWidth) {
       return null
     }
-
-    // return mapData.entries.map((item, index) => renderListItem({ index, item }))
-
     return (
-      &lt;View style={styles.scrollView}>
-        &lt;FlatList
-          data={mapData.entries}
-          renderItem={renderListItem}
-          onLayout={onListLayoutDetected}
-          inverted
-          decelerationRate='fast'
-          disableIntervalMomentum
-          initialScrollIndex={mapData.progressIndex ?? 0}
-          removeClippedSubviews
-          persistentScrollbar
-          keyExtractor={flatListKeyExtractor}
-          initialNumToRender={50}
-          maxToRenderPerBatch={50}
-          updateCellsBatchingPeriod={3000}
-          getItemLayout={flatListGetItemLayout}
-        />
-      &lt;/View>
+      &lt;FlatList
+        data={listData}
+        renderItem={renderListItem2}
+        inverted
+        decelerationRate='fast'
+        disableIntervalMomentum
+        initialScrollIndex={initialIndex}
+        removeClippedSubviews
+        persistentScrollbar
+        keyExtractor={flatListKeyExtractor}
+        initialNumToRender={10}
+        maxToRenderPerBatch={3}
+        updateCellsBatchingPeriod={50}
+        getItemLayout={flatListGetItemLayout}
+      />
     )
   }
-
   return (
     &lt;ScreenBase
       {...mapDocs}
-      loadMessage={t('mapScreen.loadData')}
       progress={counter}
-      style={styles.container}
+      onRefresh={refresh}
+      style={mapDocs.error ? styles.failedContainer : styles.container}
     >
-      {renderList()}
+      &lt;View style={styles.scrollView} onLayout={onListLayoutDetected}>
+        {renderList()}
+      &lt;/View>
     &lt;/ScreenBase>
   )
 }
 
 const flatListGetItemLayout = (data, index) => {
-  const entry = data[index]
-  const length = entry &amp;&amp; ['stage', 'milestone'].includes(entry.type)
-    ? ITEM_HEIGHT + 10
-    : 59
-  return { length, offset: length * index, index }
+  // const entry = data[index]
+  // const length = entry &amp;&amp; ['stage', 'milestone'].includes(entry.type)
+  //   ? ITEM_HEIGHT + 10
+  //   : 59
+  return { length: STAGE_SIZE, offset: STAGE_SIZE * index, index }
 }
 const flatListKeyExtractor = (item) => item.entryKey
 
-const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, dimensionOrder, isActive }) => {
+const MapStage = React.memo(({ index, stage, selectStage, connectorWidth, dimensions, dimensionOrder, isActive }) => {
   const progress = 100 * (stage.userProgress || 0) / stage.progress
   const justifyContent = positionMap[stage.viewPosition.current]
   const stageStyle = mergeStyles(styles.stage, { justifyContent })
@@ -245,10 +263,10 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, di
 
   return (
     &lt;View style={stageStyle}>
-      {renderConnector(viewPosition.left, connectorWidth, viewPosition.icon)}
+      &lt;MapConnector connectorId={viewPosition.left} listWidth={connectorWidth} withIcon={viewPosition.icon} />
       &lt;Stage
-        width={ITEM_HEIGHT}
-        height={ITEM_HEIGHT}
+        width={STAGE_SIZE}
+        height={STAGE_SIZE}
         onPress={() => selectStage(stage, index)}
         unitSets={stage.unitSets}
         dimensions={dimensions}
@@ -257,23 +275,23 @@ const renderStage = ({ index, stage, selectStage, connectorWidth, dimensions, di
         progress={progress}
         isActive={isActive}
       />
-      {renderConnector(viewPosition.right, connectorWidth, viewPosition.icon)}
+      &lt;MapConnector connectorId={viewPosition.right} listWidth={connectorWidth} withIcon={viewPosition.icon} />
     &lt;/View>
   )
-}
+})
 
-const renderMilestone = ({ milestone, connectorWidth }) => {
+const MapMilestone = React.memo(({ milestone, connectorWidth }) => {
   const progress = 100 * milestone.userProgress / milestone.maxProgress
   return (
     &lt;View style={styles.stage}>
-      {renderConnector(milestone.viewPosition.left, connectorWidth)}
+      &lt;MapConnector connectorId={milestone.viewPosition.left} listWidth={connectorWidth} />
       &lt;Milestone progress={progress} level={milestone.level + 1} />
-      {renderConnector(milestone.viewPosition.right, connectorWidth)}
+      &lt;MapConnector connectorId={milestone.viewPosition.right} listWidth={connectorWidth} />
     &lt;/View>
   )
-}
+})
 
-const renderConnector = (connectorId, listWidth, withIcon = -1) => {
+const MapConnector = React.memo(({ connectorId, listWidth, withIcon = -1 }) => {
   if (connectorId === 'fill') {
     return (
       &lt;LeaText style={{ width: listWidth ?? '100%' }} />
@@ -286,7 +304,8 @@ const renderConnector = (connectorId, listWidth, withIcon = -1) => {
   }
 
   return null
-}
+})
+
 const positionMap = {
   center: 'center',
   left: 'flex-start',
@@ -302,6 +321,9 @@ const styles = createStyleSheet({
     marginLeft: 15,
     marginRight: 15
   },
+  failedContainer: {
+    ...Layout.container()
+  },
   scrollView: {
     width: '100%'
   },
@@ -310,7 +332,8 @@ const styles = createStyleSheet({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: ITEM_HEIGHT
+    height: STAGE_SIZE,
+    borderColor: 'blue'
   },
   connector: {
     flexGrow: 1
@@ -332,13 +355,13 @@ const styles = createStyleSheet({
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AuthenticationError.html">AuthenticationError</a></li><li><a href="ChoiceImageInstructions.html">ChoiceImageInstructions</a></li><li><a href="ClozeRenderer.html">ClozeRenderer</a></li><li><a href="ConnectItemRenderer.html">ConnectItemRenderer</a></li><li><a href="ConnectionError.html">ConnectionError</a></li><li><a href="ImageRenderer.html">ImageRenderer</a></li><li><a href="LeaCollection.html">LeaCollection</a></li><li><a href="Loading.html">Loading</a></li><li><a href="MeteorError_MeteorError.html">MeteorError</a></li><li><a href="SyncScreen.html">SyncScreen</a></li><li><a href="UnitContentElementFactory.html">UnitContentElementFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AccountInfo">AccountInfo</a></li><li><a href="global.html#AchievementsScreen">AchievementsScreen</a></li><li><a href="global.html#ActionButton">ActionButton</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AppSession">AppSession</a></li><li><a href="global.html#CharacterInput">CharacterInput</a></li><li><a href="global.html#Checkbox">Checkbox</a></li><li><a href="global.html#ChoiceRenderer">ChoiceRenderer</a></li><li><a href="global.html#CircularProgress">CircularProgress</a></li><li><a href="global.html#ClozeRendererBlank">ClozeRendererBlank</a></li><li><a href="global.html#ClozeRendererSelect">ClozeRendererSelect</a></li><li><a href="global.html#Colors">Colors</a></li><li><a href="global.html#CompareState">CompareState</a></li><li><a href="global.html#CompleteScreen">CompleteScreen</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#Confirm">Confirm</a></li><li><a href="global.html#Connecting">Connecting</a></li><li><a href="global.html#ConnectorComponent">ConnectorComponent</a></li><li><a href="global.html#ContentRenderer">ContentRenderer</a></li><li><a href="global.html#CurrentProgress">CurrentProgress</a></li><li><a href="global.html#DeveloperScreen">DeveloperScreen</a></li><li><a href="global.html#Diamond">Diamond</a></li><li><a href="global.html#DimensionScreen">DimensionScreen</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FadePanel">FadePanel</a></li><li><a href="global.html#HomeScreen">HomeScreen</a></li><li><a href="global.html#InstructionsGraphicsRendererOriginal">InstructionsGraphicsRendererOriginal</a></li><li><a href="global.html#InteractionGraph">InteractionGraph</a></li><li><a href="global.html#LeaButton">LeaButton</a></li><li><a href="global.html#LeaButtonGroup">LeaButtonGroup</a></li><li><a href="global.html#LeaLogo">LeaLogo</a></li><li><a href="global.html#LeaText">LeaText</a></li><li><a href="global.html#MapScreen">MapScreen</a></li><li><a href="global.html#Markdown">Markdown</a></li><li><a href="global.html#MarkdownRenderer">MarkdownRenderer</a></li><li><a href="global.html#MilestoneComponent">MilestoneComponent</a></li><li><a href="global.html#NullComponent">NullComponent</a></li><li><a href="global.html#PlainTextRenderer">PlainTextRenderer</a></li><li><a href="global.html#ProfileScreen">ProfileScreen</a></li><li><a href="global.html#RegistrationScreen">RegistrationScreen</a></li><li><a href="global.html#RenderScreenBase">RenderScreenBase</a></li><li><a href="global.html#RouteButton">RouteButton</a></li><li><a href="global.html#SoundIcon">SoundIcon</a></li><li><a href="global.html#Stack">Stack</a></li><li><a href="global.html#Stage">Stage</a></li><li><a href="global.html#Sync">Sync</a></li><li><a href="global.html#TTSVoiceConfig">TTSVoiceConfig</a></li><li><a href="global.html#TTSengine">TTSengine</a></li><li><a href="global.html#TermsAndConditionsScreen">TermsAndConditionsScreen</a></li><li><a href="global.html#TtsComponent">TtsComponent</a></li><li><a href="global.html#UnitRenderer">UnitRenderer</a></li><li><a href="global.html#UnitSetRenderer">UnitSetRenderer</a></li><li><a href="global.html#UserProgress">UserProgress</a></li><li><a href="global.html#WelcomeScreen">WelcomeScreen</a></li><li><a href="global.html#addCollection">addCollection</a></li><li><a href="global.html#asyncTimeout">asyncTimeout</a></li><li><a href="global.html#byDocId">byDocId</a></li><li><a href="global.html#byOrderedIds">byOrderedIds</a></li><li><a href="global.html#callMeteor">callMeteor</a></li><li><a href="global.html#checkResponse">checkResponse</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#collectionExists">collectionExists</a></li><li><a href="global.html#collectionNotInitialized">collectionNotInitialized</a></li><li><a href="global.html#completeUnit">completeUnit</a></li><li><a href="global.html#correctDiamondProgress">correctDiamondProgress</a></li><li><a href="global.html#createCollection">createCollection</a></li><li><a href="global.html#createRepository">createRepository</a></li><li><a href="global.html#createRoutableComponent">createRoutableComponent</a></li><li><a href="global.html#createSchema">createSchema</a></li><li><a href="global.html#createScoringSummaryForInput">createScoringSummaryForInput</a></li><li><a href="global.html#createSimpleTokenizer">createSimpleTokenizer</a></li><li><a href="global.html#createStorageAPI">createStorageAPI</a></li><li><a href="global.html#createStyleSheet">createStyleSheet</a></li><li><a href="global.html#createTimedPromise">createTimedPromise</a></li><li><a href="global.html#ensureConnected">ensureConnected</a></li><li><a href="global.html#getChoiceEntryScoreColor">getChoiceEntryScoreColor</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCompareValuesForSelectableItems">getCompareValuesForSelectableItems</a></li><li><a href="global.html#getDimensionColor">getDimensionColor</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getPositionOnCircle">getPositionOnCircle</a></li><li><a href="global.html#getScoring">getScoring</a></li><li><a href="global.html#hasOwnProp">hasOwnProp</a></li><li><a href="global.html#isDefined">isDefined</a></li><li><a href="global.html#isSafeInteger">isSafeInteger</a></li><li><a href="global.html#isUndefinedResponse">isUndefinedResponse</a></li><li><a href="global.html#isValidNumber">isValidNumber</a></li><li><a href="global.html#isWord">isWord</a></li><li><a href="global.html#loadAchievementsData">loadAchievementsData</a></li><li><a href="global.html#loadDevData">loadDevData</a></li><li><a href="global.html#loadHomeData">loadHomeData</a></li><li><a href="global.html#loadMapData">loadMapData</a></li><li><a href="global.html#loadSettingsFromUserProfile">loadSettingsFromUserProfile</a></li><li><a href="global.html#randomArrayElement">randomArrayElement</a></li><li><a href="global.html#randomIntInclusive">randomIntInclusive</a></li><li><a href="global.html#resetSyncData">resetSyncData</a></li><li><a href="global.html#setNewVoice">setNewVoice</a></li><li><a href="global.html#shouldRenderStory">shouldRenderStory</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#simpleRandomHex">simpleRandomHex</a></li><li><a href="global.html#toArrayIfNot">toArrayIfNot</a></li><li><a href="global.html#toDocId">toDocId</a></li><li><a href="global.html#toInteger">toInteger</a></li><li><a href="global.html#toPrecisionNumber">toPrecisionNumber</a></li><li><a href="global.html#updateUserProfile">updateUserProfile</a></li><li><a href="global.html#useBackHandler">useBackHandler</a></li><li><a href="global.html#useConnection">useConnection</a></li><li><a href="global.html#useContentElementFactory">useContentElementFactory</a></li><li><a href="global.html#useDocs">useDocs</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#usePath">usePath</a></li><li><a href="global.html#useRefresh">useRefresh</a></li><li><a href="global.html#validateSettingsSchema">validateSettingsSchema</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Oct 25 2023 09:40:55 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Sep 03 2024 11:47:20 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

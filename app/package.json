@@ -9,8 +9,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --coverage",
-    "docs": "jsdoc -c jsdoc.conf.json",
+    "test:fails": "jest --watch --bail",
     "lint": "expo lint",
+    "build:docs": "jsdoc -c jsdoc.conf.json",
     "build:staging": "node build --type=staging",
     "build:prod": "node build --type=production"
   },
@@ -68,8 +69,11 @@
     "eslint-plugin-n": "^17.10.2",
     "eslint-plugin-promise": "^7.1.0",
     "jest": "^29.7.0",
+    "eslint-plugin-jest": "^28.8.2",
     "jest-expo": "~51.0.3",
+    "jsdoc": "^4.0.3",
     "react-test-renderer": "18.2.0",
+    "sinon": "^18.0.0",
     "typescript": "~5.3.3"
   },
   "private": true

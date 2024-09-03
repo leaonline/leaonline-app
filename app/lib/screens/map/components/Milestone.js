@@ -54,7 +54,7 @@ const getStars = (value) => {
   const xOffsetLeft = ((value - 1) * 9) / 2
 
   for (let i = 0; i < value; i++) {
-    stars[i] = (<MilestoneStar index={i} xOffsetLeft={xOffsetLeft} />)
+    stars[i] = (<MilestoneStar key={i} index={i} xOffsetLeft={xOffsetLeft} />)
   }
 
   return stars

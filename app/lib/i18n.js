@@ -25,7 +25,10 @@ const resources = {
       continue: 'Continue'
     },
     connecting: {
-      title: 'You are offline. I\'m trying to connect.'
+      title: 'You are offline. I\'m trying to connect.',
+      done: 'You are connected again! 🎉',
+      backend: 'You are currently not connected to the lea-system.',
+      www: 'You have no internet connection, please check it.'
     },
     actions: {
       back: 'Back',
@@ -179,6 +182,7 @@ const resources = {
       continue: 'Weiter'
     },
     connecting: {
+      title: 'Verbinde mit dem lea-System',
       done: 'Du bist wieder verbunden! 🎉',
       backend: 'Du bist aktuell nicht mit dem lea-System verbunden. ',
       www: 'Du bist aktuell nicht mit dem Internet verbunden. Bitte prüfe deine Internet\u00ADverbindung.'

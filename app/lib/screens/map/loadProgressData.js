@@ -6,7 +6,6 @@ const debug = Log.create('loadProgressDoc', 'debug')
 
 export const loadProgressDoc = async (fieldId) => {
   debug('for', { fieldId })
-
   const progressDoc = await callMeteor({
     name: Config.methods.getProgress,
     args: { fieldId },
