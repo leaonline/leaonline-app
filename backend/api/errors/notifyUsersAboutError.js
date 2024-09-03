@@ -8,7 +8,7 @@ const { notify, replyTo, from } = Meteor.settings.email
  * Sends a notification to all registered listeners.
  * @param error
  * @param type
- * @return {Promise<[]>}
+ * @return {Promise}
  */
 export const notifyUsersAboutError = (error, type) => {
   if (!notify?.length || typeof error !== 'object' || error === null) {
