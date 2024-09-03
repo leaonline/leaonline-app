@@ -1,12 +1,12 @@
 {
-  "isDevelopment": false,
-  "isDeveloperRelease": false,
+  "isDevelopment": true,
+  "isDeveloperRelease": true,
   "appToken": "01234567890123456789012345678901",
   "backend": {
-    "url": "wss://appbackend.lealernen.de/websocket",
-    "reachabilityUrl": "https://appbackend.lealernen.de/reachability",
-    "maxTimeout": 100000,
-    "interval": 500,
+    "url": "ws://192.168.178.46:8080/websocket",
+    "reachabilityUrl": "http://192.168.178.46:8080/reachability",
+    "maxTimeout": 3000,
+    "interval": 250,
     "methods": {
       "defaultTimeout": 5000,
       "sendError": "clientErrors.methods.send",
@@ -46,7 +46,7 @@
     }
   },
   "content": {
-    "url": "https://content.lealernen.de"
+    "url": "http://192.168.178.22:3030"
   },
   "log": {
     "level": 0,

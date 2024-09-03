@@ -81,6 +81,6 @@ const styles = createStyleSheet({
     flex: 1,
     paddingLeft: 20,
     paddingTop: 15,
-    paddingBottom: 15,
+    paddingBottom: 15
   }
 })

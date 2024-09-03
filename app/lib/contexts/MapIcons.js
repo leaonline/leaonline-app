@@ -56,5 +56,3 @@ MapIcons.render = (index) => {
     />
   )
 }
-
-const MemoIcon = React.memo(Icon)

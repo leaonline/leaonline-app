@@ -65,7 +65,7 @@ export const ImageRenderer = props => {
               <Tts text={t('errors.imageFailed')} color={Colors.gray} dontShowText />
               <Icon name="image" size={48} color={Colors.gray} />
           </View>
-        )
+          )
         : (<Image {...imageProps} accessibilityRole='image' resizeMode='center' />)
       }
     </View>

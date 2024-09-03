@@ -25,7 +25,7 @@ export const createScoringSummaryForInput = ({ itemIndex, actual, entries }) => 
     index: itemIndex,
     score: 0, // computed average
     color: undefined,
-    actual: actual,
+    actual,
     entries: []
   }
 

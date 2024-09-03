@@ -9,7 +9,7 @@ import { createStyleSheet } from '../../styles/createStyleSheet'
 import { Layout } from '../../constants/Layout'
 import { Loading } from '../../components/Loading'
 import { InteractionGraph } from '../../infrastructure/log/InteractionGraph'
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native'
 /**
  * Screen for registering a new user.
  * This screen should automatically run without further actions required.

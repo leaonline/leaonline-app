@@ -9,7 +9,7 @@ export const useDevelopment = () => {
   useEffect(() => {
     setIsDevelopment(Config.isDevelopment)
     setIsDeveloperRelease(Config.isDeveloperRelease())
-    setIsDeveloperRelease(Config.isTest())
+    setIsTest(Config.isTest())
   }, [])
 
   return { isDevelopment, isDeveloperRelease, isTest }
