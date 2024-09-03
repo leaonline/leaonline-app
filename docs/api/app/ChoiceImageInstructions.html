@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: infrastructure/Log.js</title>
+    <title>JSDoc: Class: ChoiceImageInstructions</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,168 +17,195 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: infrastructure/Log.js</h1>
+    <h1 class="page-title">Class: ChoiceImageInstructions</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import { Config } from '../env/Config'
-import { ConsoleLogger } from './log/ConsoleLogger'
-import { Colors } from '../constants/Colors'
+        <h2><span class="attribs"><span class="type-signature"></span></span>ChoiceImageInstructions<span class="signature">(props)</span><span class="type-signature"> &rarr; {Element}</span></h2>
+        
+    
+</header>
 
-// TODO move to /log
-export const Log = {}
+<article>
+    <div class="container-overview">
+    
+        
 
-Log.name = 'Log'
+    
 
-let logLevel = Config.debug.logLevel
-let logTarget = ConsoleLogger
-const stack = []
+    
+    <h4 class="name" id="ChoiceImageInstructions"><span class="type-signature"></span>new ChoiceImageInstructions<span class="signature">(props)</span><span class="type-signature"> &rarr; {Element}</span></h4>
+    
 
-Log.setTarget = (impl) => {
-  logTarget = impl
-}
+    
 
-Log.stack = async () => [].concat(stack)
 
-Log.color = type => allLevels[type]?.color
 
-const allLevels = {
-  debug: {
-    index: 0,
-    color: Colors.gray,
-    run: (...args) => {
-      if (logLevel > 0) { return }
-      const now = timestamp()
-      stack.push(['debug', now].concat(args))
-      logTarget.debug(now, ...args)
-    }
-  },
-  info: {
-    index: 1,
-    color: Colors.info,
-    run: (...args) => {
-      if (logLevel > 1) { return }
-      const now = timestamp()
-      stack.push(['info', now].concat(args))
-      logTarget.info(now, ...args)
-    }
-  },
-  log: {
-    index: 2,
-    color: Colors.dark,
-    run: (...args) => {
-      if (logLevel > 2) { return }
-      const now = timestamp()
-      stack.push(['log', now].concat(args))
-      logTarget.log(now, ...args)
-    }
-  },
-  warning: {
-    index: 3,
-    color: Colors.warning,
-    run: (...args) => {
-      if (logLevel > 3) { return }
-      const now = timestamp()
-      stack.push(['warning', now].concat(args))
-      logTarget.warn(timestamp(), ...args)
-    }
-  },
-  error: {
-    index: 4,
-    color: Colors.danger,
-    run: (...args) => {
-      if (logLevel > 4) { return }
-      const now = timestamp()
-      stack.push(['error', now].concat(args))
-      logTarget.error(now, ...args)
-    }
-  },
-  fatal: {
-    index: 5,
-    color: '#ff0000',
-    run: (...args) => {
-      if (logLevel > 5) { return }
-      const now = timestamp()
-      stack.push(['fatal', now].concat(args))
-      logTarget.fatal
-        ? logTarget.fatal(now, ...args)
-        : logTarget.error(now, ...args)
-    }
-  }
-}
 
-const timestamp = () => {
-  const d = new Date()
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
-}
 
-Log.levels = () => ({ ...allLevels })
 
-Log.setLevel = level => {
-  const indices = Object.values(allLevels)
 
-  if (!indices.includes(level)) {
-    throw new Error(`Unsupported log level: ${level}`)
-  }
 
-  logLevel = level
-}
 
-/**
- * Creates a new log type.
- * @param name {string} the namespace for the log
- * @param {string=} [type='log'] the log type name
- * @param force {boolean=} overrides global logLevel
- * @return {function}
- */
-Log.create = (name, type = 'log', force) => {
-  if (name in Config.debug &amp;&amp; !Config.debug.name) {
-    return () => {}
-  }
 
-  if (typeof force === 'boolean' &amp;&amp; force !== true) {
-    return () => {} // noOp on conditionals
-  }
 
-  if (Config.isTest()) {
-    return () => {}
-  }
+    <h5>Parameters:</h5>
+    
 
-  if (!Object.hasOwnProperty.call(allLevels, type)) {
-    throw new Error(`Unsupported log type: ${type}`)
-  }
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-  const logName = `[${name}]:`
-  const logFn = allLevels[type].run
+        <th>Type</th>
 
-  if (!logFn) {
-    throw new Error(`Unexpected: no log function retrieved for type ${type}`)
-  }
+        
 
-  return (...args) => logFn(logName, ...args)
-}
+        
 
-Log.debug = (...args) => allLevels.debug.run(...args)
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-Log.info = (...args) => allLevels.info.run(...args)
+    <tbody>
+    
 
-Log.log = (...args) => allLevels.log.run(...args)
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
 
-Log.warn = (...args) => allLevels.warning.run(...args)
+            <td class="type">
+            
+            </td>
 
-Log.error = (...args) => allLevels.error.run(...args)
+            
 
-Log.fatal = (...args) => allLevels.fatal.run(...args)
+            
 
-Log.print = obj => Log.debug(JSON.stringify(obj, null, 2))
-</code></pre>
-        </article>
-    </section>
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="screens_unit_instructions_ChoiceImageInstructions.js.html">screens/unit/instructions/ChoiceImageInstructions.js</a>, <a href="screens_unit_instructions_ChoiceImageInstructions.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
