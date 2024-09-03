@@ -1,4 +1,3 @@
-import Meteor from '@meteorrn/core'
 import { Dimension } from '../../../lib/contexts/Dimension'
 import { stub, restoreAll } from '../../../__testHelpers__/stub'
 import { simpleRandom } from '../../../__testHelpers__/simpleRandom'
@@ -32,8 +31,6 @@ describe(loadMapData.name, () => {
 
   it('returns an "empty" message if the server responded with no or faulty map data', async () => {
     const fieldDoc = { _id: simpleRandom() }
-
-
     const allData = [
       undefined,
       null,

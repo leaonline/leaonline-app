@@ -20,7 +20,7 @@ test('recursively iterate all object keys of i18 EN and DE, checks if the same n
     })
     return keys
   }
-  const byName = (a,b) => a.localeCompare(b)
+  const byName = (a, b) => a.localeCompare(b)
   const deKeys = toKeys(translationDE).sort(byName)
   const enKeys = toKeys(translationEN).sort(byName)
 

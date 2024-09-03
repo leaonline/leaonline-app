@@ -1,7 +1,7 @@
 import { MapIcons } from '../../lib/contexts/MapIcons'
 import { createContextBaseTests } from '../../__testHelpers__/createContextBaseTests'
 import { simpleRandomHex } from '../../lib/utils/simpleRandomHex'
-import { render } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native'
 
 describe(MapIcons.name, () => {
   createContextBaseTests({ ctx: MapIcons })
