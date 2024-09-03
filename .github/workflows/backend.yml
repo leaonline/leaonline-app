@@ -73,7 +73,7 @@ jobs:
           meteor-release: '3.0.2'
 
       - name: Install NPM Dependencies
-        run: cd backend && meteor npm ci
+        run: cd backend && meteor npm ci --legacy-peer-deps --force
 
       - name: Run Tests
         run: cd backend && sh ./test.sh -c -o
@@ -120,5 +120,5 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'backend/package-lock.json'
 
-      - run: cd backend && npm ci
+      - run: cd backend && npm ci --legacy-peer-deps --force
       - run: cd backend && npm run build:docs
