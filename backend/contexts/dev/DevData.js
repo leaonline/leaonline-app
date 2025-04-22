@@ -10,9 +10,9 @@ DevData.methods = {}
 DevData.methods.get = {
   name: 'devData.methods.get',
   schema: {},
-  run: function () {
+  run: async function () {
     // TODO return only to dev accounts
-    const units = getCollection(Unit.name).find({}).map(({ _id, shortCode }) => ({ _id, shortCode }))
+    const units = await getCollection(Unit.name).find({}).mapAsync(({ _id, shortCode }) => ({ _id, shortCode }))
     return { units }
   }
 }

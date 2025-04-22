@@ -56,18 +56,19 @@ Response.schema = {
  * Counts all answer scores of a given unit that were scored as true
  * (accomplished).
  *
+ * @async
  * @param userId {string} the _id of the associated user
  * @param sessionId {string} the _id of the associated session
  * @param unitId {string} the _id of the associated unit
  * @return {number} the overall count of accomplished answers
  */
-Response.countAccomplishedAnswers = ({ userId, sessionId, unitId }) => {
+Response.countAccomplishedAnswers = async ({ userId, sessionId, unitId }) => {
   log('count accomplished answers', { userId, sessionId, unitId })
   const allDocsByUnit = getCollection(Response.name).find({ userId, sessionId, unitId })
 
   let count = 0
 
-  allDocsByUnit.forEach(responseDoc => {
+  await allDocsByUnit.forEachAsync(responseDoc => {
     responseDoc.scores.forEach(entry => {
       if (entry.score) {
         const competency = Array.isArray(entry.competency)
@@ -100,7 +101,7 @@ Response.methods.submit = {
   name: 'response.methods.submit',
   schema: submitSchema,
   run: onServerExec(function () {
-    return function (responseDoc) {
+    return async function (responseDoc) {
       responseDoc.timeStamp = new Date()
       responseDoc.userId = this.userId
 
@@ -112,7 +113,7 @@ Response.methods.submit = {
         page: responseDoc.page
       }
 
-      return getCollection(Response.name).upsert(selector, modifier)
+      return getCollection(Response.name).upsertAsync(selector, modifier)
     }
   })
 }

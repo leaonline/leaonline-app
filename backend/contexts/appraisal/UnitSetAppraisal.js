@@ -53,6 +53,34 @@ UnitSetAppraisal.schema = {
     type: Number,
     min: 0,
     max: 4
+  },
+
+  /**
+   * Additional reason can help
+   * to improve on the content
+   */
+  reason: {
+    type: String,
+    optional: true
+  },
+
+  /**
+   * Additionally we want to see if the score
+   * was high or low
+   */
+  score: {
+    type: Number,
+    optional: true
+  },
+
+  /**
+   * Additionally we store the sessionId
+   * to draw potential conclusion from the
+   * response
+   */
+  sessionId: {
+    type: String,
+    optional: true
   }
 }
 
@@ -64,10 +92,10 @@ UnitSetAppraisal.methods.send = {
     unitSetId: UnitSetAppraisal.schema.unitSetId,
     response: UnitSetAppraisal.schema.response
   },
-  run: function ({ unitSetId, response }) {
+  run: async function ({ unitSetId, response }) {
     const { userId } = this
     const createdAt = new Date()
-    const unitSetDoc = getCollection(UnitSet.name).findOne(unitSetId)
+    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(unitSetId)
     ensureDocument({
       name: UnitSet.name,
       docId: unitSetId,
@@ -76,15 +104,14 @@ UnitSetAppraisal.methods.send = {
     })
     const fieldId = unitSetDoc.field
     const dimensionId = unitSetDoc.dimension
-    const insertDoc = {
+    return getCollection(UnitSetAppraisal.name).insertAsync({
       userId,
       createdAt,
       unitSetId,
       fieldId,
       dimensionId,
       response
-    }
-    return getCollection(UnitSetAppraisal.name).insert(insertDoc)
+    })
   }
 }
 
@@ -102,11 +129,11 @@ UnitSetAppraisal.methods.getAll = {
     }
   },
   backend: true,
-  run: function ({ dependencies } = {}) {
-    const docs = getCollection(UnitSetAppraisal.name).find().fetch()
+  run: async function ({ dependencies } = {}) {
+    const docs = await getCollection(UnitSetAppraisal.name).find({}).fetchAsync()
     const data = { [UnitSetAppraisal.name]: docs }
 
-    onDependencies()
+    await onDependencies()
       .add(Field, 'fieldId')
       .add(Dimension, 'dimensionId')
       .add(UnitSet, 'unitSetId')

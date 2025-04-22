@@ -8,23 +8,38 @@ import { ClientConnection } from '../contexts/connection/ClientConnection'
 const { sync, remap } = Meteor.settings.remotes.content
 
 Meteor.startup(async () => {
-  useFixtures()
+  await useFixtures()
   await ContentServer.init()
+
+  // connection is set with a fixed timeout, since
+  // we only need this connection once.
+  // If the timeout is exceeded, we assume the content server
+  // is not available for now and we skip sync.
+  //
+  // This might lead in not 100% up-to-date data
+  // but waiting for the content server might lead
+  // to the whole backend not being available to clients,
+  // which is worse (unless we implement full offline support
+  // for the mobile clients).
+  if (!ContentServer.canSync()) {
+    return
+  }
+
+  // contexts to sync are only queued,
+  // if they are flagged in the settings.json
   const contexts = ContentServer.contexts().filter(ctx => !!sync[ctx.name])
 
   if (contexts.length > 0) {
-    // array.forEach can't be used, because we want
-    // read them in sequence and forEach does not do that
     for (const ctx of contexts) {
       await ContentServer.sync(ctx)
 
       // let the clients know, that we have updated the data
       if (ctx.sync) {
-        SyncState.update(ctx.name)
+        await SyncState.update(ctx.name)
       }
     }
   }
-  runRemap(remap)
+  await runRemap(remap)
 })
 
 Meteor.onConnection(ClientConnection.onConnected)

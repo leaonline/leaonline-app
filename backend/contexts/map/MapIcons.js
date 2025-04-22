@@ -32,9 +32,9 @@ MapIcons.methods.insert = {
   name: 'mapIcons.methods.insert',
   schema: MapIcons.schema,
   backend: true,
-  run: function ({ fieldId, icons }) {
-    const docId = getCollection(MapIcons.name).insert({ fieldId, icons })
-    SyncState.update(MapIcons.name)
+  run: async function ({ fieldId, icons }) {
+    const docId = await getCollection(MapIcons.name).insertAsync({ fieldId, icons })
+    await SyncState.update(MapIcons.name)
     return docId
   }
 }
@@ -48,11 +48,11 @@ MapIcons.methods.update = {
     ...MapIcons.schema
   },
   backend: true,
-  run: function ({ _id, fieldId, icons }) {
-    const updated = getCollection(MapIcons.name).update({ _id }, {
+  run: async function ({ _id, fieldId, icons }) {
+    const updated = await getCollection(MapIcons.name).updateAsync({ _id }, {
       $set: { fieldId, icons }
     })
-    SyncState.update(MapIcons.name)
+    await SyncState.update(MapIcons.name)
     return updated
   }
 }
@@ -62,9 +62,9 @@ MapIcons.methods.remove = {
   schema: {
     _id: String
   },
-  run: function ({ _id }) {
-    const removed = getCollection(MapIcons.name).remove({ _id })
-    SyncState.update(MapIcons.name)
+  run: async function ({ _id }) {
+    const removed = await getCollection(MapIcons.name).removeAsync({ _id })
+    await SyncState.update(MapIcons.name)
     return removed
   }
 }
@@ -74,8 +74,8 @@ MapIcons.methods.get = {
   schema: {
     _id: String
   },
-  run: function ({ _id }) {
-    return getCollection(MapIcons.name).findOne({ _id })
+  run: async function ({ _id }) {
+    return await getCollection(MapIcons.name).findOneAsync({ _id })
   }
 }
 
@@ -93,15 +93,13 @@ MapIcons.methods.getAll = {
     }
   },
   backend: true,
-  run: function ({ dependencies } = {}) {
-    const docs = getCollection(MapIcons.name).find().fetch()
+  run: async function ({ dependencies } = {}) {
+    const docs = await getCollection(MapIcons.name).find().fetchAsync()
     const data = { [MapIcons.name]: docs }
-
-    onDependencies()
-      .add(Field, 'fieldId')
+    await onDependencies()
       .output(data)
-      .run({ dependencies, docs })
-
+      .add(Field, 'fieldId')
+      .run({ docs, dependencies })
     return data
   }
 }

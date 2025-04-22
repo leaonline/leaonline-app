@@ -39,16 +39,16 @@ Content.methods.home = {
     import { Dimension } from './Dimension'
     import { Level } from './Level'
 
-    return function ({ field, dimension, level }) {
+    return async function ({ field, dimension, level }) {
       return {
         field: field
-          ? getCollection(Field.name).find().fetch()
+          ? await getCollection(Field.name).find().fetchAsync()
           : [],
         dimension: dimension
-          ? getCollection(Dimension.name).find().fetch()
+          ? await getCollection(Dimension.name).find().fetchAsync()
           : [],
         level: level
-          ? getCollection(Level.name).find().fetch()
+          ? await getCollection(Level.name).find().fetchAsync()
           : []
       }
     }
@@ -64,10 +64,24 @@ Content.methods.map = {
     fieldId: String
   },
   run: onServerExec(function () {
+    import { Meteor } from 'meteor/meteor'
     import { MapData } from '../map/MapData'
+    import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
+    import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
 
-    return function ({ fieldId }) {
-      return MapData.get({ field: fieldId })
+    return async function ({ fieldId }) {
+      const mapData = await MapData.get({ field: fieldId })
+      if (!mapData) {
+        Meteor.defer(() => notifyUsersAboutError(
+          new DocNotFoundError('mapData.notFound', {
+            fieldId,
+            method: Content.methods.map.name
+          }),
+          DocNotFoundError.name
+        ))
+        return { empty: true }
+      }
+      return mapData
     }
   })
 }
@@ -103,7 +117,7 @@ Content.methods.unit = {
 
     return function ({ unitId }) {
       // TODO return unit only in staging mode
-      return getCollection(Unit.name).findOne({ _id: unitId })
+      return getCollection(Unit.name).findOneAsync({ _id: unitId })
     }
   })
 }

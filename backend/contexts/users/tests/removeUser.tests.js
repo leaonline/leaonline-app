@@ -9,6 +9,7 @@ import { getUsersCollection } from '../../../api/collections/getUsersCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const UsersCollection = getUsersCollection()
 const SessionCollection = initTestCollection(Session)
@@ -18,10 +19,12 @@ const allCollections = [UsersCollection, SessionCollection, ProgressCollection, 
 
 describe(removeUser.name, function () {
   setupAndTeardown(allCollections)
-  it('throws if the user is not defined', () => {
+
+  it('throws if the user is not defined', async () => {
     const calledBy = Random.id()
-    ;[undefined, null, Random.id()].forEach(userId => {
-      expectThrown({
+    const allIds = [undefined, null, Random.id()]
+    await forEachAsync(allIds, async userId => {
+      await expectThrown({
         fn: () => removeUser(userId, calledBy),
         name: 'removeUser.error',
         reason: 'removeUser.userDoesNotExist',
@@ -29,12 +32,12 @@ describe(removeUser.name, function () {
       })
     })
   })
-  it('removes all the user\'s data', () => {
-    const userId = UsersCollection.insert({ username: Random.id() })
-    ResponseCollection.insert({ userId })
-    SessionCollection.insert({ userId })
-    ProgressCollection.insert({ userId })
-    const result = removeUser(userId, userId)
+  it('removes all the user\'s data', async () => {
+    const userId = await UsersCollection.insertAsync({ username: Random.id() })
+    await ResponseCollection.insertAsync({ userId })
+    await SessionCollection.insertAsync({ userId })
+    await ProgressCollection.insertAsync({ userId })
+    const result = await removeUser(userId, userId)
     expect(result).to.deep.equal({
       responsesRemoved: 1,
       sessionsRemoved: 1,

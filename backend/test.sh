@@ -31,7 +31,7 @@ Options:
 "
 
 
-while getopts "a:bcg:hov" opt; do
+while getopts "cg:hov" opt; do
   case $opt in
     g)
       T_FILTER=${OPTARG}

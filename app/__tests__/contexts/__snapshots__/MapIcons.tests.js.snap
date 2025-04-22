@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mapIcons  renders an icon by given index 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text />
+</View>
+`;
+
+exports[`mapIcons  renders an icon by given index 2`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text />
+</View>
+`;
+
+exports[`mapIcons  renders an icon by given index 3`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text />
+</View>
+`;

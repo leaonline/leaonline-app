@@ -43,9 +43,9 @@ describe(MapIcons.name, function () {
     })
     testGetMethod(MapIcons)
     testGetAllMethod(MapIcons, {
-      factory: (withDeps) => {
+      factory: async (withDeps) => {
         const fieldId = withDeps
-          ? FieldCollection.findOne()._id
+          ? (await FieldCollection.findOneAsync())._id
           : Random.id()
         return createDoc({ fieldId })
       },

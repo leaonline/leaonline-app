@@ -6,7 +6,7 @@ import { updateUserProfile } from './updateUserProfile'
 import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
-import { safeWhile } from '../../api/utils/safeWhile'
+import { safeWhileAsync } from '../../api/utils/safeWhile'
 
 /**
  * Representation of users in the database.
@@ -111,7 +111,7 @@ Users.schema = {
    * has been completed
    */
   research: {
-    type: Boolean,
+    type: Date,
     optional: true
   },
 
@@ -132,6 +132,19 @@ Users.schema = {
     type: Object,
     optional: true,
     blackbox: true
+  },
+
+  /**
+   * With beginning of 1.2.0 we store
+   * the explicit date of when the terms have been
+   * agreed on. This is a foundation for
+   * further updates that could include the need
+   * for users to agree on an updated/renewed version
+   * of the TOC
+   */
+  terms: {
+    type: Date,
+    optional: true
   }
 }
 
@@ -164,13 +177,17 @@ Users.methods.create = {
       type: Number,
       optional: true
     },
+    termsAndConditionsIsChecked: {
+      type: Boolean,
+      optional: true
+    },
     isDev: Users.schema.isDev,
     device: Users.schema.device
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
 
-    return function (options = {}) {
+    return async function (options = {}) {
       const { userId } = this
 
       // creating a new user should either be possible
@@ -185,25 +202,29 @@ Users.methods.create = {
       }
 
       const collection = getUsersCollection()
-      const { voice, speed, isDev, device } = options
+      const { voice, speed, termsAndConditionsIsChecked, /* researchEmail, */ isDev, device } = options
+
+      // since older app versions do not send this flag
+      // we can't 100% require this to be present
+      const terms = termsAndConditionsIsChecked ? new Date() : undefined
       const username = Random.hexString(32)
       const password = Random.secret()
-      const restore = safeWhile((count) => {
+      const restore = await safeWhileAsync(async () => {
         const codes = RestoreCodes.generate()
         const r = codes.join('-')
-        const hasCodes = collection.find({ restore: r }).count() > 0
+        const hasCodes = await collection.countDocuments({ restore: r }) > 0
         if (!hasCodes) {
           return r
         }
       })
-      const newUserId = Accounts.createUser({ username, password })
-      const updateDoc = { restore, voice, speed, isDev, device }
+      const newUserId = await Accounts.createUserAsync({ username, password })
+      const updateDoc = { restore, voice, speed, terms, isDev, device }
 
-      getUsersCollection().update(newUserId, { $set: updateDoc })
+      await getUsersCollection().updateAsync(newUserId, { $set: updateDoc })
 
       // validate the new account with the created credentials
       const credentials = { user: { username }, password }
-      Accounts._runLoginHandlers(this, credentials)
+      await Accounts._runLoginHandlers(this, credentials)
 
       // finally, login this user as they should not need
       // to manually authenticate
@@ -235,7 +256,7 @@ Users.methods.updateProfile = {
       optional: true
     }
   },
-  run: function ({ voice, speed } = {}) {
+  run: async function ({ voice, speed } = {}) {
     const { userId } = this
     const nothingToUpdate = typeof voice !== 'string' && typeof speed !== 'number'
 
@@ -270,10 +291,11 @@ Users.methods.restore = {
     },
     device: Users.schema.device
   },
-  run: function ({ codes, voice, speed, device }) {
+  run: async function ({ codes, voice, speed, device }) {
     const restore = codes.join('-')
-    const userCursor = getUsersCollection().find({ restore })
-    const count = userCursor.count()
+    const query = { restore }
+    const UsersCollection = getUsersCollection()
+    const count = await UsersCollection.countDocuments(query)
     debug('restore with code', restore, '=> found', count)
 
     if (count !== 1) {
@@ -284,14 +306,14 @@ Users.methods.restore = {
       )
     }
 
-    const user = userCursor.fetch()[0]
+    const [user] = await UsersCollection.find(query).fetchAsync()
     const userId = user._id
     const hasVoice = typeof voice === 'string'
     const hasSpeed = typeof speed === 'number'
 
     if (hasVoice || hasSpeed || device) {
       const updateDoc = { userId, voice, speed, device }
-      updateUserProfile(updateDoc)
+      await updateUserProfile(updateDoc)
     }
 
     return Accounts._loginUser(this, user._id)
@@ -305,9 +327,9 @@ Users.methods.restore = {
 Users.methods.getCodes = {
   name: 'users.methods.getCodes',
   schema: {},
-  run: function () {
+  run: async function () {
     const { userId } = this
-    const user = getUsersCollection().findOne(userId)
+    const user = await getUsersCollection().findOneAsync(userId)
     return user.restore
   }
 }
@@ -327,13 +349,22 @@ Users.methods.delete = {
   name: 'users.methods.delete',
   schema: {},
   run: onServerExec(function () {
-    return function () {
+    return async function () {
       const { userId } = this
+      // TODO: check if Meteor.call('logout') makes sense
       return removeUser(userId, userId)
     }
   })
 }
 
+// -----------------------------------------------------------------------------
+// BACKEND METHODS
+// -----------------------------------------------------------------------------
+
+/**
+ * Backend-method to get all users.
+ * Cannot be called from app!
+ */
 Users.methods.getAll = {
   name: 'users.methods.getAll',
   schema: {
@@ -348,8 +379,8 @@ Users.methods.getAll = {
     }
   },
   backend: true,
-  run: function () {
-    const users = getUsersCollection().find({}, {
+  run: async function () {
+    const users = await getUsersCollection().find({}, {
       fields: {
         services: 0,
         agents: 0
@@ -357,27 +388,45 @@ Users.methods.getAll = {
       hint: {
         $natural: -1
       }
-    }).fetch()
+    }).fetchAsync()
 
     return { users }
   }
 }
 
+/**
+ * Backend-method to delete a given user.
+ * Note: Cannot be called from app!
+ */
 Users.methods.remove = {
   name: 'users.methods.remove',
   schema: {
     _id: 1
   },
   backend: true,
-  run: function ({ _id }) {
-    const calledBy = this.userId
-    try {
-      return removeUser(_id, calledBy)?.userRemoved
-    }
-    catch (e) {
-      return 0
-    }
+  run: async function ({ _id }) {
+    const { userId } = this
+    const removed = await removeUser(_id, userId)
+    return removed?.userRemoved
   }
+}
+
+Users.methods.inviteForResearch = {
+  name: 'users.methods.inviteForResearch',
+  schema: {
+    email: {
+      type: String
+    }
+  },
+  backend: true,
+  run: onServerExec(() => {
+    import { inviteForResearch } from './inviteForResearch'
+
+    return async function ({ email }) {
+      const { userId } = this
+      return inviteForResearch({ userId, email })
+    }
+  })
 }
 
 export { Users }

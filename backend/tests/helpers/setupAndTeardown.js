@@ -9,8 +9,10 @@ export const setupAndTeardown = (collections) => {
   after(() => {
     restoreCollections()
   })
-  afterEach(() => {
+  afterEach(async () => {
     restoreAll()
-    collections.forEach(c => c.remove({}))
+    for (const c of collections) {
+      await c.removeAsync({})
+    }
   })
 }

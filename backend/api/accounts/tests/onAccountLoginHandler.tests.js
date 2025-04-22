@@ -11,11 +11,11 @@ describe(onAccountLoginHandler.name, function () {
   after(() => {
     restoreCollections()
   })
-  it('adds the timestamp to the current user', () => {
-    const userId = getUsersCollection().insert({})
+  it('adds the timestamp to the current user', async () => {
+    const userId = await getUsersCollection().insertAsync({})
     const user = { _id: userId }
-    onAccountLoginHandler({ user })
-    const userDoc = getUsersCollection().findOne(userId)
+    await onAccountLoginHandler({ user })
+    const userDoc = await getUsersCollection().findOneAsync(userId)
     expect(userDoc.lastLogin).to.be.instanceOf(Date)
   })
 })

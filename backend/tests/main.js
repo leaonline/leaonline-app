@@ -1,5 +1,5 @@
+import 'meteor/aldeed:collection2/static'
 import './validateSchema'
-
 // api
 import '../api/accounts/tests'
 import '../api/collections/tests'

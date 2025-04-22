@@ -16,7 +16,6 @@ import { Legal } from '../contexts/legal/Legal'
 import { Feedback } from '../contexts/feedback/Feedback'
 import { rateLimitMethods, rateLimitMethod } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
-import { InteractionGraph } from '../contexts/analytics/InteractionGraph'
 import { Achievements } from '../contexts/achievements/Achievements'
 import { MapIcons } from '../contexts/map/MapIcons'
 import { DevData } from '../contexts/dev/DevData'
@@ -56,7 +55,6 @@ ContentServer.contexts().forEach(ctx => {
   Progress,
   Analytics,
   Legal,
-  InteractionGraph,
   Achievements,
   Order,
   ServerErrors,
@@ -83,7 +81,6 @@ const methodContexts = [
   Analytics,
   Legal,
   Feedback,
-  InteractionGraph,
   MapIcons,
   ClientErrors,
   ClientConnection,

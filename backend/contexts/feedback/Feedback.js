@@ -42,7 +42,7 @@ Feedback.methods.update = {
     phrases: { ...Feedback.schema.phrases, ...optional },
     'phrases.$': { ...Feedback.schema['phrases.$'], ...optional }
   },
-  run: function ({ _id, threshold, phrases }) {
+  run: async function ({ _id, threshold, phrases }) {
     const query = { _id }
     const modifier = { $set: {} }
 
@@ -54,8 +54,8 @@ Feedback.methods.update = {
       modifier.$set.phrases = phrases
     }
 
-    const updated = getCollection(Feedback.name).update(query, modifier)
-    SyncState.update(Feedback.name)
+    const updated = await getCollection(Feedback.name).updateAsync(query, modifier)
+    await SyncState.update(Feedback.name)
     return updated
   }
 }
@@ -64,9 +64,9 @@ Feedback.methods.insert = {
   name: 'feedback.methods.insert',
   schema: Feedback.schema,
   backend: true,
-  run: function ({ threshold, phrases }) {
-    const insertId = getCollection(Feedback.name).insert({ threshold, phrases })
-    SyncState.update(Feedback.name)
+  run: async function ({ threshold, phrases }) {
+    const insertId = await getCollection(Feedback.name).insertAsync({ threshold, phrases })
+    await SyncState.update(Feedback.name)
     return insertId
   }
 }
@@ -79,8 +79,8 @@ Feedback.methods.get = {
       optional: true
     }
   },
-  run: function ({ _id } = {}) {
-    return getCollection(Feedback.name).findOne({ _id })
+  run: async function ({ _id } = {}) {
+    return getCollection(Feedback.name).findOneAsync({ _id })
   }
 }
 
@@ -97,9 +97,10 @@ Feedback.methods.getAll = {
       optional: true
     }
   },
-  run: function () {
+  run: async function () {
+    const docs = await getCollection(Feedback.name).find().fetchAsync()
     return {
-      [Feedback.name]: getCollection(Feedback.name).find().fetch()
+      [Feedback.name]: docs
     }
   }
 }

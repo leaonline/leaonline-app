@@ -39,23 +39,23 @@ Achievements.schema = {
   }
 }
 
-Achievements.create = ({ dimensionId, fieldId }) => {
+Achievements.create = async function create ({ dimensionId, fieldId }) {
   const collection = getCollection(Achievements.name)
-  const achievementId = collection.insert({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
-  return collection.findOne(achievementId)
+  const achievementId = await collection.insertAsync({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
+  return collection.findOneAsync(achievementId)
 }
 
-Achievements.update = ({ dimensionId, fieldId, maxProgress, maxCompetencies }) => {
+Achievements.update = async function update ({ dimensionId, fieldId, maxProgress, maxCompetencies }) {
   const collection = getCollection(Achievements.name)
   const query = { dimensionId, fieldId }
-  let achievementDoc = collection.findOne(query)
+  let achievementDoc = await collection.findOneAsync(query)
 
   if (!achievementDoc) {
-    achievementDoc = Achievements.create(query)
+    achievementDoc = await Achievements.create(query)
   }
 
-  const updated = collection.update(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
-  SyncState.update(Achievements.name)
+  const updated = await collection.updateAsync(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+  await SyncState.update(Achievements.name)
 
   return updated
 }
@@ -76,11 +76,11 @@ Achievements.methods.getAll = {
       optional: true
     }
   },
-  run: function ({ dependencies = {} } = {}) {
-    const docs = getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetch()
+  run: async function ({ dependencies = {} } = {}) {
+    const docs = await getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetchAsync()
     const data = { [Achievements.name]: docs }
 
-    onDependencies()
+    await onDependencies()
       .output(data)
       .add(Field, 'fieldId')
       .add(Dimension, 'dimensionId')

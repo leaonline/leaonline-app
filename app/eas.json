@@ -1,0 +1,33 @@
+{
+  "cli": {
+    "version": ">= 11.0.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_APP_SETTINGS": "staging"
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_APP_SETTINGS": "staging"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "credentialsSource": "local",
+      "env": {
+        "EXPO_PUBLIC_APP_SETTINGS": "production"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -3,29 +3,16 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { Response } from '../Response'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
-import {
-  restoreCollections,
-  stubCollection
-} from '../../../tests/helpers/stubCollection'
 import { createMethod } from '../../../infrastructure/factories/createMethod'
+import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 
 const ResponseCollection = initTestCollection(Response)
 
 describe('Response', function () {
-  before(function () {
-    stubCollection([ResponseCollection])
-  })
-
-  after(function () {
-    restoreCollections()
-  })
-
-  beforeEach(function () {
-    ResponseCollection.remove({})
-  })
+  setupAndTeardown([ResponseCollection])
 
   describe(Response.countAccomplishedAnswers.name, function () {
-    it('Counts all answer scores of a given unit that were scored as true', function () {
+    it('Counts all answer scores of a given unit that were scored as true', async () => {
       const userId = Random.id()
       const sessionId = Random.id()
       const unitId = Random.id()
@@ -41,9 +28,9 @@ describe('Response', function () {
         unitId,
         scores: [{}, { score: true, competency: [4, 5, 6] }, { score: true, competency: 1 }, { score: true }]
       }
-      ResponseCollection.insert(insertDoc1)
-      ResponseCollection.insert(insertDoc2)
-      expect(Response.countAccomplishedAnswers({ userId, sessionId, unitId }))
+      await ResponseCollection.insertAsync(insertDoc1)
+      await ResponseCollection.insertAsync(insertDoc2)
+      expect(await Response.countAccomplishedAnswers({ userId, sessionId, unitId }))
         .to.equal(6)
     })
   })
@@ -51,7 +38,7 @@ describe('Response', function () {
   describe(Response.methods.submit.name, function () {
     const method = createMethod(Response.methods.submit)
 
-    it('saves a response', function () {
+    it('saves a response', async () => {
       const responseDoc = {
         sessionId: Random.id(),
         unitId: Random.id(),
@@ -69,8 +56,8 @@ describe('Response', function () {
         }]
       }
       const userId = Random.id()
-      method._execute({ userId }, { ...responseDoc })
-      const { _id, timeStamp, ...doc } = ResponseCollection.findOne()
+      await method._execute({ userId }, { ...responseDoc })
+      const { _id, timeStamp, ...doc } = await ResponseCollection.findOneAsync()
       expect(doc).to.deep.equal({
         userId,
         ...responseDoc

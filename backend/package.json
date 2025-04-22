@@ -37,7 +37,8 @@
       "COVERAGE": {
         "plugins": [
           "istanbul"
-        ]
+        ],
+        "exclude": ["**/packages/**"]
       }
     }
   },

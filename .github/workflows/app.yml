@@ -1,0 +1,66 @@
+name: App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    name: 'App Lint'
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: install node modules
+        run: cd app && npm ci --legacy-peer-deps --force
+      - name: run standard js
+        run: cd app && npm run lint
+
+  tests:
+    name: 'App Unit Tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: install node modules
+        run: cd app && npm ci --legacy-peer-deps --force
+
+      - name: run jest tests
+        run: cd app && npm test
+
+  docs:
+    name: 'Build App jsDoc'
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'app/package-lock.json'
+
+      - name: install node modules
+        run: cd app && npm ci --legacy-peer-deps --force
+      - name: run jsdoc
+        run: cd app && npm run build:docs

@@ -7,6 +7,7 @@ import { stub, restoreAll, overrideStub } from '../../../tests/helpers/stubUtils
 import { DocNotFoundError } from '../DocNotFoundError'
 import { normalizeError } from '../normalizeError'
 
+const architectures = ['server', 'client']
 const appName = Meteor.settings.app.name
 const { notify, replyTo, from } = Meteor.settings.email
 const getHtml = (error) => {
@@ -18,32 +19,34 @@ describe(notifyUsersAboutError.name, function () {
   afterEach(() => {
     restoreAll()
   })
-  it('skips if no error is given', () => {
-    stub(Email, 'send', args => expect.fail())
-    ;[null, undefined, '', 1, () => {}].forEach(value => {
-      notifyUsersAboutError(value, undefined)
-    })
+  it('skips if no error is given', async () => {
+    stub(Email, 'sendAsync', expect.fail)
+    const values = [null, undefined, '', 1, () => {}]
+    for (const value of values) {
+      await notifyUsersAboutError(value, undefined)
+    }
   })
-  it('notifies registered users about a server error', () => {
-    stub(Email, 'send', args => expect.fail())
-    ;[
+  it('notifies registered users about a server error', async () => {
+    stub(Email, 'sendAsync', expect.fail)
+    const values = [
       new Error('foo'),
       new TypeError('bar'),
       new Meteor.Error('foo', 'bar', 'baz'),
       new DocNotFoundError('foo', 'bar')
-    ].forEach(error => {
-      ['server', 'client'].forEach(type => {
-        const e = normalizeError({ error })
+    ]
 
-        overrideStub(Email, 'send', options => {
+    for (const error of values) {
+      for (const type of architectures) {
+        const e = normalizeError({ error })
+        overrideStub(Email, 'sendAsync', async options => {
           expect(notify).to.include(options.to)
           expect(options.subject).to.equal(`${appName} (${type}) [error]: ${e.message}`)
           expect(options.replyTo).to.equal(replyTo)
           expect(options.from).to.equal(from)
           expect(options.html).to.equal(getHtml(e))
         })
-        notifyUsersAboutError(e, type)
-      })
-    })
+        await notifyUsersAboutError(e, type)
+      }
+    }
   })
 })

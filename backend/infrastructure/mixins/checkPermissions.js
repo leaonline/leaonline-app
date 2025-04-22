@@ -1,30 +1,40 @@
 import { Meteor } from 'meteor/meteor'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
+import { isBackendUser } from '../../api/accounts/isBackendUser'
 
 export const checkPermissions = function (options) {
   const { isPublic, backend } = options
 
-  if (isPublic) {
-    return options
-  }
+  if (isPublic) { return options }
 
   const runFct = options.run
-  options.run = function run (...args) {
-    let userId = this.userId
+  options.run = async function run (...args) {
+    const userId = this.userId
 
     if (!userId) {
-      const user = Meteor.user()
-      userId = user?._id
-    }
-
-    if (!userId) {
-      throw new Meteor.Error('errors.permissionDenied', 'errors.userNotExists', { userId })
+      throw new Meteor.Error(
+        'errors.permissionDenied',
+        'errors.userNotExists',
+        {
+          userId,
+          isPublic,
+          backend,
+          clientConnection: this.connection?.id
+        })
     }
 
     if (backend) {
-      const user = getUsersCollection().findOne(userId)
-      if (!user?.services?.lea) {
-        throw new Meteor.Error('errors.permissionDenied', 'errors.backendOnly', { userId })
+      const user = await getUsersCollection().findOneAsync(userId)
+      if (!isBackendUser(user)) {
+        throw new Meteor.Error(
+          'errors.permissionDenied',
+          'errors.backendOnly',
+          {
+            userId,
+            isPublic,
+            backend,
+            clientConnection: this.connection.id
+          })
       }
     }
 

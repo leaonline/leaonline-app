@@ -9,6 +9,8 @@ import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { MapData } from '../MapData'
 import { SyncState } from '../../sync/SyncState'
 import { Achievements } from '../../achievements/Achievements'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
+import { mapAsync } from '../../../infrastructure/async/mapAsync'
 
 const FieldCollection = initTestCollection(Field)
 
@@ -21,28 +23,28 @@ describe(runRemap.name, function () {
     restoreCollections()
   })
 
-  afterEach(() => {
-    FieldCollection.remove({})
+  afterEach(async () => {
+    await FieldCollection.removeAsync({})
     restoreAll()
   })
 
-  it('skips if active is not explicitly true', () => {
-    ;[undefined, {}, { active: undefined }, { active: null }, { active: false }, { active: 1 }]
-      .forEach(options => {
-        expect(runRemap(options)).to.equal(false)
-      })
+  it('skips if active is not explicitly true', async () => {
+    const allOptions = [undefined, {}, { active: undefined }, { active: null }, { active: false }, { active: 1 }]
+    await forEachAsync(allOptions, async options => {
+      expect(await runRemap(options)).to.equal(false)
+    })
   })
-  it('skips if no fields are found', () => {
+  it('skips if no fields are found', async () => {
     const options = { active: true }
-    expect(runRemap(options)).to.equal(false)
+    expect(await runRemap(options)).to.equal(false)
   })
-  it('creates a map data for each field', () => {
+  it('creates a map data for each field', async () => {
     const dimensionDocs = [
       { _id: Random.id(), maxProgress: 0, maxCompetencies: 0 },
       { _id: Random.id(), maxProgress: 0, maxCompetencies: 0 }
     ]
-    const mapDocs = [{}, {}, {}].map(doc => {
-      const fieldId = FieldCollection.insert(doc)
+    const mapDocs = await mapAsync([{}, {}, {}], async doc => {
+      const fieldId = await FieldCollection.insertAsync(doc)
       return {
         _id: Random.id(),
         field: fieldId,
@@ -56,17 +58,17 @@ describe(runRemap.name, function () {
     const dimensions = { order: [] }
     const options = { active: true, dimensions }
 
-    stub(MapData, 'create', () => true)
-    stub(MapData, 'get', ({ field }) => mapDocs.find(d => d.field === field))
+    stub(MapData, 'create', async () => true)
+    stub(MapData, 'get', async ({ field }) => mapDocs.find(d => d.field === field))
     stub(Achievements, 'update', expect.fail)
     stub(SyncState, 'update', expect.fail)
-    expect(runRemap(options)).to.equal(true)
+    expect(await runRemap(options)).to.equal(true)
   })
-  it('creates/updates achievements for each dimension of a given map after it is created', () => {
+  it('creates/updates achievements for each dimension of a given map after it is created', async () => {
     const dimensionDocs = [
       { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 }
     ]
-    const fieldId = FieldCollection.insert({})
+    const fieldId = await FieldCollection.insertAsync({})
     const mapDoc = {
       _id: Random.id(),
       field: fieldId,
@@ -78,22 +80,19 @@ describe(runRemap.name, function () {
     }
     const dimensions = { order: [] }
     const options = { active: true, dimensions }
-    let updateCalled = false
 
-    stub(MapData, 'create', () => true)
-    stub(MapData, 'get', () => mapDoc)
-    stub(Achievements, 'update', () => {
-      updateCalled = true
-    })
+    const updateCalled = stub(Achievements, 'update', async () => {})
+    stub(MapData, 'create', async () => true)
+    stub(MapData, 'get', async () => mapDoc)
     stub(SyncState, 'update', expect.fail)
-    expect(runRemap(options)).to.equal(true)
-    expect(updateCalled).to.equal(true)
+    expect(await runRemap(options)).to.equal(true)
+    expect(updateCalled.called).to.equal(true)
   })
-  it('syncs if dryRun is explicitly false', () => {
+  it('syncs if dryRun is explicitly false', async () => {
     const dimensionDocs = [
       { _id: Random.id(), maxProgress: 10, maxCompetencies: 10 }
     ]
-    const fieldId = FieldCollection.insert({})
+    const fieldId = await FieldCollection.insertAsync({})
     const mapDoc = {
       _id: Random.id(),
       field: fieldId,
@@ -105,16 +104,14 @@ describe(runRemap.name, function () {
     }
     const dimensions = { order: [] }
     const options = { active: true, dimensions, dryRun: false }
-    let updateCalled = false
 
-    stub(MapData, 'create', () => true)
-    stub(MapData, 'get', () => mapDoc)
-    stub(Achievements, 'update', () => true)
-    stub(SyncState, 'update', (name) => {
+    stub(MapData, 'create', async () => true)
+    stub(MapData, 'get', async () => mapDoc)
+    stub(Achievements, 'update', async () => true)
+    const updateCalled = stub(SyncState, 'update', async (name) => {
       expect(name).to.equal(MapData.name)
-      updateCalled = true
     })
-    expect(runRemap(options)).to.equal(true)
-    expect(updateCalled).to.equal(true)
+    expect(await runRemap(options)).to.equal(true)
+    expect(updateCalled.calledOnce).to.equal(true)
   })
 })

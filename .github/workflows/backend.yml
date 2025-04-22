@@ -1,9 +1,9 @@
-name: Backend Tests
+name: Backend
 
 on:
   push:
     branches:
-      - ma
+      - main
   pull_request:
 
 jobs:
@@ -11,41 +11,35 @@ jobs:
     name: Backend JS lint
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v3
+      - name: checkout
+        uses: actions/checkout@v4
 
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14.x'
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
 
-    - name: cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-
-    - run: cd backend && npm install
-    - run: cd backend && npm run lint:code
+      - run: cd backend && npm ci --legacy-peer-deps --force
+      - run: cd backend && npm run lint:code
 
   tests:
-    name: Backend Meteor ${{ matrix.meteor }} tests
+    name: Backend Meteor Tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Checkout leaonline:corelib repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: leaonline/corelib
           path: github/corelib
 
 
       - name: Checkout leaonline:service-registry repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: leaonline/service-registry
           path: github/service-registry
@@ -53,42 +47,33 @@ jobs:
       # CACHING
       - name: Install Meteor
         id: cache-meteor-install
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.meteor
-          key: v2-meteor-${{ hashFiles('.meteor/versions') }}
+          key: v3-meteor-${{ hashFiles('.meteor/versions') }}
           restore-keys: |
-                v2-meteor-
-
-      - name: Cache NPM dependencies
-        id: cache-meteor-npm
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: v1-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-                v1-npm-
+            v3-meteor-
 
       - name: Cache Meteor build
         id: cache-meteor-build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .meteor/local/resolver-result-cache.json
             .meteor/local/plugin-cache
             .meteor/local/isopacks
             .meteor/local/bundler-cache/scanner
-          key: v2-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
+          key: v3-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
-            v2-meteor_build_cache-
+            v3-meteor_build_cache-
 
       - name: Setup meteor
-        uses: meteorengineer/setup-meteor@v1
+        uses: meteorengineer/setup-meteor@v2
         with:
-          meteor-release: '2.7.3'
+          meteor-release: '3.0.2'
 
       - name: Install NPM Dependencies
-        run: cd backend && meteor npm ci
+        run: cd backend && meteor npm ci --legacy-peer-deps --force
 
       - name: Run Tests
         run: cd backend && sh ./test.sh -c -o
@@ -120,3 +105,20 @@ jobs:
 #        with:
 #          path: ".coverage/lcov.info"
 #          min_coverage: 95 # TODO increase to 95!
+
+  docs:
+    name: Backend Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+
+      - run: cd backend && npm ci --legacy-peer-deps --force
+      - run: cd backend && npm run build:docs

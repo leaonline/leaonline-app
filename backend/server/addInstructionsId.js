@@ -9,7 +9,6 @@ const { beforeSyncUpsert, syncEnd } = ContentServer.hooks
 ContentServer.on(beforeSyncUpsert, Unit.name, ({ type, doc }) => {
   const value = doc.instructions?.[0]?.value
   if (value) {
-    console.debug(value)
     hashes.add(md5(value))
   }
 })

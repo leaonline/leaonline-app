@@ -5,9 +5,10 @@ import { Legal } from '../Legal'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { testGetMethod, testUpdate } from '../../../tests/helpers/backendMethods'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const LegalCollection = initTestCollection(Legal)
-const createDoc = () => ({
+const createMockDoc = () => ({
   imprint: Random.id(),
   privacy: Random.id(),
   terms: Random.id(),
@@ -22,38 +23,40 @@ describe(Legal.name, function () {
       const validNames = ['imprint', 'privacy', 'terms', 'contact']
       const invalidNames = ['imprint2', '__proto__']
       const emptyNameArgs = [undefined, {}, { name: undefined }, { name: null }, { name: false }, { name: '' }]
-      it('returns nothing if no doc exists', () => {
-        const test = name => {
-          const doc = run({ name })
+      const env = {}
+
+      it('returns nothing if no doc exists', async () => {
+        const test = async name => {
+          const doc = await run.call(env, { name })
           expect(doc).to.equal(undefined)
         }
-        validNames.forEach(test)
-        invalidNames.forEach(test)
-        emptyNameArgs.forEach(test)
+        await forEachAsync(validNames, test)
+        await forEachAsync(invalidNames, test)
+        await forEachAsync(emptyNameArgs, test)
       })
 
-      it('returns the doc on no name', () => {
-        const docId = LegalCollection.insert(createDoc())
-        const doc = LegalCollection.findOne(docId)
+      it('returns the doc on no name', async () => {
+        const docId = await LegalCollection.insertAsync(createMockDoc())
+        const doc = await LegalCollection.findOneAsync(docId)
 
-        emptyNameArgs.forEach(arg => {
-          const current = run(arg)
+        await forEachAsync(emptyNameArgs, async arg => {
+          const current = await run.call(env, arg)
           expect(current).to.deep.equal(doc)
         })
       })
 
-      it('returns only a specific text if name is given', () => {
-        const docId = LegalCollection.insert(createDoc())
-        const doc = LegalCollection.findOne(docId)
+      it('returns only a specific text if name is given', async () => {
+        const docId = await LegalCollection.insertAsync(createMockDoc())
+        const doc = await LegalCollection.findOneAsync(docId)
 
-        validNames.forEach(name => {
-          const text = run({ name })
+        await forEachAsync(validNames, async name => {
+          const text = await run.call(env, { name })
           expect(text).to.be.a('string')
           expect(text).to.equal(doc[name])
         })
 
-        invalidNames.forEach(name => {
-          const text = run({ name })
+        await forEachAsync(invalidNames, async name => {
+          const text = await run.call(env, { name })
           expect(text).to.equal(undefined)
         })
       })
@@ -62,8 +65,8 @@ describe(Legal.name, function () {
       expectSync: true,
       factory: () => {
         return {
-          insertDoc: createDoc(),
-          updateDoc: createDoc()
+          insertDoc: createMockDoc(),
+          updateDoc: createMockDoc()
         }
       }
     })

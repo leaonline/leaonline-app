@@ -14,20 +14,34 @@ const contentUrl = Meteor.settings.remotes.content.url
 /**
  * Establishes a basic, unauthenticated connection.
  * @param log {function} log function
+ * @async
  * @return {Promise<void>}
  */
-ContentConnection.connect = ({ log } = {}) => {
+ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
   return new Promise((resolve, reject) => {
     if (log) log('establish connection to', contentUrl)
+    let connected = false
+    const onError = err => {
+      clearTimeout(timer)
+      contentConnection?.disconnect()
+      return reject(err)
+    }
+    const timer = setTimeout(() => {
+      if (!connected) {
+        return onError(new Meteor.Error('errors.notConnected', 'remote.timeOut', { contentUrl, timeout }))
+      }
+      clearTimeout(timer)
+    }, timeout)
     contentConnection = DDP.connect(contentUrl, {
       retry: false,
       onConnected: err => {
         if (err) {
-          console.error(err)
-          return reject(err)
+          return onError(err)
         }
 
-        if (log) log('connection established with', contentUrl)
+        if (log) log('connection established with', contentUrl, contentConnection)
+        connected = true
+        clearTimeout(timer)
         resolve()
       }
     })
@@ -38,11 +52,12 @@ ContentConnection.connect = ({ log } = {}) => {
  * Returns, whether the connection is fully established
  * @return {boolean}
  */
-ContentConnection.isConnected = () =>
-  typeof contentConnection?.status === 'function'
-    ? contentConnection.status()?.status === 'connected'
-    : false
-
+ContentConnection.isConnected = function isConnected () {
+  if (typeof contentConnection?.status !== 'function') {
+    return false
+  }
+  return contentConnection.status()?.status === 'connected'
+}
 /**
  * Get doc(s) from a collection
  * @param name {string} name of the context to get docs from
@@ -50,7 +65,7 @@ ContentConnection.isConnected = () =>
  * @param log
  * @return {Promise}
  */
-ContentConnection.get = ({ name, ids = [], log }) => {
+ContentConnection.get = function get ({ name, ids = [], log }) {
   return new Promise((resolve) => {
     const methodName = ids.length > 0
       ? `${name}.methods.get`

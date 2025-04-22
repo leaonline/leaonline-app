@@ -1,3 +1,4 @@
+import { expect } from 'chai'
 
 /**
  * Awaits a given promise and catches the error, if any.
@@ -9,6 +10,7 @@
 export const expectAsyncError = async (promise) => {
   try {
     await promise
+    expect.fail()
   }
   catch (e) {
     return e

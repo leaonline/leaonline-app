@@ -71,16 +71,16 @@ Progress.schema = {
   }
 }
 
-Progress.create = ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) => {
+Progress.create = async function create ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) {
   log('create', { userId, fieldId, unitSetId, progress, competencies, complete })
   const unitSets = [{ _id: unitSetId, dimensionId, progress, competencies, complete }]
-  return getCollection(Progress.name).insert({ userId, fieldId, unitSets })
+  return getCollection(Progress.name).insertAsync({ userId, fieldId, unitSets })
 }
 
-Progress.update = ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) => {
+Progress.update = async function update ({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete }) {
   log('update', { userId, fieldId, unitSetId, progress, competencies, complete })
   const ProgressCollection = getCollection(Progress.name)
-  const progressDoc = ProgressCollection.findOne({ userId, fieldId })
+  const progressDoc = await ProgressCollection.findOneAsync({ userId, fieldId })
 
   if (!progressDoc) {
     return Progress.create({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete })
@@ -104,7 +104,7 @@ Progress.update = ({ userId, fieldId, unitSetId, dimensionId, progress, competen
       }
 
   log('unit set', { unitSetDoc, index, updateDoc })
-  return ProgressCollection.update(progressDoc._id, updateDoc)
+  return ProgressCollection.updateAsync(progressDoc._id, updateDoc)
 }
 
 Progress.methods = {}
@@ -115,9 +115,9 @@ Progress.methods.get = {
     fieldId: String
   },
   run: onServerExec(function () {
-    return function ({ fieldId }) {
+    return async function ({ fieldId }) {
       const { userId } = this
-      return getCollection(Progress.name).findOne({ userId, fieldId })
+      return getCollection(Progress.name).findOneAsync({ userId, fieldId })
     }
   })
 }
@@ -136,12 +136,12 @@ Progress.methods.getAll = {
     }
   },
   backend: true,
-  run: function ({ dependencies } = {}) {
+  run: async function ({ dependencies } = {}) {
     const options = { hint: { $natural: -1 } }
-    const docs = getCollection(Progress.name).find({}, options).fetch()
+    const docs = await getCollection(Progress.name).find({}, options).fetchAsync()
     const data = { [Progress.name]: docs }
 
-    onDependencies()
+    await onDependencies()
       .output(data)
       .add(Field, 'fieldId')
       .run({ dependencies, docs })
@@ -153,8 +153,8 @@ Progress.methods.getAll = {
 Progress.methods.my = {
   name: 'progress.methods.my',
   schema: {},
-  run: function () {
+  run: async function () {
     const { userId } = this
-    return getCollection(Progress.name).find({ userId }).fetch()
+    return getCollection(Progress.name).find({ userId }).fetchAsync()
   }
 }

@@ -1,7 +1,11 @@
 import { getUsersCollection } from '../collections/getUsersCollection'
 
-export const onAccountLoginHandler = function ({ user }) {
+/**
+ * Adds a lastLogin to the current user
+ * @param user
+ */
+export const onAccountLoginHandler = async function ({ user }) {
   const userId = user._id
   const lastLogin = new Date()
-  getUsersCollection().update(userId, { $set: { lastLogin } })
+  await getUsersCollection().updateAsync(userId, { $set: { lastLogin } })
 }

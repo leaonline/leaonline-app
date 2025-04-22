@@ -9,8 +9,9 @@ import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 import { stub } from '../../../tests/helpers/stubUtils'
 import { RestoreCodes } from '../../../api/accounts/RestoreCodes'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
-import { iterate } from '../../../tests/helpers/iterate'
+import { iterateAsync } from '../../../tests/helpers/iterate'
 import { coin } from '../../../tests/helpers/coin'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const createUser = (options = {}) => {
   const doc = {
@@ -37,17 +38,17 @@ describe('Users', function () {
     describe(Users.methods.create.name, () => {
       const run = Users.methods.create.run
 
-      it('throws if there is a userId', () => {
+      it('throws if there is a userId', async () => {
         const userId = Random.id()
         stub(RestoreCodes, 'generate', expect.fail)
-        expectThrown({
+        await expectThrown({
           fn: () => run.call({ userId }),
           name: createUser.error,
           reason: 'createUser.alreadyExist',
           details: { userId }
         })
       })
-      it('creates a new user and logs them in', () => {
+      it('creates a new user and logs them in', async () => {
         let runLoginHandlersCalled = false
         let loginUserCalled = false
         stub(RestoreCodes, 'generate', () => ['foo', 'bar', 'baz', Random.id(4)])
@@ -61,18 +62,19 @@ describe('Users', function () {
           return newUserId
         })
 
-        iterate(3, () => {
+        await iterateAsync(3, async () => {
           runLoginHandlersCalled = false
           loginUserCalled = false
           const voice = coin() ? 'de-DE-test' : undefined
           const speed = coin() ? 1.0 : undefined
           const isDev = coin()
           const device = coin() ? { vendor: 'foo' } : undefined
-          const newUserId = run({ voice, speed, isDev, device })
-          const userDoc = getUsersCollection().findOne(newUserId)
+          const newUserId = await run.call({}, { voice, speed, isDev, device })
+          const terms = undefined
+          const userDoc = await getUsersCollection().findOneAsync(newUserId)
           const { username, restore, createdAt, services, ...doc } = userDoc
           expect(doc).to.deep.equal({
-            _id: newUserId, voice, speed, isDev, device
+            _id: newUserId, voice, speed, isDev, device, terms
           })
           expect(createdAt).to.be.instanceOf(Date)
           expect(username).to.be.a('string')
@@ -85,89 +87,90 @@ describe('Users', function () {
     describe(Users.methods.updateProfile.name, function () {
       const run = Users.methods.updateProfile.run
 
-      it('throws if there is nothing to update', () => {
+      it('throws if there is nothing to update', async () => {
         const userId = Random.id()
         const env = { userId }
-        ;[undefined, {}, { voice: undefined, speed: undefined }]
-          .forEach(options => {
-            const { voice, speed } = (options ?? {})
-            expectThrown({
-              fn: () => run.call(env, options),
-              name: 'permissionDenied',
-              reason: 'updateProfile.failed',
-              details: { userId, voice, speed }
-            })
+        const allOptions = [undefined, {}, { voice: undefined, speed: undefined }]
+        await forEachAsync(allOptions, async options => {
+          const { voice, speed } = (options ?? {})
+          await expectThrown({
+            fn: () => run.call(env, options),
+            name: 'permissionDenied',
+            reason: 'updateProfile.failed',
+            details: { userId, voice, speed }
           })
+        })
       })
-      it('updates the profile accordingly', () => {
-        [
+      it('updates the profile accordingly', async () => {
+        const allOptions = [
           { voice: 'foo' },
           { voice: 'foo', speed: 1 },
           { speed: 1 }
         ]
-          .forEach(options => {
-            const userId = UsersCollection.insert({})
-            const env = { userId }
-            run.call(env, options)
-            const doc = UsersCollection.findOne(userId)
-            expect(doc).to.deep.equal({
-              _id: userId,
-              ...options
-            })
+        await forEachAsync(allOptions, async options => {
+          const userId = await UsersCollection.insertAsync({})
+          const env = { userId }
+          await run.call(env, options)
+          const doc = await UsersCollection.findOneAsync(userId)
+          expect(doc).to.deep.equal({
+            _id: userId,
+            ...options
           })
+        })
       })
     })
     describe(Users.methods.getCodes.name, function () {
       const run = Users.methods.getCodes.run
 
-      it('returns a user\'s restore codes', () => {
+      it('returns a user\'s restore codes', async () => {
         const restore = 'foo-bar-baz'
-        const userId = UsersCollection.insert({ restore })
-        expect(run.call({ userId }))
-          .to.equal(restore)
+        const userId = await UsersCollection.insertAsync({ restore })
+        expect(await run.call({ userId })).to.equal(restore)
       })
     })
     describe(Users.methods.restore.name, () => {
       const run = Users.methods.restore.run
 
-      it('throws if there is no user by restore codes', () => {
+      it('throws if there is no user by restore codes', async () => {
         const count = 0
-        ;[
+        const allCodes = [
           [],
           ['foo'],
           ['foo', 'bar'],
           ['foo', 'bar', 'baz']
-        ].forEach(codes => {
+        ]
+        await forEachAsync(allCodes, async codes => {
           const restore = codes.join('-')
-          expectThrown({
-            fn: () => run({ codes }),
+          await expectThrown({
+            fn: () => run.call({}, { codes }),
             name: 'permissionDenied',
             reason: 'restore.failed',
             details: { codes, restore, count }
           })
         })
       })
-      it('restores a user by codes', () => {
+      it('restores a user by codes', async () => {
         const codes = ['foo', 'bar', 'baz']
         const restore = 'foo-bar-baz'
-        const userId = UsersCollection.insert({ restore })
+        const userId = await UsersCollection.insertAsync({ restore })
 
         stub(Accounts, '_loginUser', (self, _id) => _id)
-        const actualId = run({ codes })
+        const actualId = await run.call({}, { codes })
         expect(actualId).to.equal(userId)
       })
-      it('updates the voice and speed if any value is passed', () => {
+      it('updates the voice and speed if any value is passed', async () => {
         stub(Accounts, '_loginUser', (self, _id) => _id)
-        ;[
+        const allOptions = [
           { voice: 'foo' },
           { speed: 1 },
           { device: { vendor: 'foo' } }
-        ].forEach((options, index) => {
+        ]
+        await forEachAsync(allOptions, async (options, index) => {
           const codes = ['foo', 'bar', 'baz', `${index}`]
           const restore = `foo-bar-baz-${index}`
-          const userId = UsersCollection.insert({ restore })
-          run({ codes, ...options })
-          expect(UsersCollection.findOne(userId)).to.deep.equal({
+          const userId = await UsersCollection.insertAsync({ restore })
+          await run.call({}, { codes, ...options })
+          expect(await UsersCollection.findOneAsync(userId)).to.deep.equal({
             _id: userId,
             restore,
             ...options

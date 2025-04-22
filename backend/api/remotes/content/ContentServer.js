@@ -20,6 +20,7 @@ import { createLog } from '../../../infrastructure/log/createLog'
 // for better reasoning between connection and logic we have
 // all connection functionality in a separate file
 import { ContentConnection } from './ContentConnection'
+import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 // set the lib's validator to allow validation of received unit docs
 SchemaValidator.set(function (schema) {
@@ -57,7 +58,12 @@ ContentServer.contexts = () => [].concat(contexts)
  * @return {Promise<ContentServer>}
  */
 ContentServer.init = async () => {
-  await ContentConnection.connect({ log })
+  try {
+    await ContentConnection.connect({ log })
+  }
+  catch (e) {
+    console.error(e)
+  }
   return ContentServer
 }
 
@@ -107,7 +113,7 @@ ContentServer.sync = async ({ name, debug } = {}) => {
   const allIds = []
   allIds.length = allDocs.length
 
-  allDocs.forEach((doc, index) => {
+  await forEachAsync(allDocs, async (doc, index) => {
     if (doc.isLegacy) {
       stats.skipped++
       return
@@ -116,32 +122,36 @@ ContentServer.sync = async ({ name, debug } = {}) => {
     const { _id: docId } = doc
     allIds[index] = docId
 
-    if (collection.find({ _id: docId }).count() === 0) {
-      onBeforeUpsert({ type: 'insert', doc })
-      const insertId = collection.insert(doc)
+    if (await collection.countDocuments({ _id: docId }) === 0) {
+      await onBeforeUpsert({ type: 'insert', doc })
+      const insertId = await collection.insertAsync(doc)
       if (debug) log(name, 'inserted', insertId)
       stats.created++
     }
 
     else {
-      onBeforeUpsert({ type: 'update', doc })
+      await onBeforeUpsert({ type: 'update', doc })
       const updateDoc = { ...doc }
       delete updateDoc._id
-      const updated = collection.update(docId, { $set: updateDoc })
+      const updated = await collection.updateAsync(docId, { $set: updateDoc })
       if (debug) log(name, 'updated', docId, '=', updated)
       stats.updated++
     }
   })
 
   // remove all docs, that are not in ids anymore
-  stats.removed = collection.remove({ _id: { $nin: allIds } })
+  stats.removed = await collection.removeAsync({ _id: { $nin: allIds } })
   log(JSON.stringify(stats))
 
-  onSyncEnd(stats)
+  await onSyncEnd(stats)
 
   return stats
 }
 
+/**
+ * Current supported hooks.
+ * @type {{beforeSyncUpsert: string, syncEnd: string}}
+ */
 ContentServer.hooks = {
   beforeSyncUpsert: 'beforeSyncUpsert',
   syncEnd: 'syncEnd'
@@ -175,15 +185,34 @@ const getSet = (hookName, ctxName) => {
   return map.get(ctxName)
 }
 
+/**
+ * Registers a hook for a given sync-stage.
+ * @param hookName {string} one of {ContentServer.hooks}
+ * @param ctxName {string}
+ * @param fn {function}
+ */
 ContentServer.on = (hookName, ctxName, fn) => {
   const fns = getSet(hookName, ctxName)
   fns.add(fn)
 }
 
+/**
+ * Un-registers a hook
+ * @param hookName {string} one of {ContentServer.hooks}
+ * @param ctxName {string} name of the ctx in scope
+ * @param fn {function}
+ */
 ContentServer.off = (hookName, ctxName, fn) => {
   const fns = getSet(hookName, ctxName)
   fns.delete(fn)
 }
+
+/**
+ * Checks, whether a sync is possible with the
+ * remote content server.
+ * @return {boolean} true, if sync is possible, otherwise false
+ */
+ContentServer.canSync = () => canSync()
 
 /// /////////////////////////////////////////////////////////////////////////////
 //
@@ -196,10 +225,18 @@ ContentServer.off = (hookName, ctxName, fn) => {
  * @throws {ContentServerError} if collection does not exist
  */
 const ensureConnected = () => {
-  if (!ContentConnection.isConnected()) {
+  if (!canSync()) {
     throw new ContentServerError('notConnected')
   }
 }
+
+/**
+ * Sync can only work if there is an active connection
+ * with the remove content server.
+ * @private
+ * @return {boolean}
+ */
+const canSync = () => ContentConnection.isConnected()
 
 /**
  * Throws if context name is not supported

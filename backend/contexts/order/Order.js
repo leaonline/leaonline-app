@@ -45,11 +45,12 @@ Order.methods.update = {
     },
     ...Order.schema
   },
-  run: function ({ _id, ...orderDoc }) {
+  run: async function ({ _id, ...orderDoc }) {
+    const OrderCollection = getCollection(Order.name)
     const selector = { _id }
     const modifier = { $set: orderDoc }
-    const updated = getCollection(Order.name).update(selector, modifier)
-    SyncState.update(Order.name)
+    const updated = await OrderCollection.updateAsync(selector, modifier)
+    await SyncState.update(Order.name)
     return updated
   }
 }
@@ -72,18 +73,42 @@ Order.methods.get = {
       optional: true
     }
   },
-  run: function ({ _id, dependencies }) {
-    return getCollection(Order.name).findOne()
+  run: async function ({ _id, dependencies }) {
+    return getCollection(Order.name).findOneAsync()
+  }
+}
+
+Order.methods.getAll = {
+  name: 'order.methods.getAll',
+  backend: true,
+  schema: {
+    dependencies: {
+      type: Array,
+      optional: true
+    },
+    'dependencies.$': {
+      type: Object,
+      blackbox: true,
+      optional: true
+    }
+  },
+  run: async function ({ dependencies }) {
+    const data = {
+      [Order.name]: await getCollection(Order.name).findOneAsync()
+    }
+    data[Field.name] = await getCollection(Field.name).find().fetchAsync()
+    data[Dimension.name] = await getCollection(Dimension.name).find().fetchAsync()
+    return data
   }
 }
 
 Order.publications = {}
 
-Order.init = () => {
+Order.init = async function init () {
   const OrderCollection = getCollection(Order.name)
 
-  if (OrderCollection.find().count() === 0) {
-    OrderCollection.insert({
+  if (await OrderCollection.countDocuments({}) === 0) {
+    await OrderCollection.insertAsync({
       field: [],
       fields: []
     })

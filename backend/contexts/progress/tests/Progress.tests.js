@@ -9,7 +9,7 @@ import {
 } from '../../../tests/helpers/stubCollection'
 import { testGetAllMethod, testGetMethod } from '../../../tests/helpers/backendMethods'
 import { Field } from '../../content/Field'
-import { createDocs } from '../../../tests/helpers/createDocs'
+import { createTestDocs } from '../../../tests/helpers/createTestDocs'
 import { DocumentFactories, SelectorFactories } from '../../../tests/helpers/Factories'
 
 const ProgressCollection = initTestCollection(Progress)
@@ -41,16 +41,16 @@ describe('Progress', function () {
   after(function () {
     restoreCollections()
   })
-  beforeEach(function () {
-    ProgressCollection.remove({})
-    FieldCollection.remove({})
+  beforeEach(async () => {
+    await ProgressCollection.removeAsync({})
+    await FieldCollection.removeAsync({})
   })
 
   describe(Progress.create.name, function () {
-    it('creates a new progress doc', function () {
+    it('creates a new progress doc', async () => {
       const insertDoc = createDoc()
-      const progressId = Progress.create(insertDoc)
-      expect(ProgressCollection.findOne(progressId)).to.deep.equal({
+      const progressId = await Progress.create(insertDoc)
+      expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
         _id: progressId,
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
@@ -67,10 +67,10 @@ describe('Progress', function () {
     })
   })
   describe(Progress.update.name, function () {
-    it('creates a new Progress doc if non exists', function () {
+    it('creates a new Progress doc if non exists', async () => {
       const updateDoc = createDoc()
-      const progressId = Progress.update(updateDoc)
-      expect(ProgressCollection.findOne(progressId)).to.deep.equal({
+      const progressId = await Progress.update(updateDoc)
+      expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
         _id: progressId,
         userId: updateDoc.userId,
         fieldId: updateDoc.fieldId,
@@ -85,12 +85,12 @@ describe('Progress', function () {
         ]
       })
     })
-    it('updates an existing Progress doc', function () {
+    it('updates an existing Progress doc', async () => {
       const insertDoc = createDoc()
-      const progressId = Progress.create(insertDoc)
+      const progressId = await Progress.create(insertDoc)
 
       // update existing unit set
-      Progress.update({
+      await Progress.update({
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
         unitSetId: insertDoc.unitSetId,
@@ -100,7 +100,7 @@ describe('Progress', function () {
         complete: true
       })
 
-      expect(ProgressCollection.findOne(progressId)).to.deep.equal({
+      expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
         _id: progressId,
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
@@ -117,7 +117,7 @@ describe('Progress', function () {
 
       // add new unit set
       const newUnitSetId = Random.id()
-      Progress.update({
+      await Progress.update({
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
         unitSetId: newUnitSetId,
@@ -127,7 +127,7 @@ describe('Progress', function () {
         complete: false
       })
 
-      expect(ProgressCollection.findOne(progressId)).to.deep.equal({
+      expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
         _id: progressId,
         userId: insertDoc.userId,
         fieldId: insertDoc.fieldId,
@@ -152,8 +152,8 @@ describe('Progress', function () {
   })
   testGetMethod(Progress)
   testGetAllMethod(Progress, {
-    factory: (withDeps) => {
-      const fieldDoc = withDeps && FieldCollection.findOne()
+    factory: async (withDeps) => {
+      const fieldDoc = withDeps && await FieldCollection.findOneAsync()
       const fieldId = withDeps ? fieldDoc._id : Random.id()
       return createDoc({ fieldId })
     },
@@ -167,20 +167,20 @@ describe('Progress', function () {
   describe(Progress.methods.my.name, function () {
     const run = Progress.methods.my.run
 
-    it('returns only the user\'s docs', () => {
+    it('returns only the user\'s docs', async () => {
       const userId = Random.id()
-      const docs = createDocs({
+      const docs = await createTestDocs({
         factory: () => createDoc({ userId }),
         collection: ProgressCollection
       })
 
-      const others = createDocs({
+      const others = await createTestDocs({
         factory: () => createDoc({ userId: Random.id() }),
         collection: ProgressCollection
       })
       const all = docs.length + others.length
-      expect(ProgressCollection.find().count()).to.equal(all)
-      const my = run.call({ userId })
+      expect(await ProgressCollection.countDocuments({})).to.equal(all)
+      const my = await run.call({ userId })
       expect(my.length).to.equal(docs.length)
       expect(my.length).to.be.lessThan(all)
       expect(my).to.deep.equal(docs)

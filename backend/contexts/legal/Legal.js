@@ -51,9 +51,9 @@ Legal.methods.update = {
     terms: Legal.schema.terms,
     contact: Legal.schema.contact
   },
-  run: function ({ _id, imprint, privacy, terms, contact }) {
-    const updated = getCollection(Legal.name).update(_id, { $set: { imprint, privacy, terms, contact } })
-    SyncState.update(Legal.name)
+  run: async function ({ _id, imprint, privacy, terms, contact }) {
+    const updated = await getCollection(Legal.name).updateAsync(_id, { $set: { imprint, privacy, terms, contact } })
+    await SyncState.update(Legal.name)
     return updated
   }
 }
@@ -72,8 +72,8 @@ Legal.methods.get = {
       allowedValues: Object.keys(Legal.schema)
     }
   },
-  run: function ({ name } = {}) {
-    const config = getCollection(Legal.name).findOne()
+  run: async function ({ name } = {}) {
+    const config = await getCollection(Legal.name).findOneAsync()
     if (!name || !config) {
       return config
     }

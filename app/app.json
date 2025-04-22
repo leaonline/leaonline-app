@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "lea.App",
+    "slug": "leaapp",
+    "version": "1.2.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/favicon-1024.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash_screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f3f3f3"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "de.uni-bremen.leaonline.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.testCompany.leaonline",
+      "versionCode": 8,
+      "allowBackup": false,
+      "publishBundlePath": ".builds"
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "assets/fonts/SemikolonPlus-Regular.ttf"
+          ]
+        }
+      ],
+      ["expo-build-properties", {
+        "android": {
+          "minSdkVersion": 26,
+          "compileSdkVersion": 34,
+          "targetSdkVersion": 35,
+          "buildToolsVersion": "34.0.0",
+          "kotlinVersion": "1.9.25",
+          "newArchEnabled": false,
+          "enableProguardInReleaseBuilds": true,
+          "enableShrinkResourcesInReleaseBuilds": true
+        },
+        "ios": {
+          "deploymentTarget": "14.0"
+        }
+      }]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "75420428-d3d4-44af-9f34-2500d81ff430"
+      }
+    }
+  }
+}
