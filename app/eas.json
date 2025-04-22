@@ -13,6 +13,12 @@
         "EXPO_PUBLIC_APP_SETTINGS": "staging"
       }
     },
+    "staging": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_APP_SETTINGS": "staging"
+      }
+    },
     "production": {
       "distribution": "store",
       "credentialsSource": "local",

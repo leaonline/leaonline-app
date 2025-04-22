@@ -22,9 +22,9 @@ shell-server@0.6.0            # Server-side component of the `meteor shell` comm
 # TESTING
 #========================================
 meteortesting:mocha
-lmieulet:meteor-legacy-coverage@0.4.0
-lmieulet:meteor-coverage
-hwillson:stub-collections
+# lmieulet:meteor-legacy-coverage@0.4.0
+# lmieulet:meteor-coverage
+# hwillson:stub-collections
 
 #========================================
 # GENERAL / SYSTEM
