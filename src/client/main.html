@@ -1,0 +1,138 @@
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=-5"/>
+    <title>otu.lea</title>
+
+    <link rel="preload" href="/fonts/SemikolonPlus-Regular.ttf" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/fonts/SemikolonPlus-Bold.otf" as="font" crossorigin="anonymous">
+    <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="/apple-touch-icon-180.png">
+    <link rel="icon" type="image/png" size="192x192" href="/favicon-192.png">
+    <link rel="mask-icon" href="/mask-icon.svg" color="#f5f5f5">
+    <link rel="fluid-icon" href="/fluidicon.png" title="otu.lea">
+
+    <meta name="application-name" content="otue.lea">
+    <meta name="description" content="Online Testumgebung zur Literalitätsentwicklung von Arbeitskräften">
+    <meta name="theme-color" content="#f59d1d">
+    <link rel="manifest" href="/manifest.json">
+    <noscript>
+        <style>
+            body:lang(de):before {
+                content: "Diese Anwendung benötigt JavaScript!";
+            }
+
+            body:lang(en):before {
+                content: "This application requires JavaScript!";
+            }
+        </style>
+    </noscript>
+
+    <style>
+        @font-face {
+            font-family: 'Semikolon';
+            src: url('/fonts/SemikolonPlus-Regular.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'SemikolonBold';
+            src: url('/fonts/SemikolonPlus-Bold.otf') format('opentype');
+            font-display: swap;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        .card {
+            box-shadow: 0 3px 6px #d6d6d6;
+            filter: progid:DXImageTransform.Microsoft.Shadow(Strength=6, Direction=135, Color='#D6D6D6');
+        }
+
+        .mh-50 {
+            max-height: 50vh;
+        }
+
+        .no-wrap {
+            white-space: nowrap;
+        }
+
+        .d-unavailable {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .lea-text {
+            font-family: Semikolon, sans-serif;
+            font-size: 24px;
+        }
+
+        .lea-text-bold {
+            font-family: SemikolonBold, Semikolon, sans-serif;
+            font-size: 24px;
+        }
+
+        h1 {
+            font-family: Semikolon, sans-serif;
+            font-size: 30px;
+        }
+
+        .lea-text-sm {
+            font-family: Semikolon, sans-serif;
+            font-size: 12px !important;
+        }
+
+        .lea-text-xl {
+            font-size: 48px;
+        }
+
+        body, wrapper {
+            background-color: #f5f5f5 !important;
+            min-height: 100vh;
+        }
+
+        @media print {
+            body {
+                background: none !important;
+            }
+
+            .d-print-none {
+                display: none !important;
+            }
+        }
+
+        .card {
+            border: 0 !important;
+        }
+
+        .vh-25 {
+            height: 25vh;
+        }
+
+        .container-fluid {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .trapezoid {
+            transform: perspective(3px) rotateX(-1deg);
+        }
+
+        .border-thick {
+            border-width: thick !important;
+        }
+    </style>
+    <meteor-bundled-css/>
+</head>
+
+<body></body>
+
+<template name="main-render-target">
+    <wrapper class="container-fluid d-flex flex-column">
+        <main class="w-100 main-container flex-fill">
+            {{> yield}}
+        </main>
+        {{> footer}}
+    </wrapper>
+    {{> fatal }}
+</template>
