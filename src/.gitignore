@@ -124,3 +124,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# fonts
+public/fonts/*

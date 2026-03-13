@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { DDP } from 'meteor/ddp-client'
+import { createJWTFactory } from 'meteor/leaonline:jwt'
 
 /**
  * Manages connection and calls to the content server.
@@ -98,25 +99,18 @@ ContentConnection.get = function get ({ name, ids = [], log }) {
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
+const { content } = Meteor.settings.remotes
+const url = Meteor.absoluteUrl()
+
 /**
  * generates a function to create jwt
  * @private
  */
-const getToken = (function () {
-  const { content } = Meteor.settings.remotes
-  const nJwt = require('njwt')
-  const signingKey = content.jwt.key
-  const url = Meteor.absoluteUrl()
-  const claims = {
-    iss: url.substring(0, url.length - 1), // The URL of your service
-    sub: content.jwt.sub // The UID of the user in your system
-  }
-
-  return ({ name }) => {
-    const jwt = nJwt.create({ scope: name, ...claims }, signingKey)
-    jwt.setExpiration(new Date().getTime() + (60 * 1000)) // One minute from now
-    return jwt.compact()
-  }
-})()
+const getToken = createJWTFactory({
+  url: url.substring(0, url.length - 1),
+  key: content.jwt.key,
+  sub: content.jwt.sub,
+  expires: content.jwt.expires
+})
 
 export { ContentConnection }
