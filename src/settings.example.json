@@ -69,5 +69,46 @@
     "replyTo": "noreply@example.com",
     "from": "system@example.com"
   },
-  "public": {}
+  "public": {
+    "env": "dev",
+    "defaultLocale": "de",
+    "issueMail": "mail@example.com",
+    "status": "production",
+    "accounts": {
+      "code": {
+        "length": 5
+      }
+    },
+    "packages": {
+      "dynamic-import": {
+        "useLocationOrigin": true
+      }
+    },
+    "app": {
+      "name": "otu.lea",
+      "label": "apps.otulea.title",
+      "description": "apps.otulea.description",
+      "icon": "edit",
+      "logLevel": "info"
+    },
+    "tts": {
+      "url": "http://localhost:3030/tts"
+    },
+    "hosts": {
+      "content": {
+        "base": "http://localhost:3030",
+        "tts": "/tts",
+        "competency": "/competencies",
+        "url": "http://localhost:3030"
+      },
+      "sessions": {
+        "url": "http://localhost:6060",
+        "evalUrl": "http://localhost:6060/eval",
+        "responseUrl": "http://localhost:6060/response"
+      }
+    },
+    "error": {
+      "maxStackSize": 1500
+    }
+  }
 }

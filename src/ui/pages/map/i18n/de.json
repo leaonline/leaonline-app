@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "map": {
+      "title": "Aufgaben Karte"
+    }
+  },
+  "map": {
+    "entry": {
+      "title": "Aufgabe {{value}}"
+    }
+  }
+}

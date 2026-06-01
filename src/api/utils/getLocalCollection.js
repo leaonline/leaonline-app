@@ -1,4 +1,5 @@
 import { LocalCollections } from '../collections/LocalCollections'
+import { makeGloballyAvailable } from '../../utils/makeGloballyAvailable'
 
 /**
  * Access (non-persistent; local; unnamed) Mongo.Collection by name
@@ -8,3 +9,5 @@ import { LocalCollections } from '../collections/LocalCollections'
  * @return {Mongo.Collection|undefined}
  */
 export const getLocalCollection = name => LocalCollections.get(name)
+
+makeGloballyAvailable({ getLocalCollection })

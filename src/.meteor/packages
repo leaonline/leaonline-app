@@ -85,3 +85,7 @@ leaonline:theme
 fourseven:scss@4.17.0-rc.0
 jkuester:template-states
 jkuester:template-loader
+ostrio:flow-router-extra
+ostrio:i18n
+accounts-passwordless
+accounts-google

@@ -1,0 +1,66 @@
+<template name="map">
+    <div class="lea-map-container">
+        {{#unless error}}
+        {{!--
+            The default container lists all fields
+        --}}
+
+            {{#container class="map-main-container my-4"}}
+                {{#if loadComplete}}
+                    {{#if field}}
+                        {{> textGroup text=field.title}}
+                    {{/if}}
+
+                    {{#each entry in entries}}
+                        <div class="card my-2">
+                            <div class="card-body d-flex justify-content-between" data-bs-toggle="collapse"
+                                 href="#map-entry-{{entry.id}}" role="button" aria-expanded="false"
+                                 aria-controls="map-entry-{{entry.id}}">
+                                {{> textGroup text=entry.title}}
+
+                                <div>
+                                    {{#each unitSet in entry.unitSets}}
+                                        {{> icon name=unitSet.dimension.icon fw=true class=unitSet.dimension.textColorClass}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="progress" role="progressbar" aria-label="Basic example"
+                                 aria-valuenow="{{entry.progress.perc}}" aria-valuemin="0" aria-valuemax="100"
+                                 style="height: 0.5em !important;border-radius: 0;">
+                                <div class="progress-bar bg-primary" style="width: {{entry.progress.perc}}%;"></div>
+                            </div>
+                            <div class="collapse" id="map-entry-{{entry.id}}">
+                                <div class="card-body row">
+                                    {{#each unitSet in entry.unitSets}}
+                                        <div class="col-12 col-lg-6">
+                                            {{> actionButton
+                                                type=unitSet.dimension.color
+                                                label=unitSet.dimension.title
+                                                icon=unitSet.dimension.icon
+                                                btnClass="unitset-btn w-100 p-3 my-1"
+                                                data-target=unitSet._id
+                                            }}
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{>loading}}
+                {{/if}}
+            {{/container}}
+
+        {{else}}
+            {{#container class="overview-dimensions-container my-4"}}
+                {{#if loadComplete}}
+                    <div class="card">
+                        <div class="card-body">
+                            {{> textGroup text=(i18n error.message) type="danger"}}
+                        </div>
+                    </div>
+                {{/if}}
+            {{/container}}
+        {{/unless}}
+    </div>
+</template>

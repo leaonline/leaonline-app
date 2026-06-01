@@ -1,34 +1,27 @@
 import { Meteor } from 'meteor/meteor'
 import { hasProp } from '../../api/utils/hasProp'
-import chalk from 'chalk'
-
-const logLevel = Meteor.settings.log.level
+import { isomorph } from 'meteor/leaonline:corelib/utils/arch'
 
 const internal = {
   error: {
     level: 0,
-    color: s => chalk.red(s),
     run: (...args) => console.error(...args)
   },
   warn: {
     level: 1,
-    color: s => chalk.yellow(s),
     run: (...args) => console.warn(...args)
   },
   log: {
     level: 2,
-    color: s => chalk.blue(s),
     run: (...args) => console.log(...args)
 
   },
   info: {
     level: 3,
-    color: s => chalk.gray(s),
     run: (...args) => console.info(...args)
   },
   debug: {
     level: 4,
-    color: s => chalk.magenta(s),
     run: (...args) => console.debug(...args)
   }
 }
@@ -49,39 +42,74 @@ const internal = {
  * @return {Function} a logger function or empty no-op function if log-level is
  *  not supported / defined
  */
-export const createLog = function ({ name = 'system', type = 'log', includeInTests = false } = {}) {
-  if (!hasProp(internal, type)) {
-    throw new Error(`Unexpected log type ${type}`)
-  }
+export const createLog = isomorph({
+  onServer: () => {
+    import chalk from 'chalk'
+    const logLevel = Meteor.settings.log.level
 
-  const logName = `[${name}]:`
-  const logType = internal[type]
-  const typeName = `${type}`
-  const excludeForTest = Meteor.isTest && !includeInTests
+    internal.error.color = s => chalk.red(s)
+    internal.warn.color = s => chalk.yellow(s)
+    internal.log.color = s => chalk.blue(s)
+    internal.info.color = s => chalk.gray(s)
+    internal.debug.color = s => chalk.magenta(s)
 
-  // if the log level is not supported, wo return a no-op fn
-  if (logType.level > logLevel || excludeForTest) {
-    return () => {}
-  }
+    const getLine = () => {
+      const stack = new Error().stack
+      const lines = stack.split('\n').slice(1)
 
-  return (...args) => {
-    const line = getLine()
-    const info = logType.color(`${typeName} ${line}`)
-    logType.run(info, logName, ...args)
-  }
-}
+      for (const line of lines) {
+        if (line.match(/^\s*(at eval \(eval)|(eval:)/)) {
+          return 'file: "eval"'
+        }
 
-const getLine = () => {
-  const stack = new Error().stack
-  const lines = stack.split('\n').slice(1)
-
-  for (const line of lines) {
-    if (line.match(/^\s*(at eval \(eval)|(eval:)/)) {
-      return 'file: "eval"'
+        if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
+          return line.replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '').replace(/[()]+/g, '')
+        }
+      }
     }
 
-    if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
-      return line.replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '').replace(/[()]+/g, '')
+    return ({ name = 'system', type = 'log', includeInTests = false } = {}) => {
+      if (!hasProp(internal, type)) {
+        throw new Error(`Unexpected log type ${type}`)
+      }
+
+      const logName = `[${name}]:`
+      const logType = internal[type]
+      const typeName = `${type}`
+      const excludeForTest = Meteor.isTest && !includeInTests
+
+      // if the log level is not supported, wo return a no-op fn
+      if (logType.level > logLevel || excludeForTest) {
+        return () => {}
+      }
+
+      return (...args) => {
+        const line = getLine()
+        const info = logType.color(`${typeName} ${line}`)
+        logType.run(info, logName, ...args)
+      }
+    }
+  },
+  onClient: () => {
+    const logLevel = Meteor.settings.public.log?.level ?? 2
+    return ({ name = 'system', type = 'log', includeInTests = false } = {}) => {
+      if (!hasProp(internal, type)) {
+        throw new Error(`Unexpected log type ${type}`)
+      }
+
+      const logName = `[${name}]:`
+      const logType = internal[type]
+      const typeName = `${type}`
+      const excludeForTest = Meteor.isTest && !includeInTests
+
+      // if the log level is not supported, wo return a no-op fn
+      if (logType.level > logLevel || excludeForTest) {
+        return () => {}
+      }
+
+      return (...args) => {
+        logType.run(typeName, logName, ...args)
+      }
     }
   }
-}
+})

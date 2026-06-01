@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
 import { onServerExec } from '../../infrastructure/arch/onServerExec'
-import { RestoreCodes } from '../../api/accounts/RestoreCodes'
 import { updateUserProfile } from './updateUserProfile'
 import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
@@ -186,6 +185,7 @@ Users.methods.create = {
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
+    import { RestoreCodes } from '../../api/accounts/RestoreCodes'
 
     return async function (options = {}) {
       const { userId } = this

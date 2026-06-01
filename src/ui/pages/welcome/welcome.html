@@ -1,0 +1,127 @@
+<template name="welcome">
+    <div class="w-100 lea-welcome-container">
+        {{#unless loadComplete}}
+            {{> loading}}
+        {{/unless}}
+
+        <div class="w-100">
+            <div class="container intro-video-container">
+                {{> image
+                        src=(fullUrl "/logo/welcome-1110x625.png")
+                        width=1110
+                        height=625
+                        alt="image welcome"
+                        class="rounded lea-main-logo autoscale shadow"}}
+                {{!--
+                                    <div class="intro-video-container embed-responsive embed-responsive-16by9 mh-50 shadow shadow-sm">
+                                        <video controls preload="none"
+                                               class="embed-responsive-item" allowfullscreen>
+                                            <source src="{{video "welcome"}}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                --}}
+            </div>
+        </div>
+
+        {{! we need to show a beta version warning in order to inform users }}
+        {{#if isBeta}}
+            {{#onComplete complete=dependenciesComplete}}
+                {{#container class="welcome-intro-container my-5"}}
+                    <div class="card">
+                        <div class="card-header beta-header border border-primary bg-white d-flex justify-content-between">
+                            {{> textGroup type=this.type text=(i18n "pages.welcome.beta.title")}}
+                            {{#unless betaMessageOpen}}
+                                {{> actionButton
+                                        btnClass="btn-primary bg-primary text-white"
+                                        type="primary"
+                                        class="toggle-beta"
+                                        label=(i18n "actions.show")}}
+                            {{else}}
+                                {{> actionButton
+                                        btnClass="btn-primary bg-primary text-white"
+                                        type="primary"
+                                        class="toggle-beta"
+                                        label=(i18n "actions.hide")}}
+                            {{/unless}}
+                        </div>
+                        <div class="card-body beta-content border border-primary" style="display: none;">
+                            {{> textGroup type=this.type text=(i18n "pages.welcome.beta.note")}}
+                        </div>
+                    </div>
+                {{/container}}
+            {{/onComplete}}
+        {{/if}}
+
+        {{#unless currentUser}}
+            {{#container class="welcome-intro-container my-5"}}
+                {{#unless currentLogin}}
+                <div class="card bg-white lea-login-list-card">
+                    <div class="card-header bg-white">
+                        {{#onComplete complete=dependenciesComplete}}
+                            {{> textGroup text=(i18n "pages.welcome.introduction")}}
+                        {{/onComplete}}
+                    </div>
+                    {{#onComplete complete=dependenciesComplete}}
+                        <div class="card-body py-4 row row-gap-3">
+                            {{#each loginMethod in availableLogins}}
+                                <div class="col-12 col-lg-6">
+                                    {{> actionButton
+                                            class="w-100"
+                                            block=true
+                                            outline=true
+                                            type=loginMethod.color
+                                            tts=loginMethod.tts
+                                            label=(i18n loginMethod.label)
+                                            btnClass="lea-login-btn py-3"
+                                            data-target=loginMethod.name
+                                            icon=loginMethod.icon
+                                            sndBtnClass="border-0"
+                                    }}
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/onComplete}}
+                </div>
+                {{/unless}}
+
+                {{#with currentLogin}}
+
+                    <div class="card bg-white mt-3 mt-lg-5 lea-login-method-card">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            {{> actionButton
+                                    block=true
+                                    sm=true
+                                    outline=true
+                                    tts=(i18n "common.back")
+                                    btnClass="lea-cancel-login-btn"
+                                    icon="arrow-left"
+                            }}
+                            <div class="d-flex gap-2 align-items-center">
+                            {{> soundbutton
+                                    tts=this.tts
+                                    text=null
+                                    outline=true
+                                    class="border-0"
+                                    sm=true
+                                    type='secondary'
+                            }}
+                            <div class=" d-flex justify-content-center align-items-baseline">
+                                {{> icon name=this.icon fw=true}}
+                                <span class="lea-text-bold">
+                                    {{i18n this.label}}
+                                </span>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {{#onComplete complete=loginTemplateLoaded}}
+                                {{> Template.dynamic template=this.template data=(loginTemplateData this)}}
+                            {{/onComplete}}
+                        </div>
+                    </div>
+                {{/with}}
+            {{/container}}
+        {{/unless}}
+    </div>
+</template>

@@ -1,0 +1,45 @@
+<template name="navbar">
+	<div class="w-100 text-center mt-4">
+		{{#with labels}}
+			<span class="lea-text-bold no-wrap text-{{this.type}}">
+                {{#if ../showUsername}}{{currentUser.username}} - {{/if}}{{this.dimension}} - {{this.level}}
+            </span>
+		{{/with}}
+	</div>
+	<div class="w-100 d-flex justify-content-between align-items-center mt-2 mb-4 d-print-none">
+		{{#if showProgress}}
+			{{#with progress}}
+				<div class="progress w-100 bg-transparent border border-{{this.type}}">
+					<div class="progress-bar bg-{{this.type}}" role="progressbar" style="width: {{this.value}}%"
+						 aria-valuenow="{{this.value}}" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<span class="mx-3 no-wrap text-{{this.type}}">{{this.rounded}}%</span>
+			{{/with}}
+		{{/if}}
+        {{#if hasExit}}
+		<span class="ms-auto ml-auto no-wrap d-print-none">
+			{{#onComplete complete=loadComplete}}
+				{{! > actionButton class="me-1" outline=true btnClass="navbar-help-button btn-sm" sound=false title=(i18n "common.help") icon="question"}}
+				{{> actionButton outline=true btnClass="navbar-overview-button btn-sm" sound=false title=(i18n "common.toOverview") icon="times"}}
+			{{/onComplete}}
+		</span>
+        {{/if}}
+	</div>
+
+    {{!-- confirm modal --}}
+    <div class="modal" id="navbar-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {{> textGroup type=this.type text=(i18n "actions.confirmCancel")}}
+                </div>
+                    {{#onComplete complete=loadComplete}}
+                <div class="modal-footer d-flex justify-content-between">
+                        {{> actionButton outline=true btnClass="navbar-confirm-cancel btn-sm" label=(i18n "common.yes")}}
+                        {{> actionButton outline=true btnClass="btn-sm" label=(i18n "common.no") data-bs-dismiss="modal"}}
+                </div>
+                    {{/onComplete}}
+            </div>
+        </div>
+    </div>
+</template>

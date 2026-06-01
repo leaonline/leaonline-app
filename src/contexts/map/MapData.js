@@ -1,10 +1,11 @@
-import { getCollection } from '../../api/utils/getCollection'
+import { Field } from '../content/Field'
 import { createLog } from '../../infrastructure/log/createLog'
+import { getCollection } from '../../api/utils/getCollection'
 import { countUnitCompetencies } from '../competencies/countUnitCompetencies'
 import { cursorToMap } from '../../api/utils/cursorToMap'
 import { forEachAsync } from '../../infrastructure/async/forEachAsync'
-import { Field } from '../content/Field'
 import { onDependencies } from '../utils/onDependencies'
+import { onClientExec, onServerExec } from '../../utils/archUtils'
 
 /**
  * Represents the "map" overview for a given field, where users are able to select
@@ -21,6 +22,10 @@ export const MapData = {
   methods: {},
   sync: true
 }
+
+onClientExec(() => {
+  MapData.isLocal = true
+})
 
 /**
  * The database schema.
@@ -199,313 +204,329 @@ MapData.schema = {
   }
 }
 
-const log = createLog({ name: MapData.name })
-const warn = createLog({ name: MapData.name, type: 'warn' })
-const byLevel = (a, b) => a.level - b.level
-const checkIntegrity = ({ condition, premise }) => {
-  if (!condition) {
-    throw new Error(
-      `Integrity failed: ${premise}`
-    )
-  }
-}
-
-/**
- * Creates read-optimized map data for every field. This is a very resource-
- * intensive method and should only be called when a new sync has been executed.
- *
- * Do not call from a regular method that could be invoked by clients.
- * @method
- *
- * @async
- * @param options {object}
- * @param options.field {string} the field id
- * @param options.dryRun {boolean?} if false will not be saved to db
- * @param options.dimensionsOrder {string[]} array of short codes to sort dimensions
- * @return {Promise<*>}
- */
-MapData.create = async (options) => {
-  const { field, dryRun, dimensionsOrder } = options
-  const fieldDoc = await getCollection('field').findOneAsync(field)
-  checkIntegrity({
-    condition: fieldDoc,
-    premise: `Expect field doc by _id "${field}"`
-  })
-
-  log('create for field', fieldDoc.title)
-  const dimensions = (await getCollection('dimension')
-    .find()
-    .fetchAsync())
-    .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
-  const levels = (await getCollection('level')
-    .find()
-    .fetchAsync())
-    .sort(byLevel)
-
-  checkIntegrity({
-    condition: dimensions.length,
-    premise: 'Expect at least one dimension doc'
-  })
-  checkIntegrity({
-    condition: levels.length,
-    premise: 'Expect at least one level doc'
-  })
-
-  const TestCycleCollection = getCollection('testCycle')
-  const UnitSetCollection = getCollection('unitSet')
-  const UnitCollection = getCollection('unit')
-  const mapData = {
-    field,
-    dimensions: dimensions.map(({ _id }) => ({ _id, maxProgress: 0, maxCompetencies: 0 })),
-    levels: levels.map(l => l._id),
-    maxProgress: 0,
-    maxCompetencies: 0,
-    entries: []
+onServerExec(() => {
+  const log = createLog({ name: MapData.name })
+  const warn = createLog({ name: MapData.name, type: 'warn' })
+  const byLevel = (a, b) => a.level - b.level
+  const checkIntegrity = ({ condition, premise }) => {
+    if (!condition) {
+      throw new Error(
+        `Integrity failed: ${premise}`
+      )
+    }
   }
 
-  // for each level
-  await forEachAsync(levels, async (levelDoc, levelIndex) => {
-    log('collect level (milestone)', levelDoc.title)
+  /**
+   * Creates read-optimized map data for every field. This is a very resource-
+   * intensive method and should only be called when a new sync has been executed.
+   *
+   * Do not call from a regular method that could be invoked by clients.
+   * @method
+   *
+   * @async
+   * @param options {object}
+   * @param options.field {string} the field id
+   * @param options.dryRun {boolean?} if false will not be saved to db
+   * @param options.dimensionsOrder {string[]} array of short codes to sort dimensions
+   * @return {Promise<*>}
+   */
+  MapData.create = async (options) => {
+    const { field, dryRun, dimensionsOrder } = options
+    const fieldDoc = await getCollection('field').findOneAsync(field)
+    checkIntegrity({
+      condition: fieldDoc,
+      premise: `Expect field doc by _id "${field}"`
+    })
 
-    // each level ends with a milestone
-    const milestone = {
-      type: 'milestone',
-      level: levelIndex,
-      progress: 0,
-      competencies: []
+    log('create for field', fieldDoc.title)
+    const dimensions = (await getCollection('dimension')
+      .find()
+      .fetchAsync())
+      .sort((a, b) => dimensionsOrder.indexOf(a.shortCode) - dimensionsOrder.indexOf(b.shortCode))
+    const levels = (await getCollection('level')
+      .find()
+      .fetchAsync())
+      .sort(byLevel)
+
+    checkIntegrity({
+      condition: dimensions.length,
+      premise: 'Expect at least one dimension doc'
+    })
+    checkIntegrity({
+      condition: levels.length,
+      premise: 'Expect at least one level doc'
+    })
+
+    const TestCycleCollection = getCollection('testCycle')
+    const UnitSetCollection = getCollection('unitSet')
+    const UnitCollection = getCollection('unit')
+    const mapData = {
+      field,
+      dimensions: dimensions.map(({ _id }) => ({ _id, maxProgress: 0, maxCompetencies: 0 })),
+      levels: levels.map(l => l._id),
+      maxProgress: 0,
+      maxCompetencies: 0,
+      entries: []
     }
 
-    // used to determine, whether to add a milestone at the end
-    // of a level or not
-    let hasAtLeastOneStage = false
+    // for each level
+    await forEachAsync(levels, async (levelDoc, levelIndex) => {
+      log('collect level (milestone)', levelDoc.title)
 
-    // -------------------------------------------------------------------------
-    // phase 1 - collecting
-    // -------------------------------------------------------------------------
-
-    // we first fill all stages into lists by dimension
-    // which we later distribute into an entry-list
-    // like so:
-    //
-    // r: [ = = = = = = ]
-    // w: [ = = = ]
-    // l: [ = = = = = = ]
-    // m: [ = = = = = ]
-
-    const stages = {}
-
-    // for each dimension
-    await forEachAsync(dimensions, async (dimensionDoc, dimensionIndex) => {
-      log('collect dimension', dimensionDoc.shortCode, dimensionDoc.title)
-      const dimensionId = dimensionDoc._id
-      const testCycleDoc = await TestCycleCollection.findOneAsync({
-        field: field,
-        level: levelDoc._id,
-        dimension: dimensionDoc._id
-      })
-
-      // if we found no test cycle for this given combination we need to
-      // make sure there is no further map building for this test cycle.
-      if (!testCycleDoc) {
-        return warn(fieldDoc.title, 'has no TestCycle for ', dimensionDoc.title, `(${dimensionDoc._id})`, levelDoc.title, `(${levelDoc._id})`)
+      // each level ends with a milestone
+      const milestone = {
+        type: 'milestone',
+        level: levelIndex,
+        progress: 0,
+        competencies: []
       }
 
-      log('continue with', fieldDoc.title, dimensionDoc.shortCode, levelDoc.title)
+      // used to determine, whether to add a milestone at the end
+      // of a level or not
+      let hasAtLeastOneStage = false
 
-      // get unit sets with fallback in case they are undefined on some
-      // test cycle docs and to prevent followup errors
-      const unitSets = testCycleDoc.unitSets || []
+      // -------------------------------------------------------------------------
+      // phase 1 - collecting
+      // -------------------------------------------------------------------------
 
-      checkIntegrity({
-        condition: unitSets.length,
-        premise: `Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
-      })
+      // we first fill all stages into lists by dimension
+      // which we later distribute into an entry-list
+      // like so:
+      //
+      // r: [ = = = = = = ]
+      // w: [ = = = ]
+      // l: [ = = = = = = ]
+      // m: [ = = = = = ]
 
-      // once we know, if we have any unitSets,
-      // we add a new stage for this dimension
-      if (!stages[dimensionId]) stages[dimensionId] = []
+      const stages = {}
 
-      // this will be the count of all competencies for the current dimension
-      // which
-      let maxCompetencies = 0
-
-      const unitSetQuery = { _id: { $in: unitSets } }
-      const unitSetCursor = UnitSetCollection.find(unitSetQuery)
-      const expectedUnitSets = unitSets.length
-      const actualUnitSets = await UnitSetCollection.countDocuments(unitSetQuery)
-
-      // If there is a mismatch between unit sets, as defined in the test cycle doc,
-      // we have an integrity issue and need to throw this as error
-      checkIntegrity({
-        condition: actualUnitSets === expectedUnitSets,
-        premise: `Expect ${expectedUnitSets} unit sets for test cycle ${testCycleDoc._id}, got ${actualUnitSets}`
-      })
-
-      const unitSetMap = await cursorToMap(unitSetCursor)
-
-      await forEachAsync(unitSets, async unitSetId => {
-        const unitSetDoc = unitSetMap.get(unitSetId)
-
-        checkIntegrity({
-          condition: unitSetDoc,
-          premise: `Expect unit set doc by _id ${unitSetId}`
+      // for each dimension
+      await forEachAsync(dimensions, async (dimensionDoc, dimensionIndex) => {
+        log('collect dimension', dimensionDoc.shortCode, dimensionDoc.title)
+        const dimensionId = dimensionDoc._id
+        const testCycleDoc = await TestCycleCollection.findOneAsync({
+          field: field,
+          level: levelDoc._id,
+          dimension: dimensionDoc._id
         })
 
-        const competencies = await countCompetencies(unitSetDoc, log)
-        log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+        // if we found no test cycle for this given combination we need to
+        // make sure there is no further map building for this test cycle.
+        if (!testCycleDoc) {
+          return warn(fieldDoc.title, 'has no TestCycle for ', dimensionDoc.title, `(${dimensionDoc._id})`, levelDoc.title, `(${levelDoc._id})`)
+        }
 
-        const units = unitSetDoc.units || []
-        const expectedUnits = units.length
-        const query = { _id: { $in: units } }
-        const actualUnits = await UnitCollection.countDocuments(query)
+        log('continue with', fieldDoc.title, dimensionDoc.shortCode, levelDoc.title)
+
+        // get unit sets with fallback in case they are undefined on some
+        // test cycle docs and to prevent followup errors
+        const unitSets = testCycleDoc.unitSets || []
 
         checkIntegrity({
-          condition: expectedUnits > 0,
-          premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
+          condition: unitSets.length,
+          premise: `Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
         })
 
-        // We also require strict integrity of units in a unit set
+        // once we know, if we have any unitSets,
+        // we add a new stage for this dimension
+        if (!stages[dimensionId]) stages[dimensionId] = []
+
+        // this will be the count of all competencies for the current dimension
+        // which
+        let maxCompetencies = 0
+
+        const unitSetQuery = { _id: { $in: unitSets } }
+        const unitSetCursor = UnitSetCollection.find(unitSetQuery)
+        const expectedUnitSets = unitSets.length
+        const actualUnitSets = await UnitSetCollection.countDocuments(unitSetQuery)
+
+        // If there is a mismatch between unit sets, as defined in the test cycle doc,
+        // we have an integrity issue and need to throw this as error
         checkIntegrity({
-          condition: expectedUnits === actualUnits,
-          premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
+          condition: actualUnitSets === expectedUnitSets,
+          premise: `Expect ${expectedUnitSets} unit sets for test cycle ${testCycleDoc._id}, got ${actualUnitSets}`
         })
 
-        // push new stage to the stage data
-        stages[dimensionId].push({
+        const unitSetMap = await cursorToMap(unitSetCursor)
+
+        await forEachAsync(unitSets, async unitSetId => {
+          const unitSetDoc = unitSetMap.get(unitSetId)
+
+          checkIntegrity({
+            condition: unitSetDoc,
+            premise: `Expect unit set doc by _id ${unitSetId}`
+          })
+
+          const competencies = await countCompetencies(unitSetDoc, log)
+          log(testCycleDoc.shortCode, 'collect unit set', unitSetDoc.shortCode, 'with', competencies, 'competencies')
+
+          const units = unitSetDoc.units || []
+          const expectedUnits = units.length
+          const query = { _id: { $in: units } }
+          const actualUnits = await UnitCollection.countDocuments(query)
+
+          checkIntegrity({
+            condition: expectedUnits > 0,
+            premise: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0 (${JSON.stringify(unitSetDoc)})`
+          })
+
+          // We also require strict integrity of units in a unit set
+          checkIntegrity({
+            condition: expectedUnits === actualUnits,
+            premise: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got ${actualUnits} / ${unitSetDoc.units.toString()}`
+          })
+
+          // push new stage to the stage data
+          stages[dimensionId].push({
+            dimension: dimensionIndex,
+            _id: unitSetDoc._id,
+            progress: unitSetDoc.progress,
+            code: unitSetDoc.shortCode,
+            competencies: competencies
+          })
+
+          // At this point we know for sure, that there is
+          hasAtLeastOneStage = true
+          maxCompetencies += competencies
+
+          // summ progress/competencies to the max values
+          mapData.maxCompetencies += competencies
+          mapData.maxProgress += unitSetDoc.progress
+
+          // also add progress/competencies to the dimensions
+          mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
+          mapData.dimensions[dimensionIndex].maxCompetencies += competencies
+        })
+
+        // after we have counted all competencies for this milestone
+        // we can add a new entry with the maximum obtainable competencies
+        // for the current dimension to the milestone
+        milestone.competencies.push({
           dimension: dimensionIndex,
-          _id: unitSetDoc._id,
-          progress: unitSetDoc.progress,
-          code: unitSetDoc.shortCode,
-          competencies: competencies
+          max: maxCompetencies
+        })
+      })
+
+      // -------------------------------------------------------------------------
+      // phase 2 - transposing
+      // -------------------------------------------------------------------------
+
+      // now we have to take the {stages} Object and transpose it into a single
+      // dimensioned list that contains an equal distribution of unit sets:
+      //
+      // [
+      //    [r,w,l,m],
+      //    [r,w,l,m],
+      //    [r,w,l,m],
+      //    [r,l,m],
+      //    [r,l,m],
+      //    [r,l]
+      // ]
+      //
+      // Note, how writing and math are only added as often they occur on their
+      // lists.
+
+      let maxLength = 0
+      const stageEntries = Object.values(stages)
+
+      // first, we estimate the largest list length, which will
+      // determine the number of stages we will get for our map
+      stageEntries.forEach((list = []) => {
+        if (list.length > maxLength) {
+          maxLength = list.length
+        }
+      })
+
+      // now we collect in each iteration one entry from every list
+      for (let i = 0; i < maxLength; i++) {
+        const stage = { type: 'stage', level: levelIndex, unitSets: [], progress: 0 }
+
+        stageEntries.forEach(list => {
+          // skip, if the list already does not have any entry
+          // which can happen and must be supported
+          if (i > list.length - 1) { return }
+
+          const unitSet = list[i]
+
+          // we need to sum the progress of all unitSets
+          // to be able to display progress for the full stage
+          stage.progress += unitSet.progress
+          stage.unitSets.push(unitSet)
         })
 
-        // At this point we know for sure, that there is
-        hasAtLeastOneStage = true
-        maxCompetencies += competencies
+        // sum up progress
+        milestone.progress += stage.progress
 
-        // summ progress/competencies to the max values
-        mapData.maxCompetencies += competencies
-        mapData.maxProgress += unitSetDoc.progress
+        // then we add our stage to the entries list
+        mapData.entries.push(stage)
+      }
 
-        // also add progress/competencies to the dimensions
-        mapData.dimensions[dimensionIndex].maxProgress += unitSetDoc.progress
-        mapData.dimensions[dimensionIndex].maxCompetencies += competencies
-      })
-
-      // after we have counted all competencies for this milestone
-      // we can add a new entry with the maximum obtainable competencies
-      // for the current dimension to the milestone
-      milestone.competencies.push({
-        dimension: dimensionIndex,
-        max: maxCompetencies
-      })
-    })
-
-    // -------------------------------------------------------------------------
-    // phase 2 - transposing
-    // -------------------------------------------------------------------------
-
-    // now we have to take the {stages} Object and transpose it into a single
-    // dimensioned list that contains an equal distribution of unit sets:
-    //
-    // [
-    //    [r,w,l,m],
-    //    [r,w,l,m],
-    //    [r,w,l,m],
-    //    [r,l,m],
-    //    [r,l,m],
-    //    [r,l]
-    // ]
-    //
-    // Note, how writing and math are only added as often they occur on their
-    // lists.
-
-    let maxLength = 0
-    const stageEntries = Object.values(stages)
-
-    // first, we estimate the largest list length, which will
-    // determine the number of stages we will get for our map
-    stageEntries.forEach((list = []) => {
-      if (list.length > maxLength) {
-        maxLength = list.length
+      // After all stages of one iteration have been added we can finally add the milestone entry.
+      // However, this is only to be added, in case there is an actual map created.
+      // This is only the case, if we have added at least one stage.
+      // There is a real case, where no test cycle is defined for a given combination
+      // of field/dimension/level and we need to be aware of that.
+      if (hasAtLeastOneStage) {
+        mapData.entries.push(milestone)
       }
     })
 
-    // now we collect in each iteration one entry from every list
-    for (let i = 0; i < maxLength; i++) {
-      const stage = { type: 'stage', level: levelIndex, unitSets: [], progress: 0 }
+    // At this point we skip on dryRun but also if we
+    // found no way to build a map for a given field.
+    // This is also important to determine, whether a field
+    // should even be listed in the overview.
+    if (dryRun || mapData.entries.length === 0) { return }
 
-      stageEntries.forEach(list => {
-        // skip, if the list already does not have any entry
-        // which can happen and must be supported
-        if (i > list.length - 1) { return }
+    // Otherwise, we can safely update the collection.
 
-        const unitSet = list[i]
-
-        // we need to sum the progress of all unitSets
-        // to be able to display progress for the full stage
-        stage.progress += unitSet.progress
-        stage.unitSets.push(unitSet)
-      })
-
-      // sum up progress
-      milestone.progress += stage.progress
-
-      // then we add our stage to the entries list
-      mapData.entries.push(stage)
-    }
-
-    // After all stages of one iteration have been added we can finally add the milestone entry.
-    // However, this is only to be added, in case there is an actual map created.
-    // This is only the case, if we have added at least one stage.
-    // There is a real case, where no test cycle is defined for a given combination
-    // of field/dimension/level and we need to be aware of that.
-    if (hasAtLeastOneStage) {
-      mapData.entries.push(milestone)
-    }
-  })
-
-  // At this point we skip on dryRun but also if we
-  // found no way to build a map for a given field.
-  // This is also important to determine, whether a field
-  // should even be listed in the overview.
-  if (dryRun || mapData.entries.length === 0) { return }
-
-  // Otherwise, we can safely update the collection.
-
-  return getCollection(MapData.name).upsertAsync({ field }, { $set: mapData })
-}
-
-/**
- * Counts competencies of a given unitSet.
- * @private
- * @async
- * @param unitSet
- * @param log
- * @return {number}
- */
-const countCompetencies = async (unitSet, log) => {
-  const UnitCollection = getCollection('unit')
-  let count = 0
-
-  await UnitCollection.find({ _id: { $in: unitSet.units } }).forEachAsync(unitDoc => {
-    count += countUnitCompetencies({ unitDoc, log })
-  })
-
-  if (!count) {
-    log(unitSet.shortCode, 'has no competencies linked')
+    return getCollection(MapData.name).upsertAsync({ field }, { $set: mapData })
   }
-  return count
+
+  /**
+   * Counts competencies of a given unitSet.
+   * @private
+   * @async
+   * @param unitSet
+   * @param log
+   * @return {number}
+   */
+  const countCompetencies = async (unitSet, log) => {
+    const UnitCollection = getCollection('unit')
+    let count = 0
+
+    await UnitCollection.find({ _id: { $in: unitSet.units } }).forEachAsync(unitDoc => {
+      count += countUnitCompetencies({ unitDoc, log })
+    })
+
+    if (!count) {
+      log(unitSet.shortCode, 'has no competencies linked')
+    }
+    return count
+  }
+
+  /**
+   * Returns a map data document by field (fieldId)
+   * @param field
+   * @return {object}
+   */
+  MapData.get = async ({ field }) => getCollection(MapData.name).findOneAsync({ field })
+})
+
+MapData.methods = MapData.methods ?? {}
+
+MapData.methods.get = {
+  name: 'mapData.methods.get',
+  schema: {
+    field: {
+      type: String
+    }
+  },
+  run: onServerExec(() => {
+    return async function ({ field }) {
+      return getCollection(MapData.name).findOneAsync({ field })
+    }
+  })
 }
-
-/**
- * Returns a map data document by field (fieldId)
- * @param field
- * @return {object}
- */
-MapData.get = async ({ field }) => getCollection(MapData.name).findOneAsync({ field })
-
-MapData.methods = {}
 
 MapData.methods.getAll = {
   name: 'mapData.methods.getAll',
@@ -521,15 +542,17 @@ MapData.methods.getAll = {
     }
   },
   backend: true,
-  run: async function ({ dependencies } = {}) {
-    const docs = await getCollection(MapData.name)
-      .find({}, { hint: { $natural: -1 } })
-      .fetchAsync()
-    const data = { [MapData.name]: docs }
-    await onDependencies()
-      .add(Field.name, 'field')
-      .output(data)
-      .run({ docs, dependencies })
-    return data
-  }
+  run: onServerExec(() => {
+    return async function ({ dependencies } = {}) {
+      const docs = await getCollection(MapData.name)
+        .find({}, { hint: { $natural: -1 } })
+        .fetchAsync()
+      const data = { [MapData.name]: docs }
+      await onDependencies()
+        .add(Field.name, 'field')
+        .output(data)
+        .run({ docs, dependencies })
+      return data
+    }
+  })
 }

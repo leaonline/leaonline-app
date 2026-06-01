@@ -27,6 +27,7 @@ import { ServerErrors } from '../contexts/errors/ServerErrors'
 import { ClientErrors } from '../contexts/errors/ClientErrors'
 import { ClientConnection } from '../contexts/connection/ClientConnection'
 import { UnitSetAppraisal } from '../contexts/appraisal/UnitSetAppraisal'
+import { Errors } from '../contexts/errors/Errors'
 
 const register = ctx => {
   if (!ContextRegistry.has(ctx.name)) {
@@ -47,7 +48,8 @@ ContentServer.contexts().forEach(ctx => {
 })
 
 // create collections for backend ctx
-;[MapData,
+;[
+  MapData,
   MapIcons,
   SyncState,
   Session,
@@ -57,6 +59,7 @@ ContentServer.contexts().forEach(ctx => {
   Legal,
   Achievements,
   Order,
+  Errors,
   ServerErrors,
   ClientErrors,
   UnitSetAppraisal,
@@ -70,6 +73,9 @@ ContentServer.contexts().forEach(ctx => {
 // where in staging mode we add additional contexts
 // that make methods only accessible in this mode
 const methodContexts = [
+  Field,
+  Dimension,
+  Level,
   MapData,
   Users,
   Content,

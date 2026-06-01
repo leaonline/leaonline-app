@@ -15,3 +15,8 @@ export const createMethod = method => {
   log(method.name)
   return methodFactory(method)
 }
+
+export const createMethods = methods => methods.forEach(methodDef => {
+  console.info(`[methodFactory]: create ${methodDef.name}`)
+  createMethod(methodDef)
+})

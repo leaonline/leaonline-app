@@ -1,4 +1,5 @@
 import { createRepository } from '../infrastructure/factories/createRepository'
+import { makeGloballyAvailable } from '../utils/makeGloballyAvailable'
 
 /**
  * An instance of a Repository, used to store references to all contexts and allows them
@@ -9,3 +10,5 @@ import { createRepository } from '../infrastructure/factories/createRepository'
  * @inheritDoc {Repository}
  */
 export const ContextRegistry = createRepository()
+
+makeGloballyAvailable({ ContextRegistry })

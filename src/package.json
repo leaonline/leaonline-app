@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.5",
+    "bootstrap": "^5.3.8",
     "chalk": "^5.0.0",
     "dotenv": "^16.0.0",
+    "easy-speech": "^2.4.0",
     "jquery": "^3.7.1",
     "meteor-node-stubs": "^1.1.0",
     "njwt": "^1.2.0",

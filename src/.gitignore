@@ -127,3 +127,6 @@ dist
 
 # fonts
 public/fonts/*
+
+# settings file, similar to .env
+settings.json

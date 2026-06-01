@@ -1,0 +1,27 @@
+<template name="story">
+    <div class="lea-unit-nav-container">
+        {{#onComplete complete=loadComplete}}
+            {{#container class="lea-sotry-container"}}
+                {{>navbar navbarData}}
+            {{/container}}
+        {{/onComplete}}
+    </div>
+
+    <div class="lea-story-container mb-5">
+        {{#unless loadComplete}}
+            <div class="w-100 text-center text-primary">
+                {{> icon pulse=true name="spinner"}}
+            </div>
+        {{else}}
+            {{#container class="lea-unit-content-container"}}
+                {{> taskPageRenderer pageContentData}}
+
+                <div class="card-body">
+                    {{> actionButton type=currentType tts="actions.forward" btnClass="lea-story-finish-button"
+                            type=currentType class="lea-story-finish-group" block=true
+                            icon="arrow-right" iconPos="right" label=(i18n "common.forward") }}
+                </div>
+            {{/container}}
+        {{/unless}}
+    </div>
+</template>

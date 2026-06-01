@@ -1,0 +1,45 @@
+<template name="overview">
+    <div class="lea-overview-container">
+      {{#unless error}}
+        {{!--
+            The default container lists all fields
+        --}}
+
+        {{#container class="overview-dimensions-container my-4"}}
+            {{#if loadComplete}}
+                <div class="card bg-white">
+                    <div class="card-header">
+                        {{> textGroup text=(i18n "pages.overview.chooseDimension")}}
+                    </div>
+                    <div class="card-body row gap-2">
+                        {{#each field in fields}}
+                            <div class="col col-12 col-lg-6">
+                            {{> actionButton
+                                    type="primary"
+                                    label=field.title
+                                    icon=field.icon
+                                    btnClass="w-100 field-btn"
+                                data-target=field._id
+                            }}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{else}}
+                {{>loading}}
+            {{/if}}
+        {{/container}}
+
+      {{else}}
+        {{#container class="overview-dimensions-container my-4"}}
+          {{#if loadComplete}}
+          <div class="card">
+            <div class="card-body">
+              {{> textGroup text=(i18n error.message) type="danger"}}
+            </div>
+          </div>
+          {{/if}}
+        {{/container}}
+      {{/unless}}
+    </div>
+</template>

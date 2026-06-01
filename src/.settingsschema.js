@@ -2,6 +2,12 @@ const SimpleSchema = require('simpl-schema')
 const schema = def => new SimpleSchema(def)
 
 const settingsSchema = schema({
+  // package settings are custom
+  packages: {
+    type: Object,
+    optional: true,
+    blackbox: true
+  },
   app: schema({
     name: String,
     token: String
@@ -88,7 +94,51 @@ const settingsSchema = schema({
       optional: true
     }
   }),
-  public: schema({})
+  public: schema({
+    env: String,
+    defaultLocale: String,
+    issueMail: String,
+    status: String,
+    accounts: schema({
+      code: schema({
+        length: SimpleSchema.Integer
+      })
+    }),
+    packages: schema({
+      'dynamic-import': schema({
+        useLocationOrigin: {
+          type: Boolean,
+          optional: true
+        }
+      })
+    }),
+    app: schema({
+      name: String,
+      label: String,
+      description: String,
+      icon: String,
+      logLevel: String
+    }),
+    tts: schema({
+      url: String
+    }),
+    hosts: schema({
+      content: schema({
+        base: String,
+        tts: String,
+        competency: String,
+        url: String
+      }),
+      sessions: schema({
+        url: String,
+        evalUrl: String,
+        responseUrl: String
+      })
+    }),
+    error: schema({
+      maxStackSize: SimpleSchema.Integer
+    })
+  }),
 })
 
 module.exports = function (settings) {
