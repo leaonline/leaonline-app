@@ -6,6 +6,7 @@ import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { safeWhileAsync } from '../../api/utils/safeWhile'
+import {createUser} from "./server/createUser";
 
 /**
  * Representation of users in the database.
@@ -270,6 +271,39 @@ Users.methods.updateProfile = {
 
     return updateUserProfile({ userId, speed, voice })
   }
+}
+
+Users.methods.passwordlessLogin = {
+    name: 'users.methods.passwordlessLogin',
+    schema: {
+        email: true
+    },
+    run: onServerExec(() =>  {
+        import { createUser } from "./server/createUser";
+        return async function ({ email }) {
+            const { userId } = this
+
+            // creating a new user should either be possible
+            // without an existing account
+            // or if the caller is actually a backenduser
+            if (userId) {
+                throw new Meteor.Error(
+                    'createUser.error',
+                    'createUser.alreadyExist',
+                    { userId }
+                )
+            }
+
+            let existingUser = await Accounts.findUserByEmail(email)
+            if (existingUser?._id) {
+                return Accounts.sendLoginTokenEmail(existingUser._id)
+            }
+
+            const newUser = await createUser({ email })
+            await Accounts.sendLoginTokenEmail(newUser.userId)
+            return newUser
+        }
+    })
 }
 
 /**

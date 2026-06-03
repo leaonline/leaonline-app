@@ -6,6 +6,8 @@ import '../../components/container/container'
 import './welcome.scss'
 import './welcome.html'
 import { fatal } from '../../components/fatal/fatal'
+import {translate} from "../../../api/i18n/translate";
+import {setQueryParam} from "../../routing/setQueryParam";
 
 let originalVideoHeight
 
@@ -13,15 +15,20 @@ const Logins = {
   new: {
     name: 'new',
     icon: 'rocket',
-    color: 'primary'
+    color: 'primary',
+      template: 'registerNewUser',
+      load: () => import('./logins/new/registerNewUser')
   },
-  /*
-   qrcode: {
-   name: 'qrcode'
-   },
+
    email: {
    name: 'email',
-   icon: 'envelope'
+   icon: 'envelope',
+       template: 'loginWithEmail',
+       load: () => import('./logins/email/loginWithEmail')
+   },
+    /*
+   qrcode: {
+      name: 'qrcode'
    },
    apple: {
    name: 'apple'
@@ -39,12 +46,14 @@ const Logins = {
       })
     }
   },
+    /*
   password: {
     name: 'password',
     icon: 'keyboard',
     template: 'loginWithPassword',
     load: () => import('./logins/password/loginWithPassword')
   }
+     */
 }
 
 Template.welcome.onCreated(function () {
@@ -135,59 +144,29 @@ Template.welcome.events({
       }
     }
 
+    const query = currentLogin.name.toLocaleLowerCase().replaceAll(' ', '-')
+    setQueryParam({ login: encodeURIComponent(query) })
     templateInstance.state.set({ currentLogin, loadingLoginTemplate: true })
     await asyncTimeout(300)
     const element = templateInstance.$('.lea-login-method-card').get(0)
     try {
       element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
-    } catch {}
+    }
+    catch (e) {
+      console.error(e)
+    }
     if (load) { await load() }
     templateInstance.state.set({ loadingLoginTemplate: false })
   },
   'click .lea-cancel-login-btn': async (event, templateInstance) => {
     event.preventDefault()
     templateInstance.state.set({ currentLogin: null })
+      setQueryParam({ login: null })
     await asyncTimeout(300)
     const element = templateInstance.$('.lea-login-list-card').get(0)
     try {
       element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
     } catch {}
-  },
-  'click .lea-back-button' (event, templateInstance) {
-    event.preventDefault()
-    templateInstance.wizard.newCode(false)
-    templateInstance.state.set('loginFail', false)
-    templateInstance.$('.intro-video-container').animate({ height: originalVideoHeight }, 500, 'swing', () => {
-      templateInstance.wizard.login(false)
-    })
-  },
-  'click .to-overview-button' (event, templateInstance) {
-    fadeOut('.lea-welcome-container', templateInstance, () => {
-      templateInstance.data.next()
-    })
-  },
-  'click .toggle-beta' (event, templateInstance) {
-    event.preventDefault()
-
-    // prevent multiple clicks here
-    if (templateInstance.state.get('betaToggling')) {
-      return
-    }
-
-    templateInstance.state.get('betaToggling', true)
-
-    const betaMessageOpen = templateInstance.state.get('betaMessageOpen')
-    const betaToggleComplete = () => {
-      templateInstance.state.set('betaMessageOpen', !betaMessageOpen)
-      templateInstance.state.get('betaToggling', false)
-    }
-
-    if (betaMessageOpen) {
-      templateInstance.api.fadeOut('.beta-content', betaToggleComplete)
-    }
-    else {
-      templateInstance.api.fadeIn('.beta-content', betaToggleComplete)
-    }
   }
 })
 

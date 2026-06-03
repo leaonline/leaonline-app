@@ -1,0 +1,10 @@
+{
+  "logins": {
+    "new": {
+      "account": {
+        "creating": "Dein Zugang wird angelegt",
+        "created": "Dein Zugang ist fertig"
+      }
+    }
+  }
+}
