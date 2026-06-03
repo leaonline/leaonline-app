@@ -11,6 +11,8 @@ import { loadAllContentDocs } from '../../loading/loadAllContentDocs'
 import '../../components/container/container'
 import './map.html'
 import { postProcessMap } from './postProcessMap'
+import { callMethod } from '../../../infrastructure/methods/callMethod'
+import { Session } from '../../../contexts/session/Session'
 
 Template.map.onDestroyed(function () {
   const instance = this
@@ -81,6 +83,9 @@ Template.map.helpers({
   },
   entries () {
     return Template.getState('entries')
+  },
+  loadingSession () {
+    return Template.getState('loadingSession')
   }
 })
 
@@ -90,11 +95,33 @@ Template.map.events({
     const unitSetId = dataTarget(event)
 
     // three scenarios here
-    // A. no session exists, then start a new one
-    // B. session exists, continue
-    // C. session exists, restart
-    // for B and C we need to display a modal
-    // that asks for continue or restart
+    // A. start a new session
+    // B. session exists with current unit
+    // → B.1 continue
+    // → B.2 restart
+    // for B.1 and B.2 we need to display a decision dialog
 
+    templateInstance.state.set('loadingSession', unitSetId)
+
+    callMethod({
+      name: Session.methods.get,
+      args: { unitSetId },
+      receive: () => templateInstance.state.set('loadingSession', null),
+      failure: templateInstance.onError,
+      success: ({ sessionDoc, unitSetDoc }) => {
+        if (!sessionDoc || !unitSetDoc) {
+          return templateInstance.onError(new Error('session.loadFailed'))
+        }
+
+        // A. session is new, just start the story mode
+        if (!sessionDoc.unit) {
+          Session.start({ sessionDoc, unitSetDoc })
+          const sessionId = sessionDoc._id
+          const unitSetId = unitSetDoc._id
+          const showStory = true
+          return templateInstance.data.onSelected({ sessionId, unitSetId, showStory })
+        }
+      }
+    })
   }
 })

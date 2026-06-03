@@ -1,9 +1,10 @@
 import { Template } from 'meteor/templating'
-import { UnitSet } from '../../../contexts/unitSet/UnitSet'
-import { Dimension } from '../../../contexts/Dimension'
+import { UnitSet } from '../../../contexts/content/UnitSet'
+import { Dimension } from '../../../contexts/content/Dimension'
 import { Session } from '../../../contexts/session/Session'
-import { Level } from '../../../contexts/Level'
-import { createSessionLoader } from '../../loading/createSessionLoader'
+import { Level } from '../../../contexts/content/Level'
+import { Unit } from '../../../contexts/content/Unit'
+import { loadSessionDocs } from '../../loading/createSessionLoader'
 import { initTaskRenderers } from '../../renderers/initTaskRenderers'
 import '../../components/container/container'
 import '../../layout/navbar/navbar'
@@ -13,45 +14,28 @@ const renderersLoaded = initTaskRenderers()
 
 Template.story.onCreated(function () {
   const instance = this
-  const { api } = instance.initDependencies({
+  const { sessionId, unitSetId } = instance.data.params
+
+  instance.initDependencies({
     tts: true,
     language: true,
     translations: {
       de: () => import('./i18n/de')
     },
-    contexts: [UnitSet, Session, Dimension, Level],
-    onComplete () {
-      instance.state.set('dependenciesComplete', true)
+    contexts: [UnitSet, Session, Dimension, Level, Unit],
+    onComplete: async () => {
+      if (!Session.has({ sessionId, unitSetId })) {
+        await Session.load({ sessionId, unitSetId })
+      }
+      const sessionDocs = await loadSessionDocs(Session.data())
+      instance.state.set({ ...sessionDocs, dependenciesComplete: true })
     }
   })
-
-  const { debug } = api
-  const loadSessionDocs = createSessionLoader({ debug })
 
   instance.autorun(computation => {
     if (renderersLoaded.get()) {
-      debug('renderers loaded')
       return computation.stop()
     }
-  })
-
-  instance.autorun(() => {
-    const data = Template.currentData()
-    const { unitId, sessionId } = data.params
-
-    if (!unitId || !sessionId) {
-      return abortStory(instance)
-    }
-
-    loadSessionDocs({ sessionId })
-      .catch(err => abortStory(instance, err))
-      .then(({ sessionDoc, unitSetDoc, dimensionDoc, levelDoc, color }) => {
-        if (!sessionDoc || !unitSetDoc || !dimensionDoc || !levelDoc) {
-          return abortStory(instance)
-        }
-        console.log(color)
-        instance.state.set({ sessionDoc, unitSetDoc, dimensionDoc, levelDoc, color })
-      })
   })
 })
 
@@ -65,10 +49,10 @@ Template.story.helpers({
       renderersLoaded.get()
   },
   pageContentData () {
-    const intsance = Template.instance()
-    const unitSetDoc = intsance.state.get('unitSetDoc')
-    const sessionDoc = intsance.state.get('sessionDoc')
-    const color = intsance.state.get('color')
+    const instance = Template.instance()
+    const unitSetDoc = instance.state.get('unitSetDoc')
+    const sessionDoc = instance.state.get('sessionDoc')
+    const color = instance.state.get('color')
 
     return {
       isStory: true,
@@ -95,24 +79,33 @@ Template.story.helpers({
     }
   },
   currentType () {
-    const intsance = Template.instance()
-    return intsance.state.get('color')
+    const instance = Template.instance()
+    return instance.state.get('color')
   }
 })
 
 Template.story.events({
-  'click .lea-story-finish-button' (event, templateInstance) {
+  'click .lea-story-finish-button'(event, templateInstance) {
     event.preventDefault()
+    debugger
     const sessionDoc = templateInstance.state.get('sessionDoc')
+    const unitSetId = sessionDoc.unitSet
     const sessionId = sessionDoc._id
-    const { unitId } = templateInstance.data.params
 
-    templateInstance.data?.next({ sessionId, unitId })
+    // If this is the first time we visit the story
+    // we have no unit on the session doc and need to update the session.
+    // However, users can theoretically rewatch the session story so
+    // we would mess things up if we update already updated session here
+    if (!sessionDoc.unit) {
+      Session.update({
+        prepare: () => templateInstance.state.set('updatingSession', true),
+        receive: () => templateInstance.state.set('updatingSession', false),
+        failure: templateInstance.onError,
+        success: unitId => templateInstance.data?.next({ sessionId, unitSetId, unitId })
+      })
+    } else {
+      const unitId = sessionDoc.nextUnit
+      templateInstance.data?.next({ sessionId, unitSetId, unitId })
+    }
   }
 })
-
-function abortStory (instance, err) {
-  console.error('abort story')
-  console.error(err)
-  instance.data?.exit()
-}

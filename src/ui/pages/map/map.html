@@ -8,7 +8,10 @@
             {{#container class="map-main-container my-4"}}
                 {{#if loadComplete}}
                     {{#if field}}
-                        {{> textGroup text=field.title}}
+                        <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+                            {{> textGroup align="baseline" bold=true text=field.title class="text-secondary"}}
+                            {{> icon name=field.icon fw=true bold=true class="text-secondary"}}
+                        </div>
                     {{/if}}
 
                     {{#each entry in entries}}

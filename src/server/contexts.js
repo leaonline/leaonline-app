@@ -13,6 +13,7 @@ import { Response } from '../contexts/response/Response'
 import { Analytics } from '../contexts/analytics/Analytics'
 import { ServiceRegistry } from '../api/remotes/ServiceRegistry'
 import { Legal } from '../contexts/legal/Legal'
+import { Unit } from '../contexts/content/Unit'
 import { Feedback } from '../contexts/feedback/Feedback'
 import { rateLimitMethods, rateLimitMethod } from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
@@ -76,6 +77,7 @@ const methodContexts = [
   Field,
   Dimension,
   Level,
+  Unit,
   MapData,
   Users,
   Content,

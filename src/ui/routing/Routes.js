@@ -165,15 +165,17 @@ Routes.map = {
     // window.scrollTo(0, 0)
   },
   data: {
-    onSelected({ fieldId }) {
-
+    onSelected({ sessionId, unitSetId, showStory }) {
+      if (showStory) {
+        return go(Routes.story, sessionId, unitSetId)
+      }
     }
   }
 }
 
 Routes.story = {
-  path: (sessionId = ':sessionId', unitSetId = ':unitSetId', unitId = ':unitId') => {
-    return `${settings().story}/${sessionId}/${unitSetId}/${unitId}`
+  path: (sessionId = ':sessionId', unitSetId = ':unitSetId') => {
+    return `${settings().story}/${sessionId}/${unitSetId}`
   },
   label: 'pages.unit.story',
   triggersEnter: () => [toWelcome],
@@ -186,14 +188,16 @@ Routes.story = {
     window.scrollTo(0, 0)
   },
   data: {
-    next ({ sessionId, unitId }) {
-      if (!sessionId) {
+    next ({ sessionId, unitSetId, unitId }) {
+      if (!sessionId || !unitSetId) {
         return go(Routes.overview)
       }
 
-      return (!unitId)
-        ? go(Routes.complete, sessionId)
-        : go(Routes.unit, sessionId, unitId)
+      if (!unitId) {
+        return go(Routes.complete, sessionId, unitSetId)
+      }
+
+      return go(Routes.unit, sessionId, unitSetId, unitId)
     },
     exit () {
       go(Routes.overview)
@@ -205,8 +209,8 @@ Routes.story = {
  */
 
 Routes.unit = {
-  path: (sessionId = ':sessionId', unitId = ':unitId') => {
-    return `${settings().unit}/${sessionId}/${unitId}`
+  path: (sessionId = ':sessionId', unitSetId = ':unitSetId', unitId = ':unitId') => {
+    return `${settings().unit}/${sessionId}/${unitSetId}/${unitId}`
   },
   label: 'pages.unit.title',
   triggersEnter: () => [toWelcome],

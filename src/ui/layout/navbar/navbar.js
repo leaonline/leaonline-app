@@ -19,7 +19,6 @@ Template.navbar.onCreated(function () {
   instance.autorun(() => {
     const data = Template.currentData()
     const { sessionDoc, showProgress, dimensionDoc, levelDoc, unitSetDoc } = data
-
     if (!sessionDoc || !unitSetDoc || !dimensionDoc || !levelDoc) {
       return instance.state.set({
         showProgress: false
@@ -28,7 +27,7 @@ Template.navbar.onCreated(function () {
 
     const colorType = ColorType.byIndex(dimensionDoc.colorType)?.type || 'primary'
     const current = (sessionDoc.progress || 0) + 1
-    const max = (sessionDoc.maxProgress || 0)
+    const max = (unitSetDoc.progress || 0)
     const value = (current / (max)) * 100
     const rounded = Math.round(value)
     const progress = {

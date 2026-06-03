@@ -15,7 +15,7 @@ export const loadContentDoc = async ({ context, collection, name, unlessExists, 
     throw new Error('Context is expected')
   }
 
-  const localCollection = collection ?? getLocalCollection(context.name) ?? context?.collection()
+  const localCollection = collection ?? getLocalCollection(context.name)
   if (!localCollection) {
     throw new Error(`Expected collection for ctx ${context.name}`)
   }

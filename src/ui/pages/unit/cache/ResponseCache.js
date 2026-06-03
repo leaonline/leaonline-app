@@ -56,6 +56,23 @@ export class ResponseCache {
       }
     })
   }
+
+  all ({ sessionId } = {}) {
+    const self = this
+    const items = self.storage?.getAll
+      ? self.storage.getAll()
+      : { ...self.storage }
+    const data = {}
+    Object.entries(items).forEach(([key, value]) => {
+      if (key.startsWith('rc-')) {
+        const loaded = EJSON.parse(this.decode(value))
+        if (!sessionId || sessionId === loaded.sessionId) {
+          data[key] = loaded
+        }
+      }
+    })
+    return data
+  }
 }
 
 const encB64 = x => btoa(x)

@@ -7,6 +7,8 @@ import { getCollection } from '../../api/utils/getCollection'
  *
  * It acts as a bridge between the clients and the internal API and intends
  * to prevent direct access to such internals.
+ * @mobile-api
+ * @deprecated We keep it alive until the mobile app is EOL
  * @category contexts
  * @namespace
  */
