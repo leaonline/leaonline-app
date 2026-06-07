@@ -11,14 +11,14 @@
                     <div class="card-header">
                         {{> textGroup text=(i18n "pages.overview.chooseDimension")}}
                     </div>
-                    <div class="card-body row gap-2">
+                    <div class="card-body row">
                         {{#each field in fields}}
-                            <div class="col col-12 col-lg-6">
+                            <div class="col col-12 col-lg-6 my-3">
                             {{> actionButton
                                     type="primary"
                                     label=field.title
                                     icon=field.icon
-                                    btnClass="w-100 field-btn"
+                                    btnClass="w-100 field-btn py-2 py-lg-5"
                                 data-target=field._id
                             }}
                             </div>

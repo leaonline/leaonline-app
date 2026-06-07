@@ -157,7 +157,6 @@ Template.unit.onCreated(function () {
    * @return {FlatArray<*[], 1>[]}
    */
   instance.onEvaluate = () => {
-    debugger
     const sessionDoc = instance.state.get('sessionDoc')
     const unitDoc = instance.state.get('unitDoc')
     const currentPage = instance.state.get('currentPageCount')
@@ -181,7 +180,6 @@ Template.unit.onCreated(function () {
   }
 
   instance.forward = () => {
-    debugger
     const isStory = !!instance.state.get('story')
     const unit = isStory ? null : instance.state.get('unitDoc')
     const allUnits = instance.state.get('unitDocs')
@@ -274,7 +272,10 @@ Template.unit.helpers({
       unitSetDoc,
       dimensionDoc,
       showProgress: true,
-      onExit: instance.data.exit
+      onExit: () => {
+        const { fieldId, unitSet } = sessionDoc
+        instance.data.exit({ fieldId, unitSetId: unitSet })
+      }
     }
   }
 })
@@ -348,7 +349,6 @@ Template.unit.events({
 })
 
 function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
-  debugger
   const unitDoc = templateInstance.state.get('unitDoc')
   const unitId = unitDoc._id
   const sessionDoc = templateInstance.state.get('sessionDoc')
@@ -385,6 +385,7 @@ function abortUnit (templateInstance, err) {
   templateInstance.api.fadeOut('.lea-unit-container', () => {
     // there should be a strategy pattern here so we can easily switch depending
     // on the settings configuration and users needs (tests vs production etc.)
-    templateInstance.data.exit()
+    const { fieldId } = templateInstance.state.get('sessionDoc')
+    templateInstance.data.exit({ fieldId })
   })
 }

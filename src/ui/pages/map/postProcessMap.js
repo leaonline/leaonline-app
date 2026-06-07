@@ -6,7 +6,12 @@ import { Dimension } from '../../../contexts/content/Dimension'
 import { ColorType } from '../../../contexts/types/ColorType'
 
 
-export const postProcessMap = ({ entries, levels, dimensions, maxCompetencies, maxProgress }) => {
+export const postProcessMap = ({ entries, levels, dimensions, maxCompetencies, maxProgress }, progressDoc) => {
+  const progressMap = {}
+  for (const progressEntry of (progressDoc?.unitSets ?? [])) {
+    progressMap[progressEntry._id] = progressEntry
+  }
+console.debug(progressMap)
   const LevelsCollection = getLocalCollection(Level.name)
   const DimensionsCollection = getLocalCollection(Dimension.name)
   const allLevels = levels.map(levelId => {
@@ -31,23 +36,35 @@ export const postProcessMap = ({ entries, levels, dimensions, maxCompetencies, m
     const levelDoc = allLevels[entry.level]
     data.level = { _id: levelDoc._id, title: levelDoc.title }
 
-    // progress
-    const progressPerc = Math.random() * 100
-    data.progress = { max: entry.progress, current: 0, perc: progressPerc }
+    let stageProgress = 0
 
     if (isStage(entry)) {
-      data.unitSets = entry.unitSets.map(unitSet => {
+      data.unitSets = []
+      for (const unitSet of entry.unitSets) {
         const dimensionDoc = allDimensions[unitSet.dimension]
         const colorName = ColorType.byIndex(dimensionDoc.colorType).name
         dimensionDoc.color = colorName
         dimensionDoc.textColorClass = `text-${colorName}`
         dimensionDoc.bgColorClass = `bg-${colorName}`
-        return {
+        const unitSetProgress = progressMap[unitSet._id]
+        const currentProgress = unitSetProgress ? unitSetProgress.progress : 0
+        stageProgress += currentProgress
+
+        data.unitSets.push({
           ...unitSet,
-          dimension: dimensionDoc
-        }
-      })
+          dimension: dimensionDoc,
+          progress: {
+            current: currentProgress,
+            max: unitSet.progress,
+            perc: currentProgress / unitSet.progress
+          }
+        })
+      }
     }
+
+    // progress
+    const progressPerc = stageProgress / entry.progress
+    data.progress = { max: entry.progress, current: stageProgress, perc: progressPerc }
 
     processed.push(data)
   }

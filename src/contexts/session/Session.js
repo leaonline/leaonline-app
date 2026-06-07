@@ -9,6 +9,7 @@ import { Dimension } from '../content/Dimension'
 import { ensureDocument } from '../../api/utils/ensureDocument'
 import { onDependencies } from '../utils/onDependencies'
 import { onClientExec } from '../../utils/archUtils'
+import { callMethod } from '../../infrastructure/methods/callMethod'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.
@@ -134,6 +135,18 @@ onClientExec(() => {
   }
 
   Session.data = () => sessionData.all()
+
+  Session.restart = async ({ sessionId }) => {
+    const { sessionDoc, unitSetDoc } = await callMethod({
+      name: Session.methods.restart,
+      args: { sessionId },
+    })
+    if (sessionDoc?._id !== sessionId) {
+      throw new Error(`Could not restart session for ${{sessionId }}`)
+    }
+    Session.start({ sessionDoc, unitSetDoc })
+    return { sessionDoc, unitSetDoc }
+  }
 
   Session.update = async ({ prepare, receive, failure, success } =  {}) => {
     const sessionDoc = sessionData.get('sessionDoc')
@@ -269,6 +282,54 @@ onServerExec(() => {
     }
 
     return { sessionDoc, unitSetDoc, unitDoc }
+  }
+
+  Session.restart = async ({ sessionId, userId }) => {
+    log('update', { sessionId, userId })
+    const SessionCollection = getCollection(Session.name)
+
+    // 1 get sessionDoc by sessionId+userId
+    const sessionDoc = await SessionCollection.findOneAsync({ _id: sessionId, userId })
+    ensureDocument({
+      document: sessionDoc,
+      docId: sessionId,
+      name: Session.name,
+      details: { userId }
+    })
+
+    if (sessionDoc.completedAt) {
+      throw new Meteor.Error('session.completed', 'session.noRestartCompleted', { sessionId, userId })
+    }
+
+    // 2 get the unitSet by sessionDoc.unitset
+    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(sessionDoc.unitSet)
+    ensureDocument({
+      document: unitSetDoc,
+      docId: sessionDoc.unitSet,
+      name: UnitSet.name
+    })
+
+    // 3 remove prior responses
+    await getCollection(Response.name).removeAsync({ userId, sessionId })
+
+    // 4 remove / reset Progress docs?
+
+    // 5 reset the session Doc
+    const unitId = unitSetDoc.units[0]
+    await SessionCollection.updateAsync({ _id: sessionDoc._id }, {
+      $unset: { unit: 1 },
+      $set: {
+        nextUnit: unitId,
+        progress: 0,
+        competencies: 0,
+        updatedAt: new Date()
+      }
+    })
+
+    return {
+      unitSetDoc,
+      sessionDoc: await SessionCollection.findOneAsync({ _id: sessionDoc._id })
+    }
   }
 
   /**
@@ -489,6 +550,20 @@ Session.methods.get = {
     return function ({ unitSetId }) {
       const { userId } = this
       return Session.get({ unitSet: unitSetId, userId })
+    }
+  })
+}
+
+Session.methods.restart = {
+  name: 'session.methods.restart',
+  schema: {
+    sessionId: String
+  },
+  run: onServerExec(function () {
+
+    return function ({ sessionId }) {
+      const { userId } = this
+      return Session.restart({ sessionId, userId })
     }
   })
 }

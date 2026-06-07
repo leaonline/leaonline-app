@@ -26,7 +26,7 @@ Template.overview.onCreated(function () {
       try {
         await loadAllContentDocs({
           context: Field,
-          unlessExists: true
+          // unlessExists: true
         })
       } catch (e) {
         instance.onError(e)

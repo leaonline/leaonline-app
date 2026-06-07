@@ -153,7 +153,13 @@ Routes.overview = {
  * Map to select units
  */
 Routes.map = {
-  path: (fieldId = ':fieldId') => `${settings().map}/${fieldId}`,
+  path: (fieldId = ':fieldId', unitSetId) => {
+    const base = `${settings().map}/${fieldId}`
+    if (unitSetId) {
+      return `${base}?unitSet=${unitSetId}`
+    }
+    return base
+  },
   label: 'pages.map.title',
   triggersEnter: () => [toWelcome],
   async load () {
@@ -165,9 +171,12 @@ Routes.map = {
     // window.scrollTo(0, 0)
   },
   data: {
-    onSelected({ sessionId, unitSetId, showStory }) {
+    onSelected({ sessionId, unitSetId, unitId, showStory }) {
       if (showStory) {
         return go(Routes.story, sessionId, unitSetId)
+      }
+      else {
+        return go(Routes.unit, sessionId, unitSetId, unitId)
       }
     }
   }
@@ -238,7 +247,10 @@ Routes.unit = {
         ? go(Routes.complete, sessionId)
         : go(Routes.unit, sessionId, unitId)
     },
-    exit () {
+    exit ({ fieldId, unitSetId } = {}) {
+      if (fieldId) {
+        return go(Routes.map, fieldId, unitSetId)
+      }
       go(Routes.overview)
     },
     finish ({ sessionId }) {

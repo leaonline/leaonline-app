@@ -3,16 +3,19 @@ import { Field } from '../../../contexts/content/Field'
 import { MapData } from '../../../contexts/map/MapData'
 import { Level } from '../../../contexts/content/Level'
 import { Dimension } from '../../../contexts/content/Dimension'
+import { Session } from '../../../contexts/session/Session'
+import { Progress } from '../../../contexts/progress/Progress'
 import { fatal } from '../../components/fatal/fatal'
 import { getLocalCollection } from '../../../api/utils/getLocalCollection'
 import { dataTarget } from '../../../utils/dataTarget'
 import { loadContentDoc } from '../../loading/loadContentDoc'
 import { loadAllContentDocs } from '../../loading/loadAllContentDocs'
-import '../../components/container/container'
-import './map.html'
 import { postProcessMap } from './postProcessMap'
 import { callMethod } from '../../../infrastructure/methods/callMethod'
-import { Session } from '../../../contexts/session/Session'
+import { requestDecision } from '../../components/decision/decision'
+import '../../components/container/container'
+import '../../components/decision/decision'
+import './map.html'
 
 Template.map.onDestroyed(function () {
   const instance = this
@@ -24,7 +27,7 @@ Template.map.onCreated(function () {
   const { fieldId } = instance.data.params
 
   instance.initDependencies({
-    contexts: [Field, MapData, Dimension, Level],
+    contexts: [Field, MapData, Dimension, Level, Progress],
     language: true,
     tts: true,
     translations: {
@@ -42,7 +45,6 @@ Template.map.onCreated(function () {
           query: { field: fieldId },
           unlessExists: true
         })
-
         const dimensionIds = mapData.dimensions.map(d => d._id)
         await loadAllContentDocs({
           context: Dimension,
@@ -56,7 +58,15 @@ Template.map.onCreated(function () {
           unlessExists: true
         })
 
-        const entries = postProcessMap(mapData)
+        // while rendering the map we fetch the progress
+        const progressDoc = await loadContentDoc({
+          context: Progress,
+          query: { fieldId }
+        })
+
+
+        const entries = postProcessMap(mapData, progressDoc)
+        console.debug({ entries })
         instance.state.set({ entries })
       } catch (e) {
         instance.onError(e)
@@ -86,7 +96,7 @@ Template.map.helpers({
   },
   loadingSession () {
     return Template.getState('loadingSession')
-  }
+  },
 })
 
 Template.map.events({
@@ -108,18 +118,54 @@ Template.map.events({
       args: { unitSetId },
       receive: () => templateInstance.state.set('loadingSession', null),
       failure: templateInstance.onError,
-      success: ({ sessionDoc, unitSetDoc }) => {
+      success: async ({ sessionDoc, unitSetDoc }) => {
         if (!sessionDoc || !unitSetDoc) {
           return templateInstance.onError(new Error('session.loadFailed'))
         }
 
+        const sessionId = sessionDoc._id
+        const unitSetId = unitSetDoc._id
+
         // A. session is new, just start the story mode
         if (!sessionDoc.unit) {
           Session.start({ sessionDoc, unitSetDoc })
-          const sessionId = sessionDoc._id
-          const unitSetId = unitSetDoc._id
           const showStory = true
           return templateInstance.data.onSelected({ sessionId, unitSetId, showStory })
+        }
+
+        if (sessionDoc.unit) {
+          const { decision } = await requestDecision({
+            title: 'pages.map.decideContinue',
+            options: [
+              {
+                value: 'restart',
+                label: 'common.restart',
+                icon: 'undo',
+                iconPos: 'right'
+              },
+              {
+                value: 'continue',
+                label: 'common.continue',
+                icon: 'arrow-right',
+                iconPos: 'right',
+                type: 'primary'
+              }
+            ]
+          })
+
+          if (decision === 'continue') {
+            const unitId = sessionDoc.unit
+            return templateInstance.data.onSelected({ sessionId, unitSetId, unitId })
+          }
+
+          if (decision === 'restart') {
+            // restart session and then load story
+            await Session.restart({ sessionId })
+            const showStory = true
+            return templateInstance.data.onSelected({ sessionId, unitSetId, showStory })
+          }
+
+          // ignore cancel decision
         }
       }
     })

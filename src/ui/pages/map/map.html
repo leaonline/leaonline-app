@@ -7,6 +7,25 @@
 
             {{#container class="map-main-container my-4"}}
                 {{#if loadComplete}}
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        {{> routeButton
+                                href=(route "overview")
+                                block=true
+                                sm=true
+                                outline=true
+                                tts=(i18n "common.back")
+                                icon="arrow-left"
+                        }}
+
+                        {{> actionButton
+                                block=true
+                                sm=true
+                                outline=true
+                                tts=(i18n "pages.profile.title")
+                                icon="user"
+                        }}
+                    </div>
+
                     {{#if field}}
                         <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
                             {{> textGroup align="baseline" bold=true text=field.title class="text-secondary"}}
@@ -15,7 +34,7 @@
                     {{/if}}
 
                     {{#each entry in entries}}
-                        <div class="card my-2">
+                        <div class="card my-4 bg-white">
                             <div class="card-body d-flex justify-content-between" data-bs-toggle="collapse"
                                  href="#map-entry-{{entry.id}}" role="button" aria-expanded="false"
                                  aria-controls="map-entry-{{entry.id}}">
@@ -35,14 +54,21 @@
                             <div class="collapse" id="map-entry-{{entry.id}}">
                                 <div class="card-body row">
                                     {{#each unitSet in entry.unitSets}}
-                                        <div class="col-12 col-lg-6">
-                                            {{> actionButton
-                                                type=unitSet.dimension.color
-                                                label=unitSet.dimension.title
-                                                icon=unitSet.dimension.icon
-                                                btnClass="unitset-btn w-100 p-3 my-1"
-                                                data-target=unitSet._id
+                                        <div class="col-12 col-lg-6 my-3">
+                                            {{#actionButton
+                                                    type=unitSet.dimension.color
+                                                    label=unitSet.dimension.title
+                                                    icon=unitSet.dimension.icon
+                                                    iconClass="fa-2x"
+                                                    btnClass="unitset-btn w-100 p-2 py-lg-5"
+                                                    data-target=unitSet._id
                                             }}
+                                                <div>
+                                                    <div class="d-block no-wrap">{{> icon name="flag-checkered"}} {{unitSet.progress.perc}}%</div>
+                                                    <div class="d-block no-wrap">{{> icon name="gem"}} 0
+                                                        / {{unitSet.competencies}}</div>
+                                                </div>
+                                            {{/actionButton}}
                                         </div>
                                     {{/each}}
                                 </div>
@@ -64,6 +90,11 @@
                     </div>
                 {{/if}}
             {{/container}}
+
         {{/unless}}
     </div>
+    {{!-- confirm modal --}}
+    {{#onComplete complete=loadComplete}}
+        {{> decision }}
+    {{/onComplete}}
 </template>
