@@ -41,7 +41,7 @@ facts-base@1.0.2
 fetch@0.1.6
 force-ssl@1.1.1
 force-ssl-common@1.1.1
-fourseven:scss@4.17.0-rc.0
+fourseven:scss@4.17.0-rc.1
 geojson-utils@1.0.12
 google-oauth@1.4.5
 hot-code-push@1.0.5
