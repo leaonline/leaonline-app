@@ -9,7 +9,6 @@ import { Dimension } from '../content/Dimension'
 import { ensureDocument } from '../../api/utils/ensureDocument'
 import { onDependencies } from '../utils/onDependencies'
 import { onClientExec } from '../../utils/archUtils'
-import { callMethod } from '../../infrastructure/methods/callMethod'
 
 /**
  * A session represents a user's current state of work on a specific {Field} and {UnitSet}.

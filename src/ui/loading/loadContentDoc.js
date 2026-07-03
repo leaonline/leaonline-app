@@ -36,7 +36,7 @@ export const loadContentDoc = async ({ context, collection, name, unlessExists, 
   })
 
   if (document) {
-    localCollection.upsert(document._id, { $set: document })
+    localCollection.upsert({ _id: document._id }, { $set: { ...document } })
   }
 
 
