@@ -80,5 +80,6 @@ const decB64 = y => atob(y)
 
 function getKey ({ sessionId, unitId, page, contentId }) {
   const hash = simpleHash(`${sessionId}-${unitId}-${page}-${contentId}`)
+  console.debug('get storage key', {sessionId, unitId, page, contentId}, '=>', hash)
   return `rc-${hash}`
 }

@@ -20,7 +20,7 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
    * @param page {Number} the current page of this unit
    * @return {Promise} A promise that resolves, once all items been submitted
    */
-  return ({ sessionId, unitDoc, page }) => {
+  return ({ sessionId, unitDoc, page, scores }) => {
     const unitId = unitDoc._id
     const allResponseDocs = []
 
@@ -29,19 +29,18 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
     // xxx: circumvent special case, where there is no pages or no content
     if (Array.isArray(contentPage?.content)) {
       contentPage.content.forEach(entry => {
-        // we iterate the full page stgructure
+        // we iterate the full page structure
         // so we skip on any content
-        // that is not flagged as item tyoe
+        // that is not flagged as item type
         if (entry.type !== 'item') return
-
         const { contentId } = entry
-        const responseDoc = { sessionId, unitId, page, contentId }
-        const responseValue = loadValue(responseDoc)
-        responseDoc.responses = (responseValue?.responses) || []
-        allResponseDocs.push(responseDoc)
+        const responseValue = loadValue({ sessionId, unitId, page, contentId })
+        allResponseDocs.push({
+          sessionId, unitId, page, itemId: contentId, responses: (responseValue?.responses) || []
+        })
       })
     }
-
+    debugger
     return Promise.all(allResponseDocs.map(responseDoc =>
       callMethod({
         name: Response.methods.submit.name,
