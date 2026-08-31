@@ -115,6 +115,7 @@ dist
 
 # deployment folders
 .deploy
+.staging
 
 # android keystores
 **/*.keystore
