@@ -1,0 +1,21 @@
+# .codex/config.toml — committed
+
+default_permissions = "leaonline-workspace"
+
+[permissions.leaonline-workspace]
+description = "Restricted leaonline-app workspace access"
+extends = ":workspace"
+
+[permissions.leaonline-workspace.filesystem]
+":root" = "deny"
+":minimal" = "read"
+
+# Required on current Linux Codex releases so the sandbox can execute
+# Codex's standalone runtime. Remove once Codex includes this in :minimal.
+"~/.codex/packages/standalone/releases/" = "read"
+
+[permissions.leaonline-workspace.filesystem.":workspace_roots"]
+"." = "write"
+
+[permissions.leaonline-workspace.network]
+enabled = false
