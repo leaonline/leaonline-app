@@ -1,89 +1,160 @@
-# Domain Definitions and Explanaitons
+# Domain Definitions and Explanations
 
 ## lea. and lea.online
 
-lea. stands for "literacy education for adults", while lea.online
-is a software system, comprising of multiple applications for specific purposes:
+`lea.` stands for **literacy education for adults**. `lea.online` is a software system comprising
+multiple applications for different purposes:
 
-- lea.app - learning app for low literacy people, used anonymously by individuals
-- otu.lea - diagnostic app for identifying individual competencies, mostly used in formal literacy classes under
-  supervision
-- lea.dashboard - dashboard for supervisors and educators to manage users and visualize competency development over time
-- lea.content - a headless content service, statically containing and providing all necessary data that is shared by the
-  other applications
-- lea.backend - a frontend for the internal lea. team to manage content and data, and some app configurations
-- lea.accounts - an oauth2 server managing SSO and teacher accounts across the applications
+- **lea.app** - anonymous learning application for adults with low literacy.
+- **otu.lea** - diagnostic application for identifying individual competencies, primarily used
+  in formal literacy classes under supervision.
+- **lea.dashboard** - dashboard for supervisors and educators to manage users and visualize
+  competency development over time.
+- **lea.content** - headless content service that statically contains and provides shared data
+  required by the other applications.
+- **lea.backend** - internal frontend used by the lea. team to manage content, data, and selected
+  application configuration.
+- **lea.accounts** - OAuth 2 service providing SSO and teacher-account management across
+  applications.
+
+## Domain Invariants Relevant to Migration
+
+The migration must preserve the meaning of the domain entities and their relationships. UI,
+transport, persistence, or framework changes must not silently change these semantics.
+
+In particular:
+
+- shared domain definitions should be reused from `leaonline:corelib` where available;
+- identifiers and references between fields, dimensions, levels, test cycles, unit sets, units,
+  items, competencies, responses, scores, evaluations, and progress must retain their existing
+  meaning;
+- response-state distinctions are semantically significant and must not be collapsed;
+- evaluation and scoring are different concepts;
+- evaluation and progress are different aggregation scopes;
+- migrations must not infer a missing competency achievement from absence of data unless the
+  existing scoring/evaluation rules explicitly do so.
 
 ## Terminology
 
-**Field**
-A field represents an area or topic of learning, optionally consisting of a specific theme.
-Examples include: nursing, food industry, technical jobs, financial literacy.
+### Field
 
-**Dimension**
-A dimension defines a dimension or subject of learning, such as Reading, Writing, Maths, Language understanding.
-It can occur singular or mixed throughout all fields.
+A **Field** represents an area or topic of learning, optionally with a specific theme.
 
-**AlphaLevel**
-Represents a major category of competencies that are strongly bound to a specific dimension.
-These levels (1 to 5) define fine granular levels of competencies below the lowest elementary-school level definition of
-competencies (defined by PISA).
-The lowest alpha levels include fundamental literacy elements, such as identifying single letters, numerals, and words.
-In turn, the highest alpha levels (alpha level 5) contain the competencies, closest to lowest elementrary school level
-of competencies
-(PISA level 1)
+Examples include nursing, food industry, technical occupations, and financial literacy.
 
-**Competency and competency category**
-Competencies are granular definitions of skills, related to a specific dimension.
-They define positively what a person can do and are bounded by other competencies.
-What a person cannot do, in turn, is therefore defined by the absence or non-fulfillment of a competency.
+### Dimension
 
-**Level**
-A level defines a certain difficulty in relation to the competencies that can be achieved by solving the associated
-units. Optimally, levels are used to define a linear progression.
+A **Dimension** defines a subject or dimension of learning, such as Reading, Writing,
+Mathematics, or Language Understanding.
 
-**TestCycle**
-A test cycle defines a collection of unit sets that are bound to a specific dimension and level.
-Optimally, they bundle only competencies that are related or at least similar and "near by".
-It contains at least one or more unit-sets but is only bound to a single dimension and level.
+A field can contain learning material for a single dimension or a mixture of dimensions.
 
-**UnitSet**
-A UnitSet (unit-set/unit set) is a bounding context of a collection of units.
-It often defines a specific "Story" that provides a narrative context for the units,
-where prototypical actors of the related field follow the narrative and have to solve certain
-problems in relation to their work (which will then in the units be project as the tasks to the users)
-It contains at least one or more units
+### AlphaLevel
 
-**Unit**
-A unit contains a specific (often, but not always, narrative) problem context,
-an instruction, an optional stimulus and one or more pages with the actual tasks to solve.
-Each page can contain items, which are the smallest units of interactions, required to solve the task at hand.
-An item is associated with one or more competencies and scoring rules, used to determine whether the solution
-of the task can be regarded as fulfilment of the competency.
+An **AlphaLevel** represents a major category of competencies associated strongly with a
+specific dimension.
 
-**Response**
-By interacting with an item, users create responses, that will be used during scoring, whether the user
-has fulfilled the competency. There are multiple states of responses:
+Alpha levels 1 through 5 describe fine-grained competency levels below the lowest elementary
+school competency level commonly represented by PISA. Lower alpha levels include fundamental
+literacy elements such as recognizing individual letters, numerals, and words. Alpha level 5
+contains competencies closest to the lowest elementary-school level, approximately PISA level 1.
 
-- entered → a value has been entered
-- absent → no value has been entered
-- null → a previously entered value was deleted
-- __undefined__ → the user omitted the interaction entirely, for example by skipping the page or by not interacting
-  with the specific item but other items on the page
+### Competency and Competency Category
 
-**Evaluation**
-The evaluation is not to be confused with scoring. In the evaluation, all existent scores of a test cycle are
-collected and used to count the number of achieved competencies to provide a summary of achievement.
-These in turn build the basis to define the level of how far an alpha level has been achieved.
-For example, if 50% of all competencies of an alpha level are achived then the alpha level is considered
-to be 50% achived.
-Usually a testcycle also contains competencies from more than one alpha levels (because the highest competencies
-of an alpha level overlap with the lowest of the consecutive alpha level), which is why at the end of an evaluation,
-the user knows exactly,
-which competencies were fulfilled to which degree - and which alpha levels were covered to which degree
-by this very test cycle.
+A **Competency** is a granular positive description of a skill associated with a specific
+dimension. Competencies are bounded by other competencies and describe what a learner can do.
 
-**Progres**
-Building on top of the evaluation, the progress tracks all achivements across test cycles.
-This is necessary, because the achivements in a testcylce only define a snapshot of its units.
-Progress is used to track "the bigger picture".
+Lack of fulfillment of a competency represents that the corresponding competency has not been
+demonstrated; migration code must not reinterpret this absence without an explicit domain rule.
+
+A **Competency Category** groups related competencies where such grouping is defined by the
+content/domain model.
+
+### Level
+
+A **Level** defines difficulty relative to the competencies that can be achieved by solving its
+associated units. Ideally, levels form a linear progression.
+
+A Level is not the same concept as an AlphaLevel.
+
+### TestCycle
+
+A **TestCycle** is a collection of unit sets bound to one dimension and one level.
+
+Ideally, it groups competencies that are related or close to one another. A test cycle contains
+one or more UnitSets but is associated with exactly one Dimension and one Level.
+
+### UnitSet
+
+A **UnitSet** is the bounding context for a collection of Units.
+
+It often defines a story or narrative context in which prototypical actors from the associated
+field encounter work-related situations. These situations are projected into tasks presented to
+the learner.
+
+A UnitSet contains one or more Units.
+
+### Unit
+
+A **Unit** defines a specific problem context, often but not necessarily narrative. It contains:
+
+- an instruction;
+- an optional stimulus;
+- one or more pages containing the tasks to solve.
+
+Each page may contain Items.
+
+### Item
+
+An **Item** is the smallest interaction unit required to solve a task.
+
+An Item is associated with one or more Competencies and with scoring rules used to determine
+whether the learner's response demonstrates fulfillment of those competencies.
+
+### Response
+
+A **Response** is created when a learner interacts with an Item. Responses are consumed by
+scoring logic to determine competency fulfillment.
+
+The following response states are distinct and must remain distinguishable during migration:
+
+- **entered** - a value has been entered;
+- **absent** - no value has been entered;
+- **null** - a previously entered value was deleted;
+- **`__undefined__`** - the learner omitted the interaction entirely, for example by skipping
+  the page or interacting with other items on the page but not this item.
+
+Do not normalize these states into a single "empty" value unless existing domain logic explicitly
+requires that transformation.
+
+### Scoring
+
+**Scoring** evaluates responses for individual items/competencies according to their scoring
+rules.
+
+Scoring is not the same as Evaluation.
+
+### Evaluation
+
+**Evaluation** aggregates existing scores for a TestCycle and determines the achieved
+competencies represented by that cycle.
+
+The result provides a summary of competency achievement and forms the basis for determining how
+far relevant AlphaLevels have been achieved. For example, if 50% of the competencies associated
+with an AlphaLevel are achieved, that AlphaLevel may be considered 50% achieved according to the
+app's evaluation rules.
+
+A TestCycle can contain competencies from more than one AlphaLevel because higher competencies
+of one AlphaLevel can overlap with lower competencies of the next. Consequently, an Evaluation
+can describe both:
+
+- which competencies were fulfilled and to what degree; and
+- which AlphaLevels were covered and to what degree by that TestCycle.
+
+### Progress
+
+**Progress** aggregates achievements across TestCycles.
+
+Evaluation describes the outcome of a particular TestCycle. Progress tracks the broader
+longitudinal state across multiple TestCycles and therefore represents the learner's accumulated
+achievement rather than a single-cycle snapshot.
