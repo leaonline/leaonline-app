@@ -33,6 +33,7 @@ extends = ":workspace"
 [permissions.leaonline-workspace.filesystem]
 ":root" = "deny"
 ":minimal" = "read"
+"~/.codex/plugins/" = "read"
 
 # Required on current Linux Codex releases so the sandbox can execute
 # Codex's standalone runtime. Remove once Codex includes this in :minimal.
