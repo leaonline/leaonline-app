@@ -20,22 +20,31 @@ that plan as the source of truth for scope, ordering, acceptance criteria, and c
 Do not silently reorder, merge, skip, or broaden migration stages unless required to preserve
 correctness. If a deviation is necessary, document it clearly.
 
-Relevant shared packages include:
+## External Reference Repositories
 
-- `leaonline:corelib`
-- `leaonline:ui`
+The following independent repositories are available outside the
+`leaonline-app` workspace as read-only reference sources:
 
-Prefer existing shared definitions and functionality over introducing app-local duplicates.
+- `../lib/corelib` - source of `leaonline:corelib`
+- `../lib/ui` - source of `leaonline:ui`
+- `../leaonline-otulea` - source of the `otu.lea` application
 
-The source repositories for these packages are located outside the application workspace:
+Agents may inspect and search these repositories to understand:
 
-- `../lib/corelib` - source for `leaonline:corelib`
-- `../lib/ui` - source for `leaonline:ui`
+- shared APIs and implementation details;
+- domain models and data structures;
+- established usage patterns for `leaonline:corelib` and `leaonline:ui`;
+- equivalent or related functionality already implemented in `otu.lea`;
+- architectural conventions that may be relevant to the migration.
 
-They are external, independent Git repositories and are not part of the leaonline-app workspace.
-The Codex launcher grants them explicit read-only filesystem access for source inspection. Agents
-may inspect and search them to understand APIs, data models, implementation details, and expected
-behavior, but must not modify, commit, reset, clean, or otherwise operate on their Git trees.
+These repositories are not part of the writable `leaonline-app` workspace.
+
+Agents must not:
+
+- modify files in these repositories;
+- stage, commit, reset, clean, or otherwise alter their Git state;
+- copy implementations wholesale when existing shared functionality can be reused;
+- treat them as migration targets unless a separate task explicitly changes their scope.
 
 ## Repository Layout
 
@@ -51,6 +60,120 @@ behavior, but must not modify, commit, reset, clean, or otherwise operate on the
 
 The active Meteor application follows the common Meteor project structure:
 https://docs.meteor.com/tutorials/application-structure/#file-structure
+
+## Legacy Documentation and Evidence
+
+The material under `docs/api`, `docs/arch`, and `docs/guide` documents the deprecated mobile
+client and its original Meteor backend. Use it together with `deprecated/app` to understand the
+learner experience and the historical division of responsibilities; do not treat it as a
+specification of the current source tree.
+
+Interpret legacy evidence in this order:
+
+1. User-visible workflow and domain intent shown consistently by diagrams, guides, API docs,
+   deprecated source, and tests are migration-parity evidence.
+2. Generated API pages are snapshots of old code. They are useful for method payloads, state
+   transitions, and component responsibilities, but their code is not automatically safe or
+   current.
+3. Guide text marked `TBD`, incomplete test scenarios, comments describing future work, and
+   contradictory statements are historical design notes, not requirements.
+4. Known defects and incidental React Native/Expo mechanisms are not parity requirements. Preserve
+   the user-observable outcome, not a broken selector, stale field name, mutable cache, mobile
+   lifecycle workaround, or framework-specific component tree.
+5. Current `src` backend contracts and persisted data may already differ because migration work has
+   begun. Inspect current code and compatibility requirements before changing them; never overwrite
+   a newer server design merely to match generated legacy docs.
+
+When sources conflict, follow this authority order:
+
+1. explicit user instructions, this file, and [DOMAIN.md](./DOMAIN.md);
+2. the approved migration plan and recorded product decisions;
+3. consistent deprecated-mobile learner behavior and tests;
+4. shared `leaonline:corelib` and `leaonline:ui` contracts;
+5. legacy backend/API documentation for historical intent;
+6. persisted/current implementation details for compatibility evidence.
+
+Record material conflicts instead of silently choosing an interpretation. In particular, do not
+infer a product rule from a single stale guide sentence when code, tests, or content support a
+broader case.
+
+## Architecture and Workflow Boundaries
+
+The mobile system used three distinct data/runtime layers:
+
+- `lea.content` was the upstream editorial content authority.
+- The Meteor backend imported explicitly enabled full collections during startup, retained the
+  production-approved snapshot, precomputed read-optimized map and achievement data, and owned
+  accounts, sessions, responses, scoring-derived progress, and client-facing methods.
+- The mobile client synchronized a bounded set of rarely changing reference contexts into local
+  storage and combined that topology/reference data with account-specific server state. It was not
+  an independent content authority.
+
+Keep the equivalent PWA boundaries explicit:
+
+- server/content synchronization and remapping remain server responsibilities and are required
+  parts of the web application architecture, not temporary legacy compatibility;
+- the browser may cache versioned content for performance/offline use but must not import from the
+  content service, generate canonical map topology, or decide authoritative progress;
+- static topology/reference caches must be separated from account-scoped session, response, and
+  progress data;
+- a local response cache or future outbox is provisional until durable server acknowledgement;
+- server methods derive identity from the authenticated invocation and verify ownership and content
+  relationships rather than trusting client-supplied identifiers or scores.
+
+### Controlled Learning-Content Promotion
+
+The active web application must never expose live `lea.content` data directly to learners. Editors
+and developers need to create, revise, and test Fields, UnitSets, Units, Items, media, and related
+metadata without unfinished or inconsistent work appearing in production lea.app.
+
+Preserve the backend snapshot boundary:
+
+- `lea.content` is the editorial source, while the lea.app backend's local collections are the
+  learner-facing production snapshot;
+- synchronization is an explicit, configured startup operation for selected full collections; a
+  content edit alone must not change what learners see;
+- normal client methods/publications read the backend snapshot and must not proxy learner requests
+  to live content-service collections;
+- disabled synchronization leaves the approved backend snapshot unchanged;
+- a failed or partial import must not become the active learner-facing state. Validate required
+  relationships and complete all derived remap/achievement work before marking the new snapshot
+  ready;
+- map topology, achievement maxima, sync hashes/versions, and other content-derived read models must
+  correspond to the same imported snapshot and be refreshed only as part of its controlled
+  promotion;
+- preserve the last known-good snapshot and report synchronization/remap failures. Do not clear
+  production collections first or silently continue with a mixed old/new content graph;
+- changes to synchronization selection, activation, validation, or promotion behavior are
+  production-content release changes and require explicit tests and operational documentation.
+
+Do not replace this boundary with live publications, direct browser-to-content-service access,
+request-time content fetching, or automatic continuous synchronization during the PWA migration.
+
+The historical learner path is: restore an existing login token or enter the registration/recovery
+flow; accept legal terms during registration; choose a field; view the field journey map; choose a
+stage and then a dimension/unit set; view the unit-set story once at its beginning when present;
+complete ordered unit pages with immediate feedback; complete the unit set; return to refreshed map
+progress; optionally use profile, achievements, TTS settings, account recovery, or deletion.
+
+Preserve these behavioral boundaries while translating them to web navigation:
+
+- authentication gates the learning routes, but connectivity state is independently visible;
+- field, stage, dimension, unit-set, unit, and page selection are distinct states and must not be
+  collapsed merely because a web route can encode them in one URL;
+- a session is server-owned resumable learning state for one user and unit set; browser route/cache
+  state is only a projection;
+- unit-set story state is distinct from the first unit/page and is shown only at the start of a new
+  applicable session, not on every resume;
+- pages may contain zero, one, or multiple content elements/items. Empty pages remain navigable, and
+  response/scoring logic must key multiple items independently;
+- evaluation feedback precedes advancement. A failed durable submission must not be presented as
+  authoritative completion;
+- completion updates progress before the map/achievement projection is treated as refreshed;
+- TTS, plain language, large controls, non-color feedback, and predictable back/continue behavior
+  are core accessibility behavior, not decorative mobile details;
+- internet reachability, backend/DDP reachability, authentication restoration, reference-data sync,
+  and learner-data submission are separate states with separate recovery messages.
 
 ## General Engineering Rules
 
@@ -199,7 +322,8 @@ already used by the repository over ad-hoc alternatives.
 
 - Never commit directly on `main` or `master`.
 - Work on a separate task-specific branch.
-- Follow `CONTRIBUTING.md`.
+- Follow [docs/guide/CONTRIBUTIONS.md](./docs/guide/CONTRIBUTIONS.md). Treat its React Native,
+  Expo, and Jest details as legacy where they conflict with the active Meteor PWA toolchain.
 - Include issue numbers in commit messages when applicable.
 - If commits are explicitly requested, append the agent name in brackets at the end of the
   commit message.
