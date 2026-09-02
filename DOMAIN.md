@@ -309,3 +309,23 @@ visible focus, and feedback that does not rely solely on color, animation, vibra
 part of the learning behavior for this audience. Platform-specific vibration or native secure
 storage are implementation details; their accessible purpose must be preserved through suitable web
 behavior rather than copied literally.
+
+## Meteor Realization Boundary
+
+The domain concepts above do not require parallel framework infrastructure. In the Meteor PWA:
+
+- an Anonymous Account is a Meteor account and authenticated DDP identity;
+- routine login, resume tokens, logout, and optional provider/passwordless modes should use the
+  Meteor Accounts system and its official provider packages;
+- a lea.app Session is a domain document/state machine, not Meteor's client-only `Session` UI store;
+- Responses, Progress, and derived read models use Meteor Methods and Mongo collections, with
+  publications/subscriptions only where reactive delivery is a product need;
+- connectivity presentation starts from Meteor's reactive connection status, while browser network
+  signals are only supplementary hints;
+- server startup synchronization is orchestrated through Meteor startup/configuration facilities,
+  but controlled content promotion and validation remain lea.app domain/operational rules.
+
+Framework primitives do not change the invariants in this file. Accounts does not define recovery
+product policy; Methods do not make transitions idempotent automatically; Mongo does not define
+scoring/progress; and DDP reconnect does not make an unacknowledged Response durable. Prefer the
+Meteor primitive, then add only the missing domain rule.

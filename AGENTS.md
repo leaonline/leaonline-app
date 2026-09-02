@@ -150,6 +150,54 @@ Preserve the backend snapshot boundary:
 Do not replace this boundary with live publications, direct browser-to-content-service access,
 request-time content fetching, or automatic continuous synchronization during the PWA migration.
 
+## Meteor 3.4 Capability-First Rule
+
+Before designing infrastructure, check the pinned official Meteor 3.4 API and maintained-package
+documentation at <https://release-3-4-0.docs-online.meteor.com/>. Prefer Meteor core, an official
+maintained package, or the repository's existing wrapper around those capabilities over an
+app-local substitute. A custom abstraction is justified only when it implements lea.app domain
+semantics, fills a documented Meteor gap, or provides a thin testable boundary around a Meteor API.
+
+Use the existing project factories where they already standardize these primitives; do not bypass
+them merely to call Meteor directly, and do not duplicate what they already enforce.
+
+Apply this mapping during planning, implementation, and review:
+
+| Requirement | Meteor/package capability to evaluate first | App-specific responsibility that remains |
+| --- | --- | --- |
+| Anonymous users, password/code login, resume, logout, other-session revocation | `accounts-base`, `accounts-password`, `Accounts.*`, `Meteor.loginWithPassword`, `Meteor.logout`, `Meteor.logoutOtherClients` | learner-facing code format, restore-code semantics, deletion workflow, privacy copy |
+| Passwordless and OAuth | `accounts-passwordless`, provider packages such as `accounts-google`, `service-configuration`, Accounts login hooks | mode/link/merge policy, anonymity guarantees, accessible UX |
+| Custom QR/bearer login | `Accounts.registerLoginHandler` and client login-function APIs; `Random.secret`/platform crypto for opaque secrets | payload version, proof/rotation/recovery policy; never create a parallel session system |
+| Authenticated mutations | `Meteor.methods`, async method handlers, `Meteor.callAsync`, invocation `this.userId`, `Meteor.Error` | ownership and domain-transition rules |
+| Argument validation and abuse control | `check`/`Match`, `audit-argument-checks`, `DDPRateLimiter`; Accounts default rate limits | schemas, stable learner-safe errors, method-specific limits |
+| Reactive server data | `Meteor.publish`/`Meteor.subscribe`, publication `this.userId`, Minimongo | least-data projections and deciding whether reactivity is actually required |
+| Connection/reconnect state | reactive `Meteor.status()`, `Meteor.reconnect()`, `DDP.onReconnect` | learner-facing state combination and safe retry/idempotency behavior |
+| Blaze lifecycle/state | `Template` lifecycle, `Tracker`, `ReactiveVar`, `ReactiveDict`; use `Session` only for truly global ephemeral UI state | page/view models, cleanup, domain orchestration; do not confuse Meteor `Session` with the lea.app learning Session |
+| Persistence and atomic writes | async `Mongo.Collection` APIs, `createIndexAsync`, unique indexes, atomic single-document updates/upserts; raw Mongo transactions only when needed | logical idempotency keys, cross-document domain consistency and migrations |
+| Startup/configuration | `Meteor.startup`, `Meteor.settings`, async startup sequencing | controlled content-import/remap validation and last-known-good promotion |
+| Serialization | EJSON/DDP-supported values | an explicit versioned DTO and preservation rules where Mongo/EJSON boundaries differ |
+| Client updates and code loading | `autoupdate`, WebApp update hooks, Meteor modules/dynamic `import()` | active-work safeguards, service-worker coordination, route boundaries |
+| Email delivery | `email` plus Accounts email/token APIs | templates, privacy, enumeration resistance and product policy |
+
+Do not claim that a Meteor capability provides domain guarantees it does not provide. In
+particular, Meteor does not by itself define lea.app response-state semantics, idempotent UnitSet
+replacement, progress/scoring rules, atomic multi-collection content promotion, offline outbox
+conflict resolution, or map topology. Build those rules on Meteor primitives and test them
+explicitly.
+
+Use Meteor's Pub/Sub only when live data is necessary, otherwise prefer local collections with data,
+loaded by methods via callMethod or loadIntoCollection.
+
+Reviewer checklist:
+
+- flag custom login/session tokens when Accounts can own authentication and resume;
+- flag custom RPC, pub/sub, reconnect polling, validation, rate limiting, reactive stores, or index
+  management without a documented reason;
+- require Meteor 3 async APIs on server paths where the pinned API provides them;
+- require field-limited publications/user reads and authenticated invocation identity rather than
+  client-supplied identity;
+- require a short design note whenever a plan rejects a relevant official capability.
+
 The historical learner path is: restore an existing login token or enter the registration/recovery
 flow; accept legal terms during registration; choose a field; view the field journey map; choose a
 stage and then a dimension/unit set; view the unit-set story once at its beginning when present;

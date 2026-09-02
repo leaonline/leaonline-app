@@ -240,6 +240,34 @@ In this context it is mandatory to understand the capacities provided by the Met
 and/or available packages to implement any of these requirements.
 For example, Meteor utilizes an exhaustive accounts system for managing accounts and authentication.
 
+### Meteor 3.4 realization baseline
+
+Use the pinned Meteor 3.4 API and maintained packages before introducing infrastructure:
+
+- Accounts owns anonymous users, password/code login, browser resume tokens, logout, and
+  authenticated `userId`; do not create an app-local auth token/session protocol.
+- Register server operations through the existing Method factories backed by `Meteor.methods`, use
+  async handlers/`Meteor.callAsync`, derive identity from the invocation, return `Meteor.Error`, and
+  use `check`/`Match` plus the existing schema wrappers.
+- Apply `DDPRateLimiter` and Accounts' default login limits through existing project factories;
+  never implement process-local request counters.
+- Drive connection UI from reactive `Meteor.status()` and use `Meteor.reconnect()`/
+  `DDP.onReconnect` for explicit reconnect coordination; browser reachability is supplementary.
+- Use `Meteor.publish`/`Meteor.subscribe` and Minimongo for genuinely reactive bounded data, and
+  Methods for bounded snapshots where reactivity adds no value; do not create a second transport.
+- Use Template lifecycle, Tracker, `ReactiveVar`, and `ReactiveDict` for Blaze-owned state. Meteor's
+  client-only `Session` store is not the lea.app learning Session model.
+- Use Meteor 3 async Mongo APIs, `createIndexAsync`, unique indexes, and atomic single-document
+  updates/upserts. Use raw Mongo transactions only for a documented cross-document invariant.
+- Run controlled import/remap orchestration through `Meteor.startup` and `Meteor.settings`; these
+  hooks do not replace the app-specific last-known-good promotion protocol.
+- Coordinate active-work-safe updates with `autoupdate`/WebApp update hooks and the service worker;
+  do not add a parallel bundle-version poller.
+- Use Meteor modules/dynamic `import()` for route-level lazy loading on the Meteor bundler.
+
+The implementation review must list each new infrastructure abstraction in these areas and record
+why the Meteor capability or existing project wrapper was insufficient.
+
 ### 4.0 Controlled content promotion
 
 Backend startup synchronization remains part of the target architecture. Its purpose is release
@@ -280,6 +308,10 @@ Use synchronous Minimongo reads inside helpers. Async server/content calls
 belong in lifecycle-owned loaders with explicit pending, success, empty, and
 failure states.
 
+Own reactive computations through Tracker/Template lifecycle and stop them during teardown. Prefer
+`ReactiveVar` or `ReactiveDict` for template-local state; add another state container only for a
+documented capability gap.
+
 ### 4.2 Server boundary
 
 The server remains authoritative for:
@@ -297,6 +329,10 @@ be rate limited. A client score may be used for immediate presentation, but the
 server must independently compute or verify the persisted score from canonical
 item definitions.
 
+Meet these infrastructure requirements through the existing factories backed by `Meteor.methods`,
+`check`/`Match`, `audit-argument-checks`, and `DDPRateLimiter`. Feature modules must not reimplement
+RPC dispatch, invocation identity, validation auditing, or rate-limit storage.
+
 Prefer one-shot methods for bounded content/session loading already used by
 the app. Introduce publications only for data that genuinely needs reactive
 updates. Any user-specific publication must filter by `this.userId` and project
@@ -311,8 +347,9 @@ real-world identity, not unauthenticated access.
 Migration scope is limited to the code-based account flow needed for mobile
 parity:
 
-- use Meteor's password authentication with a generated/code-based username and
-  password combination, following the established otu.lea integration pattern;
+- use `accounts-base` + `accounts-password`, `Accounts.createUserAsync`, and
+  `Meteor.loginWithPassword` with a generated/code-based username/password combination, following
+  the established otu.lea integration pattern;
 - create and log in the anonymous account during registration;
 - restore the Meteor resume token on the same browser when available;
 - retain the existing dedicated restore-code flow for another browser/device;
@@ -321,6 +358,10 @@ parity:
 - retain normal Meteor browser-session persistence and logout behavior. Enhanced
   cleared-storage/device-change warnings and client-data lifecycle controls are
   deferred to `03_offline-and-client-data-management.md`.
+
+Use Accounts login/logout hooks and reactive `Meteor.userId()`/`Meteor.loggingIn()` state for route
+gating. Do not read/write `services.resume` directly or create a parallel token store. Field-limit
+user reads/publications and never publish the `services` object.
 
 Passwordless email, QR login/recovery presentation, Google/OAuth, credential
 mode supersession, account merging, credential rotation, and related token
@@ -784,6 +825,9 @@ Deliverables:
   representative Playwright screenshot baselines used by the map.
 - Add contract tests for route argument construction, context method schemas,
   and representative shared-renderer payloads.
+- Produce a Meteor-capability audit for Accounts, Methods, validation, rate limiting, connection
+  state, pub/sub, Mongo indexes/atomicity, startup, autoupdate, and modules. Record the domain reason
+  or missing capability for every retained custom mechanism.
 - Pin or document all directly used Atmosphere packages. Replace prerelease
   packages only where a compatible stable release is proven; do not combine a
   broad dependency upgrade with workflow changes.
@@ -937,8 +981,10 @@ Deliverables:
 - Replace the inherited service-worker behavior with a versioned, tested cache
   policy for shell and immutable build assets.
 - Add an update-available flow so active learner work is not destroyed by an
-  uncontrolled service-worker activation.
-- Add online/reconnecting/offline UI and test SockJS/DDP exclusion explicitly.
+  uncontrolled service-worker activation. Integrate `autoupdate`/WebApp update notification with
+  service-worker activation instead of polling bundle versions separately.
+- Add online/reconnecting/offline UI driven primarily by reactive `Meteor.status()` and test
+  `Meteor.reconnect()`/`DDP.onReconnect` plus SockJS/DDP cache exclusion explicitly.
 - Do not cache learning content or implement response outbox/replay. Link the
   deferred `offline-and-client-data-management.md` plan from release docs.
 - Test static-cache update behavior and app update during an active online unit.
@@ -1030,17 +1076,16 @@ redesign in one pull request.
 
 ## 8. Decision status and deferred specifications
 
-All migration questions raised by the review are answered in
-`mobile-to-blaze-pwa-migration-decisions.md` and incorporated into this plan.
-There are no remaining review decisions blocking implementation.
+All migration questions raised by the review have been incorporated into this
+plan. There are no remaining review decisions blocking implementation.
 
 The following separately planned work is explicitly not part of migration:
 
 - passwordless email, QR, Google/OAuth, account merge, and extended credential
-  lifecycle: `extended-authentication.md`;
+  lifecycle: `02_extended-authentication.md`;
 - full offline learning, durable response outbox/replay, learning-content cache,
   browser-account persistence warnings, storage partitioning, and client-data
-  lifecycle: `offline-and-client-data-management.md`.
+  lifecycle: `03_offline-and-client-data-management.md`.
 
 ## 9. Definition of migration complete
 
@@ -1074,7 +1119,11 @@ The migration is complete when:
   https://docs.meteor.com/tutorials/blaze/
 - Meteor accounts: https://docs.meteor.com/tutorials/accounts/accounts
 - Meteor accounts API (storage and HttpOnly-cookie behavior):
-  https://docs.meteor.com/api/accounts.html
+  https://release-3-4-0.docs-online.meteor.com/api/accounts
+- Pinned Meteor 3.4 API index (Methods, pub/sub, connections, Mongo, Tracker, validation, rate
+  limiting, startup, EJSON): https://release-3-4-0.docs-online.meteor.com/api/
+- Pinned maintained-package index (`audit-argument-checks`, `autoupdate`, modules and related
+  packages): https://release-3-4-0.docs-online.meteor.com/api/#packages
 - Blaze template lifecycle: https://www.blazejs.org/api/templates.html
 - Blaze reusable components:
   https://www.blazejs.org/guide/reusable-components.html
@@ -1085,7 +1134,6 @@ The migration is complete when:
 - Historical workflow diagrams: `docs/arch/application-flow.graphml` and
   `docs/arch/auth-workflow.graphml`
 - Generated legacy API snapshots: `docs/api/app` and `docs/api/backend` (evidence only)
-- Recorded decisions: `docs/plans/mobile-to-blaze-pwa-migration-decisions.md`
-- Separate authentication work: `docs/plans/extended-authentication.md`
+- Separate authentication work: `docs/plans/02_extended-authentication.md`
 - Deferred offline/client-data work:
-  `docs/plans/offline-and-client-data-management.md`
+  `docs/plans/03_offline-and-client-data-management.md`
