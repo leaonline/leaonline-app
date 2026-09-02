@@ -8,6 +8,24 @@ profile and optional multi-agent migration workflow.
 The committed `.codex/config.toml` keeps the application workspace as the only writable project
 root. The launcher additionally exposes the shared package sources as read-only references.
 
+```
+                         filesystem
+                             │
+                 :root = DENY
+                             │
+          ┌──────────────────┼─────────────────┐
+          │                  │                 │
+ leaonline-app             external          runtime/cache
+ READ + WRITE               refs
+          │                  │                 │
+          │          corelib      READ         ├─ Codex runtime READ
+          │          ui           READ         └─ skill cache   READ
+          │          otu.lea      READ
+          │
+   .deploy/.staging
+   targets still DENIED
+```
+
 Expected access:
 
 | Location | Access |

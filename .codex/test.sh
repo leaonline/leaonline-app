@@ -252,12 +252,19 @@ done
 # Validate the intended behavioral separation.
 if [[ -r "$implementer_cfg" ]] &&
    grep -qi 'implementation agent' "$implementer_cfg" &&
-   grep -qi 'modify only files in the leaonline-app workspace' "$implementer_cfg" &&
-   grep -qi 'do not.*modify.*\.\./lib/corelib.*\.\./lib/ui\|modify \.\./lib/corelib or \.\./lib/ui' "$implementer_cfg"; then
+   grep -qi 'modify only files in the leaonline-app workspace' "$implementer_cfg"; then
   ok "implementer role is constrained to application-workspace changes"
 else
   bad "implementer role instructions do not clearly constrain write scope"
 fi
+
+for ref in '../lib/corelib' '../lib/ui' '../leaonline-otulea'; do
+  if grep -Fqi -- "$ref" "$implementer_cfg"; then
+    ok "implementer role references $ref"
+  else
+    bad "implementer role does not mention $ref"
+  fi
+done
 
 if [[ -r "$reviewer_cfg" ]] &&
    grep -qi 'strictly read-only' "$reviewer_cfg" &&
@@ -393,29 +400,35 @@ fi
 # 11. External shared libraries must be readable but not writable
 # --------------------------------------------------------------------
 
-external_libs=(
+external_repositories=(
   "../lib/corelib"
   "../lib/ui"
+  "../leaonline-otulea"
 )
 
-for lib in "${external_libs[@]}"; do
-  if [[ ! -d "$lib" ]]; then
-    warning "$lib does not exist on host"
+for repo in "${external_repositories[@]}"; do
+  if [[ ! -d "$repo" ]]; then
+    warning "$repo does not exist on host"
     continue
   fi
 
-  if run_in_sandbox "test -r '$lib' && find '$lib' -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null | grep -q ."; then
-    ok "$lib is readable for source inspection"
+  if run_in_sandbox "
+    test -r '$repo' &&
+    find '$repo' -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null |
+      grep -q .
+  "; then
+    ok "$repo is readable for source inspection"
   else
-    bad "$lib is not readable through the configured Codex launcher"
+    bad "$repo is not readable through the configured Codex launcher"
   fi
 
-  probe="$lib/.codex-external-write-test-$$"
+  probe="$repo/.codex-external-write-test-$$"
+
   if run_in_sandbox "touch '$probe' 2>/dev/null"; then
-    bad "$lib is writable; expected explicit read-only access"
+    bad "$repo is writable; expected explicit read-only access"
     rm -f "$probe" 2>/dev/null || true
   else
-    ok "$lib is not writable"
+    ok "$repo is not writable"
   fi
 done
 
@@ -521,6 +534,29 @@ if [[ "$AGENT_SMOKE" == "1" ]]; then
   rm -f "$smoke_output" "$smoke_err"
 else
   warning "live multi-agent spawn test skipped (use --agent-smoke to enable)"
+fi
+
+# --------------------------------------------------------------------
+# Codex skill cache must be readable but not writable
+# --------------------------------------------------------------------
+
+if run_in_sandbox '
+  test -r "$HOME/.code/cache" &&
+  find "$HOME/.code/cache" -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null |
+    grep -q .
+'; then
+  ok "~/.code/cache is readable"
+else
+  bad "~/.code/cache is not readable"
+fi
+
+skill_cache_probe="$HOME/.code/cache/.codex-write-test-$$"
+
+if run_in_sandbox "touch '$skill_cache_probe' 2>/dev/null"; then
+  bad "~/.code/cache is writable"
+  rm -f "$skill_cache_probe" 2>/dev/null || true
+else
+  ok "~/.code/cache is read-only"
 fi
 
 # --------------------------------------------------------------------

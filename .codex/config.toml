@@ -1,4 +1,12 @@
 # .codex/config.toml — committed
+# External repositories are added by run-secure.sh as absolute read-only
+# filesystem exceptions:
+#
+#   ../lib/corelib
+#   ../lib/ui
+#   ../leaonline-otulea
+#
+# They deliberately remain outside :workspace_roots.
 
 # permission restricted workspace with agentic behavior addition
 approval_policy = "never"

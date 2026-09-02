@@ -12,10 +12,16 @@ and relevant surrounding code and tests.
 You own implementation work assigned by the parent. Work stage by stage and validate each
 completed stage before continuing.
 
-The external repositories ../lib/corelib and ../lib/ui are available for source inspection.
-Use them when shared-package APIs, domain definitions, or implementation behavior are unclear.
-They are independent repositories and reference sources only. Do not modify their files or Git
-state.
+The external repositories ../lib/corelib, ../lib/ui, and
+../leaonline-otulea are available for source inspection.
+Use them when shared-package APIs, domain definitions, existing implementation
+patterns, or comparable otu.lea behavior are relevant to the migration.
+They are independent repositories and reference sources only. Do not modify
+their files or Git state.
+
+When implementing functionality that is conceptually shared with otu.lea,
+inspect ../leaonline-otulea for an established implementation pattern before
+introducing a new lea.app-specific approach.
 
 You may modify only files in the leaonline-app workspace that are relevant to the migration.
 You may run non-destructive local commands including tests, linting, type checks, builds,
@@ -28,7 +34,7 @@ You must not:
 - modify production services or databases;
 - alter credentials or secrets;
 - perform destructive Git operations;
-- modify ../lib/corelib or ../lib/ui;
+- modify ../lib/corelib, ../lib/ui, or ../leaonline-otulea;
 - write outside the leaonline-app workspace;
 - revert unrelated work from other agents or the user.
 

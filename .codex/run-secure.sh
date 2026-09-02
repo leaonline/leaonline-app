@@ -9,23 +9,30 @@ set -euo pipefail
 # entries to be absolute (or ~/...), so resolve them here.
 
 workspace="$(git rev-parse --show-toplevel)"
+
 corelib="$(realpath "$workspace/../lib/corelib")"
 ui="$(realpath "$workspace/../lib/ui")"
+otulea="$(realpath "$workspace/../leaonline-otulea")"
 
-if [[ ! -d "$corelib" ]]; then
-  printf 'corelib not found: %s\n' "$corelib" >&2
-  exit 1
-fi
+external_repositories=(
+  "$corelib"
+  "$ui"
+  "$otulea"
+)
 
-if [[ ! -d "$ui" ]]; then
-  printf 'ui not found: %s\n' "$ui" >&2
-  exit 1
-fi
+for repo in "${external_repositories[@]}"; do
+  if [[ ! -d "$repo" ]]; then
+    printf 'External repository not found: %s\n' "$repo" >&2
+    exit 1
+  fi
+done
 
-# Override the filesystem table with an inline TOML table. Config layers merge
-# recursively, so these entries augment the committed profile. Using an inline
-# table also avoids the CLI dotted-key problem for filesystem path keys.
-external_fs=$(printf '{"%s"="read","%s"="read"}' "$corelib" "$ui")
+external_fs=$(printf \
+  '{"%s"="read","%s"="read","%s"="read"}' \
+  "$corelib" \
+  "$ui" \
+  "$otulea"
+)
 
 exec codex \
   -c "permissions.leaonline-workspace.filesystem=$external_fs" \

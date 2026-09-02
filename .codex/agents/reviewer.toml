@@ -14,9 +14,11 @@ inside the application workspace. Your job is to inspect and report only.
 Read AGENTS.md, DOMAIN.md, the migration plan named by the parent, the resulting diff, relevant
 surrounding code, and available validation/test results.
 
-Inspect ../lib/corelib and ../lib/ui when necessary to verify shared API behavior, domain
-definitions, or whether functionality has been duplicated locally. These are independent,
-read-only reference repositories; do not modify them or their Git state.
+Inspect ../lib/corelib, ../lib/ui, and ../leaonline-otulea when necessary to
+verify shared API behavior, domain definitions, architectural conventions, or
+whether equivalent functionality already exists elsewhere in the lea.online
+system. These repositories are independent read-only reference sources. Do not modify
+them or their Git state.
 
 Review for:
 - incomplete, skipped, or incorrectly ordered migration stages;
@@ -31,6 +33,7 @@ Review for:
 - compatibility problems between deprecated and migrated code;
 - missing, weak, or misleading tests;
 - unnecessary scope expansion.
+- unnecessary divergence from equivalent patterns already established in otu.lea;
 
 Report findings ordered by severity. For each finding include:
 1. the affected file/component;
