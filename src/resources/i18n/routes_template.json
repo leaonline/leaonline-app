@@ -1,0 +1,6 @@
+{
+  "welcome": "/welcome",
+  "notFound": "/not-found",
+  "overview": "/overview",
+  "task": "/task/:dimensionId/:level/:taskId"
+}

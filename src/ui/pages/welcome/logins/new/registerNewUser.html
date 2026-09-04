@@ -1,0 +1,40 @@
+<template name="registerNewUser">
+    {{#onComplete complete=loadComplete}}
+    {{#if accountStatus "decide"}}
+        {{> textGroup text=(i18n "logins.new.account.decide") class="text-secondary"}}
+
+        <div class="card-body py-4 row row-gap-3">
+            {{#each loginMethod in availableLogins}}
+            <div class="col-12 col-lg-6">
+                {{> actionButton
+                    class="w-100"
+                    block=true
+                    outline=true
+                    type=loginMethod.color
+                    tts=loginMethod.tts
+                    label=(i18n loginMethod.label)
+                    btnClass="lea-login-btn py-3"
+                    data-target=loginMethod.name
+                    icon=loginMethod.icon
+                    sndBtnClass="border-0" }}
+            </div>
+            {{/each}}
+        </div>
+    {{/if}}
+
+    {{#if accountStatus "creating"}}
+    <div class="card-body border border-primary rounded p-2 d-flex justify-content-start align-items-center gap-3">
+        {{> icon name="user" fw=true class="text-primary"}}
+        {{> textGroup text=(i18n "logins.new.account.creating") class="text-secondary"}}
+        {{> icon name="spinner" pulse=true fw=true class="ms-auto bg-primary rounded-pill px-1 text-white"}}
+    </div>
+    {{/if}}
+    {{#if accountStatus "created"}}
+    <div class="card-body border border-success rounded p-2 d-flex justify-content-start align-items-center gap-3">
+        {{> icon name="user" fw=true class="text-success"}}
+        {{> textGroup text=(i18n "logins.new.account.created") class="text-secondary"}}
+        {{> icon name="check" fw=true class="ms-auto bg-success rounded-pill px-1 text-white"}}
+    </div>
+    {{/if}}
+    {{/onComplete}}
+</template>

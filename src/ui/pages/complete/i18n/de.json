@@ -1,0 +1,42 @@
+{
+  "generateFeedback": {
+    "error": "Es ist ein Fehler beim Erstellen der Ergennisse aufgetreten",
+    "sessionNotComplete": "Testdurchlauf ist noch nicht abgeschlossen.",
+    "noCompetencyDoc": "Es konnten eine oder mehrere Kompetenzen nicht gefunden werden.",
+    "noAlphaLevelDoc": "Es konnten eine oder mehrere Alpha-Levels nicht gefunden werden."
+  },
+  "pages": {
+    "complete": {
+      "title": "Fertig",
+      "thankYou": "Schön, dass du teilgenommen hast!",
+      "printResults": "Für dich ausdrucken",
+      "printResultsTeacher": "Für Kursleitende ausdrucken",
+      "youCanPrint": "Du kannst das Ergebnis hier ausdrucken.",
+      "continueOrEnd": "Was möchtest du als nächstes tun?",
+      "failed": "Es kann derzeit keine Bewertung deiner Ergebnisse erzeugt werden. Das Lea Team ist informiert und wird die Auswertung in Kürze wieder zur Verfügung stellen.",
+      "definitionMissing": "Kompetenz ermittelt aber Definition fehlt",
+      "noEntries": "Es sind hierzu keine Einträge in der Rückmeldung enthalten.",
+      "competencies": "Kann-Beschreibungen",
+      "iCan": "Ich kann...",
+      "alphaLevels": "Alpha-Level",
+      "noScoredAlpha": "Es sind noch nicht genug Aufgaben bearbeitet, um dein Alpha-Level einschätzen zu können.",
+      "noScoredComp": "Es sind noch nicht genug Aufgaben bearbeitet, um Kompetenzen einschätzen zu können.",
+      "responses": "Alle Antworten",
+      "loading": "Deine persönliche Auswertung wird erstellt. Dies kann einen Moment dauern.",
+      "percent": "{{percent}} %"
+    }
+  },
+  "thresholds": {
+    "notEnough": "Nicht ausreichend getestet",
+    "notAccomplished": "Nicht erfüllt",
+    "partiallyAccomplished": "Teilweise erfüllt",
+    "nearlyAccomplished": "Fast erfüllt",
+    "accomplished": "Erfüllt",
+    "id": "ID",
+    "min": "min. Anzahl",
+    "count": "Anzahl",
+    "correct": "Bestanden",
+    "perc": "in Prozent",
+    "grade": "Bewertung"
+  }
+}

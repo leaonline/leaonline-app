@@ -1,0 +1,36 @@
+<template name="login">
+    <div class="row my-5">
+        <div class="col col-sm-12 col-md-6 col-lg-4 ms-auto ml-auto me-auto">
+            {{#if view "login"}}
+                <div class="w-100 {{#if loggingIn}}d-unavailable{{/if}}">
+                    <button class="btn btn-primary block w-100 login-button">
+                        {{i18n "common.login"}}
+                    </button>
+                </div>
+            {{/if}}
+
+            {{#if loggingIn}}
+                <div class="w-100 text-center">
+                    <span class="spinner-border text-primary"></span>
+                </div>
+            {{/if}}
+
+            {{#with loginError}}
+                <div class="alert alert-danger">
+                    <h2 class="py-2">{{i18n this.name}}: {{i18n this.reason}}</h2>
+                    <pre>{{this.details}}</pre>
+                </div>
+            {{/with}}
+
+            {{#if loggedIn}}
+                <div class="alert alert-info">
+                    <strong class="alert-heading">{{i18n "pages.login.loggedIn"}}</strong>
+                </div>
+
+                <a class="btn btn-primary block w-100" href="{{next}}">
+                    {{i18n "common.continue"}}
+                </a>
+            {{/if}}
+        </div>
+    </div>
+</template>

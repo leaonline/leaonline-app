@@ -1,0 +1,23 @@
+{
+  "short_name": "otu.lea",
+  "name": "otu.lea - lea.online",
+  "category": "education",
+  "description": "Online Testumgebung zur Literalitätsentwicklung von Arbeitskräften",
+  "icons": [
+    {
+      "src": "/logo/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "scope": "/",
+  "background_color": "#f5f5f5",
+  "theme_color": "#f59d1d"
+}

@@ -1,0 +1,54 @@
+# .codex/config.toml — committed
+# External repositories are added by run-secure.sh as absolute read-only
+# filesystem exceptions:
+#
+#   ../lib/corelib
+#   ../lib/ui
+#   ../leaonline-otulea
+#
+# They deliberately remain outside :workspace_roots.
+
+# permission restricted workspace with agentic behavior addition
+approval_policy = "never"
+default_permissions = "leaonline-workspace"
+
+#==============================================================================
+# AGENTS
+#==============================================================================
+[features]
+multi_agent = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 2
+max_depth = 1
+
+[agents.implementer]
+description = "Implements the staged lea.app migration and runs non-destructive validation."
+config_file = "agents/implementer.toml"
+
+[agents.reviewer]
+description = "Independently reviews the migration implementation and must not modify files."
+config_file = "agents/reviewer.toml"
+
+#==============================================================================
+# PERMISSIONS
+#==============================================================================
+[permissions.leaonline-workspace]
+description = "Restricted leaonline-app workspace access with network enabled"
+extends = ":workspace"
+
+[permissions.leaonline-workspace.filesystem]
+":root" = "deny"
+":minimal" = "read"
+"~/.codex/plugins/" = "read"
+
+# Required on current Linux Codex releases so the sandbox can execute
+# Codex's standalone runtime. Remove once Codex includes this in :minimal.
+"~/.codex/packages/standalone/releases/" = "read"
+
+[permissions.leaonline-workspace.filesystem.":workspace_roots"]
+"." = "write"
+
+[permissions.leaonline-workspace.network]
+enabled = true

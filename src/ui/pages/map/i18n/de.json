@@ -1,0 +1,17 @@
+{
+  "common": {
+    "restart": "Neu starten",
+    "continue": "Fortsetzen"
+  },
+  "pages": {
+    "map": {
+      "title": "Aufgaben Karte",
+      "decideContinue": "Du hast diese Aufgabe bereits angefangen. Wie möchtest Du weiter machen?"
+    }
+  },
+  "map": {
+    "entry": {
+      "title": "Aufgabe {{value}}"
+    }
+  }
+}
