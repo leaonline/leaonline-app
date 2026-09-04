@@ -5,9 +5,9 @@ truthfully claim there are “no remaining review decisions.”
 The repository is correctly pinned to METEOR@3.4; the relevant installed packages include Accounts, Blaze, Mongo,
 dynamic-import, autoupdate, audit-argument-checks, and ddp-rate-limiter.
 
-## Confirmed misunderstandings
+## Migration
 
-### 1. Content promotion cannot satisfy its atomicity guarantee as designed
+### Content promotion cannot satisfy its atomicity guarantee as designed
 
 The plan requires content collections, map data, achievement maxima, and client versions to become visible as one
 promotion (docs/plans/01_mobile-to-blaze-pwa-migration.md:286). But the map design simultaneously:
@@ -29,19 +29,7 @@ The plan must choose a concrete strategy in Phase 0, such as:
 “In-memory validation followed by per-document upserts” is insufficient. This also conflicts with the instruction that
 no active-version pointer be introduced.
 
-### 2. Accounts.sendLoginTokenEmail is described as avoiding custom token persistence
-
-The authentication plan groups Accounts.sendLoginTokenEmail with the normal passwordless workflow while forbidding
-custom token documents (docs/plans/02_extended-authentication.md:58).
-
-Meteor documents Accounts.sendLoginTokenEmail as a low-level/manual API: callers must create the token/sequence and save
-it themselves. The normal managed flow is Accounts.requestLoginTokenForUser, followed by
-Meteor.passwordlessLoginWithToken. See the official accounts-passwordless documentation.
-
-Recommended correction: remove Accounts.sendLoginTokenEmail from the standard design. Retain it only as an explicitly
-rejected/manual alternative unless the project deliberately accepts ownership of token generation and persistence.
-
-### 3. autoupdate does not inherently provide an active-work-safe update flow
+### autoupdate does not inherently provide an active-work-safe update flow
 
 Both AGENTS.md and the plans refer broadly to “autoupdate/WebApp update hooks” as owning bundle-update signaling (
 AGENTS.md:179; docs/plans/01_mobile-to-blaze-pwa-migration.md:983).
@@ -56,9 +44,7 @@ this requires reload migration hooks or an app-specific wrapper, that dependency
 must be stated. Service-worker activation and Meteor HCP also need a single named coordinator to prevent competing
 reloads.
 
-## Material ambiguities
-
-### 4. The session API cannot enforce page-based progress as written
+### The session API cannot enforce page-based progress as written
 
 The contract declares one progress unit per completed page (docs/plans/01_mobile-to-blaze-pwa-migration.md:689), but the
 only transition method is:
@@ -81,7 +67,35 @@ Phase 0 must decide:
 Meteor automatically retries unacknowledged method calls after reconnect, making the stated idempotency requirement
 essential. See the official Methods/reconnection documentation.
 
-### 5. Passwordless enrollment into an existing anonymous account is underspecified
+### “No remaining review decisions” contradicts the plans themselves
+
+The main plan says no decisions remain (docs/plans/01_mobile-to-blaze-pwa-migration.md:1080), while it defers the atomic
+promotion mechanism to implementation and Phase 0 still must define success DTOs, error codes, page semantics,
+replacement behavior, and stable IDs.
+
+The authentication and offline plans openly list unresolved product/architecture decisions. That is appropriate, but
+their status should be reflected consistently:
+
+- main migration: “ready to begin Phase 0 contract resolution,” not fully decision-closed;
+- extended authentication: blocked on listed product decisions;
+- offline plan: intentionally conceptual until its Section 3 decisions are approved.
+
+
+## Extended Auth
+
+### Accounts.sendLoginTokenEmail is described as avoiding custom token persistence
+
+The authentication plan groups Accounts.sendLoginTokenEmail with the normal passwordless workflow while forbidding
+custom token documents (docs/plans/02_extended-authentication.md:58).
+
+Meteor documents Accounts.sendLoginTokenEmail as a low-level/manual API: callers must create the token/sequence and save
+it themselves. The normal managed flow is Accounts.requestLoginTokenForUser, followed by
+Meteor.passwordlessLoginWithToken. See the official accounts-passwordless documentation.
+
+Recommended correction: remove Accounts.sendLoginTokenEmail from the standard design. Retain it only as an explicitly
+rejected/manual alternative unless the project deliberately accepts ownership of token generation and persistence.
+
+### Passwordless enrollment into an existing anonymous account is underspecified
 
 The plan requires attaching a verified email to the existing learner without creating another account (
 docs/plans/02_extended-authentication.md:53). But Accounts.requestLoginTokenForUser selects a user by the supplied
@@ -100,7 +114,7 @@ A safe enrollment protocol is still needed:
 Accounts provides primitives, but it does not define that account-linking transaction. The plan recognizes the
 duplicate-email policy but not the exact enrollment state machine.
 
-### 6. “Protect the QR login handler with DDPRateLimiter” is imprecise
+### “Protect the QR login handler with DDPRateLimiter” is imprecise
 
 Accounts.registerLoginHandler participates in the Accounts login method. DDPRateLimiter limits DDP messages/methods; it
 does not wrap a login handler as a separate endpoint. The current wording at docs/plans/02_extended-
@@ -109,7 +123,9 @@ authentication.md:93 could lead to a nonexistent handler-specific rule.
 Specify whether the design relies on Accounts’ default login limit or adds a login method rule keyed by client
 address/connection. Under Meteor 3.4, rate-limiter matcher functions must remain synchronous.
 
-### 7. Offline replay needs to account for Meteor’s own retry queue
+## Offline PWA
+
+### Offline replay needs to account for Meteor’s own retry queue
 
 The offline plan correctly says that IndexedDB durability and conflict resolution are custom. But “replayed operations
 call … Meteor.callAsync” (docs/plans/03_offline-and-client-data-management.md:64) does not define interaction with
@@ -122,19 +138,6 @@ The plan should decide whether outbox dispatch uses:
 
 Without this decision, one operation may exist simultaneously in the custom outbox and Meteor’s reconnect queue. Stable
 operation IDs make this survivable but do not make acknowledgement and cleanup semantics unambiguous.
-
-### 8. “No remaining review decisions” contradicts the plans themselves
-
-The main plan says no decisions remain (docs/plans/01_mobile-to-blaze-pwa-migration.md:1080), while it defers the atomic
-promotion mechanism to implementation and Phase 0 still must define success DTOs, error codes, page semantics,
-replacement behavior, and stable IDs.
-
-The authentication and offline plans openly list unresolved product/architecture decisions. That is appropriate, but
-their status should be reflected consistently:
-
-- main migration: “ready to begin Phase 0 contract resolution,” not fully decision-closed;
-- extended authentication: blocked on listed product decisions;
-- offline plan: intentionally conceptual until its Section 3 decisions are approved.
 
 ## Areas that are correctly understood
 

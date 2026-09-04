@@ -1,8 +1,9 @@
 # lea.app mobile-to-Blaze PWA migration plan
 
-Status: proposal for review; no implementation is authorized by this document.
+Status: revised with the recorded Meteor review decisions; no implementation is authorized by this
+document.
 
-Date: 2026-09-02
+Date: 2026-09-04
 
 ## 1. Objective
 
@@ -30,12 +31,13 @@ development-only immediate-feedback path in `imports/ui/pages/internal`.
   package releases. Do not add alpha, beta, or RC dependencies. Existing RC
   dependencies, notably `fourseven:scss`, should be treated as inherited debt,
   not as precedent for adding more prereleases.
-- Preserve server-startup synchronization from `lea.content` into the lea.app backend as a required
-  production-content promotion boundary. Learners must read the backend's approved snapshot, never
-  live editorial data, and the browser must not become a second content-sync authority.
+- Preserve server-startup synchronization from `lea.content` into the lea.app backend as the
+  configured content-release boundary used by the mobile backend. Learners must read backend-local
+  content, never live editorial data, and the browser must not become a second content-sync
+  authority.
 - Do not introduce continuous/live content propagation. Unfinished or in-development Units and
   related content must remain invisible until an operator explicitly enables synchronization and a
-  complete, validated backend snapshot plus derived read models is ready.
+  configured startup import and its existing remap work have completed.
 - Preserve anonymous learning accounts and restore semantics unless a separately
   approved product decision changes them.
 
@@ -137,15 +139,15 @@ the learning product.
 | Unit-set story | story template and shared task renderer | Stabilize session advancement and replay behavior. |
 | Choice, cloze, connect, highlight items | shared `leaonline:ui` renderers and corelib scoring | Verify subtype-by-subtype parity against mobile fixtures/tests. |
 | Immediate correct/incorrect feedback | partial `onEvaluate` integration in current unit page; otu.lea internal reference | Complete as a learner feature with accessible visual/audio feedback. |
-| Page/unit resume | `ResponseCache`, `UnitPageCache`, local storage | Correct and harden for reload/reconnect; full offline learning is deferred. |
+| Page/unit resume | `ResponseCache`, `UnitPageCache`, local storage | Resume the server-owned Unit, restarting it at page index 0; partial page position is not durable. Full offline learning is deferred. |
 | Server response persistence | `Response.methods.submit` | Repair contract and ownership checks before relying on it. |
-| Unit/session completion | transitional `Session` context and complete page | Replace ambiguous/nonexistent transition calls with the explicit session API in section 4.5; retain learner feedback and exclude diagnostic reports/records. |
+| Unit/session completion | transitional `Session` context and complete page | Stabilize the original mobile Unit-transition API described in section 4.5; retain learner feedback and exclude diagnostic reports/records. |
 | Achievements/profile/TTS settings | partial server contexts; mobile profile screens | Port every mobile screen after the core learning loop is stable. |
 | Connectivity/sync screen | partial loading/service-worker behavior | Recast for a PWA: explicit online, reconnecting, cached-shell, and failed/pending submission states. |
 
 Workflow invariants behind this table:
 
-- restore-token login, backend connectivity, and reference-data sync are independent boot states;
+- restore-token login, backend connectivity, and reference-data loading are independent boot states;
 - field -> stage -> dimension/unit-set -> story -> unit/page -> completion are distinct state
   transitions even if web routes render some of them together;
 - story advancement does not count as Unit completion, and a resumed active session must not replay
@@ -153,8 +155,8 @@ Workflow invariants behind this table:
 - pages support zero, one, or multiple items; cache and persistence keys include item identity;
 - immediate evaluation is formative client feedback, while durable response/progress authority stays
   on the server;
-- completion is not final until the session transition and Progress update succeed; map and
-  Achievements then consume refreshed read models;
+- Unit completion is final when its server session transition and Progress update succeed; response
+  writes are independent per-item operations and do not gate page navigation;
 - optional appraisal never changes score, progress, completion, or availability;
 - all secondary profile features remain outside the core learning loop.
 
@@ -191,8 +193,8 @@ These are observed planning inputs, not completed fixes:
 - The response schema requires server-scored fields, while the current client
   submission builder sends only raw responses and its `scores` argument is
   unused. The immediate-feedback result is therefore not coherently persisted.
-- The unit page can catch submission failure and still advance the session,
-  risking lost answers and incorrect progress.
+- Response submission failures can be swallowed without leaving a visible retryable error, risking
+  lost answers because page navigation intentionally remains available.
 - Route callbacks pass inconsistent argument sets for unit/session/unit-set
   transitions.
 - The story path mixes `unit` and `nextUnit` semantics and contains unfinished
@@ -223,9 +225,9 @@ mechanisms:
 | Concern | Historical owner | PWA owner/boundary |
 | --- | --- | --- |
 | Editorial content | `lea.content` | upstream workbench/source; never queried live by learners |
-| Production content snapshot | backend startup sync | required backend-local, explicitly promoted learner snapshot |
-| Map/achievement maxima | backend remap | backend-derived, versioned read models |
-| Reference cache | AsyncStorage collections + sync hashes | versioned browser cache/Minimongo; never content authority |
+| Production content snapshot | backend startup sync | required backend-local learner content imported by explicit configuration |
+| Map/achievement maxima | backend remap | backend-derived read models |
+| Reference data | AsyncStorage collections + sync hashes | eager method loading into client Minimongo; no client sync hashes and never content authority |
 | Identity/session/response/progress | Meteor backend | authenticated Meteor server methods and collections |
 | Current input/page state | React context/device storage | account/session-scoped browser cache; provisional only |
 | Immediate feedback | mobile scorer/renderers | shared canonical adapter for accessible feedback |
@@ -259,20 +261,18 @@ Use the pinned Meteor 3.4 API and maintained packages before introducing infrast
   client-only `Session` store is not the lea.app learning Session model.
 - Use Meteor 3 async Mongo APIs, `createIndexAsync`, unique indexes, and atomic single-document
   updates/upserts. Use raw Mongo transactions only for a documented cross-document invariant.
-- Run controlled import/remap orchestration through `Meteor.startup` and `Meteor.settings`; these
-  hooks do not replace the app-specific last-known-good promotion protocol.
-- Coordinate active-work-safe updates with `autoupdate`/WebApp update hooks and the service worker;
-  do not add a parallel bundle-version poller.
+- Run the configured import/remap orchestration through `Meteor.startup` and `Meteor.settings`,
+  retaining the operational design used by the mobile backend.
 - Use Meteor modules/dynamic `import()` for route-level lazy loading on the Meteor bundler.
 
 The implementation review must list each new infrastructure abstraction in these areas and record
 why the Meteor capability or existing project wrapper was insufficient.
 
-### 4.0 Controlled content promotion
+### 4.0 Configured backend content synchronization
 
-Backend startup synchronization remains part of the target architecture. Its purpose is release
-isolation, not merely transport: `lea.content` may contain unfinished, revised, or internally tested
-learning material, whereas lea.app learners must see only the last deliberately promoted snapshot.
+Backend startup synchronization remains part of the target architecture. `lea.content` may contain
+unfinished, revised, or internally tested learning material, whereas normal learner reads use the
+backend-local content imported by the explicitly configured mobile-era startup process.
 
 The implementation contract is:
 
@@ -280,18 +280,18 @@ The implementation contract is:
    There is no request-time fallback or proxy to live `lea.content` data.
 2. Operators explicitly configure which complete collections synchronize at startup and explicitly
    disable synchronization when the intended snapshot has been imported.
-3. Import validates document shape and cross-collection references needed by the app. Remap,
-   achievement maxima, ordering, and client sync-state hashes/versions are derived from that same
-   imported snapshot.
-4. A new snapshot becomes learner-visible only after import and required derivations succeed as one
-   controlled promotion. The exact staging/atomic-switch mechanism may be refined during
-   implementation, but mixed-version or partially rebuilt learner data is not acceptable.
-5. Failure preserves the last known-good learner snapshot, emits an actionable operational error,
-   and does not advance client-visible content versions.
+3. Retain the original configured full-collection import and subsequent remap/achievement work. Do
+   not add a staging store, active-version pointer, or atomic snapshot-switch protocol in this
+   migration.
+4. Import and remap failures are reported and stop the remaining synchronization work. The plan
+   does not claim cross-collection atomic promotion guarantees that the original design cannot
+   provide.
+5. The browser eagerly loads the required backend-local contexts through Meteor methods into local
+   Minimongo collections. It does not compare or persist client synchronization hashes.
 
 Server restart by itself must not imply importing editorial changes: synchronization remains gated
 by explicit configuration. Conversely, the migration must not remove the startup-sync path merely
-because the browser can fetch or cache data differently.
+because the browser loads the resulting contexts directly into Minimongo.
 
 ### 4.1 Client boundary
 
@@ -398,7 +398,7 @@ Keep the expensive topology generation on the server. `runRemap` and
 persist one read-optimized map document per field. Normal page requests must
 never rebuild the map.
 
-Treat the inputs as two separately versioned layers:
+Treat the inputs as two separately owned layers:
 
 1. **Topology layer:** field, ordered dimensions, levels, stage/milestone
    entries, unit-set references, maximum progress/competencies, and icon
@@ -420,22 +420,21 @@ Before UI implementation, version the map DTO and validate these invariants:
 - every denominator is positive and percentages are clamped to `0..100`;
 - every populated level terminates in exactly one milestone;
 - maximum progress/competency totals equal their stage/unit-set aggregates;
-- remap replacement is atomic, so clients never load a partially rebuilt map.
+- remap output is validated before the map document is replaced.
 
 Historical topology documents are not retained. Build and validate the complete
-replacement in memory, then atomically replace/upsert the single field document.
-Store `schemaVersion`, a deterministic `topologyVersion` or content hash, and
-`generatedAt` on that document. The version identifies cache validity, not a
-second historical record.
+replacement in memory, then replace/upsert the single field document. Store
+`schemaVersion` and `generatedAt`; the client does not maintain a content hash or
+version ledger to decide whether to load it.
 
 Stable entry ids derive from canonical topology, for example field + level +
 ordered stage/milestone identity; finalize the exact collision-safe formula in
 Phase 0 and keep it independent of render order changes that do not change the
 logical entry. Split cache keys by responsibility:
 
-- topology: field + topology version + schema version;
-- learner state: account + field + learner-state version;
-- derived geometry: topology version + width class.
+- topology: field + schema version;
+- learner state: account + field;
+- derived geometry: field + schema version + width class.
 
 The server or shared adapter derives:
 
@@ -443,7 +442,7 @@ The server or shared adapter derives:
 - `current`: contains the most recently active/resumable unit set;
 - `incomplete`: not all stage work is complete.
 
-All stages are available and revisitable in the initial release. `session.start`
+All stages are available and revisitable in the initial release. `session.get`
 must still verify that the selected Field, topology, Stage, and UnitSet belong
 together, but it must not reject a valid selection because an earlier Stage is
 incomplete.
@@ -620,28 +619,26 @@ Render distinct states for:
 - topology loading;
 - progress loading over an already visible topology;
 - empty field/map;
-- stale topology version during remap;
 - integrity failure/unresolved content reference;
 - disconnected while topology/progress requires the server;
 - session-start failure;
-- topology updated while the learner is viewing the map.
+- topology reloaded while the learner is viewing the map.
 
 Use the split cache keys defined in section 4.4.1. Static topology may be shared
 across accounts; progress, current position, and sessions must never be. After a
 successful unit/session update, refresh the learner-state layer and preserve the
 selected/current stage and scroll anchor.
 
-A remap builds and validates the complete topology in memory, then atomically
-replaces/upserts the one map document for the field. Clients seeing a different
-topology version invalidate derived geometry and icon caches, rebuild once, then
-restore focus/scroll by stable entry id. No historical topology collection or
-active-version pointer is introduced.
+A remap rebuilds the one map document for the field after configured backend
+synchronization. When the client reloads that document, it rebuilds derived geometry and icon data
+and restores focus/scroll by stable entry id. No client hash comparison, historical topology
+collection, or active-version pointer is introduced.
 
 #### 4.4.9 Map-specific verification
 
 Cover at least:
 
-- server remap invariants, atomic replacement, deterministic ordering, and
+- server remap invariants, validated replacement, deterministic ordering, and
   missing TestCycle/UnitSet/Unit failures;
 - view-model layout for empty, single-stage, uneven-dimension, multi-level, and
   large maps;
@@ -653,7 +650,7 @@ Cover at least:
 - keyboard, pointer, touch, screen-reader, TTS, zoom, reduced-motion, forced
   colors, and HTML fallback behavior;
 - observer cleanup and repeated route entry under Blaze HMR;
-- disconnected-state behavior and topology-version invalidation after reconnect;
+- disconnected-state behavior and topology reload after reconnect;
 - recorded smoke-performance measurements on a production-sized map and the
   representative device/browser, without numerical release thresholds;
 - screenshot/visual-regression fixtures for representative maps.
@@ -664,17 +661,19 @@ may proceed provisionally while its result is pending.
 
 ### 4.5 Session, response, and progress contract
 
-Expose one explicit, versioned session API rather than relying on ambiguous
-get-or-create behavior:
+Preserve and stabilize the session API used by the original mobile application:
 
-- `session.start({ fieldId, unitSetId, topologyVersion })` creates a new run or
-  returns the existing incomplete run according to the UnitSet-repeat policy;
-- `session.resume({ sessionId })` returns the owned authoritative state without
-  advancing it;
-- `session.advance({ sessionId, expectedUnitId, transitionId })` durably records
-  the guarded story/unit transition exactly once;
-- `session.restart({ unitSetId, transitionId })` deliberately starts a new
-  UnitSet performance after a prior completed performance.
+- `session.get({ unitSetId })` returns the learner's existing incomplete Session or creates the
+  Session needed to start the UnitSet;
+- `session.update({ sessionId })` advances only at the Unit boundary, selects the next ordered Unit,
+  or completes the UnitSet and updates Progress;
+- `session.restart({ sessionId })` deliberately restarts an eligible Session according to the
+  existing UnitSet-repeat behavior.
+
+The server does not record page transitions. Page position remains client state, and opening or
+resuming the active Unit starts at page index 0. Empty pages and pages whose item writes are pending
+do not require a server completion marker. Page navigation therefore needs no `expectedPage`,
+`pageId`, response-operation IDs, batch acknowledgement, or content snapshot/version guard.
 
 All methods derive `userId`, Dimension, Unit ordering, page count, item types,
 and canonical content relationships on the server. Exact success DTOs, stable
@@ -690,8 +689,8 @@ Progress and competency achievement are separate aggregates:
 - Unit maximum progress is `unit.pages.length`;
 - UnitSet maximum progress is the sum of its Unit page counts;
 - active UnitSet progress is the completed-page count represented by completed
-  Units; aborting may therefore leave partial UnitSet progress, and resume starts
-  after the last completed Unit;
+  Units; abandoning an in-progress Unit preserves prior completed Units but restarts the current
+  Unit at page index 0 on resume;
 - overall/milestone progress is the sum of effective UnitSet progress;
 - maximum achievable competencies is the count of scoring occurrences, not the
   count of unique competency ids;
@@ -703,11 +702,10 @@ Items have no immediate retry loop. A learner repeats the UnitSet instead. A
 new UnitSet performance supersedes the previous effective performance for
 responses, scoring-occurrence totals, and competency percentage—even when the
 new result is lower. It does not add a second copy to longitudinal aggregates.
-Already completed Units/pages remain completed for progress purposes; the
-restart/resume contract must define and test how an interrupted repeat continues
-without double-counting. Persist enough run identity/history for idempotency and
-audit as required, but expose exactly one effective performance per learner and
-UnitSet to Progress, Map, and Achievements.
+Already completed Units remain completed for progress purposes; an interrupted Unit is not partly
+durable and restarts at page index 0. Persist enough Session/performance identity to prevent a
+repeated Unit transition from double-counting, but expose exactly one effective performance per
+learner and UnitSet to Progress, Map, and Achievements.
 
 Phase 0 must publish a versioned response contract containing:
 
@@ -734,10 +732,11 @@ Define one canonical adapter between task renderers and scoring:
 4. The renderer displays item-level correct/incorrect/undefined feedback and
    reveals the correct answer, with optional sound, without exposing diagnostic
    competency details.
-5. Raw responses are submitted to the server; the server scores or verifies
-   them and persists a canonical response document.
-6. Page/session advancement occurs only after a successful durable server
-   submission; the migration does not provide an offline response outbox.
+5. Each item's raw response is submitted independently on blur; there is no page-level response
+   batch. The server scores or verifies it and persists a canonical response document.
+6. Submission state and errors remain visible and retryable, but neither evaluation nor page
+   navigation waits for proof that every item write succeeded. Only the Unit-boundary Session update
+   is authoritative for advancement to the next Unit or completion.
 
 Items cannot be retried immediately; repetition occurs at UnitSet scope under
 section 4.5. Submitting the current page for checking immediately displays its
@@ -787,15 +786,17 @@ Deliverables:
   behavior, empty-page behavior, and accessibility interactions.
 - Explicitly cover zero-, one-, and multi-item pages; new/resumed story state; field/stage/dimension/
   unit-set selection; completion/appraisal; and profile/achievement/account paths.
-- Inventory the two sync layers separately: content-service-to-backend import/remap and
-  backend-to-client reference caching. Inventory learner-data persistence as a third, independent
-  durability path.
+- Inventory configured content-service-to-backend import/remap, eager backend-to-client reference
+  loading into Minimongo, and learner-data persistence as three independent paths. Do not design
+  client sync hashes or version comparison.
 - Capture acceptance scenarios proving that an unsynchronized `lea.content` edit is invisible to
-  learners, an explicitly promoted snapshot becomes visible with matching derived map/achievement
-  data, and a failed import/remap retains the last known-good snapshot and versions.
-- Publish the versioned session/response contract from section 4.5, including
+  learners and that configured startup import/remap makes backend-local content and derived
+  map/achievement data available. Record failure behavior without asserting an atomic
+  cross-collection promotion guarantee.
+- Publish the session/response contract from section 4.5, including
   response-state truth table, subtype payload matrix, UnitSet replacement
-  semantics, progress formulas, success DTOs, and stable error codes.
+  semantics, Unit-boundary progress formulas, per-item blur submission, success DTOs, and stable
+  error codes. Explicitly record page navigation as client-owned and non-blocking.
 - Record answer reveal on page checking in the parity scenarios.
 - Record the first-release offline boundary as static application-shell/assets
   caching plus reconnect behavior only.
@@ -826,15 +827,16 @@ Deliverables:
 - Add contract tests for route argument construction, context method schemas,
   and representative shared-renderer payloads.
 - Produce a Meteor-capability audit for Accounts, Methods, validation, rate limiting, connection
-  state, pub/sub, Mongo indexes/atomicity, startup, autoupdate, and modules. Record the domain reason
+  state, pub/sub, Mongo indexes/atomicity, startup, and modules. Record the domain reason
   or missing capability for every retained custom mechanism.
 - Pin or document all directly used Atmosphere packages. Replace prerelease
   packages only where a compatible stable release is proven; do not combine a
   broad dependency upgrade with workflow changes.
 - Confirm the app stays on the Meteor bundler and retain nested-import support.
 - Establish integration fixtures for backend startup synchronization without changing its
-  operational activation: disabled sync retains the existing snapshot; enabled sync imports the
-  selected complete collections; failure does not publish a partial/mixed snapshot.
+  operational activation: disabled sync retains existing backend-local data; enabled sync imports
+  the selected complete collections and runs the existing remap sequence; failures are reported and
+  stop subsequent synchronization work.
 
 Gate (**automated + reviewer**): repeatable lint/test commands and a documented baseline with no unknown
 core-loop failures. The baseline must also demonstrate that normal learner content reads are served
@@ -846,9 +848,9 @@ Deliverables:
 
 - Define canonical `Session` and `Response` method DTOs and remove field-name
   drift (`unit` versus `unitId`, unit-set identifiers, score types).
-- Implement the explicit `start`, `resume`, `advance`, and `restart` session API
-  from section 4.5 with ownership, content-relationship validation, unrestricted
-  valid Stage access, and transition idempotency.
+- Stabilize the existing `get`, `update`, and `restart` session API from section 4.5 with ownership,
+  content-relationship validation, unrestricted valid Stage access, and idempotent Unit-boundary
+  updates. Do not add page-transition methods or guards.
 - Make response submission idempotent with a unique logical key such as
   `(userId, unitSetPerformanceId, unitId, page, itemId)` and a matching Mongo
   index; a repeated UnitSet creates the new superseding performance scope.
@@ -856,9 +858,9 @@ Deliverables:
   accepting a response.
 - Implement the framework-neutral response normalizer and canonical corelib
   scoring adapter here, then use it to score/verify responses server-side.
-- Implement page-based progress and scored-occurrence competency aggregation
-  exactly as specified in section 4.5; repeating a UnitSet replaces, never adds
-  to, its effective competency result.
+- Implement Unit-boundary progress and scored-occurrence competency aggregation exactly as
+  specified in section 4.5; repeating a UnitSet replaces, never adds to, its effective competency
+  result.
 - Make progress/session advancement atomic enough that retries cannot duplicate
   progress. If a Mongo transaction is not appropriate, use idempotent state
   transitions and guarded updates.
@@ -872,7 +874,8 @@ Deliverables:
   handling, and rollback.
 
 Gate (**automated + reviewer**): method integration tests prove cross-user isolation, validation,
-idempotent retry, correct scoring, and no advancement after rejected writes.
+idempotent response and Unit-transition retry, correct scoring, and the deliberate independence of
+page navigation from response acknowledgement.
 
 ### Phase 3: stabilize navigation, loading, and session recovery
 
@@ -881,7 +884,7 @@ Deliverables:
 - Define a single route parameter contract for overview -> map -> story -> unit
   -> completion and back/exit paths.
 - Extract a plain-JavaScript session transition function and test all states:
-  new session with/without story, resumed page, next unit, next unit set,
+  new session with/without story, resumed Unit at page index 0, next unit, next unit set,
   completed session, stale URL, deleted content, and signed-out user.
 - Model story, current Unit, next Unit, page, and completion explicitly. Do not reproduce the legacy
   local-session restoration bug or treat route/local-cache state as server authority.
@@ -900,10 +903,9 @@ stale deep-link tests all converge on the correct session state.
 
 Deliverables:
 
-- version and validate the server-generated map topology and make remap
-  replacement of the single per-field document atomic; do not retain historical
-  topology documents;
-- generate and promote topology only from the backend's imported production snapshot; never remap
+- validate the server-generated map topology and replace the single per-field document without
+  retaining historical topology documents or client sync hashes;
+- generate topology only from the backend's imported production content; never remap
   learner-visible topology from live/request-time content-service reads;
 - replace random/current card view ids with stable topology-derived entry ids;
 - implement and unit-test the immutable map view-model/layout adapter;
@@ -914,7 +916,7 @@ Deliverables:
 - implement completed/current/incomplete states with every valid Stage
   selectable and revisitable;
 - implement the active-incomplete then next-incomplete anchor rule and preserve
-  it after load, resize, progress refresh, reconnect, and topology update;
+  it after load, resize, progress refresh, reconnect, and topology reload;
 - add responsive, accessibility, observer-cleanup, representative Playwright
   screenshot, and production-sized smoke-performance coverage; record timings
   for regression visibility without introducing numerical release budgets in
@@ -943,8 +945,8 @@ Deliverables:
   behavior, and TTS.
 - Add accessible status text and live-region behavior in addition to color and
   sound. Respect reduced-motion and sound preferences.
-- Prevent navigation while evaluation/submission is unresolved; provide a clear
-  retry path on network or validation failure.
+- Submit every changed item independently on blur and expose pending/failure state with a clear
+  retry path. Do not block page navigation or wait for a page-level batch acknowledgement.
 - Keep competency identifiers and diagnostic grading out of immediate learner
   feedback unless explicitly approved.
 
@@ -980,14 +982,11 @@ Deliverables:
   behavior for lea.app.
 - Replace the inherited service-worker behavior with a versioned, tested cache
   policy for shell and immutable build assets.
-- Add an update-available flow so active learner work is not destroyed by an
-  uncontrolled service-worker activation. Integrate `autoupdate`/WebApp update notification with
-  service-worker activation instead of polling bundle versions separately.
 - Add online/reconnecting/offline UI driven primarily by reactive `Meteor.status()` and test
   `Meteor.reconnect()`/`DDP.onReconnect` plus SockJS/DDP cache exclusion explicitly.
 - Do not cache learning content or implement response outbox/replay. Link the
   deferred `offline-and-client-data-management.md` plan from release docs.
-- Test static-cache update behavior and app update during an active online unit.
+- Test static-cache installation and replacement behavior.
 
 Gate (**automated + reviewer**): installability and cache behavior pass browser audits and manual tests;
 no stale bundle or cross-account learner data survives the defined cleanup
@@ -1016,9 +1015,9 @@ Deliverables:
   backend endpoints. No concurrent mobile-backend compatibility period is required.
 - Update the root `README.md` and active development documentation so they
   describe the Meteor/Blaze PWA rather than the deprecated React Native client.
-- Document the production content-promotion runbook: enable selected startup sync, validate import
-  and derived read models, verify client-visible versions, disable sync, and recover to the last
-  known-good snapshot on failure.
+- Document the production content-synchronization runbook used by the mobile-era design: enable the
+  selected startup sync, verify imported backend-local content and derived read models, disable
+  sync, and diagnose/recover from reported import or remap failures.
 - Run a staged pilot before broad release.
 
 Gate (**automated + reviewer + product + operational**): all release criteria
@@ -1039,7 +1038,7 @@ Use the existing `meteortesting:mocha` setup and repository `test.sh`.
 - Contract tests: run the same item fixtures through client feedback scoring and
   server persistence scoring and require equivalent canonical scores.
 - Browser E2E: full learner journeys with real DDP, reload, connection loss,
-  reconnect, duplicate actions, and static service-worker updates using Playwright. Keep the
+  reconnect, duplicate actions, and static-cache behavior using Playwright. Keep the
   migration suite focused on critical workflows rather than exhaustive visual
   or renderer permutations.
 - Authentication E2E: anonymous code registration/login, same-browser resume,
@@ -1122,7 +1121,7 @@ The migration is complete when:
   https://release-3-4-0.docs-online.meteor.com/api/accounts
 - Pinned Meteor 3.4 API index (Methods, pub/sub, connections, Mongo, Tracker, validation, rate
   limiting, startup, EJSON): https://release-3-4-0.docs-online.meteor.com/api/
-- Pinned maintained-package index (`audit-argument-checks`, `autoupdate`, modules and related
+- Pinned maintained-package index (`audit-argument-checks`, modules and related
   packages): https://release-3-4-0.docs-online.meteor.com/api/#packages
 - Blaze template lifecycle: https://www.blazejs.org/api/templates.html
 - Blaze reusable components:
