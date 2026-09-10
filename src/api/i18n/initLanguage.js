@@ -3,6 +3,9 @@ import { Meteor } from 'meteor/meteor'
 
 const defaultLocale = Meteor.settings.public.defaultLocale
 
+// fallback handler until i18n is loaded
+Template.registerHelper('i18n', s => s)
+
 export const initLanguage = async (debug = () => {}) => {
   const I18N = (await import('meteor/ostrio:i18n')).default
   const { i18n } = await import('../../api/i18n/I18n')

@@ -6,7 +6,6 @@ import { removeUser } from './removeUser'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { createLog } from '../../infrastructure/log/createLog'
 import { safeWhileAsync } from '../../api/utils/safeWhile'
-import {createUser} from "./server/createUser";
 
 /**
  * Representation of users in the database.
