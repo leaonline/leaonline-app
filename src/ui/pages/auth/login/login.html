@@ -1,0 +1,47 @@
+<template name="login">
+    {{#AuthContainer}}
+        {{#onComplete complete=dependenciesComplete}}
+        <div class="card-body p-4 row row-gap-3">
+            {{#if currentLoginMethod}}
+                <div class="col-12 d-flex justify-content-between align-items-baseline py-3 my-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-baseline gap-2">
+                        {{> textGroup text=(i18n currentLoginMethod.label) }}
+                        {{> icon name=currentLoginMethod.icon}}
+                    </div>
+                    {{> actionButton type="secondary" label=(i18n "actions.back") icon="arrow-up" btnClass="reset-method-btn"}}
+                </div>
+            {{else}}
+                {{#each loginMethod in availableLogins}}
+                    <div class="col-12 col-lg-6">
+                        {{> actionButton
+                            class="w-100"
+                            block=true
+                            outline=true
+                            type=loginMethod.color
+                            tts=loginMethod.tts
+                            label=(i18n loginMethod.label)
+                            btnClass="lea-login-btn py-4"
+                            data-target=loginMethod.name
+                            iconPos=loginMethod.iconPos
+                            icon=loginMethod.icon
+                            data-name=loginMethod.name
+                            sndBtnClass="border-0"
+                        }}
+                    </div>
+                {{/each}}
+            {{/if}}
+            {{#if loadingLoginMethod}}
+                {{> loading }}
+            {{/if}}
+
+            {{#if currentLoginMethod}}
+                {{> Template.dynamic template=currentLoginMethod.template data=currentLoginData}}
+            {{/if}}
+
+            {{#if error}}
+                {{> errorMessage error=error}}
+            {{/if}}
+        </div>
+        {{/onComplete}}
+    {{/AuthContainer}}
+</template>

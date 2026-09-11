@@ -1,0 +1,11 @@
+<template name="errorMessage">
+    {{#if parsedError}}
+    <div class="alert alert-danger">
+        {{#if parsedError.reason}}
+            {{> textGroup text=(i18n parsedError.reason) type="danger"}}
+        {{else}}
+        {{> textGroup text=(i18n parsedError.message) type="danger"}}
+        {{/if}}
+    </div>
+    {{/if}}
+</template>

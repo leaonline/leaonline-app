@@ -37,6 +37,12 @@ Router.location = function (options = {}) {
   return FlowRouter.current().path
 }
 
+/**
+ *
+ * @param options {object=}
+ * @param options.reactive {boolean=}
+ * @return {*}
+ */
 Router.current = function (options = {}) {
   if (options.reactive) {
     FlowRouter.watchPathChange()

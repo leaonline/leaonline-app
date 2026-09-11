@@ -7,20 +7,9 @@
         <div class="w-100">
             <div class="container intro-video-container">
                 {{> image
-                        src=(fullUrl "/logo/welcome-1110x625.png")
-                        width=1110
-                        height=625
+                        src=(fullUrl "/logo/welcome-1110x409.png")
                         alt="image welcome"
-                        class="rounded lea-main-logo autoscale shadow"}}
-                {{!--
-                                    <div class="intro-video-container embed-responsive embed-responsive-16by9 mh-50 shadow shadow-sm">
-                                        <video controls preload="none"
-                                               class="embed-responsive-item" allowfullscreen>
-                                            <source src="{{video "welcome"}}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </div>
-                --}}
+                        class="rounded lea-main-logo shadow"}}
             </div>
         </div>
 
@@ -30,7 +19,6 @@
                 {{#container class="welcome-intro-container my-5"}}
                     <div class="card">
                         <div class="card-header beta-header border border-primary bg-white d-flex justify-content-between">
-                            {{> textGroup type=this.type text=(i18n "pages.welcome.beta.title")}}
                             {{#unless betaMessageOpen}}
                                 {{> actionButton
                                         btnClass="btn-primary bg-primary text-white"
@@ -57,31 +45,37 @@
             {{#container class="welcome-intro-container my-5"}}
                 {{#unless currentLogin}}
                 <div class="card bg-white lea-login-list-card">
-                    <div class="card-header bg-white">
+                    <div class="card-body bg-white">
                         {{#onComplete complete=dependenciesComplete}}
                             {{> textGroup text=(i18n "pages.welcome.introduction")}}
                         {{/onComplete}}
                     </div>
-                    {{#onComplete complete=dependenciesComplete}}
-                        <div class="card-body py-4 row row-gap-3">
-                            {{#each loginMethod in availableLogins}}
-                                <div class="col-12 col-lg-6">
-                                    {{> actionButton
-                                            class="w-100"
-                                            block=true
-                                            outline=true
-                                            type=loginMethod.color
-                                            tts=loginMethod.tts
-                                            label=(i18n loginMethod.label)
-                                            btnClass="lea-login-btn py-3"
-                                            data-target=loginMethod.name
-                                            icon=loginMethod.icon
-                                            sndBtnClass="border-0"
-                                    }}
-                                </div>
-                            {{/each}}
-                        </div>
-                    {{/onComplete}}
+
+                    <div class="card-body py-4 d-flex justify-content-center gap-4">
+                        {{#onComplete complete=dependenciesComplete}}
+                            {{> routeButton
+                                    href=(route "register")
+                                    block=true
+                                    lg=true
+                                    outline=true
+                                    type="primary"
+                                    label=(i18n "pages.welcome.iAmNew")
+                                    btnClass="py-4"
+                                    iconPos="right"
+                                    icon="rocket" }}
+
+                            {{> routeButton
+                                href=(route "login")
+                                block=true
+                                lg=true
+                                outline=true
+                                type="secondary"
+                                label=(i18n "pages.welcome.iCanLogin")
+                                btnClass="py-4"
+                                iconPos="right"
+                                icon="lock-open" }}
+                        {{/onComplete}}
+                    </div>
                 </div>
                 {{/unless}}
 

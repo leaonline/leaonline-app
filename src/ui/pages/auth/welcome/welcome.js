@@ -1,60 +1,11 @@
 import { Template } from 'meteor/templating'
-import { fadeOut } from '../../../utils/animationUtils'
-import { dataTarget } from '../../../utils/dataTarget'
-import { asyncTimeout } from '../../../utils/asyncTimeout'
-import '../../components/container/container'
+import { fadeOut } from '../../../../utils/animationUtils'
+import { dataTarget } from '../../../../utils/dataTarget'
+import { asyncTimeout } from '../../../../utils/asyncTimeout'
+import '../../../components/container/container'
 import './welcome.scss'
 import './welcome.html'
-import { fatal } from '../../components/fatal/fatal'
-import {translate} from "../../../api/i18n/translate";
-import {setQueryParam} from "../../routing/setQueryParam";
 
-let originalVideoHeight
-
-const Logins = {
-  new: {
-    name: 'new',
-    icon: 'rocket',
-    color: 'primary',
-      template: 'registerNewUser',
-      load: () => import('./logins/new/registerNewUser')
-  },
-
-   email: {
-   name: 'email',
-   icon: 'envelope',
-       template: 'loginWithEmail',
-       load: () => import('./logins/email/loginWithEmail')
-   },
-    /*
-   qrcode: {
-      name: 'qrcode'
-   },
-   apple: {
-   name: 'apple'
-   },
-   */
-  google: {
-    name: 'google',
-    icon: 'google',
-    action: (instance) => {
-      Meteor.loginWithGoogle(error => {
-        if (error) {
-          return fatal({ error })
-        }
-        instance.data.onSuccess()
-      })
-    }
-  },
-    /*
-  password: {
-    name: 'password',
-    icon: 'keyboard',
-    template: 'loginWithPassword',
-    load: () => import('./logins/password/loginWithPassword')
-  }
-     */
-}
 
 Template.welcome.onCreated(function () {
   const instance = this
@@ -73,23 +24,7 @@ Template.welcome.onCreated(function () {
       instance.state.set('dependenciesComplete', true)
     }
   })
-
-  instance.availableLogins = Object.values(Logins).map(entry => {
-    const label = `pages.welcome.logins.${entry.label ?? entry.name}`
-    const info = `pages.welcome.infos.${entry.info ?? entry.name}`
-    return {
-      ...entry,
-      label,
-      info,
-      tts: entry.tts ? `pages.welcome.logins.${entry.tts}` : label,
-      icon: entry.icon ?? entry.name,
-      color: entry.color ?? 'secondary',
-      template: entry.template ?? 'notFound'
-    }
-  })
-
-
-  instance.state.set('loadComplete', true)
+    instance.state.set('loadComplete', true)
 })
 
 Template.welcome.helpers({

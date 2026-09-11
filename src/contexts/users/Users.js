@@ -19,7 +19,8 @@ const Users = {
   name: 'users',
   label: 'users.title',
   icon: 'users',
-  representative: '_id'
+  representative: '_id',
+
 }
 
 const debug = createLog({ name: Users.name, type: 'debug' })
@@ -168,20 +169,10 @@ Users.methods.create = {
   name: 'users.methods.create',
   isPublic: true,
   schema: {
-    voice: {
-      type: String,
-      optional: true
-    },
-    speed: {
-      type: Number,
-      optional: true
-    },
     termsAndConditionsIsChecked: {
       type: Boolean,
-      optional: true
     },
     isDev: Users.schema.isDev,
-    device: Users.schema.device
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
@@ -202,8 +193,11 @@ Users.methods.create = {
       }
 
       const collection = getUsersCollection()
-      const { voice, speed, termsAndConditionsIsChecked, /* researchEmail, */ isDev, device } = options
+      const { termsAndConditionsIsChecked, isDev } = options
 
+        if (termsAndConditionsIsChecked !== true) {
+            throw new Meteor.Error(`createUser.error`, 'termsAndConditionsIsChecked.false')
+        }
       // since older app versions do not send this flag
       // we can't 100% require this to be present
       const terms = termsAndConditionsIsChecked ? new Date() : undefined
@@ -218,9 +212,10 @@ Users.methods.create = {
         }
       })
       const newUserId = await Accounts.createUserAsync({ username, password })
-      const updateDoc = { restore, voice, speed, terms, isDev, device }
+      const updateDoc = { restore, terms, isDev }
 
       await getUsersCollection().updateAsync(newUserId, { $set: updateDoc })
+        console.debug('create new user', username, restore)
 
       // validate the new account with the created credentials
       const credentials = { user: { username }, password }
@@ -228,7 +223,9 @@ Users.methods.create = {
 
       // finally, login this user as they should not need
       // to manually authenticate
-      return Accounts._loginUser(this, newUserId)
+      const loggedIn = await Accounts._loginUser(this, newUserId)
+      console.debug('loggedIn', loggedIn)
+        return loggedIn
     }
   })
 }

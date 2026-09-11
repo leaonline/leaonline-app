@@ -2,6 +2,8 @@
   "pages": {
     "welcome": {
       "title": "Willkommen bei lea.",
+      "iAmNew": "Ich bin neu hier",
+      "iCanLogin": "Ich habe einen Zugang",
       "introVideo": "Video mit Begrüßung",
       "playIntro": "Einführungsvideo abspielen",
       "loggedIn": "Du bist bereits angemeldet. Du kannst auf dieser Seite noch einmal die Einführung ansehen oder zur Übersicht zurückkehren.",

@@ -95,6 +95,10 @@ const toWelcome = createTrigger(loggedOut, () => Routes.welcome.path())
 const toOverview = createTrigger(loggedIn, () => Routes.overview)
 
 
+// ============================================================================
+// AUTHENTICATION WORKFLOW PAGES
+// ============================================================================
+
 /**
  * The starting page of the app
  */
@@ -107,19 +111,80 @@ Routes.welcome = {
   label: 'pages.welcome.title',
   triggersEnter: () => [toOverview],
   async load () {
-    return import('../pages/welcome/welcome')
+    return import('../pages/auth/welcome/welcome')
   },
   target: null,
   template: 'welcome',
   data: {
-    onSuccess () {
-      go(Routes.overview)
-    },
-    onFail () {
-
-    }
+    register: () => go(Routes.register),
+    login: () => go(Routes.login),
   }
 }
+
+/**
+ * Registering a new user
+ */
+Routes.register = {
+    path: () => {
+        return `${settings().register}`
+    },
+    label: 'pages.register.title',
+    triggersEnter: () => [toOverview],
+    async load () {
+        return import('../pages/auth/register/registerNewUser')
+    },
+    target: null,
+    template: 'registerNewUser',
+    data: {
+        success: () => go(Routes.overview),
+        restore: () => go(Routes.restore),
+        login: () => go(Routes.login),
+    }
+}
+
+/**
+ * Authenticate an existing user
+ */
+Routes.login = {
+    path: () => {
+        return `${settings().login}`
+    },
+    label: 'pages.login.title',
+    triggersEnter: () => [toOverview],
+    async load () {
+        return import('../pages/auth/login/login')
+    },
+    target: null,
+    template: 'login',
+    data: {
+        success: () => go(Routes.overview),
+        restore: () => go(Routes.restore),
+    }
+}
+
+/**
+ * Restore existing account
+ */
+Routes.restore = {
+    path: () => {
+        return `${settings().restore}`
+    },
+    label: 'pages.restore.title',
+    triggersEnter: () => [toOverview],
+    async load () {
+        return import('../pages/auth/restore/restore')
+    },
+    target: null,
+    template: 'restore',
+    data: {
+        success: () => go(Routes.overview),
+        login: () => go(Routes.login),
+    }
+}
+
+// ============================================================================
+// OVERVIEW / LANDING FOR AUTHENTICATED USERS
+// ============================================================================
 
 /**
  * Overview page to select dimension and level

@@ -3,6 +3,7 @@ import { createSchema } from './createSchema'
 import { createCollectionFactory } from 'meteor/leaonline:collection-factory'
 import { LocalCollections } from '../../api/collections/LocalCollections'
 import { createLog } from '../log/createLog'
+import {getCollection} from "../../api/utils/getCollection";
 
 const collectionFactory = createCollectionFactory({
   schemaFactory: createSchema
@@ -13,7 +14,7 @@ const log = createLog({ name: 'createCollection' })
 export const createCollection = ({ name, schema, isLocal }) => {
   log(name, { isLocal: !!isLocal })
 
-  if (isLocal) {
+  if (isLocal && !LocalCollections.has(name)) {
     const existingCollection = LocalCollections.get(name)
 
     if (existingCollection) {
@@ -33,5 +34,6 @@ export const createCollection = ({ name, schema, isLocal }) => {
     return collection
   }
 
-  return collectionFactory({ name, schema })
+  const exsistingCollection = getCollection(name)
+  return exsistingCollection ?? collectionFactory({ name, schema })
 }

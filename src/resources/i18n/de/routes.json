@@ -1,5 +1,8 @@
 {
   "welcome": "/willkommen",
+  "register": "/neu-registrieren",
+  "login": "/anmelden",
+  "restore": "/zugang-wiederherstellen",
   "notFound": "/seite-nicht-gefunden",
   "overview": "/auswahl-aufgaben",
   "story": "/einleitung",

@@ -1,12 +1,12 @@
 <template name="modal">
 	<div id="{{id}}"
-		 class="modal {{#unless nofade}}fade{{/unless}} blaze-bs4-modal {{class}}"
-		 role="dialog"
-		 tabindex="-1" aria-labelledby="{{id}}"
+		 class="modal {{#unless nofade}}fade{{/unless}} lea-modal {{class}}"
+		 tabindex="-1"
+         aria-labelledby="{{id}}"
 		 aria-hidden="true"
-		 data-backdrop="{{#if static}}static{{else}}none{{/if}}"
-		 data-keyboard="{{#if static}}true{{else}}false{{/if}}">
-		<div class="modal-dialog {{#if xlarge}}modal-xl{{else if large}}modal-lg{{else if small}}modal-sm{{/if}} {{#if centered}}modal-dialog-centered{{/if}}"
+		 data-bs-backdrop="{{#if static}}static{{else}}none{{/if}}"
+		 data-bs-keyboard="{{#if static}}true{{else}}false{{/if}}">
+		<div class="modal-dialog {{#if xl}}modal-xl{{else if lg}}modal-lg{{else if sm}}modal-sm{{/if}} {{#if centered}}modal-dialog-centered{{/if}}"
 			 role="document">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -23,9 +23,7 @@
 		{{/if}}
 
 		{{#if dismiss}}
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		{{/if}}
 	</div>
 </template>
