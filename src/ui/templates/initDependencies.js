@@ -42,6 +42,7 @@ Blaze.TemplateInstance.prototype.initDependencies =
     import { isDebugUser } from '../../api/accounts/isDebugUser'
     import { sendError } from '../../contexts/errors/api/sendError'
     import { callMethod } from '../../infrastructure/methods/callMethod'
+    import { showModal } from '../utils/showModal'
 
     const instance = this
     const allComplete = []
@@ -72,6 +73,7 @@ Blaze.TemplateInstance.prototype.initDependencies =
 
     Object.assign(instance.api, {
       queryParam: value => Router.queryParam(value),
+      showModal,
       callMethod,
       loadAllContentDocs,
       loadContentDoc,
