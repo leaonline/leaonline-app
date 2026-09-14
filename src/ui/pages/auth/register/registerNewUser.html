@@ -28,21 +28,37 @@
             {{> actionButton type="primary" label=(i18n "logins.new.account.register") btnClass="py-4 register-btn" block=true lg=true}}
         </div>
         {{/if}}
+    {{/if}}
 
-    {{/if}}
     {{#if accountStatus "creating"}}
-    <div class="card-body border border-primary rounded p-2 d-flex justify-content-start align-items-center gap-3">
-        {{> icon name="user" fw=true class="text-primary"}}
-        {{> textGroup text=(i18n "logins.new.account.creating") class="text-secondary"}}
-        {{> icon name="spinner" pulse=true fw=true class="ms-auto bg-primary rounded-pill px-1 text-white"}}
-    </div>
+        <div class="card-body py-4 row row-gap-3">
+            {{> textGroup text=(i18n createStatus.label) groupClass="text-secondary justify-content-center"}}
+            <div class="col text-center">
+                {{> icon name="spinner" fw=true class="text-primary fa-2x" pulse=true}}
+                {{#with createStatus.icon}}
+                    {{this}}
+                    <span>{{> icon name=this fw=true class="text-primary fa-2x"}}</span>
+                {{/with}}
+            </div>
+            <div class="progress" role="progressbar" aria-label="{{i18n 'auth.createProgress'}}" aria-valuenow="{{createProgress}}" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: {{createProgress}}%"></div>
+            </div>
+        </div>
     {{/if}}
-    {{#if accountStatus "created"}}
-    <div class="card-body border border-success rounded p-2 d-flex justify-content-start align-items-center gap-3">
-        {{> icon name="user" fw=true class="text-success"}}
-        {{> textGroup text=(i18n "logins.new.account.created") class="text-secondary"}}
-        {{> icon name="check" fw=true class="ms-auto bg-success rounded-pill px-1 text-white"}}
-    </div>
+    {{#if accountStatus "loggedIn"}}
+        <div class="card-body py-4 row row-gap-3">
+            {{> textGroup text=(i18n "logins.new.account.created") groupClass="text-secondary justify-content-center"}}
+            <div class="col text-center">
+                {{> icon name="check" fw=true class="text-success fa-2x"}}
+            </div>
+        </div>
+        <div class="card-body py-4 row row-gap-3">
+            {{#if restoreCode}}
+                <div class="text-center block lea-text-bold">
+                    {{restoreCode}}
+                </div>
+            {{/if}}
+        </div>
     {{/if}}
     {{/onComplete}}
     {{/AuthContainer}}

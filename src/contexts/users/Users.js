@@ -224,8 +224,10 @@ Users.methods.create = {
       // finally, login this user as they should not need
       // to manually authenticate
       const loggedIn = await Accounts._loginUser(this, newUserId)
-      console.debug('loggedIn', loggedIn)
-        return loggedIn
+
+      // this returns the _id, token, tokenExpires and restore codes
+      // which the client uses to further display
+      return { restore, ...loggedIn,}
     }
   })
 }
