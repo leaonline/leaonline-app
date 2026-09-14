@@ -1,4 +1,4 @@
-# lea.online App
+# lea.online Appcodex
 
 [![App](https://github.com/leaonline/leaonline-app/actions/workflows/app.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/app.yml)
 [![Backend](https://github.com/leaonline/leaonline-app/actions/workflows/backend.yml/badge.svg)](https://github.com/leaonline/leaonline-app/actions/workflows/backend.yml)

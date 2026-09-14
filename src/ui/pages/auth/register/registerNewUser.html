@@ -1,0 +1,84 @@
+<template name="registerNewUser">
+    {{#AuthContainer}}
+    {{#onComplete complete=loadComplete}}
+
+    {{#if accountStatus "decide"}}
+        {{> textGroup text=(i18n "logins.new.account.thanks") class="text-secondary"}}
+        {{> textGroup text=(i18n "logins.new.account.decide") class="text-secondary"}}
+
+        <div class="card-body py-4 row row-gap-3">
+            <div class="col text-center">
+                {{#if accepted "terms"}}
+                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.terms") btnClass="py-4 legal-modal-btn" data-type="terms" icon="check"}}
+                {{else}}
+                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.terms") btnClass="py-4 legal-modal-btn" data-type="terms"}}
+                {{/if}}
+            </div>
+            <div class="col text-center">
+                {{#if accepted "privacy"}}
+                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.privacy") btnClass="py-4 legal-modal-btn" data-type="privacy" icon="check"}}
+                {{else}}
+                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.privacy") btnClass="py-4 legal-modal-btn" data-type="privacy"}}
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if canRegister}}
+        <div class="card-body py-4 row row-gap-3">
+            {{> actionButton type="primary" label=(i18n "logins.new.account.register") btnClass="py-4 register-btn" block=true lg=true}}
+        </div>
+        {{/if}}
+    {{/if}}
+
+    {{#if accountStatus "creating"}}
+        <div class="card-body py-4 row row-gap-3">
+            {{> textGroup text=(i18n createStatus.label) groupClass="text-secondary justify-content-center"}}
+            <div class="col text-center">
+                {{> icon name="spinner" fw=true class="text-primary fa-2x" pulse=true}}
+                {{#with createStatus.icon}}
+                    {{this}}
+                    <span>{{> icon name=this fw=true class="text-primary fa-2x"}}</span>
+                {{/with}}
+            </div>
+            <div class="progress" role="progressbar" aria-label="{{i18n 'auth.createProgress'}}" aria-valuenow="{{createProgress}}" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: {{createProgress}}%"></div>
+            </div>
+        </div>
+    {{/if}}
+    {{#if accountStatus "loggedIn"}}
+        <div class="card-body py-4 row row-gap-3">
+            {{> textGroup text=(i18n "logins.new.account.created") groupClass="text-secondary justify-content-center"}}
+            <div class="col text-center">
+                {{> icon name="check" fw=true class="text-success fa-2x"}}
+            </div>
+        </div>
+        <div class="card-body py-4 row row-gap-3">
+            {{#if restoreCode}}
+                <div class="text-center block lea-text-bold">
+                    {{restoreCode}}
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
+    {{/onComplete}}
+    {{/AuthContainer}}
+
+    {{#modal id="legal-modal" xl=true static=true}}
+        {{> modalheader dismiss=true class="bg-primary text-white" title=(i18n legal.title)}}
+        {{#modalbody}}
+            {{#if legal}}
+                {{{legal.text}}}
+            {{else}}
+                {{> loading }}
+            {{/if}}
+        {{/modalbody}}
+        {{#modalfooter}}
+            {{#if legal}}
+            <div class="w-100 d-flex justify-content-between align-items-center">
+                {{> actionButton type="secondary" label=(i18n "actions.cancel") data-bs-dismiss="modal"}}
+                {{> actionButton type="primary" label=(i18n "logins.new.account.accept") btnClass="legal-accept-btn" data-type=legal.name }}
+            </div>
+            {{/if}}
+        {{/modalfooter}}
+    {{/modal}}
+</template>

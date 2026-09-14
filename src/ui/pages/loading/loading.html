@@ -1,0 +1,8 @@
+<template name="loading">
+	<h1 class="no-wrap w-100 text-center mt-5 loading-header text-primary">
+        {{#if loadComplete}}
+            {{> icon pulse=true name="spinner"}}
+        {{/if}}
+        {{#if title}}{{title}}{{/if}}
+	</h1>
+</template>

@@ -1,0 +1,42 @@
+<template name="loginWithEmail">
+    {{#onComplete complete=loadComplete}}
+        {{#if view "request"}}
+            <div class="w-100 text-center">
+                {{> textGroup type="primary" groupClass="justify-content-center" text=(i18n "logins.email.info")}}
+            </div>
+            <input id="request-input" type="email" class="form-control border-2 border-{{#if
+                    invalid}}danger{{else}}secondary{{/if}} my-4 py-4 text-center lea-text-bold pw-input" autofocus
+                   disabled="{{#if loading}}disabled{{/if}}"
+                   style="letter-spacing: 0.4rem; font-size: 200%;">
+
+            {{#if invalid}}
+                {{> textGroup type="danger" groupClass="justify-content-center" text=(i18n "logins.email.invalid.email")}}
+            {{/if}}
+
+            <div class="mt-4 row">
+                <div class="col-12 col-lg-6 mx-auto">
+                    {{> actionButton
+                            disabled=requestDisabled
+                            btnClass="request-btn w-100 py-3"
+                            label=(i18n "logins.email.request")
+                            icon="envelope"}}
+                </div>
+            </div>
+        {{/if}}
+
+        {{#if view "confirm"}}
+            <div class="w-100 text-center">
+                {{> textGroup type="primary" text=(i18n "logins.email.confirm")}}
+            </div>
+            <input type="email" class="form-control my-4 py-4 text-center lea-text-bold pw-input text-uppercase"
+                   autofocus
+                   style="letter-spacing: 0.4rem; font-size: 200%;">
+
+            <div class="mt-4 row">
+                <div class="col-12 col-lg-6 mx-auto">
+                    {{> actionButton btnClass="w-100 py-3" label=(i18n "logins.email.request") icon="envelope"}}
+                </div>
+            </div>
+        {{/if}}
+    {{/onComplete}}
+</template>

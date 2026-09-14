@@ -1,0 +1,114 @@
+<template name="footer">
+    <footer class="container-fluid w-100 mt-5 pb-3">
+        <nav class="navbar navbar-expand-lg bg-transparent bg-light">
+            <div class="container">
+                {{#if loadComplete}}
+                    <div class="row w-100">
+                        <div class="col col-12 d-flex flex-wrap align-items-start justify-content-around">
+                              {{#each legalRoute in legalRoutes}}
+                                {{#if loadComplete}}
+                                    {{#routeButton
+                                            tts=legalRoute.label
+                                            sm=true
+                                            outline=true
+                                            border=true
+                                            group=true
+                                            href=(route "legal" legalRoute.name)
+                                            label=(i18n legalRoute.label)
+                                            class="mb-2 no-wrap"
+                                            labelClass="lea-text-sm"
+                                            data-key=legalRoute.name}}
+                                    {{/routeButton}}
+                                {{else}}
+                                    <a href="{{route "legal" legalRoute.name}}"
+                                       class="mb-2 no-wrap">{{legalRoute.name}}</a>
+                                {{/if}}
+                            {{/each}}
+
+                            {{!-- ISSUES BUTTON --}}
+                            {{#if issuesLink}}
+                                {{#routeButton
+                                        tts="issues.title"
+                                        sm=true
+                                        outline=true
+                                        border=true
+                                        group=true
+                                        href=(issuesLink currentRouteName)
+                                        label=(i18n "issues.title")
+                                        class="mb-2 no-wrap"
+                                        labelClass="lea-text-sm"}}
+                                {{/routeButton}}
+                            {{/if}}
+
+                            {{!-- DEV Users --}}
+                            {{#unless isEnv "production"}}
+                              {{#if loadComplete}}
+                                {{#routeButton
+                                    tts=false
+                                    sm=true
+                                    type="secondary"
+                                    outline=true
+                                    border=true
+                                    group=true
+                                    href=(route "internal")
+                                    class="logout-button mb-2 no-wrap"}}
+                                  <span class="lea-text-sm">{{this.username}}</span>
+                                  <span class="lea-text-sm">{{i18n "internal.title"}}</span>
+                                  <i class="fa fas fa-fw fa-lock"></i>
+                                {{/routeButton}}
+                              {{/if}}
+                            {{/unless}}
+
+                            {{!-- LOGOUT BUTTON --}}
+                            {{#with currentUser}}
+                                {{#if loadComplete}}
+                                    {{#routeButton
+                                            tts="common.logout"
+                                            sm=true
+                                            type="primary"
+                                            outline=true
+                                            border=true
+                                            group=true
+                                            href=(route "logout")
+                                            class="logout-button mb-2 no-wrap"}}
+                                        <span class="lea-text-sm">{{this.username}}</span>
+                                        <span class="lea-text-sm">{{i18n
+                                                "common.logout"}}</span>
+                                        <i class="fa fas fa-fw fa-sign-out-alt"></i>
+                                    {{/routeButton}}
+                                {{else}}
+                                    <a href="{{route "logout"}}"
+                                       class="logout-button">
+                                        <i class="fa fas fa-fw fa-sign-out-alt"></i>
+                                        ...
+                                    </a>
+                                {{/if}}
+                            {{/with}}
+                        </div>
+                        <div class="col col-12 d-flex flex-wrap align-items-center justify-content-around">
+                            <a class="navbar-brand" href="/">
+                                {{> image src="/logo/logo-200x44.png"
+                                        alt="logo"
+                                        width=200
+                                        height=44
+                                        class="lea-footer-image d-md-block me-2"}}
+                            </a>
+                            {{#each logo in logos}}
+                                <a class="navbar-brand" href="{{logo.href}}"
+                                   target="_blank" rel="noopener noreferrer">
+                                    {{> image src=logo.url
+                                            title=logo.title
+                                            alt=logo.title
+                                            width=logo.width
+                                            height=logo.height
+                                            class="lea-footer-image me-auto"
+                                            cors="Anonymous"}}
+                                </a>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        </nav>
+    </footer>
+</template>

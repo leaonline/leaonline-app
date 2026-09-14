@@ -1,0 +1,9 @@
+{
+  "pages": {
+    "logout": {
+      "description": "Du bist nun abgemeldet und kannst das Fenster schließen.",
+      "toStart": "Zur Startseite",
+      "loggingOut": "Du wirst abgemeldet."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "logins": {
+    "new": {
+      "account": {
+        "register": "Jetzt registrieren",
+        "accept": "Ich akzeptiere",
+        "creating": "Dein Zugang wird angelegt",
+        "created": "Dein Zugang ist fertig",
+        "thanks": "Schön, dass du dich registrieren möchtest!",
+        "decide": "Bitte nimm dir kurz Zeit für die Nutzungsbedingungen und Datenschutz.",
+        "open": {
+          "terms": "Nutzungsbedingungen zeigen",
+          "privacy": "Datenschutzerklärung zeigen"
+        },
+        "accepted": {
+          "terms": "Nutzungsbedingungen akzeptiert",
+          "privacy": "Datenschutzerklärung akzeptiert"
+        },
+        "confirm": {
+          "terms": "Ich habe die Nutzungsbedingungen verstanden und stimme ihnen zu",
+          "privacy": "Ich habe die Datenschutzerklärung verstanden und stimme ihnen zu"
+        }
+      }
+    }
+  }
+}

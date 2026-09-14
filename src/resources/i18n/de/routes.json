@@ -1,0 +1,23 @@
+{
+  "welcome": "/willkommen",
+  "register": "/neu-registrieren",
+  "login": "/anmelden",
+  "restore": "/zugang-wiederherstellen",
+  "notFound": "/seite-nicht-gefunden",
+  "overview": "/auswahl-aufgaben",
+  "story": "/einleitung",
+  "unit": "/aufgabe",
+  "complete": "/ergebnisse",
+  "logout": "/abgemeldet",
+  "demo": "/demo",
+  "map": "/karte",
+  "legal": {
+    "title": "/rechtliches",
+    "imprint": "impressum",
+    "terms": "agb",
+    "privacy": "datenschutz",
+    "contact": "kontakt"
+  },
+  "diagnostics": "/browser-diagnose",
+  "internal": "/intern"
+}

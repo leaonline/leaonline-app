@@ -1,0 +1,43 @@
+{
+  "content": {
+    "notAvailable": "Inhalt sind zur Zeit nicht verfügbar. Bitte versuchen Sie es in Kürze erneut."
+  },
+  "actions": {
+    "print": "Ausdrucken",
+    "close": "Schließen",
+    "continue": "Fortsetzen",
+    "restart": "Neu starten",
+    "cancel": "Abbrechen",
+    "confirmCancel": "Möchtest du die Aufgaben wirklich abbrechen?",
+    "show": "Anzeigen",
+    "hide": "Verbergen"
+  },
+  "aria": {
+    "readText": "Text als Audio abspielen"
+  },
+  "navigation": {
+    "toOverview": "Zur Übersichtsseite"
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "back": "Zurück",
+    "forward": "Weiter",
+    "end": "Beenden",
+    "logout": "Abmelden",
+    "finish": "Weiter zur nächsten Aufgabe",
+    "toOverview": "Zur Übersicht",
+    "toWelcome": "Zur Startseite",
+    "help": "Hilfe",
+    "description": "Beschreibung",
+    "logo": "Lea Logo"
+  },
+  "task": {
+    "submit": "Überprüfen",
+    "explanation": "Erklärung"
+  },
+  "pages": {},
+  "users": {
+    "title": "User / TN"
+  }
+}

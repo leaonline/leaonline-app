@@ -1,0 +1,25 @@
+<template name="unit">
+    <div class="lea-unit-nav-container">
+        {{#onComplete complete=loadComplete}}
+            {{#container class="lea-unit-nav-container"}}
+                {{> navbar navbarData}}
+            {{/container}}
+        {{/onComplete}}
+    </div>
+
+    <div class="lea-unit-container mb-5">
+        {{#unless loadComplete}}
+            <div class="w-100 text-center text-primary">
+                {{> icon pulse=true name="spinner" class="fa-3x"}}
+            </div>
+        {{else}}
+            {{#container class="lea-unit-content-container h-auto"}}
+                {{#unless submitting}}
+                    {{> taskPageRenderer pageContentData}}
+                {{else}}
+                    {{> loading }}
+                {{/unless}}
+            {{/container}}
+        {{/unless}}
+    </div>
+</template>

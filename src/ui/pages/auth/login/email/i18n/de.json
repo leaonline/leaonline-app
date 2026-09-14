@@ -1,0 +1,14 @@
+{
+  "logins": {
+    "email": {
+      "info": "Bitte gib deine Email ein",
+      "request": "Zugang anfordern",
+      "invalid": {
+        "email": "Dies ist keine gültige Email",
+        "code": "Der Code ist nicht gültig"
+      },
+      "confirm": "Gib nun den Code aus der Email hier ein",
+      "code": "Mit Code anmelden"
+    }
+  }
+}
