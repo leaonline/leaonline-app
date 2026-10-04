@@ -117,7 +117,8 @@ const settingsSchema = schema({
       label: String,
       description: String,
       icon: String,
-      logLevel: String
+      logLevel: String,
+      storageKey: String
     }),
     tts: schema({
       url: String

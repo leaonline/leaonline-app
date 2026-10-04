@@ -9,16 +9,16 @@
         <div class="card-body py-4 row row-gap-3">
             <div class="col text-center">
                 {{#if accepted "terms"}}
-                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.terms") btnClass="py-4 legal-modal-btn" data-type="terms" icon="check"}}
+                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.terms") class="h-100" btnClass="h-100 py-4 legal-modal-btn" data-type="terms" icon="check"}}
                 {{else}}
-                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.terms") btnClass="py-4 legal-modal-btn" data-type="terms"}}
+                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.terms") class="h-100" btnClass="h-100 py-4 legal-modal-btn" data-type="terms"}}
                 {{/if}}
             </div>
             <div class="col text-center">
                 {{#if accepted "privacy"}}
-                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.privacy") btnClass="py-4 legal-modal-btn" data-type="privacy" icon="check"}}
+                    {{> actionButton type="success" block=true label=(i18n "logins.new.account.accepted.privacy")  class="h-100" btnClass="h-100 py-4 legal-modal-btn" data-type="privacy" icon="check"}}
                 {{else}}
-                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.privacy") btnClass="py-4 legal-modal-btn" data-type="privacy"}}
+                    {{> actionButton type="primary" block=true label=(i18n "logins.new.account.open.privacy") class="h-100" btnClass="h-100 py-4 legal-modal-btn" data-type="privacy"}}
                 {{/if}}
             </div>
         </div>
@@ -47,17 +47,17 @@
     {{/if}}
     {{#if accountStatus "loggedIn"}}
         <div class="card-body py-4 row row-gap-3">
-            {{> textGroup text=(i18n "logins.new.account.created") groupClass="text-secondary justify-content-center"}}
-            <div class="col text-center">
+            <div class="col-12 text-center">
                 {{> icon name="check" fw=true class="text-success fa-2x"}}
             </div>
-        </div>
-        <div class="card-body py-4 row row-gap-3">
-            {{#if restoreCode}}
-                <div class="text-center block lea-text-bold">
-                    {{restoreCode}}
-                </div>
-            {{/if}}
+            {{> textGroup text=(i18n "logins.new.account.created") groupClass="text-secondary justify-content-center"}}
+            <div class="col-12 col-lg-6 mx-auto text-center">
+                {{#actionButton type="primary" iconClass="fa-3x" icon="arrow-right" iconPos="right" btnClass="w-100 p-4" class="start-btn" }}
+                    <h1 class="lea-text-bold w-100 text-center">
+                        {{i18n "actions.startLearning"}}
+                    </h1>
+                {{/actionButton}}
+            </div>
         </div>
     {{/if}}
     {{/onComplete}}

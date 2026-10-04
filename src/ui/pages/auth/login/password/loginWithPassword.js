@@ -2,7 +2,6 @@ import {Meteor} from 'meteor/meteor'
 import {Template} from 'meteor/templating'
 import './loginWithPassword.html'
 
-
 Template.loginWithPassword.onRendered(function () {
     const instance = this
     instance.$('.pw-input').get(0).focus()
@@ -33,7 +32,7 @@ Template.loginWithPassword.events({
             templateInstance.state.set('loggingIn', false)
             if (err) {
                 if (err.message.includes('check your credentials')) {
-                    failure(new Meteor.Error('login.failed', 'loginWithPassword.badCredentials'))
+                    failure(new Meteor.Error('auth.logins.failed', 'auth.logins.password.badCredentials'))
                 } else {
                     failure(err)
                 }

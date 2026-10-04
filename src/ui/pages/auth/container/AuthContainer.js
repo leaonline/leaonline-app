@@ -1,5 +1,5 @@
-import './AuthContainer.html'
 import {isCurrentRoute} from "../../../routing/isCurrentRoute";
+import './AuthContainer.html'
 
 const authRoutes = [
     {
@@ -19,7 +19,26 @@ const authRoutes = [
     }
 ]
 
+Template.AuthContainer.onCreated(function () {
+    const instance = this
+    instance.initDependencies({
+        language: true,
+        tts: true,
+        translations: {
+            de: () => import('./i18n/de')
+        },
+        onComplete: async () => {
+            instance.state.set('dependenciesComplete', true)
+        },
+        onError: e => {
+            // instance.data.onFail()
+            instance.state.set('dependenciesComplete', true)
+        }
+    })
+})
+
 Template.AuthContainer.helpers({
+    dependenciesComplete: () => Template.getState('dependenciesComplete'),
     authRoutes: () => authRoutes,
     isCurrent: (name)  => isCurrentRoute(name, { reactive: true })
 })

@@ -3,7 +3,7 @@ import { Router } from '../../ui/routing/Router'
 
 const defaultTarget = 'main-render-target'
 
-Router.titlePrefix('otu.lea - ')
+Router.titlePrefix(Meteor.settings.public.app.name)
 Router.loadingTemplate('loading')
 
 const onError = error => {

@@ -144,14 +144,15 @@ function createRoute (routeDef, onError) {
       data.queryParams = queryParams
 
       const label = translate(routeDef.label)
-      document.title = `${_titlePrefix} ${label}`
 
       // in rare cases the label is not yet available, so we re-assign in .5sec
       if (label.includes('.')) {
         setTimeout(() => {
           const updatedLabel = translate(routeDef.label)
-          document.title = `${_titlePrefix} ${updatedLabel}`
+          document.title = `${updatedLabel} - ${_titlePrefix}`
         }, 500)
+      } else {
+        document.title = `${label} - ${_titlePrefix}`
       }
 
       try {

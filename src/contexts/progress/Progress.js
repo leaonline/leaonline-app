@@ -114,17 +114,16 @@ onServerExec(() => {
 
     if (!entryExist) {
       unitSetDoc.progress = progress
+    } else {
+      unitSetDoc.progress += progress
     }
 
     // if we found a unit set, then we only update the data at the given index
     // otherwise push a completely new entry to the unitSets list
-    const updateDoc = index > -1
+    const updateDoc = entryExist
       ? {
         $set: {
           [`unitSets.${index}`]: unitSetDoc
-        },
-        $inc: {
-          [`unitSets.${index}.progress`]: progress
         }
       }
       : {

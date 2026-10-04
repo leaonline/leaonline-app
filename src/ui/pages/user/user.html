@@ -1,0 +1,9 @@
+<template name="userProfile">
+    <div class="container">
+        {{#onComplete complete=dependenciesComplete}}
+            <h1>{{> textGroup text=(i18n "pages.user.title")}}</h1>
+        {{/onComplete}}
+
+        {{> switch class="toggle-btn" data-target="moo"}}
+    </div>
+</template>

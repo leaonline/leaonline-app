@@ -19,10 +19,7 @@ export const Response = {
 
 const log = createLog({ name: Response.name })
 
-/**
- * The database schema
- */
-Response.schema = {
+const baseSchema = {
   userId: String,
   sessionId: String,
   unitSetId: String,
@@ -38,7 +35,9 @@ Response.schema = {
   },
   'responses.$': {
     type: String
-  },
+  }
+}
+const scoresSchema = {
   scores: Array,
   'scores.$': Object,
   'scores.$.target': {
@@ -57,6 +56,14 @@ Response.schema = {
   'scores.$.value.$': {
     type: oneOf(String, Integer)
   }
+}
+
+/**
+ * The database schema
+ */
+Response.schema = {
+  ...baseSchema,
+  ...scoresSchema
 }
 
 /**
@@ -99,7 +106,7 @@ Response.countAccomplishedAnswers = async ({ userId, sessionId, unitId }) => {
  */
 Response.methods = {}
 
-const { timeStamp, userId, ...submitSchema } = Response.schema
+const { timeStamp, userId, ...submitSchema } = baseSchema
 
 /**
  * Inserts or updates a given user response in relation to the current session, unit and page.
@@ -108,45 +115,15 @@ Response.methods.submit = {
   name: 'response.methods.submit',
   schema: submitSchema,
   run: onServerExec(function () {
-    import { Progress } from '../progress/Progress'
-    import { Session } from '../session/Session'
-    import { Unit } from '../content/Unit'
+    import { submitResponse } from './submitResponse'
+    import { updateProgress } from './updateProgress'
+
     return async function (responseDoc) {
       const { userId } = this
-      responseDoc.timeStamp = new Date()
-      responseDoc.userId = userId
-
-      const modifier = { $set: responseDoc }
-      const selector = {
-        sessionId: responseDoc.sessionId,
-        unitId: responseDoc.unit,
-        page: responseDoc.page,
-        userId,
-      }
-
-      const updated = await getCollection(Response.name).upsertAsync(selector, modifier)
-
-      // optionally update progress
-      try {
-        const sessionDoc = await getCollection(Session.name).findOneAsync({ _id: responseDoc.sessionId, userId })
-        const unitDoc = await getCollection(Unit.name).findOneAsync({ _id: sessionDoc?.unit })
-        if (sessionDoc && unitDoc?.pages?.length) {
-          await Progress.update({
-            userId: userId,
-            unitSetId: sessionDoc.unitSet,
-            fieldId: sessionDoc.fieldId,
-            progress: unitDoc.pages.length,
-            dimensionId: sessionDoc.dimensionId,
-            competencies: sessionDoc.competencies,
-            complete: false
-          })
-        }
-      } catch (e) {
-        // log error
-        console.debug(e)
-      }
-
-      return updated
+      const { sessionId } = responseDoc
+      const submitted = await submitResponse({ userId, responseDoc })
+      const updated = await updateProgress({ userId, sessionId })
+      return { submitted, updated }
     }
   })
 }

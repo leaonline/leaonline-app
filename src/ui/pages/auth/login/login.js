@@ -3,18 +3,17 @@ import {dataTarget} from "../../../../utils/dataTarget";
 import '../container/AuthContainer'
 import '../../../components/error/errorMessage'
 import './login.html'
-import {errorToObject} from "../../../../utils/object/errorToObject";
 
 Template.login.onCreated(function () {
     const instance = this
     instance.availableLogins = Object.values(LoginMethods).map(entry => {
-        const label = `pages.login.logins.${entry.label ?? entry.name}`
-        const info = `pages.login.infos.${entry.info ?? entry.name}`
+        const label = `${entry.label ?? entry.name}`
+        const info = `${entry.info ?? entry.name}`
         return {
             ...entry,
             label,
             info,
-            tts: entry.tts ? `pages.login.logins.${entry.tts}` : label,
+            tts: entry.tts ? entry.tts : label,
             icon: entry.icon ?? entry.name,
             iconPos: 'right',
             color: entry.color ?? 'secondary',

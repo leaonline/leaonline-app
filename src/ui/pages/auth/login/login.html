@@ -4,11 +4,11 @@
         <div class="card-body p-4 row row-gap-3">
             {{#if currentLoginMethod}}
                 <div class="col-12 d-flex justify-content-between align-items-baseline py-3 my-3 border-bottom">
+                    {{> actionButton type="secondary" label=(i18n "actions.back") icon="arrow-left" btnClass="reset-method-btn"}}
                     <div class="d-flex justify-content-between align-items-baseline gap-2">
                         {{> textGroup text=(i18n currentLoginMethod.label) }}
                         {{> icon name=currentLoginMethod.icon}}
                     </div>
-                    {{> actionButton type="secondary" label=(i18n "actions.back") icon="arrow-up" btnClass="reset-method-btn"}}
                 </div>
             {{else}}
                 {{#each loginMethod in availableLogins}}
@@ -39,7 +39,9 @@
             {{/if}}
 
             {{#if error}}
+                <div class="col-12 col-lg-8 mx-auto">
                 {{> errorMessage error=error}}
+                </div>
             {{/if}}
         </div>
         {{/onComplete}}

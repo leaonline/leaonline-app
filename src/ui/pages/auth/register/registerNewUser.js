@@ -6,6 +6,7 @@ import '../../../components/modal/modal'
 import '../container/AuthContainer'
 import './registerNewUser.html'
 import {asyncTimeout} from "../../../../utils/asyncTimeout";
+import { AppStorage } from '../../../storage/AppStorage'
 
 Template.registerNewUser.onCreated(function () {
     const instance = this
@@ -46,19 +47,18 @@ Template.registerNewUser.onCreated(function () {
         instance.state.set({ accountStatus: 'creating', createStatus: { label: 'auth.create.user', icon: 'user' }, createProgress: 0 })
         await asyncTimeout(300)
         instance.state.set({ createProgress: 20 })
-
-        await asyncTimeout(1000)
-  //      const {token, restore} = await callMethod({
-  //          name: Users.methods.create,
-  //          args: {termsAndConditionsIsChecked: true}
-  //      })
-
-        instance.state.set({ createStatus: { label: 'auth.create.login', icon: 'lock-open' }, createProgress: 60 })
-        await asyncTimeout(1000)
+        await asyncTimeout(300)
+        const {token, restore} = await callMethod({
+          name: Users.methods.create,
+          args: {termsAndConditionsIsChecked: true}
+        })
+        AppStorage.set('restore', restore)
+        await asyncTimeout(300)
         instance.state.set({ createStatus: { label: 'auth.create.complete', icon: 'check' }, createProgress: 100 })
         await asyncTimeout(300)
-//        await loginWithToken(token)
-        instance.state.set({ accountStatus: 'loggedIn', restoreCode: '123-456-789' })
+        await loginWithToken(token)
+        await asyncTimeout(300)
+        onSuccess()
     }
 })
 

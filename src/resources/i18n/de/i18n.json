@@ -4,6 +4,8 @@
   },
   "actions": {
     "print": "Ausdrucken",
+    "back": "Zurück",
+    "forward": "Weiter",
     "close": "Schließen",
     "continue": "Fortsetzen",
     "restart": "Neu starten",

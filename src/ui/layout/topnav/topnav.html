@@ -1,0 +1,52 @@
+<template name="topnav">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{route 'root'}}">
+                <img src="/logo/logo192.png" width="32" alt="lea. Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <button type="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{#if theme "dark"}}
+                                {{> icon name="moon" fw=true}}
+                            {{else}}
+                                {{> icon name="sun" fw=true}}
+                            {{/if}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end px-1" data-bs-popper="static">
+                            <li>
+                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme "light"}}active{{/if}} theme-btn"
+                                        data-target="light"
+                                        aria-pressed="{{#if theme "light"}}true{{/if}}">
+                                    {{> icon name="sun" fw=true}}
+                                    {{> textGroup text=(i18n "theme.light")}}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme "dark"}}active{{/if}} theme-btn"
+                                        data-target="dark"
+                                        aria-pressed="{{#if theme "dark"}}true{{/if}}">
+                                    {{> icon name="moon" fw=true}}
+                                    {{> textGroup text=(i18n "theme.dark")}}
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {{#if isCurrentRoute 'user'}}active{{/if}}"
+                           aria-current="page" href="{{route 'user'}}">
+                            {{> icon name="user" fw=true}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</template>

@@ -11,6 +11,7 @@
   "logout": "/abgemeldet",
   "demo": "/demo",
   "map": "/karte",
+  "user": "/mein-bereich",
   "legal": {
     "title": "/rechtliches",
     "imprint": "impressum",

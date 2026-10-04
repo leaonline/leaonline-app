@@ -1,6 +1,7 @@
 import { createTrigger } from './triggers'
 import { loggedIn, loggedOut } from '../../utils/accountUtils'
 import { Env } from '../../infrastructure/env/Env'
+import { nonEmptyString } from '../../utils/string/nonEmptyString'
 
 export const Routes = {}
 
@@ -187,6 +188,20 @@ Routes.restore = {
 // ============================================================================
 
 /**
+ * User's account / profile page
+ */
+Routes.user = {
+  path: () => `${settings().user}`,
+  label: 'pages.user.title',
+  triggersEnter: () => [toWelcome],
+  async load () {
+    return import('../pages/user/user')
+  },
+  target: null,
+  template: 'userProfile'
+}
+
+/**
  * Overview page to select dimension and level
  */
 Routes.overview = {
@@ -220,7 +235,7 @@ Routes.overview = {
 Routes.map = {
   path: (fieldId = ':fieldId', unitSetId) => {
     const base = `${settings().map}/${fieldId}`
-    if (unitSetId) {
+    if (nonEmptyString(unitSetId)) {
       return `${base}?unitSet=${unitSetId}`
     }
     return base

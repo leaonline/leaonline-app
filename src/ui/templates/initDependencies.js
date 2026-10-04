@@ -1,5 +1,6 @@
 import { Blaze } from 'meteor/blaze'
 import { Meteor } from 'meteor/meteor'
+import { initClientContext } from '../../api/context/initClientContext'
 // if we use the autoload functionality we don't need to explicitly load basic
 // and generic (stateless) templates, since they are loaded at runtime using
 // dynamic imports.
@@ -101,7 +102,9 @@ Blaze.TemplateInstance.prototype.initDependencies =
     })
 
     // if any context is added we initialize it immediately sync-style
-    contexts.forEach(ctx => initClientContext(ctx))
+    for (const ctx of contexts) {
+      initClientContext(ctx)
+    }
 
     if (language) {
       allComplete.push(loadOnce(initLanguage, {

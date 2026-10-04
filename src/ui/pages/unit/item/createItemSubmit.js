@@ -20,8 +20,9 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
    * @param page {Number} the current page of this unit
    * @return {Promise} A promise that resolves, once all items been submitted
    */
-  return ({ sessionId, unitDoc, page, scores }) => {
+  return ({ sessionId, unitDoc, dimensionId, page, scores }) => {
     const unitId = unitDoc._id
+    const unitSetId = unitDoc.unitSet
     const allResponseDocs = []
 
     const contentPage = getProperty(unitDoc.pages || [], page)
@@ -34,9 +35,18 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
         // that is not flagged as item type
         if (entry.type !== 'item') return
         const { contentId } = entry
+        const itemType = entry.subType || entry.subtype
         const responseValue = loadValue({ sessionId, unitId, page, contentId })
         allResponseDocs.push({
-          sessionId, unitId, page, itemId: contentId, responses: (responseValue?.responses) || []
+          sessionId,
+          unitId,
+          unitSetId,
+          dimensionId,
+          page,
+          itemId: contentId,
+          itemType,
+          responses: (responseValue?.responses) || [],
+          scores
         })
       })
     }

@@ -1,4 +1,7 @@
 {
+  "actions": {
+    "startLearning": "Jetzt starten"
+  },
   "logins": {
     "new": {
       "account": {
@@ -21,6 +24,11 @@
           "privacy": "Ich habe die Datenschutzerklärung verstanden und stimme ihnen zu"
         }
       }
+    }
+  },
+  "pages": {
+    "register": {
+      "title": "Neu registrieren"
     }
   }
 }

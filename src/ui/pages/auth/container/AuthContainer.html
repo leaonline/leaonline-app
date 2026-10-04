@@ -4,19 +4,21 @@
             {{> Template.contentBlock }}
         </div>
         {{#unless currentUser}}
-        <div class="card-body my-4 py-4 gap-4 d-flex justify-content-center">
+            <div class="card-body my-4 py-4 gap-4 d-flex justify-content-center">
                 {{#each authRoute in authRoutes}}
                     {{#unless isCurrent authRoute.name}}
-                        {{> routeButton
-                            href=(route authRoute.name)
-                            type="secondary"
-                            label=(i18n authRoute.label)
-                            outline=true sm=true
-                            iconPos="right"
-                            icon=authRoute.icon}}
-                        {{/unless}}
-                    {{/each}}
-        </div>
+                        {{#onComplete complete=dependenciesComplete}}
+                            {{> routeButton
+                                    href=(route authRoute.name)
+                                    type="secondary"
+                                    label=(i18n authRoute.label)
+                                    outline=true sm=true
+                                    iconPos="right"
+                                    icon=authRoute.icon}}
+                        {{/onComplete}}
+                    {{/unless}}
+                {{/each}}
+            </div>
         {{/unless}}
     </div>
 </template>

@@ -19,6 +19,7 @@ import '../../layout/navbar/navbar'
 // import '../../templates/initMarkdownRenderer'
 import './unit.html'
 import { EJSON } from 'meteor/ejson'
+import { setQueryParam } from '../../routing/setQueryParam'
 
 Scoring.init()
 const renderersLoaded = initTaskRenderers()
@@ -165,7 +166,6 @@ Template.unit.onCreated(function () {
       // filter out entries from other pages
       return value.page == currentPage
     }).map(([key, value]) => {
-      debugger
       const itemId = value.contentId
       const data = { ...value, itemId, unitId: unitDoc._id }
       const itemDefinitions = Unit.getContentElement({
@@ -299,9 +299,11 @@ Template.unit.events({
     const unitDoc = templateInstance.state.get('unitDoc')
     const unitId = unitDoc._id
     const page = templateInstance.state.get('currentPageCount')
-
+    const dimensionDoc = templateInstance.state.get('dimensionDoc')
+    const dimensionId = dimensionDoc._id
+    const scores = templateInstance.state.get('scores')
     try {
-      await submitItems({ sessionId, unitDoc, page })
+      await submitItems({ sessionId, dimensionId, unitDoc, page, scores })
     }
     catch (e) {
       console.error(e)
@@ -352,6 +354,8 @@ function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
   const unitDoc = templateInstance.state.get('unitDoc')
   const unitId = unitDoc._id
   const sessionDoc = templateInstance.state.get('sessionDoc')
+  const dimensionDoc = templateInstance.state.get('dimensionDoc')
+  const dimensionId = dimensionDoc._id
   const sessionId = sessionDoc._id
   const currentPageCount = templateInstance.state.get('currentPageCount')
 
@@ -364,7 +368,7 @@ function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
   }
 
   setTimeout(() => {
-    submitItems({ sessionId, unitDoc, page: currentPageCount })
+    submitItems({ sessionId, dimensionId, unitDoc, page: currentPageCount })
       .catch(e => {
         console.error(e)
         onComplete()

@@ -36,6 +36,11 @@ RouteHelpers.isDemoUser = (userObj) => {
 }
 RouteHelpers.isEnv = env => Env.get() === env
 
+RouteHelpers.isCurrentRoute = (name) => {
+  const current = Router.current({ reactive: true })
+  return name && name === current?.route?.name
+}
+
 const helpers = Object.entries(RouteHelpers)
 for (const [name, method] of helpers) {
   Template.registerHelper(name, method)

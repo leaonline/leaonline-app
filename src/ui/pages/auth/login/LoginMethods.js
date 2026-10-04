@@ -3,6 +3,7 @@ export const LoginMethods = {
         name: 'password',
         icon: 'keyboard',
         color: 'info',
+        label: 'auth.logins.password.title',
         template: 'loginWithPassword',
         load: () => import('./password/loginWithPassword')
     },

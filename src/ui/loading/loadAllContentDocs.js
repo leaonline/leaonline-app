@@ -13,7 +13,6 @@ import { getLocalCollection } from '../../api/utils/getLocalCollection'
  * @return {Promise}
  */
 export const loadAllContentDocs = async ({ context, collection, ids,  name, params = {}, unlessExists, debug = () => {} }) => {
-  debugger
   debug('loadAllContentDocs (call)')
   if (!context) {
     throw new Error('Context is expected')

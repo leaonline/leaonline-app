@@ -6,20 +6,21 @@
         --}}
 
         {{#container class="overview-dimensions-container my-4"}}
-            {{#if loadComplete}}
+            {{#if dependenciesComplete}}
                 <div class="card bg-white">
-                    <div class="card-header">
+                    <div class="card-body">
                         {{> textGroup text=(i18n "pages.overview.chooseDimension")}}
                     </div>
                     <div class="card-body row">
                         {{#each field in fields}}
                             <div class="col col-12 col-lg-6 my-3">
-                            {{> actionButton
-                                    type="primary"
-                                    label=field.title
-                                    icon=field.icon
-                                    btnClass="w-100 field-btn py-2 py-lg-5"
-                                data-target=field._id
+                            {{> routeButton
+                                type="primary"
+                                label=field.title
+                                icon=field.icon
+                                iconClass="fa-2x"
+                                btnClass="w-100 field-btn py-2 py-lg-5"
+                                href=(route "map" field._id)
                             }}
                             </div>
                         {{/each}}
@@ -32,7 +33,7 @@
 
       {{else}}
         {{#container class="overview-dimensions-container my-4"}}
-          {{#if loadComplete}}
+          {{#if dependenciesComplete}}
           <div class="card">
             <div class="card-body">
               {{> textGroup text=(i18n error.message) type="danger"}}
