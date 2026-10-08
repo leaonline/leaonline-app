@@ -89,7 +89,8 @@
       "label": "apps.otulea.title",
       "description": "apps.otulea.description",
       "icon": "edit",
-      "logLevel": "info"
+      "logLevel": "info",
+      "storageKey": "__lea.app__"
     },
     "tts": {
       "url": "http://localhost:3030/tts"

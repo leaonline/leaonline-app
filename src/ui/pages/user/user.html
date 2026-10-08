@@ -4,6 +4,17 @@
             <h1>{{> textGroup text=(i18n "pages.user.title")}}</h1>
         {{/onComplete}}
 
-        {{> switch class="toggle-btn" data-target="moo"}}
+        {{#each view in views}}
+            {{> routeButton
+                label=(i18n view.label)
+                icon=view.icon
+                iconPos="right"
+                class="w-100 my-2 py-2"
+                type="primary"
+                href=view.href
+                btnClass="btn-outline-primary w-100 py-2"
+            }}
+        {{/each}}
+
     </div>
 </template>

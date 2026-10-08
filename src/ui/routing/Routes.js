@@ -201,6 +201,17 @@ Routes.user = {
   template: 'userProfile'
 }
 
+Routes.secureAccount = {
+    path: () => `${settings().secureAccount}`,
+    label: 'pages.secureAccount.title',
+    triggersEnter: () => [toWelcome],
+    async load () {
+        return import('../pages/secure/secureAccount/secureAccount')
+    },
+    target: null,
+    template: 'secureAccount'
+}
+
 /**
  * Overview page to select dimension and level
  */

@@ -10,5 +10,6 @@ AppStorage.set = (key, value) => {
 
 AppStorage.get = (key) => {
   const fullKey = `${storageKey}/${key}`
-  return storage.getItem(fullKey)
+  const value = storage.getItem(fullKey)
+  return JSON.parse(value)
 }

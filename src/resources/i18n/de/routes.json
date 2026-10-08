@@ -12,6 +12,7 @@
   "demo": "/demo",
   "map": "/karte",
   "user": "/mein-bereich",
+  "secureAccount": "/zugang-sichern",
   "legal": {
     "title": "/rechtliches",
     "imprint": "impressum",
