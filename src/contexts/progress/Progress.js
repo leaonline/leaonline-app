@@ -76,7 +76,15 @@ Progress.schema = {
     type: Boolean,
     optional: true,
     defaultValue: false
-  }
+  },
+  'unitSets.$.updatedAt': {
+    type: Date,
+    optional: true
+  },
+  'unitSets.$.completedAt': {
+    type: Date,
+    optional: true
+  },
 }
 
 onServerExec(() => {
