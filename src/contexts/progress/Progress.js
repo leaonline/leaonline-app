@@ -59,19 +59,22 @@ Progress.schema = {
   },
   'unitSets.$.progress': {
     type: Number,
+    optional: true,
     defaultValue: 0
   },
   'unitSets.$.dimensionId': {
     type: String,
+    optional: true,
     defaultValue: 0
-
   },
   'unitSets.$.competencies': {
     type: Number,
+    optional: true,
     defaultValue: 0
   },
   'unitSets.$.complete': {
     type: Boolean,
+    optional: true,
     defaultValue: false
   }
 }

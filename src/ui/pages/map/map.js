@@ -18,6 +18,7 @@ import '../../components/decision/decision'
 import './map.html'
 
 createTemplate({
+  debug: console.debug,
   template: Template.map,
   contexts: [Field, MapData, Dimension, Level, Progress],
   language: true,
@@ -25,36 +26,48 @@ createTemplate({
   translations: {
     de: () => import('./i18n/de')
   },
-  onDependenciesComplete: async ({ instance }) => {
+  onDependenciesComplete: async ({ instance, debug }) => {
     const { fieldId } = instance.data.params
 
     await loadContentDoc({
       context: Field,
       query: { _id: fieldId },
-      unlessExists: true
+      unlessExists: true,
+      debug
     })
     const { _id, field, ...mapData } = await loadContentDoc({
       context: MapData,
       query: { field: fieldId },
-      unlessExists: true
+      unlessExists: true,
+      debug
     })
     const dimensionIds = mapData.dimensions.map(d => d._id)
     await loadAllContentDocs({
       context: Dimension,
       query: { ids: dimensionIds },
-      unlessExists: true
+      unlessExists: true,
+      debug
     })
 
     await loadAllContentDocs({
       context: Level,
       query: { ids: mapData.levels },
-      unlessExists: true
+      debug
     })
 
     // while rendering the map we fetch the progress
     const progressDoc = await loadContentDoc({
       context: Progress,
-      query: { fieldId }
+      query: { fieldId },
+      clean: doc => {
+        doc.unitSets = doc.unitSets ?? []
+        doc.unitSets.forEach(entry => {
+          if (Number.isNaN(entry.progress)) entry.progress = 0
+          if (Number.isNaN(entry.competencies)) entry.competencies = 0
+        })
+        return doc
+      },
+      debug
     })
 
 
