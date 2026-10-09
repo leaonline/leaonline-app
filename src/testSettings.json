@@ -1,0 +1,123 @@
+{
+  "packages": {
+    "service-configuration": {
+      "google": {
+        "clientId": "moo",
+        "secret": "01234567890"
+      }
+    }
+  },
+  "app": {
+    "name": "lea.App-Backend",
+    "token": "01234567890123456789012345678901"
+  },
+  "defaultLang": "de",
+  "isStaging": true,
+  "oauth": {
+    "clientId": "Lb5soRv7RH2g8inRc",
+    "secret": "Y4yNeHM3bniSogeWacRcYZ3S5yz3TCuW",
+    "dialogUrl": "http://localhost:9090/oauth/authorize",
+    "accessTokenUrl": "http://localhost:9090/oauth/token",
+    "authorizeUrl": "http://localhost:9090/oauth/authorize",
+    "identityUrl": "http://localhost:9090/oauth/ident",
+    "redirectUrl": "http://localhost:8080/_oauth/lea"
+  },
+  "useFixtures": true,
+  "remotes": {
+    "content": {
+      "url": "localhost:3030",
+      "jwt": {
+        "key": "0123456789001234567890",
+        "sub": "app-backend-01234567890"
+      },
+      "sync": {
+        "field": true,
+        "unit": true,
+        "unitSet": true,
+        "dimension": true,
+        "level": true,
+        "testCycle": true,
+        "mapIcons": true,
+        "feedback": true,
+        "order":true,
+        "legal":true,
+        "achievements":true
+      },
+      "remap": {
+        "active": true,
+        "dryRun": false,
+        "dimensions": {
+          "order": ["W", "R", "M", "S"]
+        }
+      }
+    }
+  },
+  "restore": {
+    "codes": {
+      "numberOfCodes": 3,
+      "length": 4,
+      "uppercase": true,
+      "forbidden": {
+        "source": "[0oq17ij5s]+",
+        "flags": "gi"
+      },
+      "maxRetries": 50
+    }
+  },
+  "crypto": {
+    "key": "12345678901234567890123456789012",
+    "algorithm": "aes-256-cbc",
+    "outputFormat": "hex"
+  },
+  "log": {
+    "level": 0
+  },
+  "email": {
+    "notify": ["admin@example.com"],
+    "replyTo": "noreply@example.com",
+    "from": "system@example.com"
+  },
+  "public": {
+    "env": "dev",
+    "defaultLocale": "de",
+    "issueMail": "mail@example.com",
+    "status": "testing",
+    "accounts": {
+      "code": {
+        "length": 5
+      }
+    },
+    "packages": {
+      "dynamic-import": {
+        "useLocationOrigin": true
+      }
+    },
+    "app": {
+      "name": "lea. App",
+      "label": "app.title",
+      "description": "app.description",
+      "icon": "edit",
+      "logLevel": "info",
+      "storageKey": "__lea.app__"
+    },
+    "tts": {
+      "url": "http://localhost:3030/tts"
+    },
+    "hosts": {
+      "content": {
+        "base": "http://localhost:3030",
+        "tts": "/tts",
+        "competency": "/competencies",
+        "url": "http://localhost:3030"
+      },
+      "sessions": {
+        "url": "http://localhost:6060",
+        "evalUrl": "http://localhost:6060/eval",
+        "responseUrl": "http://localhost:6060/response"
+      }
+    },
+    "error": {
+      "maxStackSize": 1500
+    }
+  }
+}

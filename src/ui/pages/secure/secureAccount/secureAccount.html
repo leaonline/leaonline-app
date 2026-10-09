@@ -1,0 +1,14 @@
+<template name="secureAccount">
+    {{#onComplete complete=dependenciesComplete}}
+    <h2 class="border-bottom d-flex justify-content-between align-items-center">
+        {{> textGroup text=(i18n "pages.secureAccount.title")}}
+        <span class="p-3 rounded border border-primary text-primary">
+                    {{> icon name="shield" fw=true}}
+                </span>
+    </h2>
+    {{/onComplete}}
+
+    {{#if restoreCode}}
+        {{restoreCode}}
+    {{/if}}
+</template>

@@ -1,0 +1,40 @@
+<template name="fatal">
+    <div class="modal" id="fatal-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {{#if loadComplete}}
+                    <div class="modal-header">
+                    {{> textGroup text=(i18n "fatal.title")}}
+                    </div>
+                {{/if}}
+                <div class="modal-body">
+                    <img src="/sorry.png" width="910" height="512"
+                         class="img-fluid"/>
+                </div>
+                {{#each error in errors}}
+                    <div class="modal-body lea-text">
+                        {{#if loadComplete}}
+                            {{> textGroup text=(i18n error.message)}}
+                        {{else}}
+                            {{error.message}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+                {{#if loadComplete}}
+                    <div class="modal-body">
+                    {{> textGroup text=(i18n "fatal.informed")}}
+                    </div>
+                {{/if}}
+                <div class="modal-footer">
+                    <button class="btn w-100 btn-primary" data-bs-dismiss="modal">
+                        {{#if loadComplete}}
+                            {{i18n "actions.ok"}}
+                        {{else}}
+                            Ok
+                        {{/if}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

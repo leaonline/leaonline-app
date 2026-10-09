@@ -1,0 +1,23 @@
+<template name="decision">
+    <div class="modal" id="decision-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {{> textGroup type=type text=(i18n title)}}
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    {{#each option in options}}
+                        {{> actionButton
+                                outline=true
+                                type=option.type
+                                iconPos=option.iconPos
+                                icon=option.icon
+                                btnClass="decision-button"
+                                label=(i18n option.label)
+                                data-target=option.value}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

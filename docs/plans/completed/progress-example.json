@@ -1,0 +1,37 @@
+{
+  "_id" : "3SMRg2j4F8STQGCJ5",
+  "userId" : "MzBxNCAk49JZnTmp3",
+  "fieldId" : "W2zjTv7icffNaKMhR",
+  "unitSets" : [
+    {
+      "_id" : "voJPD3LHWk26veKyn",
+      "progress" : 5,
+      "competencies" : 5,
+      "complete" : true
+    },
+    {
+      "_id" : "pAkQLcMhTHGDp2PL3",
+      "progress" : 9,
+      "competencies" : 7,
+      "complete" : true
+    },
+    {
+      "_id" : "Grm3s8pDjwX7sJZQM",
+      "progress" : 11,
+      "competencies" : 10,
+      "complete" : true
+    },
+    {
+      "_id" : "xbDiZ2Ag4RfyDRYL6",
+      "progress" : 3,
+      "competencies" : 29,
+      "complete" : true
+    },
+    {
+      "_id" : "j2P9TRsZpyRqjh9fj",
+      "progress" : 0,
+      "competencies" : 0,
+      "complete" : false
+    }
+  ]
+}

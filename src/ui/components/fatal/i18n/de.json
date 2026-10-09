@@ -1,0 +1,16 @@
+{
+  "fatal": {
+    "title": "Es sind folgende Fehler aufgetreten",
+    "informed": "Das otu.lea Team wurde automatisch über den Fehler informiert und arbeitet an einer Lösung."
+  },
+  "actions": {
+    "ok": "Ok"
+  },
+  "tts": {
+    "failed": "Dein Browser unterstützt leider keine Sprachausgabe. Bitte versuche deinen Browser zu aktualisieren oder installiere einen modernen Browser wie z.B. Firefox, Chrome oder Edge mit Unterstützung für Sprachausgabe."
+  },
+  "unknown": "Der Fehler ist uns unbekannt, wir arbeiten aber daran dieses Problem zu beheben.",
+  "content": {
+    "notAvailable": "Es sind zur Zeit keine Inhalte erreichbar, bitte Laden Sie die Seite neu oder versuchen Sie es in wenigen Minuten erneut."
+  }
+}

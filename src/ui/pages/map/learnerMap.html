@@ -1,0 +1,64 @@
+<template name="learnerMap">
+    <div class="learner-map-scene">
+        <svg class="learner-map-svg" viewBox="0 0 {{scene.width}} {{scene.height}}" style="height: {{scene.height}}px" role="group" aria-label="{{i18n 'map.journey'}}">
+            <g aria-hidden="true" class="map-connectors">
+                {{#each connector in scene.connectors}}<path d="{{connector.path}}"></path>{{/each}}
+            </g>
+            {{#each entry in scene.entries}}
+                {{#if entry.isStage}}
+                    {{> mapStage entry=entry currentId=currentId selectedId=selectedId scope=scope}}
+                {{else}}
+                    {{#if isMilestone entry}}
+                        {{> mapMilestone entry=entry}}
+                    {{else}}
+                        <g transform="translate({{entry.x}} {{entry.y}})" class="map-{{entry.type}}">
+                            {{#if isFinish entry}}
+                                <polygon points="0,-30 9,-10 31,-8 15,7 19,29 0,18 -19,29 -15,7 -31,-8 -9,-10" class="map-finish-star"></polygon>
+                                <text y="55" text-anchor="middle">{{i18n 'map.finish'}}</text>
+                            {{else}}
+                                <circle r="22" class="map-start-dot"></circle>
+                                <text y="50" text-anchor="middle">{{i18n 'map.start'}}</text>
+                            {{/if}}
+                        </g>
+                    {{/if}}
+                {{/if}}
+            {{/each}}
+        </svg>
+        <div class="map-decorations" aria-hidden="true">
+            {{#each decoration in decorations}}
+                <div class="map-decoration" style="left: {{decoration.x}}px; top: {{decoration.y}}px">{{> icon name=decoration.icon}}</div>
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="mapStage">
+    <g class="map-stage {{stageClass}}" transform="translate({{entry.x}} {{entry.y}})" role="button" tabindex="0" data-stage="{{entry.id}}" aria-label="{{description}}" aria-haspopup="dialog" aria-expanded="{{selected}}" aria-current="{{current}}">
+        <circle r="39" class="map-stage-focus"></circle>
+        <circle r="34" class="map-stage-body"></circle>
+        <circle r="36" class="map-stage-ring-track"></circle>
+        <circle r="36" class="map-stage-ring" pathLength="100" stroke-dasharray="{{ring}} 100" transform="rotate(-90)"></circle>
+        <text text-anchor="middle" dominant-baseline="central" class="map-stage-number">{{entry.number}}</text>
+        {{#each choice in entry.choices}}
+            <g class="map-diamond text-{{choice.dimension.color}}" transform="translate({{choice.dx}} {{choice.dy}})" aria-hidden="true">
+                <defs><clipPath id="{{clipId choice}}"><polygon points="0,-11 10,0 0,11 -10,0"></polygon></clipPath></defs>
+                <polygon class="map-diamond-empty" points="0,-11 10,0 0,11 -10,0"></polygon>
+                <rect x="-10" y="{{fillY choice}}" width="20" height="{{fillHeight choice}}" clip-path="url(#{{clipId choice}})" fill="currentColor"></rect>
+                <polygon fill="none" stroke="currentColor" points="0,-11 10,0 0,11 -10,0"></polygon>
+            </g>
+        {{/each}}
+    </g>
+</template>
+
+<template name="mapMilestone">
+    <g class="map-milestone" transform="translate({{entry.x}} {{entry.y}})" role="img" aria-label="{{entry.level.title}}">
+        <polygon points="0,-48 -31,0 0,48" fill="#86c4f1"></polygon>
+        <polygon points="0,-48 31,0 0,0" fill="#ffc800"></polygon>
+        <polygon points="-31,0 0,48 0,0" fill="#00ddb6"></polygon>
+        <polygon points="0,0 0,48 31,0" fill="#e3adbc"></polygon>
+        <polygon points="0,-48 31,0 0,48 -31,0" fill="none" stroke="#183b5e" stroke-width="3"></polygon>
+        <path d="M -34,0 Q 0,-4 34,0" stroke="#183b5e" stroke-width="17" fill="none"></path>
+        {{#each star in stars}}<polygon transform="translate({{star.x}} 0)" points="0,-5 1.5,-1.5 5,-1 2.5,1 3,5 0,3 -3,5 -2.5,1 -5,-1 -1.5,-1.5" fill="white"></polygon>{{/each}}
+        <text y="70" text-anchor="middle">{{entry.level.title}}</text>
+    </g>
+</template>

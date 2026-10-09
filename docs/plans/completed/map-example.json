@@ -1,0 +1,1102 @@
+{
+  "_id" : "8Zs4d3bpmx3AyjquQ",
+  "field" : "W2zjTv7icffNaKMhR",
+  "dimensions" : [
+    {
+      "_id" : "WgnDptyvdCbdSgeBC",
+      "maxProgress" : 0,
+      "maxCompetencies" : 0
+    },
+    {
+      "_id" : "REGFavxYPo2CzeM6p",
+      "maxProgress" : 196,
+      "maxCompetencies" : 1880
+    },
+    {
+      "_id" : "7vJrRBf2tQ6Zr6vkE",
+      "maxProgress" : 75,
+      "maxCompetencies" : 99
+    },
+    {
+      "_id" : "SaA7QfY8yXWZhSwaX",
+      "maxProgress" : 240,
+      "maxCompetencies" : 8104
+    },
+    {
+      "_id" : "MmaZBSXromasGZDEJ",
+      "maxProgress" : 93,
+      "maxCompetencies" : 93
+    }
+  ],
+  "entries" : [
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "pAkQLcMhTHGDp2PL3",
+          "progress" : 9,
+          "code" : "TB_1001",
+          "competencies" : 10
+        },
+        {
+          "dimension" : 2,
+          "_id" : "voJPD3LHWk26veKyn",
+          "progress" : 5,
+          "code" : "TB_2001",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "xbDiZ2Ag4RfyDRYL6",
+          "progress" : 3,
+          "code" : "TB_4001",
+          "competencies" : 125
+        },
+        {
+          "dimension" : 4,
+          "_id" : "Grm3s8pDjwX7sJZQM",
+          "progress" : 11,
+          "code" : "TB_3001",
+          "competencies" : 11
+        }
+      ],
+      "progress" : 28
+    },
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "QMLtD5bTHCbJE9EW3",
+          "progress" : 8,
+          "code" : "TB_1002",
+          "competencies" : 18
+        },
+        {
+          "dimension" : 2,
+          "_id" : "W7c9rd8dqoMsEPWwD",
+          "progress" : 5,
+          "code" : "TB_2002",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "j2P9TRsZpyRqjh9fj",
+          "progress" : 3,
+          "code" : "TB_4002",
+          "competencies" : 45
+        },
+        {
+          "dimension" : 4,
+          "_id" : "TBBoBS2QPNJSuaJvz",
+          "progress" : 5,
+          "code" : "TB_3003",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 21
+    },
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "BGBtBe5z45bfte3XJ",
+          "progress" : 4,
+          "code" : "TB_1003",
+          "competencies" : 14
+        },
+        {
+          "dimension" : 3,
+          "_id" : "FTGcisFXpo9Fr5jxF",
+          "progress" : 4,
+          "code" : "TB_4003",
+          "competencies" : 80
+        },
+        {
+          "dimension" : 4,
+          "_id" : "kgQpznYvu7MyezM6f",
+          "progress" : 5,
+          "code" : "TB_3004",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 13
+    },
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "cEFvL2Dgzu2D4XW3F",
+          "progress" : 2,
+          "code" : "TB_1004",
+          "competencies" : 20
+        },
+        {
+          "dimension" : 3,
+          "_id" : "jhDNBKS4YsHSEsn8Q",
+          "progress" : 2,
+          "code" : "TB_4004",
+          "competencies" : 40
+        },
+        {
+          "dimension" : 4,
+          "_id" : "Gu2M3kXSY8M8MgN4N",
+          "progress" : 5,
+          "code" : "TB_3005",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 9
+    },
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "4PJndsnz5uZXZffWq",
+          "progress" : 7,
+          "code" : "TB_1005",
+          "competencies" : 43
+        },
+        {
+          "dimension" : 3,
+          "_id" : "r2uHaBdfEF7Hx9gxk",
+          "progress" : 7,
+          "code" : "TB_4005",
+          "competencies" : 150
+        },
+        {
+          "dimension" : 4,
+          "_id" : "Q24cJLrsBejry9cAn",
+          "progress" : 7,
+          "code" : "TB_3006",
+          "competencies" : 7
+        }
+      ],
+      "progress" : 21
+    },
+    {
+      "type" : "stage",
+      "level" : 0,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "PM8aXJP3QpoFz5rZp",
+          "progress" : 3,
+          "code" : "TB_4006",
+          "competencies" : 85
+        }
+      ],
+      "progress" : 3
+    },
+    {
+      "type" : "milestone",
+      "level" : 0,
+      "progress" : 95,
+      "competencies" : [
+        {
+          "dimension" : 1,
+          "max" : 105
+        },
+        {
+          "dimension" : 2,
+          "max" : 10
+        },
+        {
+          "dimension" : 3,
+          "max" : 525
+        },
+        {
+          "dimension" : 4,
+          "max" : 33
+        }
+      ]
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "8zHWL97H3Lmo87kix",
+          "progress" : 12,
+          "code" : "TB_1006",
+          "competencies" : 168
+        },
+        {
+          "dimension" : 2,
+          "_id" : "enEfwKaHfqzXhPMAF",
+          "progress" : 3,
+          "code" : "TB_2003",
+          "competencies" : 3
+        },
+        {
+          "dimension" : 3,
+          "_id" : "d3iC8CGuKnumJf25Z",
+          "progress" : 2,
+          "code" : "TB_4007",
+          "competencies" : 30
+        },
+        {
+          "dimension" : 4,
+          "_id" : "y7hm7ihYfPKme5kMZ",
+          "progress" : 5,
+          "code" : "TB_3007",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 22
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "MJuKrwQFKDwifhaF5",
+          "progress" : 6,
+          "code" : "TB_1007",
+          "competencies" : 112
+        },
+        {
+          "dimension" : 2,
+          "_id" : "gTCMnQkqRkQSSSCTa",
+          "progress" : 5,
+          "code" : "TB_2004",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "yzTYNE3FrnyeTxiN6",
+          "progress" : 7,
+          "code" : "TB_4008",
+          "competencies" : 61
+        },
+        {
+          "dimension" : 4,
+          "_id" : "vo8zmP5budpRDGGJY",
+          "progress" : 5,
+          "code" : "TB_3008",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 23
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "ALFvHmffmsGZ9Fxo5",
+          "progress" : 5,
+          "code" : "TB_1008",
+          "competencies" : 50
+        },
+        {
+          "dimension" : 3,
+          "_id" : "fdQv4mivfYcTaw9Ne",
+          "progress" : 2,
+          "code" : "TB_4009",
+          "competencies" : 7
+        },
+        {
+          "dimension" : 4,
+          "_id" : "EDvonqPB97ta3Q6ia",
+          "progress" : 5,
+          "code" : "TB_3009",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 12
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "8R4jiNKPH9D2zvhts",
+          "progress" : 4,
+          "code" : "TB_1009",
+          "competencies" : 16
+        },
+        {
+          "dimension" : 3,
+          "_id" : "zPjjfeFPT4nuTE27F",
+          "progress" : 13,
+          "code" : "TB_4010",
+          "competencies" : 585
+        }
+      ],
+      "progress" : 17
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "dkmod5yPGLxh8rTxo",
+          "progress" : 5,
+          "code" : "TB_1010",
+          "competencies" : 65
+        },
+        {
+          "dimension" : 3,
+          "_id" : "Jp9yDYzX4ibdQDeuG",
+          "progress" : 2,
+          "code" : "TB_4011",
+          "competencies" : 7
+        }
+      ],
+      "progress" : 7
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "ssNoSHTbSbRkD9eYa",
+          "progress" : 6,
+          "code" : "TB_4012",
+          "competencies" : 390
+        }
+      ],
+      "progress" : 6
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "xdtZy2peLMuwjMZNg",
+          "progress" : 4,
+          "code" : "TB_4013",
+          "competencies" : 14
+        }
+      ],
+      "progress" : 4
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "xJkhnL5bERFdBKZXR",
+          "progress" : 5,
+          "code" : "TB_4014",
+          "competencies" : 20
+        }
+      ],
+      "progress" : 5
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "WK2kMJt35SxBfXX86",
+          "progress" : 3,
+          "code" : "TB_4015",
+          "competencies" : 305
+        }
+      ],
+      "progress" : 3
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "LXcBAtTKThFiYqn4k",
+          "progress" : 5,
+          "code" : "TB_4016",
+          "competencies" : 50
+        }
+      ],
+      "progress" : 5
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "KR9ETjEPq45H6x6yB",
+          "progress" : 5,
+          "code" : "TB_4017",
+          "competencies" : 105
+        }
+      ],
+      "progress" : 5
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "zY78xSgdiNBNwtwDb",
+          "progress" : 2,
+          "code" : "TB_4018",
+          "competencies" : 40
+        }
+      ],
+      "progress" : 2
+    },
+    {
+      "type" : "stage",
+      "level" : 1,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "ZerH5EueHWhCu52xR",
+          "progress" : 3,
+          "code" : "TB_4019",
+          "competencies" : 61
+        }
+      ],
+      "progress" : 3
+    },
+    {
+      "type" : "milestone",
+      "level" : 1,
+      "progress" : 114,
+      "competencies" : [
+        {
+          "dimension" : 1,
+          "max" : 411
+        },
+        {
+          "dimension" : 2,
+          "max" : 8
+        },
+        {
+          "dimension" : 3,
+          "max" : 1675
+        },
+        {
+          "dimension" : 4,
+          "max" : 15
+        }
+      ]
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "hh7yjWHWdzPs3dTGL",
+          "progress" : 4,
+          "code" : "TB_1011",
+          "competencies" : 84
+        },
+        {
+          "dimension" : 2,
+          "_id" : "7cyomyjrPn4QaG6vm",
+          "progress" : 5,
+          "code" : "TB_2005",
+          "competencies" : 9
+        },
+        {
+          "dimension" : 3,
+          "_id" : "3ZGYwbWN8m7ugX4AR",
+          "progress" : 10,
+          "code" : "TB_4020",
+          "competencies" : 638
+        },
+        {
+          "dimension" : 4,
+          "_id" : "RNeqsPuPH5ePSWkae",
+          "progress" : 5,
+          "code" : "TB_3010",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 24
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "yM7zn3Rkrzfz4yWDE",
+          "progress" : 6,
+          "code" : "TB_1012",
+          "competencies" : 95
+        },
+        {
+          "dimension" : 2,
+          "_id" : "wGHSd4Pvehq6JoFtZ",
+          "progress" : 5,
+          "code" : "TB_2006",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "b2P2ot9Q2NRiEsHug",
+          "progress" : 15,
+          "code" : "TB_4021",
+          "competencies" : 735
+        },
+        {
+          "dimension" : 4,
+          "_id" : "SHe8NCfwsWx2crL7m",
+          "progress" : 5,
+          "code" : "TB_3011",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 31
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "MzJZdqbEfJHfEbR6H",
+          "progress" : 3,
+          "code" : "TB_1013",
+          "competencies" : 4
+        },
+        {
+          "dimension" : 2,
+          "_id" : "TjG7k9ePSW4BDQwHt",
+          "progress" : 6,
+          "code" : "TB_2007",
+          "competencies" : 6
+        },
+        {
+          "dimension" : 3,
+          "_id" : "8RaeXuMoW4QGFM6vs",
+          "progress" : 5,
+          "code" : "TB_4022",
+          "competencies" : 260
+        },
+        {
+          "dimension" : 4,
+          "_id" : "bsNpSHFCw2vwKK9N9",
+          "progress" : 5,
+          "code" : "TB_3013",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 19
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "m9P4vmytogHEQkAmo",
+          "progress" : 7,
+          "code" : "TB_1014",
+          "competencies" : 70
+        },
+        {
+          "dimension" : 2,
+          "_id" : "wR7DS2GneEdFeGGHi",
+          "progress" : 6,
+          "code" : "TB_2008",
+          "competencies" : 6
+        },
+        {
+          "dimension" : 3,
+          "_id" : "bNDmrWXB9av48iAyZ",
+          "progress" : 11,
+          "code" : "TB_4023",
+          "competencies" : 208
+        },
+        {
+          "dimension" : 4,
+          "_id" : "rFd9quCrK8RKimhX2",
+          "progress" : 5,
+          "code" : "TB_3014",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 29
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "9bbsMuymEuksjGeBd",
+          "progress" : 8,
+          "code" : "TB_1015",
+          "competencies" : 76
+        },
+        {
+          "dimension" : 3,
+          "_id" : "GAfenXQtoLyfjcyH8",
+          "progress" : 2,
+          "code" : "TB_4024",
+          "competencies" : 17
+        }
+      ],
+      "progress" : 10
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "4ntjHmaN65KMvLWFr",
+          "progress" : 9,
+          "code" : "TB_1017",
+          "competencies" : 36
+        },
+        {
+          "dimension" : 3,
+          "_id" : "z3ko7F3HSYdYHdR5T",
+          "progress" : 8,
+          "code" : "TB_4025",
+          "competencies" : 180
+        }
+      ],
+      "progress" : 17
+    },
+    {
+      "type" : "stage",
+      "level" : 2,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "RDm7RdwRFb6pShbTa",
+          "progress" : 10,
+          "code" : "TB_4026",
+          "competencies" : 230
+        }
+      ],
+      "progress" : 10
+    },
+    {
+      "type" : "milestone",
+      "level" : 2,
+      "progress" : 140,
+      "competencies" : [
+        {
+          "dimension" : 1,
+          "max" : 365
+        },
+        {
+          "dimension" : 2,
+          "max" : 26
+        },
+        {
+          "dimension" : 3,
+          "max" : 2268
+        },
+        {
+          "dimension" : 4,
+          "max" : 20
+        }
+      ]
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "w7icwkz9rw7tMBeD6",
+          "progress" : 6,
+          "code" : "TB_1018",
+          "competencies" : 30
+        },
+        {
+          "dimension" : 2,
+          "_id" : "u2YnhWgo397KR5hfH",
+          "progress" : 5,
+          "code" : "TB_2011",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "RLaoQ3HsrPif4RJsZ",
+          "progress" : 2,
+          "code" : "TB_4027",
+          "competencies" : 65
+        },
+        {
+          "dimension" : 4,
+          "_id" : "6PPDapfeW5tdYahDn",
+          "progress" : 10,
+          "code" : "TB_3015",
+          "competencies" : 10
+        }
+      ],
+      "progress" : 23
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "5q8R6SgEtWj3syQRB",
+          "progress" : 3,
+          "code" : "TB_1019",
+          "competencies" : 96
+        },
+        {
+          "dimension" : 2,
+          "_id" : "tYFuax6xRRzmysMz5",
+          "progress" : 5,
+          "code" : "TB_2012",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "YbTzKZX3f7BJBWvo4",
+          "progress" : 10,
+          "code" : "TB_4028",
+          "competencies" : 1200
+        }
+      ],
+      "progress" : 18
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "HyTK9HKwsY2DBBtTh",
+          "progress" : 8,
+          "code" : "TB_1020",
+          "competencies" : 80
+        },
+        {
+          "dimension" : 2,
+          "_id" : "GezNEJFmQKGzHHXjQ",
+          "progress" : 5,
+          "code" : "TB_2013",
+          "competencies" : 10
+        },
+        {
+          "dimension" : 3,
+          "_id" : "KrBfPiHNcw8j2PvEW",
+          "progress" : 10,
+          "code" : "TB_4030",
+          "competencies" : 675
+        }
+      ],
+      "progress" : 23
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "a673qurSmGTb7Hf2y",
+          "progress" : 9,
+          "code" : "TB_1021",
+          "competencies" : 168
+        },
+        {
+          "dimension" : 2,
+          "_id" : "FSbmgfcz9EeXZCZbr",
+          "progress" : 5,
+          "code" : "TB_2014",
+          "competencies" : 5
+        },
+        {
+          "dimension" : 3,
+          "_id" : "sMdDuseJSRdh7N77G",
+          "progress" : 5,
+          "code" : "TB_4031",
+          "competencies" : 252
+        }
+      ],
+      "progress" : 19
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "ktHTpKH9BQrp5cXyX",
+          "progress" : 7,
+          "code" : "TB_1022",
+          "competencies" : 41
+        },
+        {
+          "dimension" : 3,
+          "_id" : "W34YjNe4tYQmHAEaJ",
+          "progress" : 8,
+          "code" : "TB_4032",
+          "competencies" : 117
+        }
+      ],
+      "progress" : 15
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "gT2arAHn2kZdn3jaf",
+          "progress" : 8,
+          "code" : "TB_1023",
+          "competencies" : 93
+        },
+        {
+          "dimension" : 3,
+          "_id" : "XBKtGdmCtY3dvJq7T",
+          "progress" : 14,
+          "code" : "TB_4033",
+          "competencies" : 450
+        }
+      ],
+      "progress" : 22
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "3oXSGFfps9g4gznYG",
+          "progress" : 13,
+          "code" : "TB_1024",
+          "competencies" : 214
+        },
+        {
+          "dimension" : 3,
+          "_id" : "cWRxP7SBxbNSfkhCM",
+          "progress" : 6,
+          "code" : "TB_4034",
+          "competencies" : 145
+        }
+      ],
+      "progress" : 19
+    },
+    {
+      "type" : "stage",
+      "level" : 3,
+      "unitSets" : [
+        {
+          "dimension" : 3,
+          "_id" : "D6S4AKRbcnNAndCLF",
+          "progress" : 8,
+          "code" : "TB_4035",
+          "competencies" : 195
+        }
+      ],
+      "progress" : 8
+    },
+    {
+      "type" : "milestone",
+      "level" : 3,
+      "progress" : 147,
+      "competencies" : [
+        {
+          "dimension" : 1,
+          "max" : 722
+        },
+        {
+          "dimension" : 2,
+          "max" : 25
+        },
+        {
+          "dimension" : 3,
+          "max" : 3099
+        },
+        {
+          "dimension" : 4,
+          "max" : 10
+        }
+      ]
+    },
+    {
+      "type" : "stage",
+      "level" : 4,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "dLLEwdMTJdZwJ6cA8",
+          "progress" : 3,
+          "code" : "TB_1016",
+          "competencies" : 75
+        },
+        {
+          "dimension" : 2,
+          "_id" : "gFMnaw4mTsX3HL93D",
+          "progress" : 5,
+          "code" : "TB_2015",
+          "competencies" : 10
+        },
+        {
+          "dimension" : 3,
+          "_id" : "cAMdvqrt2QHfW2878",
+          "progress" : 18,
+          "code" : "TB_4036",
+          "competencies" : 280
+        },
+        {
+          "dimension" : 4,
+          "_id" : "LRi7QERhjaYdhoPAz",
+          "progress" : 5,
+          "code" : "TB_3016",
+          "competencies" : 5
+        }
+      ],
+      "progress" : 31
+    },
+    {
+      "type" : "stage",
+      "level" : 4,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "WDWykjRFXfvNsAHQR",
+          "progress" : 14,
+          "code" : "TB_1025",
+          "competencies" : 38
+        },
+        {
+          "dimension" : 2,
+          "_id" : "c8Q4GAgyAyXtQyTae",
+          "progress" : 5,
+          "code" : "TB_2016",
+          "competencies" : 10
+        },
+        {
+          "dimension" : 3,
+          "_id" : "69G8vHvWYXbaW5ePZ",
+          "progress" : 7,
+          "code" : "TB_4037",
+          "competencies" : 75
+        },
+        {
+          "dimension" : 4,
+          "_id" : "KmQtGJnmN7Cx4LoNi",
+          "progress" : 10,
+          "code" : "TB_3017",
+          "competencies" : 10
+        }
+      ],
+      "progress" : 36
+    },
+    {
+      "type" : "stage",
+      "level" : 4,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "Mh6mXGH5DDaigMNfT",
+          "progress" : 4,
+          "code" : "TB_1026",
+          "competencies" : 66
+        },
+        {
+          "dimension" : 2,
+          "_id" : "LQB9rznmX4mi9NEph",
+          "progress" : 5,
+          "code" : "TB_2017",
+          "competencies" : 10
+        },
+        {
+          "dimension" : 3,
+          "_id" : "ntdB7Tfuj5XjAsQSk",
+          "progress" : 3,
+          "code" : "TB_4038",
+          "competencies" : 59
+        }
+      ],
+      "progress" : 12
+    },
+    {
+      "type" : "stage",
+      "level" : 4,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "E9u4qR7KcASxwtS53",
+          "progress" : 15,
+          "code" : "TB_1027",
+          "competencies" : 60
+        },
+        {
+          "dimension" : 3,
+          "_id" : "cg7nc49YTGBMcpojA",
+          "progress" : 7,
+          "code" : "TB_4039",
+          "competencies" : 123
+        }
+      ],
+      "progress" : 22
+    },
+    {
+      "type" : "stage",
+      "level" : 4,
+      "unitSets" : [
+        {
+          "dimension" : 1,
+          "_id" : "ebL834thErD2ccirc",
+          "progress" : 7,
+          "code" : "TB_1028",
+          "competencies" : 38
+        }
+      ],
+      "progress" : 7
+    },
+    {
+      "type" : "milestone",
+      "level" : 4,
+      "progress" : 108,
+      "competencies" : [
+        {
+          "dimension" : 1,
+          "max" : 277
+        },
+        {
+          "dimension" : 2,
+          "max" : 30
+        },
+        {
+          "dimension" : 3,
+          "max" : 537
+        },
+        {
+          "dimension" : 4,
+          "max" : 15
+        }
+      ]
+    }
+  ],
+  "levels" : [
+    "haPT6fbacjmegsBxq",
+    "RSDjNpkAB8Y9y36rj",
+    "Z5L9rrWM2xRBcohnh",
+    "qaPtTt7DuL8joqdMb",
+    "EDash8qvKpXs97bem"
+  ],
+  "maxCompetencies" : 10176,
+  "maxProgress" : 604
+}

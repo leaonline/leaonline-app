@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "login": "Anmelden",
+    "restore": "Zugang wiederherstellen",
+    "register": "Neue registrieren"
+  }
+}

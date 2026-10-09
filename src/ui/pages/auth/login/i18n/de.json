@@ -1,0 +1,17 @@
+{
+  "pages": {
+    "login": {
+      "title": "Anmelden"
+    }
+  },
+  "auth": {
+    "logins": {
+      "password": {
+        "title": "Mit Passwort anmelden",
+        "badCredentials": "Das Passwort ist leider falsch."
+      }
+    },
+    "submit": "Senden",
+    "submitting": "Überprüfe..."
+  }
+}

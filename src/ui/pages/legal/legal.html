@@ -1,0 +1,65 @@
+<template name="legal">
+    <div class="container">
+
+        {{#onComplete complete=dependenciesComplete}}
+            <div class="card-body text-center">
+                {{> image src="/logo/logo-200x44.png"
+                        alt=(i18n "common.logo")
+                        class="lea-main-logo"
+                        width=200
+                        height=44}}
+            </div>
+        {{/onComplete}}
+
+
+        <div class="card">
+        {{#onComplete complete=dependenciesComplete}}
+            <div class="card-header">
+                {{#textGroup
+                        tts=legalTitle
+                        autoText=false}}
+                    <h1>{{i18n legalTitle}}</h1>
+                {{/textGroup}}
+            </div>
+        {{/onComplete}}
+
+            {{#onComplete complete=dependenciesComplete}}
+                <div class="card-body d-flex justify-content-between">
+                    {{> actionButton
+                            outline=true
+                            type="secondary"
+                            class="back-button align-items-center"
+                            tts=(i18n "common.back")
+                            label=(i18n "common.back")
+                            icon="caret-left"}}
+
+                    {{#if currentUser}}
+                        {{> routeButton
+                                outline=true
+                                href=(route "overview")
+                                type="secondary"
+                                class="home-button"
+                                tts=(i18n "common.toOverview")
+                                label=(i18n "common.toOverview")
+                                icon="home"}}
+                    {{else}}
+                        {{> routeButton
+                                outline=true
+                                href=(route "welcome")
+                                type="secondary"
+                                class="home-button"
+                                tts=(i18n "common.toWelcome")
+                                label=(i18n "common.toWelcome")
+                                icon="home"}}
+                    {{/if}}
+                </div>
+            {{/onComplete}}
+
+        {{#onComplete complete=content}}
+            <div class="card-body">
+                {{{content}}}
+            </div>
+        {{/onComplete}}
+        </div>
+    </div>
+</template>

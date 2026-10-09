@@ -1,0 +1,38 @@
+{
+  "common": {
+    "restart": "Neu starten",
+    "continue": "Fortsetzen"
+  },
+  "pages": {
+    "map": {
+      "title": "Aufgaben Karte",
+      "decideContinue": "Du hast diese Aufgabe bereits angefangen. Wie möchtest Du weiter machen?"
+    }
+  },
+  "map": {
+    "journey": "Lernweg",
+    "list": "Liste",
+    "view": "Ansicht wählen",
+    "start": "Start",
+    "finish": "Ziel",
+    "pages": "Fortschritt",
+    "competencies": "Fähigkeiten",
+    "completed": "Abgeschlossen",
+    "unavailable": "Nicht verfügbar",
+    "retry": "Erneut versuchen",
+    "close": "Schließen",
+    "cancel": "Abbrechen",
+    "offline": "Du bist nicht verbunden. Verbinde dich, um eine Aufgabe zu starten.",
+    "loadingSession": "Deine Aufgabe wird geladen …",
+    "invalidTopology": "Dieser Lernweg ist gerade nicht verfügbar. Bitte versuche es erneut.",
+    "learnerUnavailable": "Dein Fortschritt konnte nicht geladen werden. Du kannst trotzdem eine Aufgabe wählen.",
+    "sceneUnavailable": "Die Karte kann gerade nicht angezeigt werden. Du kannst die Aufgaben in der Liste wählen.",
+    "iconsUnavailable": "Die Bilder für diesen Lernweg fehlen. Bitte melde dies dem lea.-Team.",
+    "metadataUnavailable": "Die Beschreibung dieses Lernwegs ist unvollständig. Bitte melde dies dem lea.-Team.",
+    "valuesUnavailable": "Einige Fortschrittswerte sind nicht verfügbar.",
+    "sessionFailed": "Die Aufgabe konnte nicht geöffnet werden. Bitte versuche es erneut.",
+    "entry": {
+      "title": "Aufgabe {{value}}"
+    }
+  }
+}

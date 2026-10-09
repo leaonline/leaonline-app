@@ -1,0 +1,121 @@
+{
+  "apps": {
+    "otulea": {
+      "title": "otu.lea",
+      "description": "Förderdiagnostik"
+    }
+  },
+  "legal": {
+    "title": "Rechtliches",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "contact": "Kontakt"
+  },
+  "logos": {
+    "title": "Logos",
+    "footer": "Fußzeilen-Logos",
+    "logoSrc": "Verlinktes Bild",
+    "logoTitle": "Titel",
+    "logoUrl": "Verlinkte URL"
+  },
+  "feedback": {
+    "title": "Rückmeldung",
+    "levels": "Levels der Rückmeldung (oben=top, unten=noch üben)",
+    "notEvaluable": "Rückmeldung für unbearbeitete aber abgesendete Aufgaben"
+  },
+  "videos": {
+    "title": "Hilfevideos",
+    "welcome": "Willkommensseite",
+    "overview": "Übersichtsseite",
+    "task": "Aufgabenseite",
+    "complete": "Ergebnissseite",
+    "notFound": "Seite nicht gefunden"
+  },
+  "users": {
+    "title": "Accounts",
+    "username": "Code",
+    "isDemoUser": "Demo",
+    "debug": "Debug",
+    "createdAt": "Registriert",
+    "updatedAt": "Zuletzt on",
+    "email": "E-Mail"
+  },
+  "errors": {
+    "title": "Fehler / Bugs",
+    "name": "Name",
+    "type": "Typ",
+    "message": "Hinweis",
+    "details": "Details",
+    "hash": "Hash",
+    "count": "Anzahl",
+    "stack": "Stack",
+    "createdBy": "Erzeugt von",
+    "createdAt": "Erstes mal",
+    "template": "Template",
+    "isServer": "Server",
+    "isClient": "Client",
+    "method": "Methode",
+    "publication": "Pub/Sub",
+    "endpoint": "HTTP",
+    "isSystem": "von System",
+    "browser": "Browser"
+  },
+  "diagnostics": {
+    "title": "Diagnosedaten",
+    "bName": "Browser",
+    "bVersion": "B.Version",
+    "bMajor": "Major",
+    "bEngine": "Engine",
+    "bEngineV": "E.Version",
+    "ua": "user-agent",
+    "osName": "System",
+    "osVersion": "S.Version",
+    "osRelease": "Release",
+    "osCodename": "Codename",
+    "osInfoSuccess": "Sysinfo",
+    "isMobile": "Mobile",
+    "arch": "Architektur",
+    "vendor": "Hersteller",
+    "model": "Modell",
+    "ram": "RAM",
+    "fontLoaded": "Font",
+    "langLoaded": "i18n",
+    "localStorage": "Storage",
+    "ttsLoaded": "TTS",
+    "ttsStatus": "Status",
+    "swLoaded": "Worker",
+    "swStatus": "W.Status",
+    "swActive": "W.Aktiv",
+    "swInstalling": "W.Install.",
+    "swWaiting": "W.Warte",
+    "perfLoaded": "Performance",
+    "perfStart": "Start",
+    "perfDuration": "Dauer",
+    "graphics": "Grafik",
+    "screen": "Bildschirm"
+  },
+  "response": {
+    "title": "Antworten",
+    "userId": "User",
+    "sessionId": "Session",
+    "unitId": "Unit",
+    "page": "Seite",
+    "contentId": "Item",
+    "failed": "Fehler"
+  },
+  "session": {
+    "title": "Session",
+    "userId": "User",
+    "startedAt": "Start",
+    "completedAt": "Fertig",
+    "updatedAt": "Aktualisiert",
+    "cancelledAt": "Abgebrochen",
+    "continuedAt": "Fortgesetzt",
+    "testCycle": "Durchlauf",
+    "unitSet": "Unit-Set",
+    "currentUnit": "Unit",
+    "progress": "Fortschritt",
+    "maxProgress": "Max. Fortschritt"
+  }
+}

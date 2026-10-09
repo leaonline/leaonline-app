@@ -1,0 +1,30 @@
+<template name="logout">
+	<div class="container">
+		<div class="card">
+			<div class="card-body">
+				{{#unless loadComplete}}
+					{{> loading}}
+                {{else}}
+                    {{#if loggedOut}}
+                        {{> textGroup text=(i18n "pages.logout.description")}}
+                        {{else}}
+                        {{> loading title=(i18n "pages.logout.loggingOut")}}
+                    {{/if}}
+                {{/unless}}
+			</div>
+		</div>
+	</div>
+
+    {{#if loadComplete}}
+    <div class="container mt-5">
+        <div class="card-body">
+        {{#routeButton
+                outline=true
+                tts="pages.logout.toStart"
+                href="/"
+                label=(i18n "pages.logout.toStart")}}
+        {{/routeButton}}
+        </div>
+    </div>
+    {{/if}}
+</template>

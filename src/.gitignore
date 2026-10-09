@@ -1,3 +1,25 @@
+# folders
+node_modules/
+packages/
+
+# ide specific
+.idea
+.vscode
+
+# config files
+productionSettings.json
+leaconfig.json
+i18n_routes.json
+routes.json
+
+# proprietary stuff
+public/fonts/
+public/logos/
+
+.deploy
+.staging
+
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -36,7 +58,6 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-.builds
 
 # Dependency directories
 node_modules/
@@ -70,7 +91,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-backend/.env
+../.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -104,22 +125,8 @@ dist
 # TernJS port file
 .tern-port
 
-# ide
-.atom
-.vscode
-.idea
-.expo
+# fonts
+public/fonts/*
 
-#macOS
-.DS_Store
-
-# deployment folders
-.deploy
-.staging
-
-# android keystores
-**/*.keystore
-**/*.jks
-
-# propietary assets
-**/Semikolon*.ttf
+# settings file, similar to .env
+settings.json

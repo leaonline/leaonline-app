@@ -1,0 +1,26 @@
+<template name="notFound">
+    <div class="container lea-pagenotfound-container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="text-center">
+                    <span>¯\_(ツ)_/¯</span>
+                </h1>
+                {{#onComplete complete=loadComplete}}
+                    {{> textGroup text=(i18n "pages.notFound.title") groupClass="my-4 lea-text-bold justify-content-center"}}
+                {{/onComplete}}
+            </div>
+        </div>
+
+        <div class="card-body">
+            {{#onComplete complete=loadComplete}}
+                {{#if currentUser}}
+                    {{> actionButton tts="common.toOverview" href=(route 'overview') label=(i18n "common.toOverview")
+                            block=true outline=true type="primary" btnClass="lea-pagenotfound-button"}}
+                {{else}}
+                    {{> actionButton tts="common.toWelcome" href=(route 'welcome') label=(i18n "common.toWelcome")
+                            block=true outline=true type="primary" btnClass="lea-pagenotfound-button"}}
+                {{/if}}
+            {{/onComplete}}
+        </div>
+    </div>
+</template>

@@ -1,0 +1,10 @@
+<template name="switch">
+    <div class="form-check form-switch {{containerClass}}">
+        <input class="form-check-input cursor-pointer {{class}}" type="checkbox" value="" id="{{id}}" switch {{inputAtts}}>
+        {{#if label}}
+            <label class="form-check-label cursor-pointer {{labelClass}}" for="{{id}}">
+                {{> textGroup text=label}}
+            </label>
+        {{/if}}
+    </div>
+</template>

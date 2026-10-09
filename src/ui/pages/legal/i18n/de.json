@@ -1,0 +1,15 @@
+{
+  "pages": {
+    "legal": {
+      "title": "Rechtliches",
+      "imprint": "Impressum",
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen",
+      "contact": "Kontakt",
+      "paragraph": "Paragraph",
+      "paragraphs": "Paragraphen",
+      "section": "Absatz {{number}}",
+      "unknownKey": "Unbekannte Kategorie: {{name}}"
+    }
+  }
+}

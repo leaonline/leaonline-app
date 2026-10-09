@@ -1,0 +1,8 @@
+{
+  "pages": {
+    "notFound": {
+      "title": "Die angefragte Seite wurde nicht gefunden. Das tut uns leid.",
+      "description": "Es wurde die angeforderte Seite nicht im System gefunden. Möchten du uns diesen Fehler mitteilen?"
+    }
+  }
+}
