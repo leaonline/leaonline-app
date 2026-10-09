@@ -4,7 +4,7 @@ import { Accounts } from 'meteor/accounts-base'
 import { HTTP } from 'meteor/jkuester:http'
 import {
   defaultDDPLoginName,
-  getOAuthDDPLoginHandler
+  getOAuthDDPLoginHandler,
 } from 'meteor/leaonline:ddp-login-handler'
 import { rateLimitAccounts } from '../infrastructure/factories/rateLimit'
 import { onAccountLoginHandler } from '../api/accounts/onAccountLoginHandler'
@@ -31,15 +31,15 @@ Meteor.startup(async () => {
         dialogUrl: oauth.dialogUrl,
         accessTokenUrl: oauth.accessTokenUrl,
         identityUrl: oauth.identityUrl,
-        redirectUrl: oauth.redirectUrl
-      }
-    }
+        redirectUrl: oauth.redirectUrl,
+      },
+    },
   )
 
   const loginHandler = getOAuthDDPLoginHandler({
     identityUrl: oauth.identityUrl,
     httpGet: (url, requestOptions) => HTTP.get(url, requestOptions),
-    debug: console.debug
+    debug: console.debug,
   })
 
   Accounts.registerLoginHandler(defaultDDPLoginName, loginHandler)
@@ -60,12 +60,14 @@ Accounts.config({
     speed: 1,
     isDev: 1,
     createdAt: 1,
-    lastLogin: 1
-  }
+    lastLogin: 1,
+  },
 })
 
-Accounts.onLogin(async info => {
-  if (!info.allowed) { return }
+Accounts.onLogin(async (info) => {
+  if (!info.allowed) {
+    return
+  }
   await ClientConnection.onLogin(info)
   await onAccountLoginHandler(info)
 })

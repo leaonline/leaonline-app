@@ -15,20 +15,20 @@ const legalRendererName = 'legalRenderer'
 LeaMarkdown.addRenderer(legalRendererName, legalRenderer())
 
 Template.legal.onCreated(function () {
-  const instance = this
-
-  instance.initDependencies({
+  this.initDependencies({
     contexts: [Legal],
     translations: legalLanguage,
     tts: true,
     onComplete: () => {
-      instance.state.set('dependenciesComplete', true)
-    }
+      this.state.set('dependenciesComplete', true)
+    },
   })
 
-  instance.autorun(() => {
-    const dependenciesComplete = instance.state.get('dependenciesComplete')
-    if (!dependenciesComplete) { return }
+  this.autorun(() => {
+    const dependenciesComplete = this.state.get('dependenciesComplete')
+    if (!dependenciesComplete) {
+      return
+    }
 
     const data = Template.currentData()
     const { type } = data.params
@@ -41,47 +41,51 @@ Template.legal.onCreated(function () {
     })
 
     if (!originalType) {
-      instance.state.set({
-        error: new Error(i18n.get('pages.legal.unknownKey', { name: originalType }))
+      this.state.set({
+        error: new Error(
+          i18n.get('pages.legal.unknownKey', { name: originalType }),
+        ),
       })
     }
 
     Meteor.call(Legal.methods.get.name, { name: originalType }, (err, res) => {
-      if (err) return instance.state.set({ error: err })
+      if (err) return this.state.set({ error: err })
 
       LeaMarkdown.parse({
         input: res,
-        renderer: legalRendererName
+        renderer: legalRendererName,
       })
-        .then((content) => instance.state.set({ content }))
-        .catch(error => {
+        .then((content) => this.state.set({ content }))
+        .catch((error) => {
           console.error(error)
-          instance.state.set({ error })
+          this.state.set({ error })
         })
 
-      instance.state.set({ type: originalType })
+      this.state.set({ type: originalType })
     })
   })
 })
 
 Template.legal.helpers({
-  allComplete () {
-    return Template.getState('dependenciesComplete') && Template.getState('content')
+  allComplete() {
+    return (
+      Template.getState('dependenciesComplete') && Template.getState('content')
+    )
   },
-  dependenciesComplete () {
+  dependenciesComplete() {
     return Template.getState('dependenciesComplete')
   },
-  content () {
+  content() {
     return Template.getState('content')
   },
-  legalTitle () {
+  legalTitle() {
     const type = Template.getState('type')
     return `pages.legal.${type}`
-  }
+  },
 })
 
 Template.legal.events({
-  'click .back-button' (/* event, templateInstance */) {
+  'click .back-button'(/* event, templateInstance */) {
     window.history.back()
-  }
+  },
 })

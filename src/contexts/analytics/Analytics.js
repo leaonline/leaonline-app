@@ -2,7 +2,7 @@
  * @deprecated
  * */
 export const Analytics = {
-  name: 'analytics'
+  name: 'analytics',
 }
 
 Analytics.schema = {
@@ -13,8 +13,8 @@ Analytics.schema = {
   message: String,
   details: {
     type: Object,
-    blackbox: true
-  }
+    blackbox: true,
+  },
 }
 
 Analytics.methods = {}
@@ -23,9 +23,9 @@ Analytics.methods.send = {
   name: 'analytics.methods.send',
   schema: {
     logs: Array,
-    'logs.$': String
+    'logs.$': String,
   },
-  run: async function () {
+  run: async () => {
     return [] // we don't implement this way anymore but keep compat with the api
-  }
+  },
 }

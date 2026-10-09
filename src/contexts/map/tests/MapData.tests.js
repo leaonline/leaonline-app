@@ -31,7 +31,7 @@ const allCollections = [
   TestCycleCollection,
   LevelCollection,
   UnitSetCollection,
-  UnitCollection
+  UnitCollection,
 ]
 
 const dimensionsOrder = Meteor.settings.remotes.content.remap.dimensions.order
@@ -39,14 +39,14 @@ const dimensionsOrder = Meteor.settings.remotes.content.remap.dimensions.order
 const mockDocuments = () => {
   return forEachAsync(Object.entries(mapFixtures), async ([name, docs]) => {
     const collection = getCollection(name)
-    await forEachAsync(docs, doc => collection.insertAsync(doc))
+    await forEachAsync(docs, (doc) => collection.insertAsync(doc))
   })
 }
 
-describe('MapData', function () {
+describe('MapData', () => {
   setupAndTeardown(allCollections)
 
-  describe(MapData.create.name, function () {
+  describe(MapData.create.name, () => {
     // throws errors; this is the case when crucial
     // or fundamental data is not available.
     // such data is:
@@ -58,7 +58,7 @@ describe('MapData', function () {
       const field = Random.id()
       await expectThrown({
         fn: () => MapData.create({ field, dimensionsOrder }),
-        message: `Expect field doc by _id "${field}"`
+        message: `Expect field doc by _id "${field}"`,
       })
     })
     it('throws if there are no dimensions', async () => {
@@ -66,7 +66,7 @@ describe('MapData', function () {
       await FieldCollection.insertAsync({ _id: field })
       await expectThrown({
         fn: () => MapData.create({ field, dimensionsOrder }),
-        message: 'Expect at least one dimension doc'
+        message: 'Expect at least one dimension doc',
       })
     })
     it('throws if there are no levels', async () => {
@@ -75,7 +75,7 @@ describe('MapData', function () {
       await DimensionCollection.insertAsync({})
       await expectThrown({
         fn: () => MapData.create({ field, dimensionsOrder }),
-        message: 'Expect at least one level doc'
+        message: 'Expect at least one level doc',
       })
     })
 
@@ -88,7 +88,7 @@ describe('MapData', function () {
       const fieldDoc = await FieldCollection.findOneAsync()
       await expectThrown({
         fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
-        message: `Integrity failed: Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`
+        message: `Integrity failed: Expect at least one unit set for test cycle ${testCycleDoc.shortCode}`,
       })
     })
 
@@ -100,7 +100,7 @@ describe('MapData', function () {
       const fieldDoc = await FieldCollection.findOneAsync()
       await expectThrown({
         fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
-        message: `Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`
+        message: `Expect ${expected} unit sets for test cycle ${testCycleDoc._id}, got 0`,
       })
     })
 
@@ -114,7 +114,7 @@ describe('MapData', function () {
       const unitSetDoc = await UnitSetCollection.findOneAsync(unitSetId)
       await expectThrown({
         fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
-        message: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0`
+        message: `Expect units for unit set ${unitSetDoc.shortCode} to be above 0`,
       })
     })
 
@@ -129,19 +129,22 @@ describe('MapData', function () {
       const fieldDoc = await FieldCollection.findOneAsync()
       await expectThrown({
         fn: () => MapData.create({ field: fieldDoc._id, dimensionsOrder }),
-        message: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got 0`
+        message: `Expect ${expectedUnits} units for unit set ${unitSetDoc.shortCode}, got 0`,
       })
     })
 
     it('does not create a map if no test cycle at all is found for given field/level/dimension', async () => {
       await mockDocuments()
       const removed = await TestCycleCollection.removeAsync({
-        _id: (await TestCycleCollection.findOneAsync())._id
+        _id: (await TestCycleCollection.findOneAsync())._id,
       })
       expect(removed).to.equal(1)
 
       const fieldDoc = await FieldCollection.findOneAsync()
-      const data = await MapData.create({ field: fieldDoc._id, dimensionsOrder })
+      const data = await MapData.create({
+        field: fieldDoc._id,
+        dimensionsOrder,
+      })
       const mapDoc = await MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(data).to.equal(undefined)
@@ -154,15 +157,21 @@ describe('MapData', function () {
       const fieldDoc = await FieldCollection.findOneAsync()
       await MapData.create({ field: fieldDoc._id, dimensionsOrder })
 
-      const toId = doc => doc._id
-      const { dimensions, entries, field, levels, maxProgress } = await MapData.get({ field: fieldDoc._id, dimensionsOrder })
+      const toId = (doc) => doc._id
+      const { dimensions, entries, field, levels, maxProgress } =
+        await MapData.get({ field: fieldDoc._id, dimensionsOrder })
 
       expect(field).to.equal(fieldDoc._id)
 
-      expect(levels).to.deep.equal((await LevelCollection.find().fetchAsync()).map(toId))
-      expect(dimensions.map(entry => entry._id))
-        .to.deep.equal((await DimensionCollection.find().fetchAsync()).map(toId))
-      expect(entries.length).to.equal(await UnitSetCollection.countDocuments({}) + 1)
+      expect(levels).to.deep.equal(
+        (await LevelCollection.find().fetchAsync()).map(toId),
+      )
+      expect(dimensions.map((entry) => entry._id)).to.deep.equal(
+        (await DimensionCollection.find().fetchAsync()).map(toId),
+      )
+      expect(entries.length).to.equal(
+        (await UnitSetCollection.countDocuments({})) + 1,
+      )
 
       const milestone = entries.pop()
       expect(milestone.type).to.equal('milestone')
@@ -171,14 +180,14 @@ describe('MapData', function () {
       const competenciesByDimension = [0, 0, 0, 0, 0]
       let countedMaxProgress = 0
 
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         expect(entry.type).to.equal('stage')
         expect(entry.level).to.equal(0)
 
         // progress sums up correctly
         let entryProgress = 0
 
-        entry.unitSets.forEach(unitSet => {
+        entry.unitSets.forEach((unitSet) => {
           entryProgress += unitSet.progress
           competenciesByDimension[unitSet.dimension] += unitSet.competencies
         })
@@ -193,20 +202,26 @@ describe('MapData', function () {
 
       // ensure the milestone competency count it the correct sum
       // of the stage's unitSet competencies per dimension
-      milestone.competencies.forEach(entry => {
+      milestone.competencies.forEach((entry) => {
         expect(entry.max).to.equal(competenciesByDimension[entry.dimension])
       })
 
       // check testcycles overall progress
-      const testCycleDoc = await TestCycleCollection.findOneAsync({ field: fieldDoc._id })
+      const testCycleDoc = await TestCycleCollection.findOneAsync({
+        field: fieldDoc._id,
+      })
       expect(testCycleDoc.progress).to.equal(countedMaxProgress)
       expect(milestone.progress).to.equal(countedMaxProgress)
     })
   })
 
-  describe('methods', function () {
+  describe('methods', () => {
     testGetAllMethod(MapData, {
-      factory: () => ({ field: Random.id(), levels: [Random.id()], dimensions: [{ _id: Random.id() }] })
+      factory: () => ({
+        field: Random.id(),
+        levels: [Random.id()],
+        dimensions: [{ _id: Random.id() }],
+      }),
     })
   })
 })

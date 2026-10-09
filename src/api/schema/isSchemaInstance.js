@@ -8,4 +8,4 @@ import SimpleSchema from 'simpl-schema'
  * @function
  * @module isSchemaInstance
  */
-export const isSchemaInstance = schema => schema instanceof SimpleSchema
+export const isSchemaInstance = (schema) => schema instanceof SimpleSchema

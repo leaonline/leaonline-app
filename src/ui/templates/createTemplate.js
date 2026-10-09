@@ -14,7 +14,21 @@ import { noop } from '../../utils/noop'
  * @param param0.events
  * @param param0.debug
  */
-export const createTemplate = ({ template, language, contexts, tts, translations, onCreated, onDependenciesComplete, onError, onRendered, onDestroyed, helpers, events, debug = noop }) => {
+export const createTemplate = ({
+  template,
+  language,
+  contexts,
+  tts,
+  translations,
+  onCreated,
+  onDependenciesComplete,
+  onError,
+  onRendered,
+  onDestroyed,
+  helpers,
+  events,
+  debug = noop,
+}) => {
   const _debug = (...args) => debug(`debug [${template.viewName}]:`, ...args)
   const handleError = ({ instance, error }) => {
     _debug(error)
@@ -26,10 +40,12 @@ export const createTemplate = ({ template, language, contexts, tts, translations
 
   template.onCreated(function () {
     const instance = this
-    const promiseError = error => handleError({ instance, error })
+    const promiseError = (error) => handleError({ instance, error })
     if (onCreated) {
       _debug('run onCreated hook')
-      Promise.resolve(onCreated({ instance, debug: _debug })).catch(promiseError)
+      Promise.resolve(onCreated({ instance, debug: _debug })).catch(
+        promiseError,
+      )
     }
 
     _debug('init dependencies')
@@ -44,43 +60,49 @@ export const createTemplate = ({ template, language, contexts, tts, translations
         instance.state.set('dependenciesComplete', true)
         if (onDependenciesComplete) {
           _debug('run onDependenciesComplete hook')
-          Promise.resolve(onDependenciesComplete({ instance, debug: _debug })).catch(promiseError)
+          Promise.resolve(
+            onDependenciesComplete({ instance, debug: _debug }),
+          ).catch(promiseError)
         }
       },
-      onError: error => {
+      onError: (error) => {
         _debug('dependencies error')
         instance.state.set({ dependenciesComplete: true })
         handleError({ instance, error })
-      }
+      },
     })
   })
 
   template.onRendered(function () {
     const instance = this
-    const promiseError = error => handleError({ instance, error })
+    const promiseError = (error) => handleError({ instance, error })
     if (onRendered) {
       _debug('run on rendered hook')
-      Promise.resolve(onRendered({ instance, debug: _debug })).catch(promiseError)
+      Promise.resolve(onRendered({ instance, debug: _debug })).catch(
+        promiseError,
+      )
     }
   })
 
   template.onDestroyed(function () {
     const instance = this
-    const promiseError = error => handleError({ instance, error })
+    const promiseError = (error) => handleError({ instance, error })
     if (onDestroyed) {
       _debug('run on destroyed hook')
-      Promise.resolve(onDestroyed({ instance, debug: _debug })).catch(promiseError)
+      Promise.resolve(onDestroyed({ instance, debug: _debug })).catch(
+        promiseError,
+      )
     }
   })
 
   template.helpers({
-    dependenciesComplete () {
+    dependenciesComplete() {
       return Template.getState('dependenciesComplete')
     },
-    error () {
+    error() {
       return Template.getState('error')
     },
-    ...helpers
+    ...helpers,
   })
 
   if (events) template.events(events)

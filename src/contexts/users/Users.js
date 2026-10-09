@@ -19,8 +19,7 @@ const Users = {
   name: 'users',
   label: 'users.title',
   icon: 'users',
-  representative: '_id'
-
+  representative: '_id',
 }
 
 const debug = createLog({ name: Users.name, type: 'debug' })
@@ -38,7 +37,7 @@ Users.schema = {
   username: {
     type: String,
     min: 32,
-    regEx: /[a-f0-9]{32}/i
+    regEx: /[a-f0-9]{32}/i,
   },
 
   /**
@@ -51,7 +50,7 @@ Users.schema = {
    */
   lastLogin: {
     type: Date,
-    optional: true
+    optional: true,
   },
 
   /**
@@ -59,30 +58,30 @@ Users.schema = {
    * for multiple authentication and verification scenarios
    */
   services: {
-    type: Object
+    type: Object,
   },
   'services.password': {
-    type: Object
+    type: Object,
   },
   'services.password.bcrypt': {
     type: String,
-    regEx: /^\$2b\$.{56}$/
+    regEx: /^\$2b\$.{56}$/,
   },
   'services.resume': {
-    type: Object
+    type: Object,
   },
   'services.resume.loginTokens': {
     type: Array,
-    optional: true
+    optional: true,
   },
   'services.resume.loginTokens.$': {
-    type: Object
+    type: Object,
   },
   'services.resume.loginTokens.$.when': {
-    type: Date
+    type: Date,
   },
   'services.resume.loginTokens.$.hashesToken': {
-    type: String
+    type: String,
   },
 
   /**
@@ -95,7 +94,7 @@ Users.schema = {
    */
   voice: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   /**
@@ -103,7 +102,7 @@ Users.schema = {
    */
   speed: {
     type: Number,
-    optional: true
+    optional: true,
   },
 
   /**
@@ -112,12 +111,12 @@ Users.schema = {
    */
   research: {
     type: Date,
-    optional: true
+    optional: true,
   },
 
   isDev: {
     type: Boolean,
-    optional: true
+    optional: true,
   },
 
   // adding Email schema from UserEmail
@@ -131,7 +130,7 @@ Users.schema = {
   device: {
     type: Object,
     optional: true,
-    blackbox: true
+    blackbox: true,
   },
 
   /**
@@ -144,8 +143,8 @@ Users.schema = {
    */
   terms: {
     type: Date,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 /**
@@ -170,13 +169,13 @@ Users.methods.create = {
   isPublic: true,
   schema: {
     termsAndConditionsIsChecked: {
-      type: Boolean
+      type: Boolean,
     },
-    isDev: Users.schema.isDev
+    isDev: Users.schema.isDev,
   },
-  run: onServerExec(function () {
-    import { Random } from 'meteor/random'
-    import { RestoreCodes } from '../../api/accounts/RestoreCodes'
+  run: onServerExec(() => {
+    const { Random } = require('meteor/random')
+    const { RestoreCodes } = require('../../api/accounts/RestoreCodes')
 
     return async function (options = {}) {
       const { userId } = this
@@ -185,18 +184,19 @@ Users.methods.create = {
       // without an existing account
       // or if the caller is actually a backenduser
       if (userId) {
-        throw new Meteor.Error(
-          'createUser.error',
-          'createUser.alreadyExist',
-          { userId }
-        )
+        throw new Meteor.Error('createUser.error', 'createUser.alreadyExist', {
+          userId,
+        })
       }
 
       const collection = getUsersCollection()
       const { termsAndConditionsIsChecked, isDev } = options
 
       if (termsAndConditionsIsChecked !== true) {
-        throw new Meteor.Error('createUser.error', 'termsAndConditionsIsChecked.false')
+        throw new Meteor.Error(
+          'createUser.error',
+          'termsAndConditionsIsChecked.false',
+        )
       }
       // since older app versions do not send this flag
       // we can't 100% require this to be present
@@ -206,7 +206,7 @@ Users.methods.create = {
       const restore = await safeWhileAsync(async () => {
         const codes = RestoreCodes.generate()
         const r = codes.join('-')
-        const hasCodes = await collection.countDocuments({ restore: r }) > 0
+        const hasCodes = (await collection.countDocuments({ restore: r })) > 0
         if (!hasCodes) {
           return r
         }
@@ -229,7 +229,7 @@ Users.methods.create = {
       // which the client uses to further display
       return { restore, ...loggedIn }
     }
-  })
+  }),
 }
 
 /**
@@ -248,36 +248,37 @@ Users.methods.updateProfile = {
   schema: {
     voice: {
       type: String,
-      optional: true
+      optional: true,
     },
     speed: {
       type: Number,
-      optional: true
-    }
+      optional: true,
+    },
   },
   run: async function ({ voice, speed } = {}) {
     const { userId } = this
-    const nothingToUpdate = typeof voice !== 'string' && typeof speed !== 'number'
+    const nothingToUpdate =
+      typeof voice !== 'string' && typeof speed !== 'number'
 
     if (nothingToUpdate) {
-      throw new Meteor.Error(
-        'permissionDenied',
-        'updateProfile.failed',
-        { userId, voice, speed }
-      )
+      throw new Meteor.Error('permissionDenied', 'updateProfile.failed', {
+        userId,
+        voice,
+        speed,
+      })
     }
 
     return updateUserProfile({ userId, speed, voice })
-  }
+  },
 }
 
 Users.methods.passwordlessLogin = {
   name: 'users.methods.passwordlessLogin',
   schema: {
-    email: true
+    email: true,
   },
   run: onServerExec(() => {
-    import { createUser } from './server/createUser'
+    const { createUser } = require('./server/createUser')
     return async function ({ email }) {
       const { userId } = this
 
@@ -285,11 +286,9 @@ Users.methods.passwordlessLogin = {
       // without an existing account
       // or if the caller is actually a backenduser
       if (userId) {
-        throw new Meteor.Error(
-          'createUser.error',
-          'createUser.alreadyExist',
-          { userId }
-        )
+        throw new Meteor.Error('createUser.error', 'createUser.alreadyExist', {
+          userId,
+        })
       }
 
       const existingUser = await Accounts.findUserByEmail(email)
@@ -301,7 +300,7 @@ Users.methods.passwordlessLogin = {
       await Accounts.sendLoginTokenEmail(newUser.userId)
       return newUser
     }
-  })
+  }),
 }
 
 /**
@@ -315,13 +314,13 @@ Users.methods.restore = {
     'codes.$': String,
     voice: {
       type: String,
-      optional: true
+      optional: true,
     },
     speed: {
       type: Number,
-      optional: true
+      optional: true,
     },
-    device: Users.schema.device
+    device: Users.schema.device,
   },
   run: async function ({ codes, voice, speed, device }) {
     const restore = codes.join('-')
@@ -331,11 +330,11 @@ Users.methods.restore = {
     debug('restore with code', restore, '=> found', count)
 
     if (count !== 1) {
-      throw new Meteor.Error(
-        'permissionDenied',
-        'restore.failed',
-        { codes, restore, count }
-      )
+      throw new Meteor.Error('permissionDenied', 'restore.failed', {
+        codes,
+        restore,
+        count,
+      })
     }
 
     const [user] = await UsersCollection.find(query).fetchAsync()
@@ -349,7 +348,7 @@ Users.methods.restore = {
     }
 
     return Accounts._loginUser(this, user._id)
-  }
+  },
 }
 
 /**
@@ -363,7 +362,7 @@ Users.methods.getCodes = {
     const { userId } = this
     const user = await getUsersCollection().findOneAsync(userId)
     return user.restore
-  }
+  },
 }
 
 /**
@@ -380,13 +379,14 @@ Users.methods.getCodes = {
 Users.methods.delete = {
   name: 'users.methods.delete',
   schema: {},
-  run: onServerExec(function () {
-    return async function () {
-      const { userId } = this
-      // TODO: check if Meteor.call('logout') makes sense
-      return removeUser(userId, userId)
-    }
-  })
+  run: onServerExec(
+    () =>
+      async function () {
+        const { userId } = this
+        // TODO: check if Meteor.call('logout') makes sense
+        return removeUser(userId, userId)
+      },
+  ),
 }
 
 // -----------------------------------------------------------------------------
@@ -402,28 +402,33 @@ Users.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
   backend: true,
-  run: async function () {
-    const users = await getUsersCollection().find({}, {
-      fields: {
-        services: 0,
-        agents: 0
-      },
-      hint: {
-        $natural: -1
-      }
-    }).fetchAsync()
+  run: async () => {
+    const users = await getUsersCollection()
+      .find(
+        {},
+        {
+          fields: {
+            services: 0,
+            agents: 0,
+          },
+          hint: {
+            $natural: -1,
+          },
+        },
+      )
+      .fetchAsync()
 
     return { users }
-  }
+  },
 }
 
 /**
@@ -433,32 +438,32 @@ Users.methods.getAll = {
 Users.methods.remove = {
   name: 'users.methods.remove',
   schema: {
-    _id: 1
+    _id: 1,
   },
   backend: true,
   run: async function ({ _id }) {
     const { userId } = this
     const removed = await removeUser(_id, userId)
     return removed?.userRemoved
-  }
+  },
 }
 
 Users.methods.inviteForResearch = {
   name: 'users.methods.inviteForResearch',
   schema: {
     email: {
-      type: String
-    }
+      type: String,
+    },
   },
   backend: true,
   run: onServerExec(() => {
-    import { inviteForResearch } from './inviteForResearch'
+    const { inviteForResearch } = require('./inviteForResearch')
 
     return async function ({ email }) {
       const { userId } = this
       return inviteForResearch({ userId, email })
     }
-  })
+  }),
 }
 
 export { Users }

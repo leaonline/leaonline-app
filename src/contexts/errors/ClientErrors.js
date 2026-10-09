@@ -7,11 +7,11 @@ import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
 export const ClientErrors = {
   name: 'clientErrors',
   label: 'clientErrors.title',
-  icon: 'exclamation-triangle'
+  icon: 'exclamation-triangle',
 }
 
 ClientErrors.schema = {
-  ...ErrorBaseSchema
+  ...ErrorBaseSchema,
 }
 
 ClientErrors.methods = {}
@@ -23,9 +23,11 @@ ClientErrors.methods.send = {
   run: async function (options = {}) {
     const userId = this.userId
     const errorDoc = normalizeError({ error: options, userId, stackLength: 3 })
-    const errorDocId = await getCollection(ClientErrors.name).insertAsync(errorDoc)
+    const errorDocId = await getCollection(ClientErrors.name).insertAsync(
+      errorDoc,
+    )
     Meteor.defer(async () => notifyUsersAboutError(errorDoc, 'client'))
 
     return errorDocId
-  }
+  },
 }

@@ -6,11 +6,11 @@ import { RequestedDocsContext } from '../../../../tests/webapp-server-helpers'
 import { expectThrow } from '../../../../tests/helpers.tests'
 import { toContentServerURL } from '../../../api/url/toContentServerURL'
 
-describe(loadContentDoc.name, function () {
-  beforeEach(function () {
+describe(loadContentDoc.name, () => {
+  beforeEach(() => {
     RequestedDocsContext.collection().remove({})
   })
-  it('loads a single document from the content server', async function () {
+  it('loads a single document from the content server', async () => {
     const docId = RequestedDocsContext.routes.byId.docId
     const doc = await loadContentDoc(RequestedDocsContext, docId)
     expect(doc).to.deep.equal(RequestedDocsContext.doc)
@@ -26,21 +26,17 @@ describe(loadContentDoc.name, function () {
     expect(cachedDoc).to.deep.equal(doc)
     expect(RequestedDocsContext.collection().find().count()).to.equal(1)
   })
-  it('throws an error if the request targets a faulty _id', async function () {
+  it('throws an error if the request targets a faulty _id', async () => {
     const docId = Random.id()
     await expectThrow({
-      fn: function () {
-        return loadContentDoc(RequestedDocsContext, docId)
-      },
-      message: `failed [404] Invalid request id ${docId}`
+      fn: () => loadContentDoc(RequestedDocsContext, docId),
+      message: `failed [404] Invalid request id ${docId}`,
     })
   })
-  it('throws if the response is not a document', async function () {
+  it('throws if the response is not a document', async () => {
     await expectThrow({
-      fn: function () {
-        return loadContentDoc(RequestedDocsContext, 'plain')
-      },
-      message: `Expected document for GET ${toContentServerURL(RequestedDocsContext.routes.byId.path)}`
+      fn: () => loadContentDoc(RequestedDocsContext, 'plain'),
+      message: `Expected document for GET ${toContentServerURL(RequestedDocsContext.routes.byId.path)}`,
     })
   })
 })

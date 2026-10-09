@@ -17,7 +17,7 @@ export const submitResponse = ({ userId, responseDoc }) => {
     sessionId: responseDoc.sessionId,
     unitId: responseDoc.unit,
     page: responseDoc.page,
-    userId
+    userId,
   }
 
   return getCollection(Response.name).upsertAsync(selector, modifier)

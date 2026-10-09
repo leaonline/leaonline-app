@@ -3,8 +3,8 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { createRepository } from '../createRepository'
 
-describe(createRepository.name, function () {
-  it('creates a new repository with default in-mem storage', function () {
+describe(createRepository.name, () => {
+  it('creates a new repository with default in-mem storage', () => {
     const repo = createRepository()
     const item = { _id: Random.id() }
     repo.add('foo', item)

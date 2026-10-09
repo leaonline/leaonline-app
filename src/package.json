@@ -3,35 +3,32 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "lint:code": "standardx -v | snazzy",
-    "lint:code-fix": "standardx --fix -v | snazzy",
-    "build:docs": "npx jsdoc -c ./jsdoc.conf.json"
+    "lint:code": "npx @biomejs/biome lint --diagnostic-level=error ./",
+    "lint:code-fix": "npx @biomejs/biome lint --write --diagnostic-level=error ./",
+    "format:code": "npx @biomejs/biome format ./",
+    "format:code-fix": "npx @biomejs/biome format --write ./",
+    "build:docs": "npx jsdoc -c ./jsdoc.conf.json",
+    "visualize": "meteor --production --extra-packages bundle-visualizer,dynamic-import --settings=settings.json"
   },
   "dependencies": {
-    "@babel/runtime": "^7.15.4",
+    "@babel/runtime": "^8.0.7",
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@popperjs/core": "^2.11.8",
+    "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.8",
-    "chalk": "^5.0.0",
-    "detect-os": "^1.2.1",
-    "dotenv": "^16.0.0",
     "easy-speech": "^2.4.0",
-    "jquery": "^3.7.1",
-    "meteor-node-stubs": "^1.1.0",
-    "njwt": "^1.2.0",
-    "simpl-schema": "^1.12.0"
+    "jquery": "^4.0.0",
+    "meteor-node-stubs": "^1.2.30",
+    "njwt": "^2.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.2",
-    "@babel/eslint-parser": "^7.17.0",
-    "babel-plugin-istanbul": "^6.1.1",
-    "better-docs": "^2.7.2",
-    "chai": "^4.3.6",
-    "jsdoc": "^3.6.11",
+    "@babel/core": "^8.0.7",
+    "@biomejs/biome": "2.5.15",
+    "babel-plugin-istanbul": "^8.0.0",
+    "chai": "^6.3.0",
+    "jsdoc": "^4.0.5",
     "puppeteer": "^24.43.1",
-    "sinon": "^15.0.1",
-    "snazzy": "^9.0.0",
-    "standardx": "^7.0.0"
+    "sinon": "^22.1.0"
   },
   "meteor": {
     "mainModule": {
@@ -50,22 +47,6 @@
           "**/packages/**"
         ]
       }
-    }
-  },
-  "eslintConfig": {
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "sourceType": "module",
-      "allowImportExportEverywhere": true
-    },
-    "rules": {
-      "brace-style": [
-        "error",
-        "stroustrup",
-        {
-          "allowSingleLine": true
-        }
-      ]
     }
   }
 }

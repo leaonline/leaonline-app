@@ -7,13 +7,17 @@
  */
 export const truncatePercent = (percent) => {
   if (!isValidNumber(percent)) {
-    throw new Error(`Expected a valid number, got ${percent} (${typeof percent}), in ${truncatePercent.name}.`)
+    throw new Error(
+      `Expected a valid number, got ${percent} (${typeof percent}), in ${truncatePercent.name}.`,
+    )
   }
 
   const integer = Math.trunc(percent)
 
   if (!isValidNumber(integer) || !Number.isSafeInteger(integer)) {
-    throw new Error(`Expected truncated safe integer, got ${integer} (${typeof integer}), in ${truncatePercent.name}.`)
+    throw new Error(
+      `Expected truncated safe integer, got ${integer} (${typeof integer}), in ${truncatePercent.name}.`,
+    )
   }
 
   return integer
@@ -25,4 +29,5 @@ export const truncatePercent = (percent) => {
  * @param n
  * @return {boolean}
  */
-const isValidNumber = n => typeof n === 'number' && !Number.isNaN(n) && Number.isFinite(n)
+const isValidNumber = (n) =>
+  typeof n === 'number' && !Number.isNaN(n) && Number.isFinite(n)

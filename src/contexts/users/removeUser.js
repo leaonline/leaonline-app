@@ -21,20 +21,26 @@ export const removeUser = async (userId, calledBy) => {
   if (!user) {
     throw new Meteor.Error('removeUser.error', 'removeUser.userDoesNotExist', {
       userId,
-      calledBy
+      calledBy,
     })
   }
 
-  const responsesRemoved = await getCollection(Response.name).removeAsync({ userId })
-  const sessionsRemoved = await getCollection(Session.name).removeAsync({ userId })
-  const progressRemoved = await getCollection(Progress.name).removeAsync({ userId })
+  const responsesRemoved = await getCollection(Response.name).removeAsync({
+    userId,
+  })
+  const sessionsRemoved = await getCollection(Session.name).removeAsync({
+    userId,
+  })
+  const progressRemoved = await getCollection(Progress.name).removeAsync({
+    userId,
+  })
   const userRemoved = await UsesCollection.removeAsync({ _id: userId })
 
   return {
     responsesRemoved,
     sessionsRemoved,
     progressRemoved,
-    userRemoved
+    userRemoved,
   }
 }
 

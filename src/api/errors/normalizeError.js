@@ -1,14 +1,14 @@
 import { Meteor } from 'meteor/meteor'
 
 export const normalizeError = ({ error, userId, stackLength = 3 }) => {
-  const isMeteorError = ('errorType' in error || error instanceof Meteor.Error)
+  const isMeteorError = 'errorType' in error || error instanceof Meteor.Error
   const errorDoc = {
     type: isMeteorError ? error.errorType : 'native',
     name: error.name,
     message: error.message,
     title: error.error,
     reason: error.reason,
-    details: error.details
+    details: error.details,
   }
 
   errorDoc.createdAt = new Date()

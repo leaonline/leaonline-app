@@ -11,7 +11,7 @@ Meteor.startup(() => {
 
   // if the user is logged in we can load the full scss, since until then
   // the service worker will have most of the
-  Tracker.autorun(async function (computation) {
+  Tracker.autorun(async (computation) => {
     if (Meteor.userId()) {
       await initFullTheme()
       computation.stop()

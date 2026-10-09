@@ -1,0 +1,103 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "api/**/*",
+      "client/**/*",
+      "contexts/**/*",
+      "fixtures/**/*",
+      "infrastructure/**/*",
+      "resources/**/*",
+      "server/**/*",
+      "startup/**/*",
+      "tests/**/*",
+      "ui/**/*",
+      "utils/**/*",
+      "**/*.md",
+      "./*.json",
+      "./*.*js"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "performance": {
+        "noDelete": "warn"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noUselessThisAlias": "warn"
+      },
+      "suspicious": {
+        "useIterableCallbackReturn": "warn",
+        "noDoubleEquals": "warn",
+        "noAssignInExpressions": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useValidAriaValues": "warn",
+        "noAutofocus": "warn",
+        "useAriaPropsSupportedByRole": "warn",
+        "noInteractiveElementToNoninteractiveRole": "warn",
+        "useSemanticElements": "warn"
+      },
+      "correctness": {
+        "noUnknownTypeSelector": "warn",
+        "noUndeclaredVariables": "error"
+      }
+    }
+  },
+  "javascript": {
+    "globals": [
+      "$",
+      "Meteor",
+      "Mongo",
+      "describe",
+      "Template",
+      "Tracker",
+      "it",
+      "beforeEach",
+      "afterEach",
+      "before",
+      "after",
+      "ServiceConfiguration",
+      "DDP"
+    ],
+    "formatter": {
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
+  "css": {
+    "linter": {
+      "enabled": true
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "html": {
+    "parser": {
+      "interpolation": true
+    }
+  }
+}

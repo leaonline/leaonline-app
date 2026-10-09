@@ -1,10 +1,13 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import { restoreCollections, stubCollection } from '../../../tests/helpers/stubCollection'
+import {
+  restoreCollections,
+  stubCollection,
+} from '../../../tests/helpers/stubCollection'
 import { onAccountLoginHandler } from '../onAccountLoginHandler'
 import { getUsersCollection } from '../../collections/getUsersCollection'
 
-describe(onAccountLoginHandler.name, function () {
+describe(onAccountLoginHandler.name, () => {
   before(() => {
     stubCollection([getUsersCollection()])
   })

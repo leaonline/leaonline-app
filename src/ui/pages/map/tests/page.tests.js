@@ -13,21 +13,26 @@ import * as referenceLoader from '../../../loading/loadAllContentDocs'
 import * as collections from '../../../../api/utils/getLocalCollection'
 import * as methods from '../../../../infrastructure/methods/callMethod'
 import * as icons from '../data'
-import { createRendererTestContext, waitFor } from '../../../../tests/helpers/rendererHelpers.tests'
+import {
+  createRendererTestContext,
+  waitFor,
+} from '../../../../tests/helpers/rendererHelpers.tests'
 import { inputs } from './model.tests'
 import '../../../templates/initDependencies'
 import '../map'
 
 const deferred = () => {
   let release
-  const promise = new Promise(resolve => { release = resolve })
+  const promise = new Promise((resolve) => {
+    release = resolve
+  })
   return { promise, resolve: release }
 }
 
 // Real initDependencies still initializes contexts, language, translations and
 // template APIs. Gate only its completion callback to exercise page readiness.
 // These tests require the application's configured client test environment.
-describe('learner map page', function () {
+describe('learner map page', () => {
   const context = createRendererTestContext()
   let instance
   let dependencies
@@ -55,42 +60,67 @@ describe('learner map page', function () {
     context.sandbox.stub(Meteor, 'userId').callsFake(() => user.get())
     context.sandbox.stub(Meteor, 'status').callsFake(() => ({ connected }))
     context.sandbox.stub(Router, 'param').callsFake(() => field.get())
-    context.sandbox.stub(Router, 'current').callsFake(() => ({ queryParams: query.get() }))
-    context.sandbox.stub(Router, 'queryParam').callsFake(value => {
+    context.sandbox
+      .stub(Router, 'current')
+      .callsFake(() => ({ queryParams: query.get() }))
+    context.sandbox.stub(Router, 'queryParam').callsFake((value) => {
       if (typeof value === 'string') return query.get()[value]
       query.set({ ...query.get(), ...value })
     })
-    context.sandbox.stub(Router.src, 'withReplaceState').callsFake(callback => callback())
+    context.sandbox
+      .stub(Router.src, 'withReplaceState')
+      .callsFake((callback) => callback())
     context.sandbox.stub(Session, 'data').returns(null)
     start = context.sandbox.stub(Session, 'start')
     calls = context.sandbox.stub(methods, 'callMethod').resolves({
-      sessionDoc: { _id: 'session', userId: user.get(), fieldId: 'field', unitSet: 'a', unit: 'first' },
-      unitSetDoc: { _id: 'a', field: 'field', units: ['first'] }
+      sessionDoc: {
+        _id: 'session',
+        userId: user.get(),
+        fieldId: 'field',
+        unitSet: 'a',
+        unit: 'first',
+      },
+      unitSetDoc: { _id: 'a', field: 'field', units: ['first'] },
     })
     context.sandbox.stub(icons, 'loadMapIcons').resolves(['book'])
     context.sandbox.stub(referenceLoader, 'loadAllContentDocs').resolves()
-    context.sandbox.stub(collections, 'getLocalCollection').callsFake(name => ({
-      findOne: id => {
-        const doc = (name === Dimension.name ? inputs.dimensions : inputs.levels).find(doc => doc._id === id)
-        return doc && { ...doc, colorType: 0 }
-      }
-    }))
-    load = context.sandbox.stub(contentLoader, 'loadContentDoc').callsFake(async ({ context: source }) => {
-      if (source === Field) return { _id: field.get(), title: 'Test field' }
-      if (source === MapData) return { ...inputs.topology, field: field.get() }
-      if (source === Progress) return null
-    })
+    context.sandbox
+      .stub(collections, 'getLocalCollection')
+      .callsFake((name) => ({
+        findOne: (id) => {
+          const doc = (
+            name === Dimension.name ? inputs.dimensions : inputs.levels
+          ).find((doc) => doc._id === id)
+          return doc && { ...doc, colorType: 0 }
+        },
+      }))
+    load = context.sandbox
+      .stub(contentLoader, 'loadContentDoc')
+      .callsFake(async ({ context: source }) => {
+        if (source === Field) return { _id: field.get(), title: 'Test field' }
+        if (source === MapData)
+          return { ...inputs.topology, field: field.get() }
+        if (source === Progress) return null
+      })
     const initialize = Blaze.TemplateInstance.prototype.initDependencies
-    context.sandbox.stub(Blaze.TemplateInstance.prototype, 'initDependencies').callsFake(function (options) {
-      if (this.view.name !== 'Template.map') return initialize.call(this, options)
-      instance = this
-      return initialize.call(this, { ...options, onComplete: () => { dependencies = options.onComplete } })
-    })
+    context.sandbox
+      .stub(Blaze.TemplateInstance.prototype, 'initDependencies')
+      .callsFake(function (options) {
+        if (this.view.name !== 'Template.map')
+          return initialize.call(this, options)
+        instance = this
+        return initialize.call(this, {
+          ...options,
+          onComplete: () => {
+            dependencies = options.onComplete
+          },
+        })
+      })
   })
   afterEach(async () => {
     context.teardown()
-    pending.forEach(item => item.resolve(null))
-    await Promise.all(pending.map(item => item.promise))
+    pending.forEach((item) => item.resolve(null))
+    await Promise.all(pending.map((item) => item.promise))
     await context.afterFlush()
   })
   const render = async () => {
@@ -105,8 +135,10 @@ describe('learner map page', function () {
     await context.afterFlush()
     return host
   }
-  const choose = async host => {
-    host.querySelector('.map-list-stage, .map-stage').dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+  const choose = async (host) => {
+    host
+      .querySelector('.map-list-stage, .map-stage')
+      .dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
     await context.afterFlush()
   }
 
@@ -136,9 +168,14 @@ describe('learner map page', function () {
   })
   for (const failure of ['icons', 'metadata', 'renderer']) {
     it(`retains selectable list entries after ${failure} failure`, async () => {
-      if (failure === 'icons') icons.loadMapIcons.rejects(new Error('icons failed'))
-      if (failure === 'metadata') collections.getLocalCollection.returns({ findOne: () => null })
-      if (failure === 'renderer') context.sandbox.stub(window, 'ResizeObserver').throws(new Error('renderer failed'))
+      if (failure === 'icons')
+        icons.loadMapIcons.rejects(new Error('icons failed'))
+      if (failure === 'metadata')
+        collections.getLocalCollection.returns({ findOne: () => null })
+      if (failure === 'renderer')
+        context.sandbox
+          .stub(window, 'ResizeObserver')
+          .throws(new Error('renderer failed'))
       const host = await ready()
       expect(host.querySelectorAll('.map-list-stage')).to.have.length(3)
       await choose(host)
@@ -153,11 +190,15 @@ describe('learner map page', function () {
         if (source === MapData) return inputs.topology
         if (source === Progress) {
           if (progress === 'failed') throw new Error('progress failed')
-          return progress === 'missing' ? null : { userId: 'other', fieldId: 'field' }
+          return progress === 'missing'
+            ? null
+            : { userId: 'other', fieldId: 'field' }
         }
       })
       await ready()
-      expect(instance.state.get('learnerUnavailable')).to.equal(progress !== 'missing')
+      expect(instance.state.get('learnerUnavailable')).to.equal(
+        progress !== 'missing',
+      )
     })
   }
   it('recovers from invalid topology on explicit retry', async () => {
@@ -232,13 +273,16 @@ describe('learner map page', function () {
       if (boundary === 'account') user.set('other')
       if (boundary === 'field') field.set('other')
       if (boundary === 'destroy') context.teardown()
-      if (boundary !== 'destroy') await waitFor(() => instance.state.get('ready'), 'new load')
+      if (boundary !== 'destroy')
+        await waitFor(() => instance.state.get('ready'), 'new load')
       const model = staleInstance.state.get('model')
       request.resolve({ _id: 'field', title: 'Stale field' })
       await request.promise
       await context.afterFlush()
       expect(staleInstance.state.get('model')).to.equal(model)
-      expect(staleInstance.state.get('field')?.title).not.to.equal('Stale field')
+      expect(staleInstance.state.get('field')?.title).not.to.equal(
+        'Stale field',
+      )
     })
   }
   for (const boundary of ['close', 'account', 'field', 'destroy']) {

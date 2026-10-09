@@ -13,7 +13,7 @@ export const Achievements = {
   name: 'achievements',
   label: 'achievements.title',
   icon: 'trophy',
-  sync: true
+  sync: true,
 }
 
 Achievements.schema = {
@@ -21,31 +21,41 @@ Achievements.schema = {
     type: String,
     dependency: {
       collection: Dimension.name,
-      field: Dimension.representative
-    }
+      field: Dimension.representative,
+    },
   },
   fieldId: {
     type: String,
     dependency: {
       collection: Field.name,
-      field: Field.representative
-    }
+      field: Field.representative,
+    },
   },
   maxProgress: {
-    type: Number
+    type: Number,
   },
   maxCompetencies: {
-    type: Number
-  }
+    type: Number,
+  },
 }
 
-Achievements.create = async function create ({ dimensionId, fieldId }) {
+Achievements.create = async function create({ dimensionId, fieldId }) {
   const collection = getCollection(Achievements.name)
-  const achievementId = await collection.insertAsync({ dimensionId, fieldId, maxProgress: 0, maxCompetencies: 0 })
+  const achievementId = await collection.insertAsync({
+    dimensionId,
+    fieldId,
+    maxProgress: 0,
+    maxCompetencies: 0,
+  })
   return collection.findOneAsync(achievementId)
 }
 
-Achievements.update = async function update ({ dimensionId, fieldId, maxProgress, maxCompetencies }) {
+Achievements.update = async function update({
+  dimensionId,
+  fieldId,
+  maxProgress,
+  maxCompetencies,
+}) {
   const collection = getCollection(Achievements.name)
   const query = { dimensionId, fieldId }
   let achievementDoc = await collection.findOneAsync(query)
@@ -54,7 +64,9 @@ Achievements.update = async function update ({ dimensionId, fieldId, maxProgress
     achievementDoc = await Achievements.create(query)
   }
 
-  const updated = await collection.updateAsync(achievementDoc._id, { $set: { maxCompetencies, maxProgress } })
+  const updated = await collection.updateAsync(achievementDoc._id, {
+    $set: { maxCompetencies, maxProgress },
+  })
   await SyncState.update(Achievements.name)
 
   return updated
@@ -68,16 +80,18 @@ Achievements.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: async function ({ dependencies = {} } = {}) {
-    const docs = await getCollection(Achievements.name).find({}, { hint: { $natural: -1 } }).fetchAsync()
+  run: async ({ dependencies = {} } = {}) => {
+    const docs = await getCollection(Achievements.name)
+      .find({}, { hint: { $natural: -1 } })
+      .fetchAsync()
     const data = { [Achievements.name]: docs }
 
     await onDependencies()
@@ -87,5 +101,5 @@ Achievements.methods.getAll = {
       .run({ docs, dependencies })
 
     return data
-  }
+  },
 }

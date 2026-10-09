@@ -5,32 +5,32 @@ import { simpleHash } from '../../../../utils/simpleHash'
  */
 
 export class UnitPageCache {
-  static create (storage) {
+  static create(storage) {
     return new UnitPageCache(storage)
   }
 
-  constructor (storage) {
+  constructor(storage) {
     this.storage = storage
   }
 
-  save ({ sessionId, unitId }, page) {
+  save({ sessionId, unitId }, page) {
     const key = getKey({ sessionId, unitId })
     this.storage.setItem(key, page)
   }
 
-  load ({ sessionId, unitId }) {
+  load({ sessionId, unitId }) {
     const key = getKey({ sessionId, unitId })
     const value = this.storage.getItem(key)
     return Number.parseInt(value, 10)
   }
 
-  clear (pageData) {
+  clear(pageData) {
     const key = getKey(pageData)
     return this.storage.removeItem(key)
   }
 }
 
-function getKey ({ sessionId, unitId }) {
+function getKey({ sessionId, unitId }) {
   const hash = simpleHash(`${sessionId}-${unitId}`)
   return `upc-${hash}`
 }

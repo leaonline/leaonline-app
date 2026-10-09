@@ -1,6 +1,6 @@
 /* eslint-env mocha */
-describe('mixins', function () {
-  import './environmentExtensionMixin.tests'
-  import './checkPermissions.tests'
-  import './errorMixin.tests'
+describe('mixins', () => {
+  require('./environmentExtensionMixin.tests')
+  require('./checkPermissions.tests')
+  require('./errorMixin.tests')
 })

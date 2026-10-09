@@ -6,36 +6,36 @@ import '../utils/object/tests/objectUtils.tests'
 import '../ui/pages/map/tests'
 
 if (Meteor.isClient) {
-  import '../startup/client/routeHelpers'
+  require('../startup/client/routeHelpers')
 }
 // The original backend suites require private settings and server-only APIs.
 if (Meteor.isServer) {
-  import './validateSchema'
+  require('./validateSchema')
   // api
-  import '../api/accounts/tests'
-  import '../api/collections/tests'
-  import '../api/crypto/tests'
-  import '../api/endpoints/tests'
-  import '../api/errors/tests'
-  import '../api/remotes/tests'
-  import '../api/utils/tests'
+  require('../api/accounts/tests')
+  require('../api/collections/tests')
+  require('../api/crypto/tests')
+  require('../api/endpoints/tests')
+  require('../api/errors/tests')
+  require('../api/remotes/tests')
+  require('../api/utils/tests')
   // contexts
-  import '../contexts/achievements/tests'
-  import '../contexts/competencies/tests'
-  import '../contexts/connection/tests'
-  import '../contexts/content/tests'
-  import '../contexts/errors/tests'
-  import '../contexts/map/tests'
-  import '../contexts/progress/tests'
-  import '../contexts/response/tests'
-  import '../contexts/session/tests'
-  import '../contexts/sync/tests'
-  import '../contexts/users/tests'
-  import '../contexts/feedback/tests'
-  import '../contexts/legal/tests'
-  import '../contexts/order/tests'
-  import '../contexts/appraisal/tests'
+  require('../contexts/achievements/tests')
+  require('../contexts/competencies/tests')
+  require('../contexts/connection/tests')
+  require('../contexts/content/tests')
+  require('../contexts/errors/tests')
+  require('../contexts/map/tests')
+  require('../contexts/progress/tests')
+  require('../contexts/response/tests')
+  require('../contexts/session/tests')
+  require('../contexts/sync/tests')
+  require('../contexts/users/tests')
+  require('../contexts/feedback/tests')
+  require('../contexts/legal/tests')
+  require('../contexts/order/tests')
+  require('../contexts/appraisal/tests')
   // infrastructure
-  import '../infrastructure/factories/tests'
-  import '../infrastructure/mixins/tests'
+  require('../infrastructure/factories/tests')
+  require('../infrastructure/mixins/tests')
 }

@@ -2,7 +2,7 @@
 import { expect } from 'chai'
 import { asyncTimeout } from '../asyncTimeout'
 const { performance } = globalThis
-describe(asyncTimeout.name, function () {
+describe(asyncTimeout.name, () => {
   it('creates a promise that resolves after timeout', async () => {
     const start = performance.now()
     await asyncTimeout(150)

@@ -6,7 +6,7 @@ import { createLog } from '../log/createLog'
 import { getCollection } from '../../api/utils/getCollection'
 
 const collectionFactory = createCollectionFactory({
-  schemaFactory: createSchema
+  schemaFactory: createSchema,
 })
 
 const log = createLog({ name: 'createCollection' })

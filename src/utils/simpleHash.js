@@ -3,7 +3,7 @@
  * @param str
  * @return {String}
  */
-export const simpleHash = str => {
+export const simpleHash = (str) => {
   let hash = 0
   let i
   let chr
@@ -14,7 +14,7 @@ export const simpleHash = str => {
 
   for (i = 0; i < str.length; i++) {
     chr = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + chr
+    hash = (hash << 5) - hash + chr
     hash |= 0 // Convert to 32bit integer
   }
 

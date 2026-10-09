@@ -39,9 +39,9 @@
         "testCycle": true,
         "mapIcons": true,
         "feedback": true,
-        "order":true,
-        "legal":true,
-        "achievements":true
+        "order": true,
+        "legal": true,
+        "achievements": true
       },
       "remap": {
         "active": true,

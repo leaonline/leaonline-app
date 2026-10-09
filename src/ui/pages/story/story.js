@@ -13,14 +13,13 @@ import './story.html'
 const renderersLoaded = initTaskRenderers()
 
 Template.story.onCreated(function () {
-  const instance = this
-  const { sessionId, unitSetId } = instance.data.params
+  const { sessionId, unitSetId } = this.data.params
 
-  instance.initDependencies({
+  this.initDependencies({
     tts: true,
     language: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     contexts: [UnitSet, Session, Dimension, Level, Unit],
     onComplete: async () => {
@@ -28,11 +27,11 @@ Template.story.onCreated(function () {
         await Session.load({ sessionId, unitSetId })
       }
       const sessionDocs = await loadSessionDocs(Session.data())
-      instance.state.set({ ...sessionDocs, dependenciesComplete: true })
-    }
+      this.state.set({ ...sessionDocs, dependenciesComplete: true })
+    },
   })
 
-  instance.autorun(computation => {
+  this.autorun((computation) => {
     if (renderersLoaded.get()) {
       return computation.stop()
     }
@@ -40,15 +39,17 @@ Template.story.onCreated(function () {
 })
 
 Template.story.helpers({
-  loadComplete () {
+  loadComplete() {
     const instance = Template.instance()
-    return instance.state.get('dependenciesComplete') &&
+    return (
+      instance.state.get('dependenciesComplete') &&
       instance.state.get('sessionDoc') &&
       instance.state.get('unitSetDoc') &&
       instance.state.get('dimensionDoc') &&
       renderersLoaded.get()
+    )
   },
-  pageContentData () {
+  pageContentData() {
     const instance = Template.instance()
     const unitSetDoc = instance.state.get('unitSetDoc')
     const sessionDoc = instance.state.get('sessionDoc')
@@ -59,10 +60,10 @@ Template.story.helpers({
       currentPageCount: -1,
       sessionId: sessionDoc._id,
       doc: unitSetDoc,
-      color: color
+      color: color,
     }
   },
-  navbarData () {
+  navbarData() {
     const instance = Template.instance()
     const sessionDoc = instance.state.get('sessionDoc')
     const levelDoc = instance.state.get('levelDoc')
@@ -75,19 +76,18 @@ Template.story.helpers({
       unitSetDoc,
       dimensionDoc,
       showProgress: true,
-      onExit: instance.data.exit
+      onExit: instance.data.exit,
     }
   },
-  currentType () {
+  currentType() {
     const instance = Template.instance()
     return instance.state.get('color')
-  }
+  },
 })
 
 Template.story.events({
-  'click .lea-story-finish-button' (event, templateInstance) {
+  'click .lea-story-finish-button'(event, templateInstance) {
     event.preventDefault()
-    debugger
     const sessionDoc = templateInstance.state.get('sessionDoc')
     const unitSetId = sessionDoc.unitSet
     const sessionId = sessionDoc._id
@@ -101,12 +101,12 @@ Template.story.events({
         prepare: () => templateInstance.state.set('updatingSession', true),
         receive: () => templateInstance.state.set('updatingSession', false),
         failure: templateInstance.onError,
-        success: unitId => templateInstance.data?.next({ sessionId, unitSetId, unitId })
+        success: (unitId) =>
+          templateInstance.data?.next({ sessionId, unitSetId, unitId }),
       })
-    }
-    else {
+    } else {
       const unitId = sessionDoc.nextUnit
       templateInstance.data?.next({ sessionId, unitSetId, unitId })
     }
-  }
+  },
 })

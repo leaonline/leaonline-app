@@ -4,41 +4,35 @@ import { marked, Renderer } from 'marked'
 import { Random } from 'meteor/random'
 
 export const createDefaultRenderer = {
-  create: (userOptions) => new DefaultRenderer(userOptions)
+  create: (userOptions) => new DefaultRenderer(userOptions),
 }
 
 class DefaultRenderer extends Renderer {
-  constructor (userOptions) {
+  constructor(userOptions) {
     super()
     this.userOptions = userOptions
   }
 
-  heading (data) {
+  heading(data) {
     const { tokens, depth } = data
     const text = this.parser.parseInline(tokens)
     return `<h${depth} class="lea-text">${text}</h${depth}>`
   }
 
-  paragraph ({ tokens } /*, level */) {
+  paragraph({ tokens } /*, level */) {
     const text = this.parser.parseInline(tokens)
     return `<p class="lea-text">${text}</p>`
   }
 
-  strong ({ tokens }) {
+  strong({ tokens }) {
     const text = this.parser.parseInline(tokens)
     return `<span class="lea-text-bold">${text}</span>`
   }
 
-  text ({ tokens, text }) {
-    const txt = tokens
-      ? this.parser.parseInline(tokens)
-      : text
-    const tts = !tokens && this.userOptions.useTTS
-      ? createTTS(txt)
-      : ''
-    return tts
-      ? `${tts} ${txt}`
-      : txt
+  text({ tokens, text }) {
+    const txt = tokens ? this.parser.parseInline(tokens) : text
+    const tts = !tokens && this.userOptions.useTTS ? createTTS(txt) : ''
+    return tts ? `${tts} ${txt}` : txt
   }
 }
 
@@ -62,13 +56,17 @@ const createTTS = (tokens) => {
   const ttsId = `markdown-tts-${Random.id(6)}`
   setTimeout(() => {
     const parent = document.querySelector(`#${ttsId}`)
-    Blaze.renderWithData(Template.soundbutton, {
-      text,
-      outline: true,
-      sm: true,
-      type: 'secondary',
-      class: 'border-0'
-    }, parent)
+    Blaze.renderWithData(
+      Template.soundbutton,
+      {
+        text,
+        outline: true,
+        sm: true,
+        type: 'secondary',
+        class: 'border-0',
+      },
+      parent,
+    )
   }, 1000)
   return `<span id="${ttsId}"></span>`
 }
@@ -78,7 +76,7 @@ const defaultOptions = {
   breaks: true,
   gfm: true,
   async: true,
-  headerIds: false
+  headerIds: false,
 }
 
 export const MarkdownRenderer = {}
@@ -92,7 +90,7 @@ MarkdownRenderer.render = async (data) => {
     value.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, ''),
     {
       ...defaultOptions,
-      renderer
-    }
+      renderer,
+    },
   )
 }

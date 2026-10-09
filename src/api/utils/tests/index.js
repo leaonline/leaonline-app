@@ -1,10 +1,10 @@
 /* eslint-env mocha */
-describe('utils', function () {
-  import './asyncTimeout.tests'
-  import './createIdSet.tests'
-  import './cursorToMap.tests'
-  import './ensureDocument.tests'
-  import './hasProps.tests'
-  import './collections.tests'
-  import './safeWhile.tests'
+describe('utils', () => {
+  require('./asyncTimeout.tests')
+  require('./createIdSet.tests')
+  require('./cursorToMap.tests')
+  require('./ensureDocument.tests')
+  require('./hasProps.tests')
+  require('./collections.tests')
+  require('./safeWhile.tests')
 })

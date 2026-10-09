@@ -8,8 +8,9 @@ describe(createReachabilityUrl.name, () => {
   it('creates a reachability url for a given path', async () => {
     const path = '/foo-bar-baz'
     createReachabilityUrl({ path })
-    expect(() => createReachabilityUrl({ path }))
-      .to.throw(`Path ${path} already taken!`)
+    expect(() => createReachabilityUrl({ path })).to.throw(
+      `Path ${path} already taken!`,
+    )
 
     const url = Meteor.absoluteUrl(path)
     const response = await fetch(url, { method: 'head' })

@@ -6,40 +6,39 @@ import './loginWithEmail.html'
 const emailRegex = /.+@.+\..+/
 
 Template.loginWithEmail.onCreated(function () {
-  const instance = this
-  instance.state.set({ view: 'request', email: '', requestDisabled: true })
-  instance.initDependencies({
+  this.state.set({ view: 'request', email: '', requestDisabled: true })
+  this.initDependencies({
     contexts: [Users],
     language: true,
     tts: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     onComplete: () => {
-      instance.state.set('dependenciesComplete', true)
+      this.state.set('dependenciesComplete', true)
     },
-    onError: e => {
+    onError: (e) => {
       // instance.data.onFail()
-      instance.state.set('dependenciesComplete', true)
-    }
+      this.state.set('dependenciesComplete', true)
+    },
   })
 })
 Template.loginWithEmail.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.getState('dependenciesComplete')
   },
-  loading () {
+  loading() {
     return Template.getState('loading')
   },
-  view (name) {
+  view(name) {
     return Template.getState('view') === name
   },
-  invalid () {
+  invalid() {
     return Template.getState('invalid')
   },
-  requestDisabled () {
+  requestDisabled() {
     return Template.getState('loading') || Template.getState('requestDisabled')
-  }
+  },
 })
 Template.loginWithEmail.events({
   'input #request-input': debounce((event, templateInstance) => {
@@ -48,21 +47,22 @@ Template.loginWithEmail.events({
     }
     const email = templateInstance.$('#request-input').val()
     templateInstance.state.set({
-      email, requestDisabled: email === templateInstance.state.get('email')
+      email,
+      requestDisabled: email === templateInstance.state.get('email'),
     })
   }, 50),
-  'click .request-btn' (event, templateInstance) {
+  'click .request-btn'(event, templateInstance) {
     event.preventDefault()
     templateInstance.state.set({
       loading: true,
-      invalid: false
+      invalid: false,
     })
     const email = templateInstance.$('#request-input').val()
     if (!emailRegex.test(email)) {
       return templateInstance.state.set({
         loading: false,
         invalid: true,
-        requestDisabled: true
+        requestDisabled: true,
       })
     }
 
@@ -74,9 +74,9 @@ Template.loginWithEmail.events({
           view: 'confirm',
           loading: false,
           invalid: false,
-          requestDisabled: false
+          requestDisabled: false,
         })
-      }
+      },
     })
-  }
+  },
 })

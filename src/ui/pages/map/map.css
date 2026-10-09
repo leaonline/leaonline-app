@@ -1,24 +1,93 @@
-.learner-map-scene { position: relative; width: 100%; }
-.learner-map-svg { display: block; width: 100%; overflow: visible; }
-.learner-map-svg text { fill: var(--bs-body-color); font-family: inherit; }
-.map-connectors path { fill: none; stroke: var(--bs-secondary); stroke-width: 3; }
-.map-stage { cursor: pointer; outline: none; }
-.map-stage-body, .map-diamond-empty { fill: var(--bs-body-bg); }
-.map-stage.is-complete .map-stage-body { fill: var(--bs-success); }
-.map-stage.is-current .map-stage-body { fill: var(--bs-primary); }
-.map-stage .map-stage-number { font-size: 24px; font-weight: 700; }
-.map-stage.is-current .map-stage-number, .map-stage.is-complete .map-stage-number { fill: white; }
-.map-stage-ring-track { fill: none; stroke: var(--bs-border-color); stroke-width: 5; }
-.map-stage-ring { fill: none; stroke: var(--bs-primary); stroke-width: 5; }
-.map-stage.is-complete .map-stage-ring { stroke: var(--bs-success); }
-.map-stage-focus { fill: none; stroke: transparent; stroke-width: 3; }
-.map-stage:focus-visible .map-stage-focus { stroke: var(--bs-emphasis-color); stroke-dasharray: 4 3; }
-.map-stage.is-selected .map-stage-body { filter: drop-shadow(0 3px 5px var(--bs-secondary)); }
-.map-finish-star, .map-start-dot { fill: var(--bs-primary); }
-.map-decorations { position: absolute; inset: 0; pointer-events: none; }
-.map-decoration { position: absolute; transform: translate(-50%, -50%); color: var(--bs-secondary); font-size: 2.5rem; }
-.map-stage-chooser .modal-content { border: 0; }
-.map-choice { min-height: 6rem; }
+.learner-map-scene {
+  position: relative;
+  width: 100%;
+}
+.learner-map-svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.learner-map-svg text {
+  fill: var(--bs-body-color);
+  font-family: inherit;
+}
+.map-connectors path {
+  fill: none;
+  stroke: var(--bs-secondary);
+  stroke-width: 3;
+}
+.map-stage {
+  cursor: pointer;
+  outline: none;
+}
+.map-stage-body,
+.map-diamond-empty {
+  fill: var(--bs-body-bg);
+}
+.map-stage.is-complete .map-stage-body {
+  fill: var(--bs-success);
+}
+.map-stage.is-current .map-stage-body {
+  fill: var(--bs-primary);
+}
+.map-stage .map-stage-number {
+  font-size: 24px;
+  font-weight: 700;
+}
+.map-stage.is-current .map-stage-number,
+.map-stage.is-complete .map-stage-number {
+  fill: white;
+}
+.map-stage-ring-track {
+  fill: none;
+  stroke: var(--bs-border-color);
+  stroke-width: 5;
+}
+.map-stage-ring {
+  fill: none;
+  stroke: var(--bs-primary);
+  stroke-width: 5;
+}
+.map-stage.is-complete .map-stage-ring {
+  stroke: var(--bs-success);
+}
+.map-stage-focus {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 3;
+}
+.map-stage:focus-visible .map-stage-focus {
+  stroke: var(--bs-emphasis-color);
+  stroke-dasharray: 4 3;
+}
+.map-stage.is-selected .map-stage-body {
+  filter: drop-shadow(0 3px 5px var(--bs-secondary));
+}
+.map-finish-star,
+.map-start-dot {
+  fill: var(--bs-primary);
+}
+.map-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.map-decoration {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: var(--bs-secondary);
+  font-size: 2.5rem;
+}
+.map-stage-chooser .modal-content {
+  border: 0;
+}
+.map-choice {
+  min-height: 6rem;
+}
 @media (prefers-reduced-motion: reduce) {
-  .lea-map-container *, .map-stage-chooser * { scroll-behavior: auto !important; transition: none !important; }
+  .lea-map-container *,
+  .map-stage-chooser * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
 }

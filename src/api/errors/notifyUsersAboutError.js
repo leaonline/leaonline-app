@@ -17,15 +17,17 @@ export const notifyUsersAboutError = (error, type) => {
 
   const html = getHtml(error)
 
-  return Promise.all(notify.map(address => {
-    return Email.sendAsync({
-      to: address,
-      subject: `${appName} (${type}) [error]: ${error.message}`,
-      replyTo: replyTo,
-      from: from,
-      html
-    })
-  }))
+  return Promise.all(
+    notify.map((address) => {
+      return Email.sendAsync({
+        to: address,
+        subject: `${appName} (${type}) [error]: ${error.message}`,
+        replyTo: replyTo,
+        from: from,
+        html,
+      })
+    }),
+  )
 }
 
 /** @private */

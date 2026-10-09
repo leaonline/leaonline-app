@@ -5,8 +5,7 @@ import '../../../components/error/errorMessage'
 import './login.html'
 
 Template.login.onCreated(function () {
-  const instance = this
-  instance.availableLogins = Object.values(LoginMethods).map(entry => {
+  this.availableLogins = Object.values(LoginMethods).map((entry) => {
     const label = `${entry.label ?? entry.name}`
     const info = `${entry.info ?? entry.name}`
     return {
@@ -17,56 +16,58 @@ Template.login.onCreated(function () {
       icon: entry.icon ?? entry.name,
       iconPos: 'right',
       color: entry.color ?? 'secondary',
-      template: entry.template ?? 'notFound'
+      template: entry.template ?? 'notFound',
     }
   })
-  instance.initDependencies({
+  this.initDependencies({
     language: true,
     tts: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     onComplete: async () => {
-      instance.state.set('dependenciesComplete', true)
+      this.state.set('dependenciesComplete', true)
     },
-    onError: e => {
+    onError: (e) => {
       // instance.data.onFail()
-      instance.state.set('dependenciesComplete', true)
-    }
+      this.state.set('dependenciesComplete', true)
+    },
   })
 })
 
 Template.login.helpers({
-  dependenciesComplete () {
+  dependenciesComplete() {
     return Template.getState('dependenciesComplete')
   },
-  availableLogins () {
+  availableLogins() {
     return Template.instance().availableLogins
   },
-  currentLoginMethod () {
+  currentLoginMethod() {
     return Template.getState('currentLoginMethod')
   },
-  currentLoginData () {
+  currentLoginData() {
     const instance = Template.instance()
     return {
       success: instance.data.success,
-      failure: error => instance.state.set({ error }),
-      clear: () => instance.state.set({ error: null })
+      failure: (error) => instance.state.set({ error }),
+      clear: () => instance.state.set({ error: null }),
     }
   },
-  loadingLoginMethod () {
+  loadingLoginMethod() {
     return Template.getState('loadingLoginMethod')
   },
-  error () {
+  error() {
     return Template.getState('error')
-  }
+  },
 })
 
 Template.login.events({
-  'click .lea-login-btn': async function (event, templateInstance) {
+  'click .lea-login-btn': async (event, templateInstance) => {
     event.preventDefault()
     const name = dataTarget(event, 'name')
-    const current = templateInstance.availableLogins.find(m => m.name === name)
+    const current = templateInstance.availableLogins.find(
+      (m) => m.name === name,
+    )
     if (!current) {
       return
     }
@@ -74,11 +75,11 @@ Template.login.events({
     await current.load()
     templateInstance.state.set({
       loadingLoginMethod: false,
-      currentLoginMethod: current
+      currentLoginMethod: current,
     })
   },
-  'click .reset-method-btn' (event, templateInstance) {
+  'click .reset-method-btn'(event, templateInstance) {
     event.preventDefault()
     templateInstance.state.set('currentLoginMethod', null)
-  }
+  },
 })

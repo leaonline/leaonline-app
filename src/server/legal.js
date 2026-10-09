@@ -10,7 +10,7 @@ Meteor.startup(async () => {
       imprint: 'Imprint',
       privacy: 'Privacy',
       terms: 'Terms',
-      contact: 'Contact'
+      contact: 'Contact',
     })
   }
 })

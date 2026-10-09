@@ -5,4 +5,5 @@ import { Errors } from '../Errors'
  * @param query {object}
  * @return {Promise<number>}
  */
-export const removeError = async query => Errors.collection().removeAsync(query)
+export const removeError = async (query) =>
+  Errors.collection().removeAsync(query)

@@ -1,97 +1,98 @@
+import { Meteor } from 'meteor/meteor'
 import { onServerExec } from '../../utils/archUtils'
 
 export const Errors = {
   name: 'errors',
   label: 'errors.title',
-  icon: 'exclamation-triangle'
+  icon: 'exclamation-triangle',
 }
 
 Errors.schema = {
   name: {
     type: String,
     optional: true,
-    defaultValue: 'error'
+    defaultValue: 'error',
   },
 
   type: {
     type: String,
     optional: true,
-    defaultValue: 'Native.Error'
+    defaultValue: 'Native.Error',
   },
 
   message: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   details: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   hash: {
-    type: String
+    type: String,
   },
 
   count: {
     type: Number,
-    optional: true
+    optional: true,
   },
 
   stack: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   createdBy: {
-    type: String
+    type: String,
   },
 
   createdAt: {
-    type: Date
+    type: Date,
   },
 
   template: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   isServer: {
     type: Boolean,
-    optional: true
+    optional: true,
   },
   isClient: {
     type: Boolean,
-    optional: true
+    optional: true,
   },
   method: {
     type: String,
-    optional: true
+    optional: true,
   },
   publication: {
     type: String,
-    optional: true
+    optional: true,
   },
   endpoint: {
     type: String,
-    optional: true
+    optional: true,
   },
   isSystem: Boolean,
 
   browser: {
     type: String,
-    optional: true
+    optional: true,
   },
   // these are added by the server-side method, no matter what
   // has been defined in "createdAt" field or being sent by client
   userId: {
     type: String,
-    optional: true
+    optional: true,
   },
   code: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 Errors.publications = {}
@@ -102,9 +103,8 @@ Errors.methods.create = {
   name: 'errors.methods.create',
   schema: Errors.schema,
   isPublic: true,
-  run: onServerExec(function () {
-    import { persistError } from './api/persistError'
-    import { Meteor } from 'meteor/meteor'
+  run: onServerExec(() => {
+    const { persistError } = require('./api/persistError')
 
     return async function (errorDoc) {
       const { userId } = this
@@ -117,5 +117,5 @@ Errors.methods.create = {
 
       return persistError(errorDoc)
     }
-  })
+  }),
 }

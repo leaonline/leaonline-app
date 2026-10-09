@@ -73,7 +73,7 @@
   },
   "unitSetAppraisal": {
     "title": "User-Bewertung",
-    "createdAt":"gesendet am",
+    "createdAt": "gesendet am",
     "userId": "User-ID",
     "fieldId": "Berufsfeld",
     "dimensionId": "Dimension",

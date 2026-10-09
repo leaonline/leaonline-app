@@ -8,25 +8,25 @@ Template.logout.onCreated(function () {
   instance.initDependencies({
     language: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     tts: true,
-    onComplete () {
+    onComplete() {
       instance.state.set('dependenciesComplete', true)
 
-      Meteor.logout(err => {
+      Meteor.logout((err) => {
         if (err) console.error(err) // todo set failure state, display error
         instance.state.set('loggedOut', true)
       })
-    }
+    },
   })
 })
 
 Template.logout.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.getState('dependenciesComplete')
   },
-  loggedOut () {
+  loggedOut() {
     return Template.getState('loggedOut')
-  }
+  },
 })

@@ -8,8 +8,8 @@ const views = Object.values({
   secure: {
     href: Routes.secureAccount.path(),
     label: Routes.secureAccount.label,
-    icon: 'shield'
-  }
+    icon: 'shield',
+  },
 })
 
 createTemplate({
@@ -17,18 +17,18 @@ createTemplate({
   tts: true,
   language: true,
   translations: {
-    de: () => import('./i18n/de')
+    de: () => import('./i18n/de'),
   },
   helpers: {
-    views () {
+    views() {
       return views
-    }
+    },
   },
   events: {
-    'change .toggle-btn' (event) {
+    'change .toggle-btn'(event) {
       const target = dataTarget(event)
       const value = event.target.checked
       console.debug({ target, value })
-    }
-  }
+    },
+  },
 })
