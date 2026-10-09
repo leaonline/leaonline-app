@@ -1,4 +1,12 @@
 {
+  "packages": {
+    "service-configuration": {
+      "google": {
+        "clientId": "moo",
+        "secret": "01234567890"
+      }
+    }
+  },
   "app": {
     "name": "lea.App-Backend",
     "token": "01234567890123456789012345678901"
@@ -69,5 +77,47 @@
     "replyTo": "noreply@example.com",
     "from": "system@example.com"
   },
-  "public": {}
+  "public": {
+    "env": "dev",
+    "defaultLocale": "de",
+    "issueMail": "mail@example.com",
+    "status": "testing",
+    "accounts": {
+      "code": {
+        "length": 5
+      }
+    },
+    "packages": {
+      "dynamic-import": {
+        "useLocationOrigin": true
+      }
+    },
+    "app": {
+      "name": "lea. App",
+      "label": "app.title",
+      "description": "app.description",
+      "icon": "edit",
+      "logLevel": "info",
+      "storageKey": "__lea.app__"
+    },
+    "tts": {
+      "url": "http://localhost:3030/tts"
+    },
+    "hosts": {
+      "content": {
+        "base": "http://localhost:3030",
+        "tts": "/tts",
+        "competency": "/competencies",
+        "url": "http://localhost:3030"
+      },
+      "sessions": {
+        "url": "http://localhost:6060",
+        "evalUrl": "http://localhost:6060/eval",
+        "responseUrl": "http://localhost:6060/response"
+      }
+    },
+    "error": {
+      "maxStackSize": 1500
+    }
+  }
 }

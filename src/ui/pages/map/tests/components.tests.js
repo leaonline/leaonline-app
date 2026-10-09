@@ -29,11 +29,35 @@ describe('learner map Blaze scene', function () {
     const host = await context.render('learnerMap', { model: buildMapModel(inputs), onSelect: id => selected.push(id) })
     const stages = host.querySelectorAll('.map-stage')
     stages[0].focus()
-    stages[0].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }))
+    stages[0].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
     expect(document.activeElement).to.equal(stages[1])
     stages[1].dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     stages[1].dispatchEvent(new window.KeyboardEvent('keydown', { key: ' ', bubbles: true }))
     expect(selected).to.deep.equal([stages[1].dataset.stage, stages[1].dataset.stage])
+  })
+  it('supports arrow boundaries, Home/End and click without changing tab order', async function () {
+    const selected = []
+    const model = buildMapModel(inputs)
+    const host = await context.render('learnerMap', { model, onSelect: id => selected.push(id) })
+    const stages = [...host.querySelectorAll('.map-stage')]
+    expect(stages.map(stage => stage.dataset.stage)).to.deep.equal(model.stages.map(stage => stage.id))
+    expect(stages.every(stage => stage.getAttribute('tabindex') === '0')).to.equal(true)
+    stages[0].focus()
+    for (const [key, destination] of [['ArrowUp', 0], ['ArrowLeft', 0], ['ArrowRight', 1], ['ArrowDown', 2], ['ArrowDown', 2], ['ArrowRight', 2], ['ArrowUp', 1], ['End', 2], ['Home', 0]]) {
+      document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true }))
+      expect(document.activeElement).to.equal(stages[destination])
+    }
+    stages[2].dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+    expect(selected).to.deep.equal([model.stages[2].id])
+  })
+  it('centers the supplied anchor and exposes unavailable progress', async function () {
+    const scroll = context.sandbox.stub(window.Element.prototype, 'scrollIntoView')
+    const model = buildMapModel({ ...inputs, progressAvailable: false })
+    const host = await context.render('learnerMap', { model, currentId: model.stages[1].id, onSelect: () => {} })
+    expect(scroll.calledOnce).to.equal(true)
+    expect(scroll.firstCall.thisValue).to.equal(host.querySelectorAll('.map-stage')[1])
+    expect(scroll.firstCall.args).to.deep.equal([{ block: 'center', behavior: 'instant' }])
+    expect(host.querySelector('.map-stage').getAttribute('aria-label')).to.include('translated:map.unavailable')
   })
   it('retains stage nodes and focus through learner updates', async function () {
     const data = new ReactiveVar({ model: buildMapModel(inputs), onSelect: () => {} })

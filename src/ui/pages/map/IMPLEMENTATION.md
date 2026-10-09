@@ -1,5 +1,73 @@
 # Learner map implementation notes
 
+## Top-to-bottom change — 2026-10-09
+
+Implemented the presentation portion of `docs/plans/ahead/map-top-to-bottom.md`:
+
+- Start, canonical stages/milestones and Finish now have increasing Y. Input
+  order, stable IDs, stage sides, dimension slots and anchor selection are unchanged.
+- Each adjacent pair gets one cubic connector. An ordered-ID FNV-1a hash varies
+  both control points, independently of learner state. Vertical control fractions
+  are ordered (0.30–0.48 and 0.52–0.70); lateral offsets are at most 12px and
+  remain inside the viewport. Centered milestone/Finish pairs also bend.
+- Down moves to the next stage and Up to the previous stage. The other keys,
+  DOM order, diamonds, decorations and initial anchor scrolling are unchanged.
+- Added model, navigation, reference-read, scene and chooser regression cases.
+  Added client-only `page.tests.js` to the map test index. It wraps the real
+  dependency initializer and gates its completion callback, preserving context,
+  language, translation and template-API initialization in the test environment.
+  Page tests cover loading/readiness, fallback, retry, URL hints, selection,
+  offline/busy guards, Session errors and stale load/selection completion.
+
+### Validation and scope deviation
+
+The user restricted changes to this map folder. Consequently the plan's first
+step (repairing `src/tests/main.js`, `src/test.sh`, browser dependencies and
+settings fixtures) could not be implemented. Those files were left unchanged.
+The full regression-before-presentation ordering and full acceptance gate are
+therefore **incomplete**. Browser regressions were added but not executed.
+
+The installed Meteor package cache contains Mocha, so `tests/run-pure.cjs`
+provides supplemental execution of the existing model/navigation suites with
+real Mocha/Chai and unmodified ES modules. It does not stub Meteor or claim to
+execute the application. From `src`, the command used was:
+
+```sh
+node --experimental-vm-modules ui/pages/map/tests/run-pure.cjs /home/jankapunkt/.meteor/packages/meteortesting_mocha-core/.8.2.0.1rj4vc.i3h93++os+web.browser+web.browser.legacy+web.cordova/npm/node_modules/mocha
+```
+
+Pass the installed Mocha module path appropriate to the workstation; no new
+dependency was installed. The runner defaults to resolving `mocha` normally
+when no argument is supplied.
+
+- Original pure-suite baseline: **24 passing**.
+- Direction/curve red run: **21 failures**, caused by decreasing Y and a single
+  normalized shape; other tests passed. Browser keyboard red was not run.
+- Final pure-suite run: **69 passing** (45 model, 24 navigation). Includes empty,
+  single-stage and 39-stage/five-milestone fixtures at 240/320/768/1320px and
+  invalid widths; exact endpoints, finite bounded controls, shape diversity and
+  stable normalized variations across resize/progress are asserted.
+- `bash test.sh -o -g 'learner map|MapData|mapIcons|runRemap|Progress|Session'`
+  initially failed to bind port 6519 in the sandbox. With local-port permission,
+  Meteor/Mongo started but startup failed at `tests/validateSchema.js` with
+  `Env is required`. The build also reported unresolved `detect-os` and browser
+  `perf_hooks`. **Zero server/browser tests executed through this command.**
+- All map JavaScript/tests and the supplemental runner pass `standardx`.
+  `git diff --check` passes. Repository `npm run lint:code` reports **83 problems
+  outside this folder**; no global lint success is claimed.
+- Coverage instrumentation and live narrow/wide visual inspection are pending
+  the application harness repairs. No coverage percentage or visual sign-off is
+  claimed. Geometry assertions alone do not prove label/diamond clearance.
+
+Remaining acceptance by file: `map.js` page cases require browser execution;
+return-position isolation and account-scoped collection cleanup still need
+dedicated assertions. `learnerMap.js` keyboard/focus/scroll/resize and
+`mapStageChooser.js` focus transitions are unexecuted. `data.js` icon-read tests
+are unexecuted. `model.js` and `navigation.js` pure tests pass, but instrumented
+branch coverage is unavailable. Related backend suites remain blocked at startup.
+
+Only files under `src/ui/pages/map` were changed. No sub-agents or commits.
+
 This folder implements the UI slice of `docs/plans/04_blaze-learner-map.md`.
 Only files in this folder were intentionally changed. Existing untracked model,
 scene and test files were extended. No commits were created.

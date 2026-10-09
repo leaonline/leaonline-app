@@ -6,4 +6,5 @@ import './data.tests'
 if (Meteor.isClient) {
   require('./components.tests')
   require('./chooser.tests')
+  require('./page.tests')
 }

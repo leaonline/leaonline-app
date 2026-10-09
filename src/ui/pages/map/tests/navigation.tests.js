@@ -2,6 +2,99 @@ import { expect } from 'chai'
 import { resolvePosition, sessionSelection } from '../navigation.js'
 
 describe('learner map navigation', function () {
+  const documents = () => ({
+    sessionDoc: { _id: 's', userId: 'user', fieldId: 'field', unitSet: 'u', unit: 'second' },
+    unitSetDoc: { _id: 'u', field: 'field', units: ['first', 'second'] }
+  })
+  for (const [name, change] of [
+    ['user', docs => { docs.sessionDoc.userId = 'other' }],
+    ['Session field', docs => { docs.sessionDoc.fieldId = 'other' }],
+    ['UnitSet field', docs => { docs.unitSetDoc.field = 'other' }],
+    ['Session UnitSet', docs => { docs.sessionDoc.unitSet = 'other' }],
+    ['UnitSet identity', docs => { docs.unitSetDoc._id = 'other' }],
+    ['current unit', docs => { docs.sessionDoc.unit = 'other' }],
+    ['completed Session', docs => { docs.sessionDoc.completedAt = new Date() }]
+  ]) {
+    it(`rejects ${name} mismatch before asking or installing`, async function () {
+      const docs = documents()
+      change(docs)
+      const calls = []
+      let error
+      try {
+        await sessionSelection({
+          unitSetId: 'u',
+          userId: 'user',
+          fieldId: 'field',
+          active: () => true,
+          lookup: async () => docs,
+          decide: async () => { calls.push('decide'); return 'continue' },
+          start: () => calls.push('start')
+        })
+      }
+      catch (e) { error = e }
+      expect(error?.message).to.equal('map.sessionFailed')
+      expect(calls).to.deep.equal([])
+    })
+  }
+  for (const boundary of ['lookup', 'decision', 'restart', 'advance', 'reload']) {
+    it(`discards cancellation while awaiting ${boundary}`, async function () {
+      let release
+      let entered
+      let active = true
+      let reads = 0
+      let starts = 0
+      const reached = new Promise(resolve => { entered = resolve })
+      const pending = new Promise(resolve => { release = resolve })
+      const pause = async (name, value) => {
+        if (name === boundary) { entered(); await pending }
+        return value
+      }
+      const docs = documents()
+      const reset = { ...docs, sessionDoc: { ...docs.sessionDoc, unit: null } }
+      const loaded = { ...docs, sessionDoc: { ...docs.sessionDoc, unit: 'first' } }
+      const result = sessionSelection({
+        unitSetId: 'u',
+        userId: 'user',
+        fieldId: 'field',
+        active: () => active,
+        lookup: () => ++reads === 1 ? pause('lookup', docs) : pause('reload', loaded),
+        decide: () => pause('decision', 'restart'),
+        restart: () => pause('restart', reset),
+        advance: () => pause('advance', 'first'),
+        start: () => starts++
+      })
+      await reached
+      active = false
+      release()
+      expect(await result).to.equal(null)
+      expect(starts).to.equal(0)
+    })
+  }
+  for (const failure of ['empty advance', 'failed reload', 'wrong Session', 'wrong unit']) {
+    it(`does not install after ${failure}`, async function () {
+      const docs = documents()
+      docs.sessionDoc.unit = null
+      let reads = 0
+      let starts = 0
+      let error
+      try {
+        await sessionSelection({
+          unitSetId: 'u',
+          active: () => true,
+          lookup: async () => {
+            if (++reads === 1) return docs
+            if (failure === 'failed reload') throw new Error('reload failed')
+            return { ...docs, sessionDoc: { ...docs.sessionDoc, _id: failure === 'wrong Session' ? 'other' : 's', unit: failure === 'wrong unit' ? 'second' : 'first' } }
+          },
+          advance: async () => failure === 'empty advance' ? null : 'first',
+          start: () => starts++
+        })
+      }
+      catch (e) { error = e }
+      expect(error).to.be.instanceOf(Error)
+      expect(starts).to.equal(0)
+    })
+  }
   const model = { anchorId: 'a', stages: [{ id: 'a', choices: [{ _id: 'u' }] }, { id: 'b', choices: [{ _id: 'v' }] }] }
   it('resolves URL stage then UnitSet, return position, automatic anchor', function () {
     expect(resolvePosition(model, { stage: 'a', unitSet: 'v' }, 'b')).to.deep.equal({ currentId: 'a', selectedId: 'a' })

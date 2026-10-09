@@ -127,6 +127,16 @@ export const buildMapModel = ({ topology, dimensions = [], levels = [], icons = 
   })
 }
 
+// FNV-1a over the ordered IDs keeps bends stable across visits and learner
+// updates. Separate bytes vary the two control points independently.
+const connectorSeed = (from, to) => {
+  let hash = 2166136261
+  for (const character of JSON.stringify([from, to])) {
+    hash = Math.imul(hash ^ character.charCodeAt(0), 16777619) >>> 0
+  }
+  return hash
+}
+
 export const layoutMap = (model, availableWidth) => {
   const width = Number.isFinite(availableWidth) ? Math.max(240, availableWidth) : 320
   const rowHeight = 136
@@ -135,7 +145,7 @@ export const layoutMap = (model, availableWidth) => {
   const entries = model.entries.map((entry, i) => ({
     ...entry,
     x: entry.isStage ? (entry.number % 2 ? width - inset : inset) : width / 2,
-    y: height - (i + 1) * rowHeight,
+    y: (i + 1) * rowHeight,
     choices: entry.choices.map(choice => {
       const angle = Math.PI + (choice.slot + 1) * Math.PI / (model.slotIds.length + 1)
       return { ...choice, dx: Math.cos(angle) * 55, dy: Math.sin(angle) * 55 }
@@ -145,8 +155,15 @@ export const layoutMap = (model, availableWidth) => {
     const previous = entries[i]
     const from = { x: previous.x, y: previous.y }
     const to = { x: entry.x, y: entry.y }
-    const middle = (from.y + to.y) / 2
-    return { from, to, path: `M ${from.x} ${from.y} C ${from.x} ${middle}, ${to.x} ${middle}, ${to.x} ${to.y}` }
+    const seed = connectorSeed(previous.id, entry.id)
+    // Ordered controls keep Y strictly increasing without loops. Small lateral
+    // bends also curve centered marker connections; controls stay in bounds.
+    const bend = Math.min(24, width * 0.06)
+    const firstX = from.x + (((seed >>> 16) & 255) / 255 - 0.5) * bend
+    const secondX = to.x + ((seed >>> 24) / 255 - 0.5) * bend
+    const firstY = from.y + rowHeight * (0.3 + (seed & 255) / 255 * 0.18)
+    const secondY = from.y + rowHeight * (0.52 + ((seed >>> 8) & 255) / 255 * 0.18)
+    return { from, to, path: `M ${from.x} ${from.y} C ${firstX} ${firstY}, ${secondX} ${secondY}, ${to.x} ${to.y}` }
   })
   return { width, height, entries, connectors }
 }

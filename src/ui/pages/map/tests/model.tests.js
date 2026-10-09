@@ -23,7 +23,60 @@ export const inputs = {
 const model = (unitSets = [], options = {}) => buildMapModel({ ...inputs, progress: { unitSets }, ...options })
 const complete = _id => ({ _id, complete: true, progress: 4, competencies: 2 })
 
+const coordinates = connector => connector.path.match(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/gi).map(Number)
+const shape = (connector, width) => {
+  const [x, y, x1, y1, x2, y2, endX, endY] = coordinates(connector)
+  const span = endY - y
+  const bend = Math.min(24, width * 0.06)
+  return [(x1 - x) / bend, (y1 - y) / span, (x2 - endX) / bend, (y2 - y) / span].map(n => n.toFixed(6)).join(',')
+}
+
 describe('learner map model', function () {
+  for (const width of [240, 320, 768, 1320, undefined, NaN, Infinity, -1]) {
+    for (const [name, source] of [
+      ['empty', { ...topology, entries: [] }],
+      ['single stage', { ...topology, entries: [topology.entries[0]] }],
+      ['long fixture', realTopology]
+    ]) {
+      it(`lays out ${name} with bounded downward curves at width ${width}`, function () {
+        const result = buildMapModel({ ...inputs, topology: source })
+        const scene = layoutMap(result, width)
+        expect(scene.width).to.equal(Number.isFinite(width) ? Math.max(240, width) : 320)
+        expect(scene.entries.map(e => e.id)).to.deep.equal(result.entries.map(e => e.id))
+        expect(scene.connectors).to.have.length(Math.max(0, scene.entries.length - 1))
+        scene.connectors.forEach((connector, index) => {
+          const from = scene.entries[index]
+          const to = scene.entries[index + 1]
+          const points = coordinates(connector)
+          expect(points).to.have.length(8)
+          expect(points.every(Number.isFinite)).to.equal(true)
+          expect(points.slice(0, 2)).to.deep.equal([from.x, from.y])
+          expect(points.slice(6)).to.deep.equal([to.x, to.y])
+          expect(to.y).to.be.above(from.y)
+          expect(points[2]).to.be.within(0, scene.width)
+          expect(points[4]).to.be.within(0, scene.width)
+          expect(points[3]).to.be.within(from.y, to.y)
+          expect(points[5]).to.be.within(points[3], to.y)
+        })
+      })
+    }
+  }
+  it('varies long-map curves deterministically across visits, progress and resizing', function () {
+    const options = { ...inputs, topology: realTopology }
+    const result = buildMapModel(options)
+    const original = layoutMap(result, 320)
+    const shapes = original.connectors.map(connector => shape(connector, 320))
+    expect(new Set(shapes).size).to.be.above(5)
+    expect(layoutMap(result, 320)).to.deep.equal(original)
+    expect(layoutMap(buildMapModel({ ...options, progress: realProgress }), 320).connectors).to.deep.equal(original.connectors)
+    for (const width of [240, 768, 1320]) {
+      expect(layoutMap(result, width).connectors.map(connector => shape(connector, width))).to.deep.equal(shapes)
+    }
+    const final = coordinates(original.connectors.at(-1))
+    expect(final[0]).to.equal(final[6])
+    expect(final[2]).not.to.equal(final[0])
+    expect(final[4]).not.to.equal(final[6])
+  })
   it('preserves the supplied 39 stages/five milestones and anchors zero-progress stage two', function () {
     const result = buildMapModel({
       topology: realTopology,
@@ -117,12 +170,33 @@ describe('learner map model', function () {
     expect(result.sceneAvailable).to.equal(false)
     expect(result.stages).to.have.length(3)
   })
-  for (const width of [320, 768, 1320]) {
-    it(`connects the entire bottom-to-top journey at width ${width}`, function () {
+  it('ignores completed, cancelled and wrong-field Sessions when anchoring', function () {
+    for (const extra of [{ completedAt: new Date() }, { cancelledAt: new Date() }, { fieldId: 'other' }]) {
+      const result = model([{ _id: 'c', complete: false }], {
+        currentSession: { unitSet: 'd', startedAt: new Date(), fieldId: 'field', ...extra }
+      })
+      expect(result.anchorId).to.equal(result.stages[1].id)
+    }
+  })
+  it('uses array order for mixed or invalid activity dates', function () {
+    for (const updatedAt of [undefined, 'invalid']) {
+      const result = model([{ _id: 'c', complete: false, updatedAt: new Date(100) }, { _id: 'd', complete: false, updatedAt }])
+      expect(result.anchorId).to.equal(result.stages[2].id)
+    }
+  })
+  it('rejects duplicate topology and retains choices when metadata is missing', function () {
+    expect(() => model([], { topology: { ...topology, entries: [topology.entries[0], topology.entries[0]] } })).to.throw('map.invalidTopology')
+    const result = model([], { dimensions: [], levels: [] })
+    expect(result.sceneAvailable).to.equal(false)
+    expect(result.stages[0].choices.map(c => c._id)).to.deep.equal(['a', 'b'])
+    expect(result.issues).to.include('map.metadataUnavailable')
+  })
+  for (const width of [240, 320, 768, 1320]) {
+    it(`connects the entire top-to-bottom journey at width ${width}`, function () {
       const scene = layoutMap(model(), width)
       expect(scene.entries[1].x).to.be.above(width / 2)
       expect(scene.entries[2].x).to.be.below(width / 2)
-      expect(scene.entries[1].y).to.be.above(scene.entries[2].y)
+      expect(scene.entries[1].y).to.be.below(scene.entries[2].y)
       expect(scene.connectors).to.have.length(scene.entries.length - 1)
       scene.connectors.forEach((c, i) => {
         expect(c.from).to.deep.equal({ x: scene.entries[i].x, y: scene.entries[i].y })

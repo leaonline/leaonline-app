@@ -31,9 +31,13 @@ describe('learner map chooser', function () {
     expect([...host.querySelectorAll('.map-unitset')].every(button => button.disabled)).to.equal(true)
     data.set({ ...data.get(), offline: false, deciding: true })
     await context.afterFlush()
+    expect(document.activeElement).to.equal(host.querySelector('.map-decision'))
     host.querySelector('[data-decision="continue"]').click()
     expect(decisions).to.deep.equal(['continue'])
     expect(host.querySelectorAll('.modal')).to.have.length(1)
+    data.set({ ...data.get(), deciding: false })
+    await context.afterFlush()
+    expect(document.activeElement).to.equal(host.querySelector('.map-unitset'))
   })
   it('closes with Escape and cleans up its backdrop on removal', async function () {
     let closed = 0

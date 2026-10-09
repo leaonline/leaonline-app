@@ -88,7 +88,7 @@ Template.learnerMap.events({
     }
     const stages = instance.findAll('.map-stage')
     const index = stages.indexOf(event.currentTarget)
-    const offset = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[event.key]
+    const offset = { ArrowUp: -1, ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1 }[event.key]
     const destination = event.key === 'Home' ? 0 : event.key === 'End' ? stages.length - 1 : offset === undefined ? null : Math.max(0, Math.min(stages.length - 1, index + offset))
     if (destination !== null) { event.preventDefault(); stages[destination].focus() }
   }
