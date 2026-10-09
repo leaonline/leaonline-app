@@ -18,7 +18,7 @@ createTemplate({
   },
   onDependenciesComplete: async () => {
     await loadAllContentDocs({
-      context: Field,
+      context: Field
       // unlessExists: true
     })
   },

@@ -119,10 +119,10 @@ onClientExec(() => {
   Session.load = async ({ sessionId, unitSetId }) => {
     const { sessionDoc, unitSetDoc } = await callMethod({
       name: Session.methods.get,
-      args: { unitSetId },
+      args: { unitSetId }
     })
-    if (sessionDoc?._id !== sessionId || unitSetDoc?._id  !== unitSetId) {
-      throw new Error(`Could not load session for ${{sessionId, unitSetId }}`)
+    if (sessionDoc?._id !== sessionId || unitSetDoc?._id !== unitSetId) {
+      throw new Error(`Could not load session for ${{ sessionId, unitSetId }}`)
     }
     Session.start({ sessionDoc, unitSetDoc })
     return { sessionDoc, unitSetDoc }
@@ -138,16 +138,16 @@ onClientExec(() => {
   Session.restart = async ({ sessionId }) => {
     const { sessionDoc, unitSetDoc } = await callMethod({
       name: Session.methods.restart,
-      args: { sessionId },
+      args: { sessionId }
     })
     if (sessionDoc?._id !== sessionId) {
-      throw new Error(`Could not restart session for ${{sessionId }}`)
+      throw new Error(`Could not restart session for ${{ sessionId }}`)
     }
     Session.start({ sessionDoc, unitSetDoc })
     return { sessionDoc, unitSetDoc }
   }
 
-  Session.update = async ({ prepare, receive, failure, success } =  {}) => {
+  Session.update = async ({ prepare, receive, failure, success } = {}) => {
     const sessionDoc = sessionData.get('sessionDoc')
     if (!sessionDoc?._id) throw new Error('Cannot update Session, no sessionDoc found!')
     const sessionId = sessionDoc._id
@@ -159,9 +159,10 @@ onClientExec(() => {
       failure,
       success: async (nextUnitId) => {
         try {
-          const updatedSessionDoc = await callMethod({ name: Session.methods.get, args: { unitSetId: sessionDoc.unitSet }})
+          const updatedSessionDoc = await callMethod({ name: Session.methods.get, args: { unitSetId: sessionDoc.unitSet } })
           sessionData.set({ sessionDoc: updatedSessionDoc })
-        } catch (e) {
+        }
+        catch (e) {
           if (failure) failure(e)
         }
 
@@ -176,7 +177,7 @@ onClientExec(() => {
 
   const getSessionDoc = () => {
     const doc = sessionData.get('sessionDoc')
-    if (!doc) throw new Error(`Session has no sessionDoc!`)
+    if (!doc) throw new Error('Session has no sessionDoc!')
     return doc
   }
 
@@ -197,7 +198,6 @@ onClientExec(() => {
 })
 
 onServerExec(() => {
-
   /**
    * Creates a new Session.
    * @async
@@ -449,7 +449,6 @@ onServerExec(() => {
     progress: unitDoc.pages.length,
     competencies: await Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
   })
-
 })
 /**
  * Meteor method definitions
@@ -545,7 +544,6 @@ Session.methods.get = {
     unitSetId: String
   },
   run: onServerExec(function () {
-
     return function ({ unitSetId }) {
       const { userId } = this
       return Session.get({ unitSet: unitSetId, userId })
@@ -559,7 +557,6 @@ Session.methods.restart = {
     sessionId: String
   },
   run: onServerExec(function () {
-
     return function ({ sessionId }) {
       const { userId } = this
       return Session.restart({ sessionId, userId })

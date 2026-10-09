@@ -151,7 +151,8 @@ function createRoute (routeDef, onError) {
           const updatedLabel = translate(routeDef.label)
           document.title = `${updatedLabel} - ${_titlePrefix}`
         }, 500)
-      } else {
+      }
+      else {
         document.title = `${label} - ${_titlePrefix}`
       }
 

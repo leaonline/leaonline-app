@@ -6,7 +6,6 @@ import '../../../components/container/container'
 import './welcome.scss'
 import './welcome.html'
 
-
 Template.welcome.onCreated(function () {
   const instance = this
 
@@ -24,7 +23,7 @@ Template.welcome.onCreated(function () {
       instance.state.set('dependenciesComplete', true)
     }
   })
-    instance.state.set('loadComplete', true)
+  instance.state.set('loadComplete', true)
 })
 
 Template.welcome.helpers({
@@ -67,7 +66,7 @@ Template.welcome.events({
   'click .lea-login-btn': async (event, templateInstance) => {
     event.preventDefault()
     const type = dataTarget(event)
-    const { load, action,...currentLogin } = templateInstance.availableLogins.find(l => l.name === type)
+    const { load, action, ...currentLogin } = templateInstance.availableLogins.find(l => l.name === type)
     if (!currentLogin) {
       // raise error
     }
@@ -96,12 +95,12 @@ Template.welcome.events({
   'click .lea-cancel-login-btn': async (event, templateInstance) => {
     event.preventDefault()
     templateInstance.state.set({ currentLogin: null })
-      setQueryParam({ login: null })
+    setQueryParam({ login: null })
     await asyncTimeout(300)
     const element = templateInstance.$('.lea-login-list-card').get(0)
     try {
       element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
-    } catch {}
+    }
+    catch {}
   }
 })
-

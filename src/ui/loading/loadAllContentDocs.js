@@ -12,7 +12,7 @@ import { getLocalCollection } from '../../api/utils/getLocalCollection'
  * @param debug {Function?} optional debug logger
  * @return {Promise}
  */
-export const loadAllContentDocs = async ({ context, collection, ids,  name, params = {}, unlessExists, debug = () => {} }) => {
+export const loadAllContentDocs = async ({ context, collection, ids, name, params = {}, unlessExists, debug = () => {}, clean = x => x }) => {
   debug('loadAllContentDocs (call)')
   if (!context) {
     throw new Error('Context is expected')
@@ -62,12 +62,11 @@ export const loadAllContentDocs = async ({ context, collection, ids,  name, para
         throw new Error('Expected doc with _id to upsert')
       }
       const docId = doc._id
-      localCollection.upsert(doc._id, { $set: doc })
+      const upsertDoc = clean({ ...doc })
+      await localCollection.upsertAsync(doc._id, { $set: upsertDoc })
       doc._id = docId
     }
   }
-
-
 
   return allDocuments
 }

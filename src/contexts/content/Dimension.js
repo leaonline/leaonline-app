@@ -12,13 +12,12 @@ onClientExec(() => {
 Dimension.methods = Dimension.methods ?? {}
 Dimension.methods.getAll = createGetAllMethod({
   context: Dimension,
-  backendOnly: false,
+  backendOnly: false
 })
 Dimension.methods.get = createGetMethod({
   context: Dimension,
-  backendOnly: false,
+  backendOnly: false
 })
-
 
 /**
  * See the corelib documentation for further into: {@link https://github.com/leaonline/corelib}

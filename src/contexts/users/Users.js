@@ -19,7 +19,7 @@ const Users = {
   name: 'users',
   label: 'users.title',
   icon: 'users',
-  representative: '_id',
+  representative: '_id'
 
 }
 
@@ -170,9 +170,9 @@ Users.methods.create = {
   isPublic: true,
   schema: {
     termsAndConditionsIsChecked: {
-      type: Boolean,
+      type: Boolean
     },
-    isDev: Users.schema.isDev,
+    isDev: Users.schema.isDev
   },
   run: onServerExec(function () {
     import { Random } from 'meteor/random'
@@ -195,9 +195,9 @@ Users.methods.create = {
       const collection = getUsersCollection()
       const { termsAndConditionsIsChecked, isDev } = options
 
-        if (termsAndConditionsIsChecked !== true) {
-            throw new Meteor.Error(`createUser.error`, 'termsAndConditionsIsChecked.false')
-        }
+      if (termsAndConditionsIsChecked !== true) {
+        throw new Meteor.Error('createUser.error', 'termsAndConditionsIsChecked.false')
+      }
       // since older app versions do not send this flag
       // we can't 100% require this to be present
       const terms = termsAndConditionsIsChecked ? new Date() : undefined
@@ -215,7 +215,7 @@ Users.methods.create = {
       const updateDoc = { restore, terms, isDev }
 
       await getUsersCollection().updateAsync(newUserId, { $set: updateDoc })
-        console.debug('create new user', username, restore)
+      console.debug('create new user', username, restore)
 
       // validate the new account with the created credentials
       const credentials = { user: { username }, password }
@@ -227,7 +227,7 @@ Users.methods.create = {
 
       // this returns the _id, token, tokenExpires and restore codes
       // which the client uses to further display
-      return { restore, ...loggedIn,}
+      return { restore, ...loggedIn }
     }
   })
 }
@@ -272,36 +272,36 @@ Users.methods.updateProfile = {
 }
 
 Users.methods.passwordlessLogin = {
-    name: 'users.methods.passwordlessLogin',
-    schema: {
-        email: true
-    },
-    run: onServerExec(() =>  {
-        import { createUser } from "./server/createUser";
-        return async function ({ email }) {
-            const { userId } = this
+  name: 'users.methods.passwordlessLogin',
+  schema: {
+    email: true
+  },
+  run: onServerExec(() => {
+    import { createUser } from './server/createUser'
+    return async function ({ email }) {
+      const { userId } = this
 
-            // creating a new user should either be possible
-            // without an existing account
-            // or if the caller is actually a backenduser
-            if (userId) {
-                throw new Meteor.Error(
-                    'createUser.error',
-                    'createUser.alreadyExist',
-                    { userId }
-                )
-            }
+      // creating a new user should either be possible
+      // without an existing account
+      // or if the caller is actually a backenduser
+      if (userId) {
+        throw new Meteor.Error(
+          'createUser.error',
+          'createUser.alreadyExist',
+          { userId }
+        )
+      }
 
-            let existingUser = await Accounts.findUserByEmail(email)
-            if (existingUser?._id) {
-                return Accounts.sendLoginTokenEmail(existingUser._id)
-            }
+      const existingUser = await Accounts.findUserByEmail(email)
+      if (existingUser?._id) {
+        return Accounts.sendLoginTokenEmail(existingUser._id)
+      }
 
-            const newUser = await createUser({ email })
-            await Accounts.sendLoginTokenEmail(newUser.userId)
-            return newUser
-        }
-    })
+      const newUser = await createUser({ email })
+      await Accounts.sendLoginTokenEmail(newUser.userId)
+      return newUser
+    }
+  })
 }
 
 /**
