@@ -4,6 +4,6 @@ export default {
     code: 'de',
     isoCode: 'de-DE',
     name: 'Deutsch',
-    load: async () => await import('./de/i18n')
-  }
+    load: async () => await import('./de/i18n'),
+  },
 }

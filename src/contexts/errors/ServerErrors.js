@@ -4,27 +4,27 @@ import { getCollection } from '../../api/utils/getCollection'
 import { ErrorBaseSchema } from './ErrorBaseSchema'
 
 export const ServerErrors = {
-  name: 'serverErrors'
+  name: 'serverErrors',
 }
 
 ServerErrors.schema = {
   ...ErrorBaseSchema,
   method: {
     type: String,
-    optional: true
+    optional: true,
   },
   publication: {
     type: String,
-    optional: true
+    optional: true,
   },
   isSystem: {
     type: Boolean,
-    optional: true
+    optional: true,
   },
   tag: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 /**
@@ -37,7 +37,15 @@ ServerErrors.schema = {
  * @param isSystem {boolean=}
  * @param tag {string=}
  */
-ServerErrors.handle = async ({ error, name, userId, isMethod, isPublication, isSystem, tag }) => {
+ServerErrors.handle = async ({
+  error,
+  name,
+  userId,
+  isMethod,
+  isPublication,
+  isSystem,
+  tag,
+}) => {
   const errorDoc = normalizeError({ error, userId })
 
   errorDoc.method = isMethod ? name : undefined
@@ -45,7 +53,9 @@ ServerErrors.handle = async ({ error, name, userId, isMethod, isPublication, isS
   errorDoc.isSystem = isSystem
   errorDoc.tag = error.tag || tag
 
-  const errorDocId = await getCollection(ServerErrors.name).insertAsync(errorDoc)
+  const errorDocId = await getCollection(ServerErrors.name).insertAsync(
+    errorDoc,
+  )
   await notifyUsersAboutError(errorDoc, 'server')
 
   return errorDocId

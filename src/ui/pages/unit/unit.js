@@ -26,62 +26,62 @@ const renderersLoaded = initTaskRenderers()
 const responseCache = ResponseCache.create(window.localStorage)
 const pageCache = UnitPageCache.create(window.localStorage)
 const submitItems = createItemSubmit({
-  loadValue: responseDoc => responseCache.load(responseDoc),
-  prepare: responseDoc => console.info('[Template.Unit]: submit to server', responseDoc),
+  loadValue: (responseDoc) => responseCache.load(responseDoc),
+  prepare: (responseDoc) =>
+    console.info('[Template.Unit]: submit to server', responseDoc),
   onSuccess: (result, responseDoc) => {
     const cleared = responseCache.clear(responseDoc)
     console.info('[Template.Unit]: clear storage', cleared, responseDoc)
   },
-  onError: (error, responseDoc) => console.error(error, responseDoc)
+  onError: (error, responseDoc) => console.error(error, responseDoc),
 })
 
 Template.unit.onCreated(function () {
-  const instance = this
-  instance.state.setDefault('currentPageCount', -1)
-  instance.state.setDefault('maxPages', -1)
-  instance.dependenciesLoaded = new ReactiveVar(false)
+  this.state.setDefault('currentPageCount', -1)
+  this.state.setDefault('maxPages', -1)
+  this.dependenciesLoaded = new ReactiveVar(false)
 
-  const { api } = instance.initDependencies({
+  const { api } = this.initDependencies({
     language: true,
     tts: true,
     contexts: [Session, Unit, UnitSet, Response, Dimension, Level],
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     onComplete: async () => {
-      instance.onItemInput = createItemInput({
+      this.onItemInput = createItemInput({
         cache: responseCache,
-        debug: instance.api.debug
+        debug: this.api.debug,
       })
-      instance.onItemLoad = createItemLoad({
+      this.onItemLoad = createItemLoad({
         cache: responseCache,
-        debug: instance.api.debug,
-        createIfMissing: true
+        debug: this.api.debug,
+        createIfMissing: true,
       })
-      instance.onNewPage = ({ action, newPage }, onComplete) => {
+      this.onNewPage = ({ action, newPage }, onComplete) => {
         onPageNavUpdate({
           action,
           newPage,
-          templateInstance: instance,
-          onComplete
+          templateInstance: this,
+          onComplete,
         })
       }
-      instance.dependenciesLoaded.set(true)
-    }
+      this.dependenciesLoaded.set(true)
+    },
   })
 
   const { info } = api
 
-  instance.autorun(async () => {
+  this.autorun(async () => {
     const { params } = Template.currentData()
     const { unitId, unitSetId, sessionId } = params
     // simply skip if these params are not set, and let the router take care
     if (!unitId || !unitSetId || !sessionId) {
       info('no unitId/sessionId', { unitId, sessionId })
-      return abortUnit(instance)
+      return abortUnit(this)
     }
 
-    const loadedUnitId = Tracker.nonreactive(() => instance.state.get('loaded'))
+    const loadedUnitId = Tracker.nonreactive(() => this.state.get('loaded'))
     if (unitId === loadedUnitId) {
       return // skip already loaded
     }
@@ -92,27 +92,21 @@ Template.unit.onCreated(function () {
 
     const currentPageCount = pageCache.load(params) || 0
 
-    instance.state.clear()
+    this.state.clear()
     const sessionData = Tracker.nonreactive(() => Session.data())
     const responseData = await loadSessionDocs(sessionData)
     if (!responseData) {
       info('response data undefined')
-      return abortUnit(instance)
+      return abortUnit(this)
     }
 
-    const {
-      sessionDoc,
-      unitDoc,
-      unitSetDoc,
-      dimensionDoc,
-      levelDoc,
-      color
-    } = responseData
+    const { sessionDoc, unitDoc, unitSetDoc, dimensionDoc, levelDoc, color } =
+      responseData
 
     // first we check for all docs, even one left-out doc is not acceptable
     if (!sessionDoc || !unitDoc || !unitSetDoc || !dimensionDoc || !levelDoc) {
       info('response data is incomplete')
-      return abortUnit(instance)
+      return abortUnit(this)
     }
 
     // verify received session doc integrity
@@ -121,13 +115,13 @@ Template.unit.onCreated(function () {
     // if we encounter a sessionDoc that is already completed, we just
     // skip any further attempts to load units and immediately finish
     if (Session.isComplete({ sessionDoc, reactive: false })) {
-      return instance.data.finish({ sessionId })
+      return this.data.finish({ sessionId })
     }
 
     // if we encounter a unit, that is different from the sessionDoc's
     // current unit we skip directly to the "next" unit via currentUnit
     if (!Session.isCurrentUnit({ unitId, reactive: false })) {
-      return instance.data.next({ unitId: currentUnit, unitSetId, sessionId })
+      return this.data.next({ unitId: currentUnit, unitSetId, sessionId })
     }
 
     if (currentPageCount > 0) {
@@ -138,7 +132,7 @@ Template.unit.onCreated(function () {
     unitDoc.pages = unitDoc.pages || []
 
     // otherwise we're good and can continue with the current session
-    instance.state.set({
+    this.state.set({
       loaded: unitDoc._id,
       sessionDoc,
       unitSetDoc,
@@ -148,7 +142,7 @@ Template.unit.onCreated(function () {
       unitDoc,
       currentPageCount,
       maxPages: unitDoc.pages.length,
-      hasNext: unitDoc.pages.length > currentPageCount + 1
+      hasNext: unitDoc.pages.length > currentPageCount + 1,
     })
   })
 
@@ -157,72 +151,76 @@ Template.unit.onCreated(function () {
    * in order to produce immediate feedback.
    * @return {FlatArray<*[], 1>[]}
    */
-  instance.onEvaluate = () => {
-    const sessionDoc = instance.state.get('sessionDoc')
-    const unitDoc = instance.state.get('unitDoc')
-    const currentPage = instance.state.get('currentPageCount')
+  this.onEvaluate = () => {
+    const sessionDoc = this.state.get('sessionDoc')
+    const unitDoc = this.state.get('unitDoc')
+    const currentPage = this.state.get('currentPageCount')
     const responseData = responseCache.all({ sessionId: sessionDoc._id })
-    const allResponses = Object.entries(responseData).filter(([key, value]) => {
-      // filter out entries from other pages
-      return value.page == currentPage
-    }).map(([key, value]) => {
-      const itemId = value.contentId
-      const data = { ...value, itemId, unitId: unitDoc._id }
-      const itemDefinitions = Unit.getContentElement({
-        unit: instance.state.get('unitDoc'),
-        contentId: itemId,
-        page: Number(currentPage)
+    const allResponses = Object.entries(responseData)
+      .filter(([key, value]) => {
+        // filter out entries from other pages
+        return value.page == currentPage
       })
-      return Scoring.run(itemDefinitions.subtype, itemDefinitions.value, data)
-    })
+      .map(([key, value]) => {
+        const itemId = value.contentId
+        const data = { ...value, itemId, unitId: unitDoc._id }
+        const itemDefinitions = Unit.getContentElement({
+          unit: this.state.get('unitDoc'),
+          contentId: itemId,
+          page: Number(currentPage),
+        })
+        return Scoring.run(itemDefinitions.subtype, itemDefinitions.value, data)
+      })
 
     return allResponses.flat()
   }
 
-  instance.forward = () => {
-    const isStory = !!instance.state.get('story')
-    const unit = isStory ? null : instance.state.get('unitDoc')
-    const allUnits = instance.state.get('unitDocs')
-    const currentUnitIndex = allUnits.findIndex(u => u._id === unit?._id)
+  this.forward = () => {
+    const isStory = !!this.state.get('story')
+    const unit = isStory ? null : this.state.get('unitDoc')
+    const allUnits = this.state.get('unitDocs')
+    const currentUnitIndex = allUnits.findIndex((u) => u._id === unit?._id)
     const nextUnit = allUnits[currentUnitIndex + 1]
 
     // always clear everything
-    instance.state.set({ unitDoc: null, story: null, currentPageCount: 0 })
+    this.state.set({ unitDoc: null, story: null, currentPageCount: 0 })
 
     if (nextUnit) {
       setQueryParam({ page: 0 })
       setTimeout(() => {
-        instance.state.set({ unitDoc: nextUnit })
+        this.state.set({ unitDoc: nextUnit })
       }, 500)
-    }
-    else {
+    } else {
       // reached end of units, show eval screen
     }
   }
 })
 
 Template.unit.onDestroyed(function () {
-  const instance = this
-  instance.state.set({
-    fadedOut: null
+  this.state.set({
+    fadedOut: null,
   })
 })
 
 Template.unit.helpers({
-  loadComplete () {
+  loadComplete() {
     const instance = Template.instance()
-    return instance.dependenciesLoaded.get() &&
+    return (
+      instance.dependenciesLoaded.get() &&
       instance.state.get('unitDoc') &&
       instance.state.get('sessionDoc') &&
       renderersLoaded.get()
+    )
   },
-  navLoadComplete () {
+  navLoadComplete() {
     const instance = Template.instance()
-    return instance.state.get('sessionDoc') &&
+    return (
+      instance.state.get('sessionDoc') &&
       instance.state.get('dimensionDoc') &&
       instance.state.get('levelDoc')
+    )
   },
-  pageContentData () {
+  pageContentData() {
     if (!renderersLoaded.get()) return
 
     const instance = Template.instance()
@@ -255,11 +253,11 @@ Template.unit.helpers({
       onNewPage,
       onEvaluate,
       onFinish: instance.forward,
-      onLoadError: instance.onError
+      onLoadError: instance.onError,
       // onLoadComplete: () => console.debug('item renderer load complete')
     }
   },
-  navbarData () {
+  navbarData() {
     const instance = Template.instance()
     const sessionDoc = instance.state.get('sessionDoc')
     const levelDoc = instance.state.get('levelDoc')
@@ -275,19 +273,19 @@ Template.unit.helpers({
       onExit: () => {
         const { fieldId, unitSet } = sessionDoc
         instance.data.exit({ fieldId, unitSetId: unitSet })
-      }
+      },
     }
-  }
+  },
 })
 
 Template.unit.events({
-  'click .lea-unit-finishstory-button' (event, templateInstance) {
+  'click .lea-unit-finishstory-button'(event, templateInstance) {
     event.preventDefault()
     templateInstance.api.fadeOut('.lea-unit-story-container', () => {
       templateInstance.state.set('unitStory', null)
     })
   },
-  'click .lea-pagenav-finish-button': async function (event, templateInstance) {
+  'click .lea-pagenav-finish-button': async (event, templateInstance) => {
     event.preventDefault()
 
     // prevent multiple calls by fast-multiple-clicking
@@ -304,8 +302,7 @@ Template.unit.events({
     const scores = templateInstance.state.get('scores')
     try {
       await submitItems({ sessionId, dimensionId, unitDoc, page, scores })
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e)
     }
 
@@ -317,10 +314,9 @@ Template.unit.events({
     try {
       sessionUpdate = await templateInstance.api.callMethod({
         name: Session.methods.next.name,
-        args: { sessionId }
+        args: { sessionId },
       })
-    }
-    catch (e) {
+    } catch (e) {
       templateInstance.api.info('session update failed')
       return abortUnit(templateInstance, e)
     }
@@ -344,13 +340,13 @@ Template.unit.events({
         unitId: nextUnit,
         unitSetId: nextUnitSet,
         hasStory,
-        completed
+        completed,
       })
     })
-  }
+  },
 })
 
-function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
+function onPageNavUpdate({ action, newPage, templateInstance, onComplete }) {
   const unitDoc = templateInstance.state.get('unitDoc')
   const unitId = unitDoc._id
   const sessionDoc = templateInstance.state.get('sessionDoc')
@@ -364,12 +360,14 @@ function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
   newPage.sessionDoc = sessionDoc
 
   if (!newPage.currentPage) {
-    throw new Error(`Undefined page for current index ${newPage.currentPageCount}`)
+    throw new Error(
+      `Undefined page for current index ${newPage.currentPageCount}`,
+    )
   }
 
   setTimeout(() => {
     submitItems({ sessionId, dimensionId, unitDoc, page: currentPageCount })
-      .catch(e => {
+      .catch((e) => {
         console.error(e)
         onComplete()
       })
@@ -380,7 +378,7 @@ function onPageNavUpdate ({ action, newPage, templateInstance, onComplete }) {
   }, 500)
 }
 
-function abortUnit (templateInstance, err) {
+function abortUnit(templateInstance, err) {
   if (err) {
     console.error('Unit aborted')
     console.error(err) // todo sendError

@@ -5,9 +5,9 @@
  * @param cursor {Mongo.Cursor}
  * @returns {Map<string, object>}
  */
-export const cursorToMap = async cursor => {
+export const cursorToMap = async (cursor) => {
   const map = new Map()
-  await cursor.forEachAsync(doc => {
+  await cursor.forEachAsync((doc) => {
     map.set(doc._id, doc)
   })
   return map

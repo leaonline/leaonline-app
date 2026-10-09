@@ -12,7 +12,16 @@ import { getLocalCollection } from '../../api/utils/getLocalCollection'
  * @param debug {Function?} optional debug logger
  * @return {Promise}
  */
-export const loadAllContentDocs = async ({ context, collection, ids, name, params = {}, unlessExists, debug = () => {}, clean = x => x }) => {
+export const loadAllContentDocs = async ({
+  context,
+  collection,
+  ids,
+  name,
+  params = {},
+  unlessExists,
+  debug = () => {},
+  clean = (x) => x,
+}) => {
   debug('loadAllContentDocs (call)')
   if (!context) {
     throw new Error('Context is expected')
@@ -51,7 +60,7 @@ export const loadAllContentDocs = async ({ context, collection, ids, name, param
 
   const allDocuments = await callMethod({
     name: context.methods.getAll,
-    args: params
+    args: params,
   })
 
   for (const [name, documents = []] of Object.entries(allDocuments)) {

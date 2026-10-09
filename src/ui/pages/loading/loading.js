@@ -2,19 +2,18 @@ import { Template } from 'meteor/templating'
 import './loading.html'
 
 Template.loading.onCreated(function () {
-  const instance = this
-  instance.initDependencies({
+  this.initDependencies({
     onComplete: () => {
-      instance.state.set('loadComplete', true)
+      this.state.set('loadComplete', true)
     },
     onError: () => {
-      instance.state.set('loadComplete', true)
-    }
+      this.state.set('loadComplete', true)
+    },
   })
 })
 
 Template.loading.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.getState('loadComplete')
-  }
+  },
 })

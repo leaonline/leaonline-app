@@ -2,13 +2,15 @@ import { Meteor } from 'meteor/meteor'
 import { getUsersCollection } from '../../api/collections/getUsersCollection'
 import { isBackendUser } from '../../api/accounts/isBackendUser'
 
-export const checkPermissions = function (options) {
+export const checkPermissions = (options) => {
   const { isPublic, backend } = options
 
-  if (isPublic) { return options }
+  if (isPublic) {
+    return options
+  }
 
   const runFct = options.run
-  options.run = async function run (...args) {
+  options.run = async function run(...args) {
     const userId = this.userId
 
     if (!userId) {
@@ -19,8 +21,9 @@ export const checkPermissions = function (options) {
           userId,
           isPublic,
           backend,
-          clientConnection: this.connection?.id
-        })
+          clientConnection: this.connection?.id,
+        },
+      )
     }
 
     if (backend) {
@@ -33,8 +36,9 @@ export const checkPermissions = function (options) {
             userId,
             isPublic,
             backend,
-            clientConnection: this.connection.id
-          })
+            clientConnection: this.connection.id,
+          },
+        )
       }
     }
 

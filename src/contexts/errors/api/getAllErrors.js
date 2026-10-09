@@ -8,9 +8,13 @@ const transform = { hint: { $natural: -1 } }
  * @param ids {string[]}
  * @return {Promise<object[]>}
  */
-export const getAllErrors = async ids => {
+export const getAllErrors = async (ids) => {
   if (ids && !Array.isArray(ids)) {
-    throw new Meteor.Error('errors.getAll.error', 'errors.getAll.arrayExpected', { ids })
+    throw new Meteor.Error(
+      'errors.getAll.error',
+      'errors.getAll.arrayExpected',
+      { ids },
+    )
   }
 
   const query = {}

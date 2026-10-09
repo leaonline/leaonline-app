@@ -8,7 +8,8 @@ import { Env } from '../../infrastructure/env/Env'
 export const RouteHelpers = {}
 
 RouteHelpers.fullUrl = (path) => Meteor.absoluteUrl(path)
-RouteHelpers.route = (key, ...optionalArgs) => resolveRoute(key, ...optionalArgs)
+RouteHelpers.route = (key, ...optionalArgs) =>
+  resolveRoute(key, ...optionalArgs)
 RouteHelpers.routeDef = (key) => Routes[key]
 RouteHelpers.backRoute = () => backRoute()
 RouteHelpers.referrer = () => {
@@ -26,7 +27,7 @@ RouteHelpers.log = (...args) => {
 }
 RouteHelpers.url = (path) => {
   return Meteor.absoluteUrl(path, {
-    secure: Meteor.isProduction
+    secure: Meteor.isProduction,
   })
 }
 RouteHelpers.isDebugUser = () => global.isDebugUser()
@@ -34,7 +35,7 @@ RouteHelpers.isDemoUser = (userObj) => {
   const user = userObj || Meteor.user() || {}
   return user.demo
 }
-RouteHelpers.isEnv = env => Env.get() === env
+RouteHelpers.isEnv = (env) => Env.get() === env
 
 RouteHelpers.isCurrentRoute = (name) => {
   const current = Router.current({ reactive: true })

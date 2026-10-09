@@ -16,7 +16,7 @@ export const Progress = {
   label: 'progress.title',
   icon: 'spinner',
   representative: 'userId',
-  useHistory: true
+  useHistory: true,
 }
 const log = createLog(Progress)
 
@@ -26,14 +26,14 @@ onClientExec(() => {
 
 Progress.schema = {
   userId: {
-    type: String
+    type: String,
   },
   fieldId: {
     type: String,
     dependency: {
       collection: Field.name,
-      field: Field.representative
-    }
+      field: Field.representative,
+    },
   },
 
   /**
@@ -48,85 +48,117 @@ Progress.schema = {
    */
 
   unitSets: {
-    type: Array
+    type: Array,
   },
   'unitSets.$': {
-    type: Object
+    type: Object,
   },
 
   'unitSets.$._id': {
-    type: String
+    type: String,
   },
   'unitSets.$.progress': {
     type: Number,
     optional: true,
-    defaultValue: 0
+    defaultValue: 0,
   },
   'unitSets.$.dimensionId': {
     type: String,
     optional: true,
-    defaultValue: 0
+    defaultValue: 0,
   },
   'unitSets.$.competencies': {
     type: Number,
     optional: true,
-    defaultValue: 0
+    defaultValue: 0,
   },
   'unitSets.$.complete': {
     type: Boolean,
     optional: true,
-    defaultValue: false
+    defaultValue: false,
   },
   'unitSets.$.updatedAt': {
     type: Date,
-    optional: true
+    optional: true,
   },
   'unitSets.$.completedAt': {
     type: Date,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 onServerExec(() => {
-  Progress.create = async function create ({
+  Progress.create = async function create({
     userId,
     fieldId,
     unitSetId,
     dimensionId,
     progress,
     competencies,
-    complete
+    complete,
   }) {
-    log('create', { userId, fieldId, unitSetId, progress, competencies, complete })
-    const unitSets = [{ _id: unitSetId, dimensionId, progress, competencies, complete }]
-    return getCollection(Progress.name).insertAsync({ userId, fieldId, unitSets })
+    log('create', {
+      userId,
+      fieldId,
+      unitSetId,
+      progress,
+      competencies,
+      complete,
+    })
+    const unitSets = [
+      { _id: unitSetId, dimensionId, progress, competencies, complete },
+    ]
+    return getCollection(Progress.name).insertAsync({
+      userId,
+      fieldId,
+      unitSets,
+    })
   }
 
-  Progress.update = async function update ({
+  Progress.update = async function update({
     userId,
     fieldId,
     unitSetId,
     dimensionId,
     progress = 0,
     competencies,
-    complete
+    complete,
   }) {
-    log('update', { userId, fieldId, unitSetId, progress, competencies, complete })
+    log('update', {
+      userId,
+      fieldId,
+      unitSetId,
+      progress,
+      competencies,
+      complete,
+    })
     const ProgressCollection = getCollection(Progress.name)
-    const progressDoc = await ProgressCollection.findOneAsync({ userId, fieldId })
+    const progressDoc = await ProgressCollection.findOneAsync({
+      userId,
+      fieldId,
+    })
 
     if (!progressDoc) {
-      return Progress.create({ userId, fieldId, unitSetId, dimensionId, progress, competencies, complete })
+      return Progress.create({
+        userId,
+        fieldId,
+        unitSetId,
+        dimensionId,
+        progress,
+        competencies,
+        complete,
+      })
     }
 
-    const index = progressDoc.unitSets.findIndex(entry => entry._id === unitSetId)
+    const index = progressDoc.unitSets.findIndex(
+      (entry) => entry._id === unitSetId,
+    )
     const entryExist = index > -1
     const unitSetDoc = { _id: unitSetId, dimensionId, competencies, complete }
 
     if (!entryExist) {
       unitSetDoc.progress = progress
-    }
-    else {
+    } else {
       unitSetDoc.progress += progress
     }
 
@@ -135,13 +167,13 @@ onServerExec(() => {
     const updateDoc = entryExist
       ? {
           $set: {
-            [`unitSets.${index}`]: unitSetDoc
-          }
+            [`unitSets.${index}`]: unitSetDoc,
+          },
         }
       : {
           $push: {
-            unitSets: unitSetDoc
-          }
+            unitSets: unitSetDoc,
+          },
         }
     log('unit set', { unitSetDoc, index, updateDoc })
     return ProgressCollection.updateAsync(progressDoc._id, updateDoc)
@@ -153,14 +185,15 @@ Progress.methods = {}
 Progress.methods.get = {
   name: 'progress.methods.get',
   schema: {
-    fieldId: String
+    fieldId: String,
   },
-  run: onServerExec(function () {
-    return async function ({ fieldId }) {
-      const { userId } = this
-      return getCollection(Progress.name).findOneAsync({ userId, fieldId })
-    }
-  })
+  run: onServerExec(
+    () =>
+      async function ({ fieldId }) {
+        const { userId } = this
+        return getCollection(Progress.name).findOneAsync({ userId, fieldId })
+      },
+  ),
 }
 
 Progress.methods.getAll = {
@@ -168,19 +201,21 @@ Progress.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
   backend: true,
   run: onServerExec(() => {
-    return async function ({ dependencies } = {}) {
+    return async ({ dependencies } = {}) => {
       const options = { hint: { $natural: -1 } }
-      const docs = await getCollection(Progress.name).find({}, options).fetchAsync()
+      const docs = await getCollection(Progress.name)
+        .find({}, options)
+        .fetchAsync()
       const data = { [Progress.name]: docs }
 
       await onDependencies()
@@ -190,7 +225,7 @@ Progress.methods.getAll = {
 
       return data
     }
-  })
+  }),
 }
 
 Progress.methods.my = {
@@ -201,5 +236,5 @@ Progress.methods.my = {
       const { userId } = this
       return getCollection(Progress.name).find({ userId }).fetchAsync()
     }
-  })
+  }),
 }

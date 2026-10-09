@@ -10,11 +10,11 @@ import { expectThrown } from '../../../tests/helpers/expectThrown'
 
 const SyncCollection = createCollection(SyncState)
 
-describe('SyncState', function () {
+describe('SyncState', () => {
   setupAndTeardown([SyncCollection])
 
-  describe(SyncState.update.name, function () {
-    it('updates a sync state of a given name', async function () {
+  describe(SyncState.update.name, () => {
+    it('updates a sync state of a given name', async () => {
       const name = Random.id()
       const names = [name]
       const ctx = { name, sync: true }
@@ -40,28 +40,30 @@ describe('SyncState', function () {
       expect(updated.updatedAt.getTime()).to.be.above(updatedAt.getTime())
     })
   })
-  describe(SyncState.validate.name, function () {
-    it('throws if a ctx is not defined', function () {
+  describe(SyncState.validate.name, () => {
+    it('throws if a ctx is not defined', () => {
       const name = Random.id()
-      expect(() => SyncState.validate([name]))
-        .to.throw(`Attempt to sync "${name}" but it's not defined for sync!`)
+      expect(() => SyncState.validate([name])).to.throw(
+        `Attempt to sync "${name}" but it's not defined for sync!`,
+      )
     })
-    it('throws if a ctx is not registered for sync', function () {
+    it('throws if a ctx is not registered for sync', () => {
       const name = Random.id()
       ContextRegistry.add(name, { name })
-      expect(() => SyncState.validate([name]))
-        .to.throw(`Attempt to sync "${name}" but it's not defined for sync!`)
+      expect(() => SyncState.validate([name])).to.throw(
+        `Attempt to sync "${name}" but it's not defined for sync!`,
+      )
     })
-    it('validates a given ctx by name', function () {
+    it('validates a given ctx by name', () => {
       const name = Random.id()
       ContextRegistry.add(name, { name, sync: true })
     })
   })
 
-  describe(SyncState.methods.getHashes.name, function () {
-    it('returns the sync states for given names', async function () {
+  describe(SyncState.methods.getHashes.name, () => {
+    it('returns the sync states for given names', async () => {
       const names = [Random.id(), Random.id()]
-      names.forEach(name => {
+      names.forEach((name) => {
         const ctx = { name, sync: true }
         SyncState.register(ctx)
         ContextRegistry.add(name, ctx)
@@ -71,29 +73,29 @@ describe('SyncState', function () {
       const method = SyncState.methods.getHashes.run
       const states = await method.call({}, { names })
 
-      Object.values(states).forEach(state => {
+      Object.values(states).forEach((state) => {
         expect(names.includes(state.name)).to.equal(true)
         expect(state.version).to.be.above(0)
       })
     })
   })
 
-  describe(SyncState.methods.getDocs.name, function () {
+  describe(SyncState.methods.getDocs.name, () => {
     const run = SyncState.methods.getDocs.run
 
-    it('throws on invalid context', async function () {
+    it('throws on invalid context', async () => {
       await expectThrown({
         fn: () => run.call({}, { name: 'foo' }),
-        message: 'Attempt to sync "foo" but it\'s not defined for sync!'
+        message: 'Attempt to sync "foo" but it\'s not defined for sync!',
       })
     })
-    it('throws on collection not exists', async function () {
+    it('throws on collection not exists', async () => {
       const ctx = { name: 'bar', sync: true }
       SyncState.register(ctx)
       ContextRegistry.add(ctx.name, ctx)
       await expectThrown({
         fn: () => run.call({}, { name: 'bar' }),
-        message: 'No collection found for bar'
+        message: 'No collection found for bar',
       })
     })
   })

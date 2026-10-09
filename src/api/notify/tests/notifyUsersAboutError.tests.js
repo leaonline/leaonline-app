@@ -4,15 +4,15 @@ import { Email } from 'meteor/email'
 import { notifyUsersAboutError } from '../notifyUsersAboutError'
 import { restoreAll, stub } from '../../../../tests/helpers.tests'
 
-describe(notifyUsersAboutError.name, function () {
-  afterEach(function () {
+describe(notifyUsersAboutError.name, () => {
+  afterEach(() => {
     restoreAll()
   })
-  it('skips an undefined error', async function () {
+  it('skips an undefined error', async () => {
     stub(Email, 'send', () => expect.fail())
     await notifyUsersAboutError()
   })
-  it('sends an email with a stringified error', async function () {
+  it('sends an email with a stringified error', async () => {
     const err = new Error('foobar')
     err.type = 'testError'
 

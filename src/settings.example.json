@@ -31,9 +31,9 @@
         "testCycle": false,
         "mapIcons": false,
         "feedback": false,
-        "order":false,
-        "legal":false,
-        "achievements":false
+        "order": false,
+        "legal": false,
+        "achievements": false
       },
       "remap": {
         "active": false,

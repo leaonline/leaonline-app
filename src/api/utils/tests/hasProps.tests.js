@@ -2,10 +2,10 @@
 import { hasProp } from '../hasProp'
 import { expect } from 'chai'
 
-describe(hasProp.name, function () {
-  it('checks if an object has an own property', function () {
+describe(hasProp.name, () => {
+  it('checks if an object has an own property', () => {
     const obj = {
-      foo: 'bar'
+      foo: 'bar',
     }
     expect(hasProp(obj, 'foo')).to.equal(true)
     expect(hasProp(obj, 'prototype')).to.equal(false)

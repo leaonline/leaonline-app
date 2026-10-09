@@ -4,7 +4,7 @@ import { expect } from 'chai'
 import { normalizeError } from '../normalizeError'
 import { DocNotFoundError } from '../DocNotFoundError'
 
-describe(normalizeError.name, function () {
+describe(normalizeError.name, () => {
   it('normalizes a native error', () => {
     const e = normalizeError({ error: new Error('foo') })
     const { createdAt, stack, ...rest } = e
@@ -17,12 +17,12 @@ describe(normalizeError.name, function () {
       reason: undefined,
       title: undefined,
       type: 'native',
-      userId: undefined
+      userId: undefined,
     })
   })
   it('normalizes a custom native error', () => {
     class FooError extends Error {
-      constructor (message) {
+      constructor(message) {
         super(message)
         this.name = 'FooError'
       }
@@ -38,7 +38,7 @@ describe(normalizeError.name, function () {
       reason: undefined,
       title: undefined,
       type: 'native',
-      userId: undefined
+      userId: undefined,
     })
   })
   it('normalizes a Meteor error', () => {
@@ -58,7 +58,7 @@ describe(normalizeError.name, function () {
       reason: reason,
       title: name,
       type: 'Meteor.Error',
-      userId: undefined
+      userId: undefined,
     })
   })
   it('normalizes a custom Meteor error', () => {
@@ -77,7 +77,7 @@ describe(normalizeError.name, function () {
       reason: reason,
       title: 'errors.docNotFound',
       type: 'Meteor.Error',
-      userId: undefined
+      userId: undefined,
     })
   })
 })

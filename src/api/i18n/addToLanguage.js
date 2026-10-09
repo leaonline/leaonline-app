@@ -21,7 +21,7 @@ import { i18n } from './I18n'
  * @return {Promise<Boolean>}
  */
 
-export const addToLanguage = async languages => {
+export const addToLanguage = async (languages) => {
   const locale = i18n.getLocale()
   const importFn = languages[locale]
 

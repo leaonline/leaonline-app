@@ -4,27 +4,27 @@
             <a class="btn btn-outline-secondary mb-3" href="{{route 'overview'}}">{{i18n 'common.back'}}</a>
             {{#if loadError}}
                 <div class="alert alert-danger" role="alert">{{i18n 'map.invalidTopology'}}</div>
-                <button class="btn btn-primary map-retry">{{i18n 'map.retry'}}</button>
+                <button type="button" class="btn btn-primary map-retry">{{i18n 'map.retry'}}</button>
             {{else}}
                 {{#if ready}}
                     <h1 class="h3 text-center">{{field.title}}</h1>
                     {{#if learnerUnavailable}}
                         <div class="alert alert-warning" role="status">
                             {{i18n 'map.learnerUnavailable'}}
-                            <button class="btn btn-outline-primary map-retry">{{i18n 'map.retry'}}</button>
+                            <button type="button" class="btn btn-outline-primary map-retry">{{i18n 'map.retry'}}</button>
                         </div>
                     {{/if}}
                     {{#if sceneUnavailable}}<p role="status">{{i18n 'map.sceneUnavailable'}}</p>{{/if}}
                     {{#each issue in model.issues}}<p role="status">{{i18n issue}}</p>{{/each}}
                     <div class="btn-group mb-3" role="group" aria-label="{{i18n 'map.view'}}">
-                        <button class="btn btn-outline-primary map-mode" data-mode="map" aria-pressed="{{#if listMode}}false{{else}}true{{/if}}">{{i18n 'map.journey'}}</button>
-                        <button class="btn btn-outline-primary map-mode" data-mode="list" aria-pressed="{{#if listMode}}true{{else}}false{{/if}}">{{i18n 'map.list'}}</button>
+                        <button type="button" class="btn btn-outline-primary map-mode" data-mode="map" aria-pressed="{{#if listMode}}false{{else}}true{{/if}}">{{i18n 'map.journey'}}</button>
+                        <button type="button" class="btn btn-outline-primary map-mode" data-mode="list" aria-pressed="{{#if listMode}}true{{else}}false{{/if}}">{{i18n 'map.list'}}</button>
                     </div>
                     {{#if listMode}}
                         {{#each stage in model.stages}}
                             <article class="card my-3">
                                 <div class="card-body">
-                                    <button class="btn btn-outline-primary map-list-stage" data-stage="{{stage.id}}" aria-haspopup="dialog" aria-current="{{stageCurrent stage.id}}" aria-expanded="{{stageSelected stage.id}}">
+                                    <button type="button" class="btn btn-outline-primary map-list-stage" data-stage="{{stage.id}}" aria-haspopup="dialog" aria-current="{{stageCurrent stage.id}}" aria-expanded="{{stageSelected stage.id}}">
                                         {{i18n 'map.entry.title' value=stage.number}}
                                         {{#if stage.complete}} — {{i18n 'map.completed'}}{{/if}}
                                     </button>

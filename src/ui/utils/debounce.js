@@ -1,12 +1,12 @@
-export const debounce = function debounce (func, wait, immediate) {
+export const debounce = function debounce(func, wait, immediate) {
   let timeout
   return function () {
-    const context = this; const args = arguments
+    const args = arguments
     clearTimeout(timeout)
-    if (immediate && !timeout) func.apply(context, args)
-    timeout = setTimeout(function () {
+    if (immediate && !timeout) func.apply(this, args)
+    timeout = setTimeout(() => {
       timeout = null
-      if (!immediate) func.apply(context, args)
+      if (!immediate) func.apply(this, args)
     }, wait)
   }
 }

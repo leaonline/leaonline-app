@@ -14,7 +14,7 @@ import { getCollection } from '../../api/utils/getCollection'
  */
 export const Content = {
   name: 'content',
-  methods: {}
+  methods: {},
 }
 
 /**
@@ -25,36 +25,30 @@ Content.methods.home = {
   schema: {
     field: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     dimension: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     level: {
       type: Boolean,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: onServerExec(function () {
-    import { Field } from './Field'
-    import { Dimension } from './Dimension'
-    import { Level } from './Level'
+  run: onServerExec(() => {
+    const { Field } = require('./Field')
+    const { Dimension } = require('./Dimension')
+    const { Level } = require('./Level')
 
-    return async function ({ field, dimension, level }) {
-      return {
-        field: field
-          ? await getCollection(Field.name).find().fetchAsync()
-          : [],
-        dimension: dimension
-          ? await getCollection(Dimension.name).find().fetchAsync()
-          : [],
-        level: level
-          ? await getCollection(Level.name).find().fetchAsync()
-          : []
-      }
-    }
-  })
+    return async ({ field, dimension, level }) => ({
+      field: field ? await getCollection(Field.name).find().fetchAsync() : [],
+      dimension: dimension
+        ? await getCollection(Dimension.name).find().fetchAsync()
+        : [],
+      level: level ? await getCollection(Level.name).find().fetchAsync() : [],
+    })
+  }),
 }
 
 /**
@@ -63,29 +57,33 @@ Content.methods.home = {
 Content.methods.map = {
   name: 'content.methods.map',
   schema: {
-    fieldId: String
+    fieldId: String,
   },
-  run: onServerExec(function () {
-    import { Meteor } from 'meteor/meteor'
-    import { MapData } from '../map/MapData'
-    import { notifyUsersAboutError } from '../../api/errors/notifyUsersAboutError'
-    import { DocNotFoundError } from '../../api/errors/DocNotFoundError'
+  run: onServerExec(() => {
+    const { Meteor } = require('meteor/meteor')
+    const { MapData } = require('../map/MapData')
+    const {
+      notifyUsersAboutError,
+    } = require('../../api/errors/notifyUsersAboutError')
+    const { DocNotFoundError } = require('../../api/errors/DocNotFoundError')
 
-    return async function ({ fieldId }) {
+    return async ({ fieldId }) => {
       const mapData = await MapData.get({ field: fieldId })
       if (!mapData) {
-        Meteor.defer(() => notifyUsersAboutError(
-          new DocNotFoundError('mapData.notFound', {
-            fieldId,
-            method: Content.methods.map.name
-          }),
-          DocNotFoundError.name
-        ))
+        Meteor.defer(() =>
+          notifyUsersAboutError(
+            new DocNotFoundError('mapData.notFound', {
+              fieldId,
+              method: Content.methods.map.name,
+            }),
+            DocNotFoundError.name,
+          ),
+        )
         return { empty: true }
       }
       return mapData
     }
-  })
+  }),
 }
 
 /**
@@ -94,16 +92,16 @@ Content.methods.map = {
 Content.methods.session = {
   name: 'content.methods.session',
   schema: {
-    unitSetId: String
+    unitSetId: String,
   },
-  run: onServerExec(function () {
-    import { Session } from '../session/Session'
+  run: onServerExec(() => {
+    const { Session } = require('../session/Session')
 
     return function ({ unitSetId }) {
       const { userId } = this
       return Session.get({ unitSet: unitSetId, userId })
     }
-  })
+  }),
 }
 
 /**
@@ -112,14 +110,14 @@ Content.methods.session = {
 Content.methods.unit = {
   name: 'content.methods.unit',
   schema: {
-    unitId: String
+    unitId: String,
   },
-  run: onServerExec(function () {
-    import { Unit } from '../content/Unit'
+  run: onServerExec(() => {
+    const { Unit } = require('../content/Unit')
 
-    return function ({ unitId }) {
+    return ({ unitId }) => {
       // TODO return unit only in staging mode
       return getCollection(Unit.name).findOneAsync({ _id: unitId })
     }
-  })
+  }),
 }

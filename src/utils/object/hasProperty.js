@@ -1,1 +1,1 @@
-export const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+export const hasProperty = (obj, prop) => Object.hasOwn(obj, prop)

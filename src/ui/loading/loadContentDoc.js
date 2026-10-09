@@ -9,7 +9,16 @@ import { callMethod } from '../../infrastructure/methods/callMethod'
  * @return {Promise<Object>} A promise resoling to an object or void
  */
 
-export const loadContentDoc = async ({ context, collection, name, unlessExists, query, debug = () => {}, isShortCode = false, clean = x => x }) => {
+export const loadContentDoc = async ({
+  context,
+  collection,
+  name,
+  unlessExists,
+  query,
+  debug = () => {},
+  isShortCode = false,
+  clean = (x) => x,
+}) => {
   debug(`[${context?.name}]: loadContentDoc (single)`)
   if (!context) {
     throw new Error('Context is expected')
@@ -32,7 +41,7 @@ export const loadContentDoc = async ({ context, collection, name, unlessExists, 
 
   const document = await callMethod({
     name: name ?? context.methods.get,
-    args: query
+    args: query,
   })
 
   if (document) {
@@ -40,10 +49,14 @@ export const loadContentDoc = async ({ context, collection, name, unlessExists, 
       const upsertDoc = clean({ ...document })
       const { _id } = document
       debug(`[${context?.name}]: upsert doc ${_id}`)
-      const upserted = await localCollection.upsertAsync({ _id }, { $set: upsertDoc })
-      debug(`[${context?.name}]: upserted ${upserted && JSON.stringify(upserted)}`)
-    }
-    catch (e) {
+      const upserted = await localCollection.upsertAsync(
+        { _id },
+        { $set: upsertDoc },
+      )
+      debug(
+        `[${context?.name}]: upserted ${upserted && JSON.stringify(upserted)}`,
+      )
+    } catch (e) {
       debug(`[${context?.name}]: error while upserting document - ${e.message}`)
       throw e
     }

@@ -14,7 +14,7 @@ import { Integer, oneOf } from '../../infrastructure/factories/createSchema'
  * @namespace
  */
 export const Response = {
-  name: 'response'
+  name: 'response',
 }
 
 const log = createLog({ name: Response.name })
@@ -31,31 +31,31 @@ const baseSchema = {
   itemType: String,
   responses: {
     type: Array,
-    optional: true
+    optional: true,
   },
   'responses.$': {
-    type: String
-  }
+    type: String,
+  },
 }
 const scoresSchema = {
   scores: Array,
   'scores.$': Object,
   'scores.$.target': {
     type: Number,
-    optional: true
+    optional: true,
   },
   'scores.$.competency': Array,
   'scores.$.competency.$': String,
   'scores.$.correctResponse': Array,
   'scores.$.correctResponse.$': {
-    type: oneOf(String, Integer, RegExp)
+    type: oneOf(String, Integer, RegExp),
   },
   'scores.$.isUndefined': Boolean,
   'scores.$.score': Boolean,
   'scores.$.value': Array,
   'scores.$.value.$': {
-    type: oneOf(String, Integer)
-  }
+    type: oneOf(String, Integer),
+  },
 }
 
 /**
@@ -63,7 +63,7 @@ const scoresSchema = {
  */
 Response.schema = {
   ...baseSchema,
-  ...scoresSchema
+  ...scoresSchema,
 }
 
 /**
@@ -78,12 +78,16 @@ Response.schema = {
  */
 Response.countAccomplishedAnswers = async ({ userId, sessionId, unitId }) => {
   log('count accomplished answers', { userId, sessionId, unitId })
-  const allDocsByUnit = getCollection(Response.name).find({ userId, sessionId, unitId })
+  const allDocsByUnit = getCollection(Response.name).find({
+    userId,
+    sessionId,
+    unitId,
+  })
 
   let count = 0
 
-  await allDocsByUnit.forEachAsync(responseDoc => {
-    responseDoc.scores.forEach(entry => {
+  await allDocsByUnit.forEachAsync((responseDoc) => {
+    responseDoc.scores.forEach((entry) => {
       if (entry.score) {
         const competency = Array.isArray(entry.competency)
           ? entry.competency
@@ -114,9 +118,9 @@ const { timeStamp, userId, ...submitSchema } = baseSchema
 Response.methods.submit = {
   name: 'response.methods.submit',
   schema: submitSchema,
-  run: onServerExec(function () {
-    import { submitResponse } from './submitResponse'
-    import { updateProgress } from './updateProgress'
+  run: onServerExec(() => {
+    const { submitResponse } = require('./submitResponse')
+    const { updateProgress } = require('./updateProgress')
 
     return async function (responseDoc) {
       const { userId } = this
@@ -125,5 +129,5 @@ Response.methods.submit = {
       const updated = await updateProgress({ userId, sessionId })
       return { submitted, updated }
     }
-  })
+  }),
 }

@@ -10,21 +10,21 @@ export const Feedback = {
   name: 'feedback',
   label: 'feedback.title',
   icon: 'thumbs-up',
-  sync: true
+  sync: true,
 }
 
 Feedback.schema = {
   threshold: {
     type: Number,
     min: 0,
-    max: 1
+    max: 1,
   },
   phrases: {
-    type: Array
+    type: Array,
   },
   'phrases.$': {
-    type: String
-  }
+    type: String,
+  },
 }
 
 Feedback.methods = {}
@@ -36,13 +36,13 @@ Feedback.methods.update = {
   backend: true,
   schema: {
     _id: {
-      type: String
+      type: String,
     },
     threshold: { ...Feedback.schema.threshold, ...optional },
     phrases: { ...Feedback.schema.phrases, ...optional },
-    'phrases.$': { ...Feedback.schema['phrases.$'], ...optional }
+    'phrases.$': { ...Feedback.schema['phrases.$'], ...optional },
   },
-  run: async function ({ _id, threshold, phrases }) {
+  run: async ({ _id, threshold, phrases }) => {
     const query = { _id }
     const modifier = { $set: {} }
 
@@ -54,21 +54,27 @@ Feedback.methods.update = {
       modifier.$set.phrases = phrases
     }
 
-    const updated = await getCollection(Feedback.name).updateAsync(query, modifier)
+    const updated = await getCollection(Feedback.name).updateAsync(
+      query,
+      modifier,
+    )
     await SyncState.update(Feedback.name)
     return updated
-  }
+  },
 }
 
 Feedback.methods.insert = {
   name: 'feedback.methods.insert',
   schema: Feedback.schema,
   backend: true,
-  run: async function ({ threshold, phrases }) {
-    const insertId = await getCollection(Feedback.name).insertAsync({ threshold, phrases })
+  run: async ({ threshold, phrases }) => {
+    const insertId = await getCollection(Feedback.name).insertAsync({
+      threshold,
+      phrases,
+    })
     await SyncState.update(Feedback.name)
     return insertId
-  }
+  },
 }
 
 Feedback.methods.get = {
@@ -76,12 +82,11 @@ Feedback.methods.get = {
   schema: {
     _id: {
       type: String,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: async function ({ _id } = {}) {
-    return getCollection(Feedback.name).findOneAsync({ _id })
-  }
+  run: async ({ _id } = {}) =>
+    getCollection(Feedback.name).findOneAsync({ _id }),
 }
 
 Feedback.methods.getAll = {
@@ -89,20 +94,20 @@ Feedback.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: async function () {
+  run: async () => {
     const docs = await getCollection(Feedback.name).find().fetchAsync()
     return {
-      [Feedback.name]: docs
+      [Feedback.name]: docs,
     }
-  }
+  },
 }
 
 Feedback.publications = {}

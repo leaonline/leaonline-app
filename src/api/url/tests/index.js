@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-describe('url', function () {
-  import './encodeQueryParams.tests'
-  import './toContentServerURL.tests'
+describe('url', () => {
+  require('./encodeQueryParams.tests')
+  require('./toContentServerURL.tests')
 })

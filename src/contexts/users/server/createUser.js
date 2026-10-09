@@ -1,9 +1,16 @@
+import { Accounts } from "meteor/accounts-base";
 import { Random } from 'meteor/random'
 import { getUsersCollection } from '../../../api/collections/getUsersCollection'
 import { safeWhileAsync } from '../../../api/utils/safeWhile'
 import { RestoreCodes } from '../../../api/accounts/RestoreCodes'
 
-export const createUser = async ({ voice, speed, termsAndConditionsIsChecked, /* researchEmail, */ isDev, email }) => {
+export const createUser = async ({
+  voice,
+  speed,
+  termsAndConditionsIsChecked,
+  /* researchEmail, */ isDev,
+  email,
+}) => {
   const collection = getUsersCollection()
 
   // since older app versions do not send this flag
@@ -14,15 +21,14 @@ export const createUser = async ({ voice, speed, termsAndConditionsIsChecked, /*
 
   if (email) {
     account.email = email
-  }
-  else {
+  } else {
     account.username = Random.hexString(32)
   }
 
   const restoreCode = await safeWhileAsync(async () => {
     const codes = RestoreCodes.generate()
     const r = codes.join('-')
-    const hasCodes = await collection.countDocuments({ restore: r }) > 0
+    const hasCodes = (await collection.countDocuments({ restore: r })) > 0
     if (!hasCodes) {
       return r
     }

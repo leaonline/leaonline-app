@@ -2,7 +2,7 @@
 import '../../../startup/client/templates'
 import '../../pages/loading/loading' // implied in app as well
 
-describe('components', function () {
-  import '../complete/tests/onComplete.tests'
-  import '../container/tests/container.tests'
+describe('components', () => {
+  require('../complete/tests/onComplete.tests')
+  require('../container/tests/container.tests')
 })

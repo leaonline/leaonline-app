@@ -5,12 +5,15 @@ import { Email } from 'meteor/email'
 import { ServerErrors } from '../ServerErrors'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { getCollection } from '../../../api/utils/getCollection'
-import { restoreCollections, stubCollection } from '../../../tests/helpers/stubCollection'
+import {
+  restoreCollections,
+  stubCollection,
+} from '../../../tests/helpers/stubCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 
 const ServerErrorsCollection = initTestCollection(ServerErrors)
 
-describe(ServerErrors.name, function () {
+describe(ServerErrors.name, () => {
   before(() => {
     stubCollection([ServerErrorsCollection])
   })
@@ -25,14 +28,16 @@ describe(ServerErrors.name, function () {
       error: new Error('foo bar moo'),
       userId: Random.id(),
       isMethod: true,
-      name: 'method.foobar'
+      name: 'method.foobar',
     }
 
     const stackSplit = options.error.stack.split('\n')
     stackSplit.length = 3
     const stack = stackSplit.join('\n')
     const docId = await ServerErrors.handle(options)
-    const { _id, createdAt, ...doc } = await getCollection(ServerErrors.name).findOneAsync(docId)
+    const { _id, createdAt, ...doc } = await getCollection(
+      ServerErrors.name,
+    ).findOneAsync(docId)
     expect(_id).to.be.a('string')
     expect(createdAt).to.be.instanceOf(Date)
     expect(doc).to.deep.equal({
@@ -47,7 +52,7 @@ describe(ServerErrors.name, function () {
       publication: undefined,
       isSystem: undefined,
       userId: options.userId,
-      tag: undefined
+      tag: undefined,
     })
     expect(emailSent.calledOnce).to.equal(true)
   })

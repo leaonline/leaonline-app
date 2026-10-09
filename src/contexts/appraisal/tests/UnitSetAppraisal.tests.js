@@ -7,7 +7,10 @@ import { Dimension } from '../../content/Dimension'
 import { UnitSet } from '../../content/UnitSet'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
-import { DocumentFactories, SelectorFactories } from '../../../tests/helpers/Factories'
+import {
+  DocumentFactories,
+  SelectorFactories,
+} from '../../../tests/helpers/Factories'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
 import { expect } from 'chai'
 
@@ -23,7 +26,7 @@ const createMockDoc = ({ fieldId, dimensionId, unitSetId }) => {
     unitSetId: unitSetId ?? Random.id(),
     response: 3,
     createdAt: new Date(),
-    stage: 11
+    stage: 11,
   }
 }
 
@@ -32,7 +35,7 @@ describe(UnitSetAppraisal.name, () => {
     UnitSetAppraisalCollection,
     FieldCollection,
     DimensionCollection,
-    UnitSetCollection
+    UnitSetCollection,
   ])
   describe('methods', () => {
     describe(UnitSetAppraisal.methods.send.name, () => {
@@ -42,7 +45,7 @@ describe(UnitSetAppraisal.name, () => {
         const unitSetId = Random.id()
         await expectThrown({
           fn: () => run.call({}, { unitSetId }),
-          name: 'errors.docNotFound'
+          name: 'errors.docNotFound',
         })
       })
       it('adds a new appraisal', async () => {
@@ -50,7 +53,10 @@ describe(UnitSetAppraisal.name, () => {
         const dimension = Random.id()
         const userId = Random.id()
         const response = '3'
-        const unitSetId = await UnitSetCollection.insertAsync({ field, dimension })
+        const unitSetId = await UnitSetCollection.insertAsync({
+          field,
+          dimension,
+        })
         const appraisalId = await run.call({ userId }, { unitSetId, response })
         expect(appraisalId).to.be.a('string')
 
@@ -64,32 +70,38 @@ describe(UnitSetAppraisal.name, () => {
           fieldId: field,
           dimensionId: dimension,
           unitSetId,
-          response
+          response,
         })
       })
     })
 
     testGetAllMethod(UnitSetAppraisal, {
-      factory: async withDeps => {
-        const fieldId = withDeps ? (await FieldCollection.findOneAsync())._id : Random.id()
-        const dimensionId = withDeps ? (await DimensionCollection.findOneAsync())._id : Random.id()
-        const unitSetId = withDeps ? (await UnitSetCollection.findOneAsync())._id : Random.id()
+      factory: async (withDeps) => {
+        const fieldId = withDeps
+          ? (await FieldCollection.findOneAsync())._id
+          : Random.id()
+        const dimensionId = withDeps
+          ? (await DimensionCollection.findOneAsync())._id
+          : Random.id()
+        const unitSetId = withDeps
+          ? (await UnitSetCollection.findOneAsync())._id
+          : Random.id()
         return createMockDoc({ fieldId, dimensionId, unitSetId })
       },
       dependencies: {
         [Field.name]: {
           factory: DocumentFactories.get(Field.name),
-          selector: SelectorFactories.idSelector('fieldId')
+          selector: SelectorFactories.idSelector('fieldId'),
         },
         [Dimension.name]: {
           factory: DocumentFactories.get(Dimension.name),
-          selector: SelectorFactories.idSelector('dimensionId')
+          selector: SelectorFactories.idSelector('dimensionId'),
         },
         [UnitSet.name]: {
           factory: DocumentFactories.get(UnitSet.name),
-          selector: SelectorFactories.idSelector('unitSetId')
-        }
-      }
+          selector: SelectorFactories.idSelector('unitSetId'),
+        },
+      },
     })
   })
 })

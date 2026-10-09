@@ -26,13 +26,14 @@ export const useFixtures = async () => {
     debug(name, 'docs:', documents.length)
     const collection = getCollection(name)
 
-    await forEachAsync(documents, async doc => {
+    await forEachAsync(documents, async (doc) => {
       if (fixturesIsActive) {
-        const upsert = await collection.upsertAsync({ _id: doc._id }, { $set: doc })
+        const upsert = await collection.upsertAsync(
+          { _id: doc._id },
+          { $set: doc },
+        )
         debug('upsert', JSON.stringify(upsert))
-      }
-
-      else {
+      } else {
         const removed = await collection.removeAsync({ _id: doc._id })
         debug(name, 'removed:', removed)
       }

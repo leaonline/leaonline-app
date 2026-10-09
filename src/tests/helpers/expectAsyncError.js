@@ -11,8 +11,7 @@ export const expectAsyncError = async (promise) => {
   try {
     await promise
     expect.fail()
-  }
-  catch (e) {
+  } catch (e) {
     return e
   }
 }

@@ -3,25 +3,24 @@ import { Template } from 'meteor/templating'
 import './loginWithPassword.html'
 
 Template.loginWithPassword.onRendered(function () {
-  const instance = this
-  instance.$('.pw-input').get(0).focus()
+  this.$('.pw-input').get(0).focus()
 })
 
 Template.loginWithPassword.helpers({
-  submitting () {
+  submitting() {
     return Template.getState('loggingIn')
   },
-  submitDisabled () {
+  submitDisabled() {
     return Template.getState('loggingIn') || !Template.getState('input')
-  }
+  },
 })
 
 Template.loginWithPassword.events({
-  'input .pw-input' (event, templateInstance) {
+  'input .pw-input'(event, templateInstance) {
     const input = $('.pw-input').val()
     templateInstance.state.set({ input })
   },
-  'click .submit-btn' (event, templateInstance) {
+  'click .submit-btn'(event, templateInstance) {
     event.preventDefault()
     const { failure, success, clear } = Template.currentData()
     clear()
@@ -32,14 +31,17 @@ Template.loginWithPassword.events({
         templateInstance.state.set('loggingIn', false)
         if (err) {
           if (err.message.includes('check your credentials')) {
-            failure(new Meteor.Error('auth.logins.failed', 'auth.logins.password.badCredentials'))
-          }
-          else {
+            failure(
+              new Meteor.Error(
+                'auth.logins.failed',
+                'auth.logins.password.badCredentials',
+              ),
+            )
+          } else {
             failure(err)
           }
-        }
-        else success()
+        } else success()
       }, 1000)
     })
-  }
+  },
 })

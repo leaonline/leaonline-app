@@ -1,4 +1,4 @@
 /* eslint-env mocha */
-describe('complete', function () {
-  import '../helpers/trunactePercent.tests'
+describe('complete', () => {
+  require('../helpers/trunactePercent.tests')
 })

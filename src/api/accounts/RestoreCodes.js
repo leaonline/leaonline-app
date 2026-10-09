@@ -12,7 +12,7 @@ const RestoreCodes = {
    * @type {string}
    * @default: 'restoreCodes'
    */
-  name: 'restoreCodes'
+  name: 'restoreCodes',
 }
 
 /**
@@ -28,12 +28,12 @@ const RestoreCodes = {
 RestoreCodes.schema = () => ({
   restore: {
     type: Array,
-    min: internal.numberOfCOdes
+    min: internal.numberOfCOdes,
   },
   'restore.$': {
     type: String,
-    min: internal.length
-  }
+    min: internal.length,
+  },
 })
 
 /**
@@ -68,8 +68,11 @@ const internal = {
   numberOfCOdes: codeSettings.numberOfCodes,
   length: codeSettings.length,
   uppercase: codeSettings.uppercase,
-  forbidden: new RegExp(codeSettings.forbidden.source, codeSettings.forbidden.flags),
-  maxRetries: codeSettings.maxRetries
+  forbidden: new RegExp(
+    codeSettings.forbidden.source,
+    codeSettings.forbidden.flags,
+  ),
+  maxRetries: codeSettings.maxRetries,
 }
 
 /**
@@ -86,9 +89,7 @@ const generateCode = () => {
     isValid = forbidden.test(code) === false
   }
 
-  return uppercase
-    ? code.toUpperCase()
-    : code
+  return uppercase ? code.toUpperCase() : code
 }
 
 export { RestoreCodes }

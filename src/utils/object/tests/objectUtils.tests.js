@@ -5,14 +5,14 @@ import { hasProperty } from '../hasProperty'
 import { isPlainObject } from '../isPlainObject'
 
 class ES6CustomWhatever {
-  get [Symbol.toStringTag] () {
+  get [Symbol.toStringTag]() {
     return 'ES6CustomWhatever'
   }
 }
 
-describe('object utils', function () {
-  describe(getType.name, function () {
-    it('returns the constructor name of a given Object', function () {
+describe('object utils', () => {
+  describe(getType.name, () => {
+    it('returns the constructor name of a given Object', () => {
       expect(getType(null)).to.equal('[object Null]')
       expect(getType()).to.equal('[object Undefined]')
       expect(getType(1)).to.equal('[object Number]')
@@ -21,18 +21,20 @@ describe('object utils', function () {
       expect(getType([])).to.equal('[object Array]')
       expect(getType(new Date())).to.equal('[object Date]')
       expect(getType(() => {})).to.equal('[object Function]')
-      expect(getType(new ES6CustomWhatever())).to.equal('[object ES6CustomWhatever]')
+      expect(getType(new ES6CustomWhatever())).to.equal(
+        '[object ES6CustomWhatever]',
+      )
     })
   })
-  describe(hasProperty.name, function () {
-    it('is a safer shorthand for hasOwnProperty', function () {
+  describe(hasProperty.name, () => {
+    it('is a safer shorthand for hasOwnProperty', () => {
       const obj = { foo: 'bar' }
       expect(hasProperty(obj, 'foo')).to.equal(true)
       expect(hasProperty(obj, 'toString')).to.equal(false) // not own prop
     })
   })
-  describe(isPlainObject.name, function () {
-    it('determines if an object is plain', function () {
+  describe(isPlainObject.name, () => {
+    it('determines if an object is plain', () => {
       expect(isPlainObject(() => {})).to.equal(false)
       expect(isPlainObject([])).to.equal(false)
       expect(isPlainObject(1)).to.equal(false)

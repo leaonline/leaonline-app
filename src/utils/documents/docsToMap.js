@@ -14,9 +14,7 @@
  * @return {Map|WeakMap}
  */
 export const docsToMap = (docs, { key = '_id', weak = false } = {}) => {
-  const map = weak === true
-    ? new WeakMap()
-    : new Map()
-  docs.forEach(doc => map.set(doc[key], doc))
+  const map = weak === true ? new WeakMap() : new Map()
+  docs.forEach((doc) => map.set(doc[key], doc))
   return map
 }

@@ -1,3 +1,7 @@
 export {
-  onServer, onServerExec, onClient, onClientExec, isomorph
+  onServer,
+  onServerExec,
+  onClient,
+  onClientExec,
+  isomorph,
 } from 'meteor/leaonline:corelib/utils/arch'

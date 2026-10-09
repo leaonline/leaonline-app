@@ -7,14 +7,16 @@ import { createLog } from '../log/createLog'
  * @param options
  * @return {*}
  */
-export const environmentExtensionMixin = function (options) {
+export const environmentExtensionMixin = (options) => {
   const { env } = options
-  if (env === null || env === false) { return options }
+  if (env === null || env === false) {
+    return options
+  }
 
   const log = createLog({ name: options.name, includeInTests: true })
   const runFct = options.run
 
-  options.run = async function run (...args) {
+  options.run = async function run(...args) {
     // safe-assign our extensions to the environment document
     Object.assign(this, { log })
 

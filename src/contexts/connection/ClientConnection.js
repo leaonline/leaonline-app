@@ -8,35 +8,35 @@ import { createLog } from '../../infrastructure/log/createLog'
 export const ClientConnection = {
   name: 'clientConnection',
   label: 'clientConnection.title',
-  icon: 'mobile'
+  icon: 'mobile',
 }
 
 ClientConnection.schema = {
   id: {
-    type: String
+    type: String,
   },
   timestamp: {
-    type: Date
+    type: Date,
   },
   clientAddress: {
-    type: String
+    type: String,
   },
   headers: {
     type: Object,
-    blackbox: true
+    blackbox: true,
   },
   userId: {
     type: String,
-    optional: true
+    optional: true,
   },
   isDev: {
     type: String,
-    optional: true
+    optional: true,
   },
   isBackend: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 /**
@@ -56,11 +56,21 @@ const log = createLog({ name: ClientConnection.name, type: 'log' })
  * @param httpHeaders
  * @return {Promise<void>}
  */
-ClientConnection.onConnected = async function ({ id, onClose, clientAddress, httpHeaders = {} }) {
+ClientConnection.onConnected = async ({
+  id,
+  onClose,
+  clientAddress,
+  httpHeaders = {},
+}) => {
   log('on connect', id, clientAddress, httpHeaders['user-agent'])
   const timestamp = new Date()
-  await connections.upsertAsync({ id }, { $set: { id, clientAddress, httpHeaders, timestamp } })
-  onClose(() => ClientConnection.onDisconnect({ id, clientAddress, httpHeaders }))
+  await connections.upsertAsync(
+    { id },
+    { $set: { id, clientAddress, httpHeaders, timestamp } },
+  )
+  onClose(() =>
+    ClientConnection.onDisconnect({ id, clientAddress, httpHeaders }),
+  )
 }
 
 /**
@@ -97,19 +107,21 @@ ClientConnection.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
   run: async function (/* { dependencies = {} } = {} */) {
     const { userId } = this
-    const docs = await connections.find({ userId: { $ne: userId } }).fetchAsync()
+    const docs = await connections
+      .find({ userId: { $ne: userId } })
+      .fetchAsync()
     return {
-      [ClientConnection.name]: docs
+      [ClientConnection.name]: docs,
     }
-  }
+  },
 }

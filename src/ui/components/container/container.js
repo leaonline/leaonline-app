@@ -3,8 +3,7 @@ import { fadeIn } from '../../../utils/animationUtils'
 import './container.html'
 
 Template.container.onRendered(function () {
-  const instance = this
-  fadeIn('.lea-base-container', instance, (err, $target) => {
+  fadeIn('.lea-base-container', this, (err, $target) => {
     if (err) {
       return console.error(err)
     }
