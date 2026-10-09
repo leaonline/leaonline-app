@@ -17,7 +17,7 @@ export const createRendererTestContext = () => {
   return {
     ...context,
     sandbox,
-    setup() {
+    setup () {
       context.setup()
       originalI18n = Blaze._globalHelpers.i18n
       originalLoading = Template.loading
@@ -25,23 +25,26 @@ export const createRendererTestContext = () => {
       Template.loading = new Template('uiTestLoading', () => 'Loading')
       sandbox.stub(TTSEngine, 'isConfigured').returns(false)
     },
-    teardown() {
+    teardown () {
       try {
         context.teardown()
-      } finally {
+      }
+      finally {
         sandbox.restore()
         if (originalI18n) {
           Template.registerHelper('i18n', originalI18n)
-        } else {
+        }
+        else {
           Template.deregisterHelper('i18n')
         }
         if (originalLoading) {
           Template.loading = originalLoading
-        } else {
+        }
+        else {
           delete Template.loading
         }
       }
-    },
+    }
   }
 }
 

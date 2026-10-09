@@ -2,7 +2,7 @@ export const createFakeIntersectionObserverTests = () => {
   const observers = []
 
   class FakeIntersectionObserver {
-    constructor(callback) {
+    constructor (callback) {
       this.callback = callback
       this.observed = []
       this.unobserved = []
@@ -10,15 +10,15 @@ export const createFakeIntersectionObserverTests = () => {
       observers.push(this)
     }
 
-    observe(target) {
+    observe (target) {
       this.observed.push(target)
     }
 
-    unobserve(target) {
+    unobserve (target) {
       this.unobserved.push(target)
     }
 
-    disconnect() {
+    disconnect () {
       this.disconnectCalls += 1
     }
   }

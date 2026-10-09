@@ -12,7 +12,7 @@ onClientExec(() => {
 Level.methods = Level.methods ?? {}
 Level.methods.getAll = createGetAllMethod({
   context: Level,
-  backendOnly: false,
+  backendOnly: false
 })
 
 Level.methods.get = createGetMethod({

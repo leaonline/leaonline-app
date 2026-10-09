@@ -7,7 +7,7 @@ const theme = new ReactiveVar()
 const LIGHT = 'light'
 const DARK = 'dark'
 const isSupported = (value) => [LIGHT, DARK].includes(value)
-const updateDOM  = (value) => {
+const updateDOM = (value) => {
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     window.document.documentElement.setAttribute('data-bs-theme', value)
   }

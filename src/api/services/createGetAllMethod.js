@@ -34,10 +34,8 @@ export const createGetAllMethod = ({ context, run, defaultQuery, backendOnly = t
       },
     },
     run: onServerExec(() => {
-      import  { getCollection } from '../utils/getCollection'
-
+      
       return run ?? async function ({ ids, dependencies = [] }) {
-
         // return value
         const output = {}
 

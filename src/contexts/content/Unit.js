@@ -46,7 +46,7 @@ onClientExec(() => {
 Unit.methods = Unit.methods ?? {}
 Unit.methods.getAll = createGetAllMethod({
   context: Unit,
-  backendOnly: false,
+  backendOnly: false
 })
 
 Unit.methods.get = createGetMethod({

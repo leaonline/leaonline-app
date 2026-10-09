@@ -95,7 +95,6 @@ Routes.legal = {
 const toWelcome = createTrigger(loggedOut, () => Routes.welcome.path())
 const toOverview = createTrigger(loggedIn, () => Routes.overview)
 
-
 // ============================================================================
 // AUTHENTICATION WORKFLOW PAGES
 // ============================================================================
@@ -118,7 +117,7 @@ Routes.welcome = {
   template: 'welcome',
   data: {
     register: () => go(Routes.register),
-    login: () => go(Routes.login),
+    login: () => go(Routes.login)
   }
 }
 
@@ -126,61 +125,61 @@ Routes.welcome = {
  * Registering a new user
  */
 Routes.register = {
-    path: () => {
-        return `${settings().register}`
-    },
-    label: 'pages.register.title',
-    triggersEnter: () => [toOverview],
-    async load () {
-        return import('../pages/auth/register/registerNewUser')
-    },
-    target: null,
-    template: 'registerNewUser',
-    data: {
-        success: () => go(Routes.overview),
-        restore: () => go(Routes.restore),
-        login: () => go(Routes.login),
-    }
+  path: () => {
+    return `${settings().register}`
+  },
+  label: 'pages.register.title',
+  triggersEnter: () => [toOverview],
+  async load () {
+    return import('../pages/auth/register/registerNewUser')
+  },
+  target: null,
+  template: 'registerNewUser',
+  data: {
+    success: () => go(Routes.overview),
+    restore: () => go(Routes.restore),
+    login: () => go(Routes.login)
+  }
 }
 
 /**
  * Authenticate an existing user
  */
 Routes.login = {
-    path: () => {
-        return `${settings().login}`
-    },
-    label: 'pages.login.title',
-    triggersEnter: () => [toOverview],
-    async load () {
-        return import('../pages/auth/login/login')
-    },
-    target: null,
-    template: 'login',
-    data: {
-        success: () => go(Routes.overview),
-        restore: () => go(Routes.restore),
-    }
+  path: () => {
+    return `${settings().login}`
+  },
+  label: 'pages.login.title',
+  triggersEnter: () => [toOverview],
+  async load () {
+    return import('../pages/auth/login/login')
+  },
+  target: null,
+  template: 'login',
+  data: {
+    success: () => go(Routes.overview),
+    restore: () => go(Routes.restore)
+  }
 }
 
 /**
  * Restore existing account
  */
 Routes.restore = {
-    path: () => {
-        return `${settings().restore}`
-    },
-    label: 'pages.restore.title',
-    triggersEnter: () => [toOverview],
-    async load () {
-        return import('../pages/auth/restore/restore')
-    },
-    target: null,
-    template: 'restore',
-    data: {
-        success: () => go(Routes.overview),
-        login: () => go(Routes.login),
-    }
+  path: () => {
+    return `${settings().restore}`
+  },
+  label: 'pages.restore.title',
+  triggersEnter: () => [toOverview],
+  async load () {
+    return import('../pages/auth/restore/restore')
+  },
+  target: null,
+  template: 'restore',
+  data: {
+    success: () => go(Routes.overview),
+    login: () => go(Routes.login)
+  }
 }
 
 // ============================================================================
@@ -202,14 +201,14 @@ Routes.user = {
 }
 
 Routes.secureAccount = {
-    path: () => `${settings().secureAccount}`,
-    label: 'pages.secureAccount.title',
-    triggersEnter: () => [toWelcome],
-    async load () {
-        return import('../pages/secure/secureAccount/secureAccount')
-    },
-    target: null,
-    template: 'secureAccount'
+  path: () => `${settings().secureAccount}`,
+  label: 'pages.secureAccount.title',
+  triggersEnter: () => [toWelcome],
+  async load () {
+    return import('../pages/secure/secureAccount/secureAccount')
+  },
+  target: null,
+  template: 'secureAccount'
 }
 
 /**
@@ -228,7 +227,7 @@ Routes.overview = {
     window.scrollTo(0, 0)
   },
   data: {
-    onSelected({ fieldId }) {
+    onSelected ({ fieldId }) {
       go(Routes.map, fieldId)
     },
     next ({ sessionId, unitId }) {
@@ -262,7 +261,7 @@ Routes.map = {
     // window.scrollTo(0, 0)
   },
   data: {
-    onSelected({ sessionId, unitSetId, unitId, showStory }) {
+    onSelected ({ sessionId, unitSetId, unitId, showStory }) {
       if (showStory) {
         return go(Routes.story, sessionId, unitSetId)
       }

@@ -1,6 +1,6 @@
 import { Blaze } from 'meteor/blaze'
 import { Meteor } from 'meteor/meteor'
-import { initClientContext } from '../../api/context/initClientContext'
+
 // if we use the autoload functionality we don't need to explicitly load basic
 // and generic (stateless) templates, since they are loaded at runtime using
 // dynamic imports.
@@ -30,11 +30,11 @@ Blaze.TemplateInstance.prototype.initDependencies =
     }
 
     import { Router } from '../routing/Router'
+    import { initClientContext } from '../../api/context/initClientContext'
     import { fatal } from '../components/fatal/fatal'
     import { initLanguage } from '../../api/i18n/initLanguage'
     import { initializeTTS } from '../../api/tts/initializeTTS'
-    import { initClientContext } from '../../api/context/initClientContext'
-    import { loadOnce } from '../loading/loadOnce'
+        import { loadOnce } from '../loading/loadOnce'
     import { createLog } from '../../utils/createInfoLog'
     import { loadAllContentDocs } from '../loading/loadAllContentDocs'
     import { loadContentDoc } from '../loading/loadContentDoc'

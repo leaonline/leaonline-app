@@ -4,7 +4,7 @@ export const Preferences = {}
 
 const prefs = new ReactiveDict()
 
-Preferences.useSoundButtons =  (value) => {
+Preferences.useSoundButtons = (value) => {
   if (typeof value === 'boolean') {
     prefs.set('useSoundButtons', value)
   }

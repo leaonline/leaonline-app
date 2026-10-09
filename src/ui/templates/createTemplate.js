@@ -33,9 +33,14 @@ export const createTemplate = ({ template, language, contexts, tts, translations
     }
 
     _debug('init dependencies')
-    instance.initDependencies({ debug: _debug, contexts, language, tts, translations,
+    instance.initDependencies({
+      debug: _debug,
+      contexts,
+      language,
+      tts,
+      translations,
       onComplete: () => {
-      _debug('dependencies complete')
+        _debug('dependencies complete')
         instance.state.set('dependenciesComplete', true)
         if (onDependenciesComplete) {
           _debug('run onDependenciesComplete hook')
@@ -43,7 +48,7 @@ export const createTemplate = ({ template, language, contexts, tts, translations
         }
       },
       onError: error => {
-          _debug('dependencies error')
+        _debug('dependencies error')
         instance.state.set({ dependenciesComplete: true })
         handleError({ instance, error })
       }
@@ -75,7 +80,7 @@ export const createTemplate = ({ template, language, contexts, tts, translations
     error () {
       return Template.getState('error')
     },
-    ...helpers,
+    ...helpers
   })
 
   if (events) template.events(events)

@@ -38,7 +38,7 @@ Template.decision.events({
   }
 })
 
-export const requestDecision = ({ title, type="primary", options }) => {
+export const requestDecision = ({ title, type = 'primary', options }) => {
   state.set({ title, options, type })
   $('#decision-modal').modal('show')
 

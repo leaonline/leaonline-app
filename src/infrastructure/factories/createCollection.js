@@ -3,7 +3,7 @@ import { createSchema } from './createSchema'
 import { createCollectionFactory } from 'meteor/leaonline:collection-factory'
 import { LocalCollections } from '../../api/collections/LocalCollections'
 import { createLog } from '../log/createLog'
-import {getCollection} from "../../api/utils/getCollection";
+import { getCollection } from '../../api/utils/getCollection'
 
 const collectionFactory = createCollectionFactory({
   schemaFactory: createSchema

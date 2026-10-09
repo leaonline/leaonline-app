@@ -16,7 +16,7 @@ export const Progress = {
   label: 'progress.title',
   icon: 'spinner',
   representative: 'userId',
-  useHistory: true,
+  useHistory: true
 }
 const log = createLog(Progress)
 
@@ -84,7 +84,7 @@ Progress.schema = {
   'unitSets.$.completedAt': {
     type: Date,
     optional: true
-  },
+  }
 }
 
 onServerExec(() => {
@@ -125,7 +125,8 @@ onServerExec(() => {
 
     if (!entryExist) {
       unitSetDoc.progress = progress
-    } else {
+    }
+    else {
       unitSetDoc.progress += progress
     }
 
@@ -133,15 +134,15 @@ onServerExec(() => {
     // otherwise push a completely new entry to the unitSets list
     const updateDoc = entryExist
       ? {
-        $set: {
-          [`unitSets.${index}`]: unitSetDoc
+          $set: {
+            [`unitSets.${index}`]: unitSetDoc
+          }
         }
-      }
       : {
-        $push: {
-          unitSets: unitSetDoc
+          $push: {
+            unitSets: unitSetDoc
+          }
         }
-      }
     log('unit set', { unitSetDoc, index, updateDoc })
     return ProgressCollection.updateAsync(progressDoc._id, updateDoc)
   }
@@ -178,7 +179,6 @@ Progress.methods.getAll = {
   backend: true,
   run: onServerExec(() => {
     return async function ({ dependencies } = {}) {
-
       const options = { hint: { $natural: -1 } }
       const docs = await getCollection(Progress.name).find({}, options).fetchAsync()
       const data = { [Progress.name]: docs }

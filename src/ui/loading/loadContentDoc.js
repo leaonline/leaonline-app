@@ -42,7 +42,8 @@ export const loadContentDoc = async ({ context, collection, name, unlessExists, 
       debug(`[${context?.name}]: upsert doc ${_id}`)
       const upserted = await localCollection.upsertAsync({ _id }, { $set: upsertDoc })
       debug(`[${context?.name}]: upserted ${upserted && JSON.stringify(upserted)}`)
-    } catch (e) {
+    }
+    catch (e) {
       debug(`[${context?.name}]: error while upserting document - ${e.message}`)
       throw e
     }

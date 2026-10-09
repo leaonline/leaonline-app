@@ -85,7 +85,7 @@ Template.story.helpers({
 })
 
 Template.story.events({
-  'click .lea-story-finish-button'(event, templateInstance) {
+  'click .lea-story-finish-button' (event, templateInstance) {
     event.preventDefault()
     debugger
     const sessionDoc = templateInstance.state.get('sessionDoc')
@@ -103,7 +103,8 @@ Template.story.events({
         failure: templateInstance.onError,
         success: unitId => templateInstance.data?.next({ sessionId, unitSetId, unitId })
       })
-    } else {
+    }
+    else {
       const unitId = sessionDoc.nextUnit
       templateInstance.data?.next({ sessionId, unitSetId, unitId })
     }

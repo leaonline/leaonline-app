@@ -255,7 +255,7 @@ Template.unit.helpers({
       onNewPage,
       onEvaluate,
       onFinish: instance.forward,
-      onLoadError: instance.onError,
+      onLoadError: instance.onError
       // onLoadComplete: () => console.debug('item renderer load complete')
     }
   },
