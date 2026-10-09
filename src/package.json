@@ -13,6 +13,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "chalk": "^5.0.0",
+    "detect-os": "^1.2.1",
     "dotenv": "^16.0.0",
     "easy-speech": "^2.4.0",
     "jquery": "^3.7.1",
@@ -27,6 +28,7 @@
     "better-docs": "^2.7.2",
     "chai": "^4.3.6",
     "jsdoc": "^3.6.11",
+    "puppeteer": "^24.43.1",
     "sinon": "^15.0.1",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
