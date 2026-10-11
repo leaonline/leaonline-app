@@ -1,4 +1,4 @@
-import { Accounts } from "meteor/accounts-base";
+import { Accounts } from 'meteor/accounts-base'
 import { Random } from 'meteor/random'
 import { getUsersCollection } from '../../../api/collections/getUsersCollection'
 import { safeWhileAsync } from '../../../api/utils/safeWhile'
