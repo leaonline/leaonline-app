@@ -6,7 +6,10 @@ import { DDP } from 'meteor/ddp'
 import { Random } from 'meteor/random'
 import { stub, restoreAll } from '../../../tests/helpers/stubUtils'
 import { expectAsyncError } from '../../../tests/helpers/expectAsyncError'
-import { stubCollection, restoreCollections } from '../../../tests/helpers/stubCollection'
+import {
+  stubCollection,
+  restoreCollections,
+} from '../../../tests/helpers/stubCollection'
 import { ContentServer } from '../content/ContentServer'
 
 import { Unit } from '../../../contexts/content/Unit'
@@ -20,11 +23,11 @@ import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle]
-const contextNames = contexts.map(ctx => ctx.name)
+const contextNames = contexts.map((ctx) => ctx.name)
 
 const UnitCollection = initTestCollection(Unit)
 
-describe('ContentServer', function () {
+describe('ContentServer', () => {
   before(() => {
     stubCollection([UnitCollection])
   })
@@ -36,12 +39,12 @@ describe('ContentServer', function () {
     await UnitCollection.removeAsync({})
   })
 
-  describe(ContentServer.contexts.name, function () {
+  describe(ContentServer.contexts.name, () => {
     it('returns all registered contexts', () => {
       expect(ContentServer.contexts()).to.deep.equal(contexts)
     })
   })
-  describe(ContentServer.init.name, function () {
+  describe(ContentServer.init.name, () => {
     it('initializes a new content connection', async () => {
       let called = false
       stub(ContentConnection, 'connect', () => {
@@ -52,7 +55,7 @@ describe('ContentServer', function () {
       expect(called).to.equal(true)
     })
   })
-  describe(ContentServer.sync.name, function () {
+  describe(ContentServer.sync.name, () => {
     const stubInvocation = () => {
       stub(DDP._CurrentMethodInvocation, 'get', () => false)
       stub(DDP._CurrentPublicationInvocation, 'get', () => false)
@@ -114,10 +117,10 @@ describe('ContentServer', function () {
     it('adds remote docs to a collection from the content server', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' }
+        { _id: Random.id(), title: 'bar' },
       ]
       const insertDocs = { [Unit.name]: docs }
-      stub(ContentConnection, 'get', () => (insertDocs))
+      stub(ContentConnection, 'get', () => insertDocs)
       stubInvocation()
       stubConnection()
       const result = await ContentServer.sync({ name: Unit.name })
@@ -126,18 +129,18 @@ describe('ContentServer', function () {
         created: 2,
         updated: 0,
         removed: 0,
-        skipped: 0
+        skipped: 0,
       })
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
     })
     it('updates existing docs with the ones from remote if their _id matches', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' }
+        { _id: Random.id(), title: 'bar' },
       ]
       const updateDocs = { [Unit.name]: docs }
-      stub(ContentConnection, 'get', () => (updateDocs))
-      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
+      stub(ContentConnection, 'get', () => updateDocs)
+      await forEachAsync(docs, (doc) => UnitCollection.insertAsync(doc))
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
@@ -148,7 +151,7 @@ describe('ContentServer', function () {
         created: 0,
         updated: 2,
         removed: 0,
-        skipped: 0
+        skipped: 0,
       })
       expect(await UnitCollection.countDocuments({})).to.equal(2)
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
@@ -156,13 +159,13 @@ describe('ContentServer', function () {
     it('removes docs which are not in the remote collection anymore', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' }
+        { _id: Random.id(), title: 'bar' },
       ]
 
       const insertDoc = { _id: Random.id(), title: 'moo' }
       const removeDocs = { [Unit.name]: [insertDoc] }
-      stub(ContentConnection, 'get', () => (removeDocs))
-      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
+      stub(ContentConnection, 'get', () => removeDocs)
+      await forEachAsync(docs, (doc) => UnitCollection.insertAsync(doc))
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
@@ -173,18 +176,20 @@ describe('ContentServer', function () {
         created: 1,
         updated: 0,
         removed: 2,
-        skipped: 0
+        skipped: 0,
       })
       expect(await UnitCollection.countDocuments({})).to.equal(1)
-      expect(await UnitCollection.find().fetchAsync()).to.deep.equal([insertDoc])
+      expect(await UnitCollection.find().fetchAsync()).to.deep.equal([
+        insertDoc,
+      ])
     })
     it('skips docs marked as legacy', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar', isLegacy: true }
+        { _id: Random.id(), title: 'bar', isLegacy: true },
       ]
       const insertDocs = { [Unit.name]: docs }
-      stub(ContentConnection, 'get', () => (insertDocs))
+      stub(ContentConnection, 'get', () => insertDocs)
       expect(await UnitCollection.countDocuments({})).to.deep.equal(0)
 
       stubInvocation()
@@ -195,7 +200,7 @@ describe('ContentServer', function () {
         created: 1,
         updated: 0,
         removed: 0,
-        skipped: 1
+        skipped: 1,
       })
       expect(await UnitCollection.countDocuments({})).to.equal(1)
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal([docs[0]])
@@ -203,10 +208,10 @@ describe('ContentServer', function () {
     it('skips if no docs are to be synced', async () => {
       const docs = [
         { _id: Random.id(), title: 'foo' },
-        { _id: Random.id(), title: 'bar' }
+        { _id: Random.id(), title: 'bar' },
       ]
       stub(ContentConnection, 'get', () => ({}))
-      await forEachAsync(docs, doc => UnitCollection.insertAsync(doc))
+      await forEachAsync(docs, (doc) => UnitCollection.insertAsync(doc))
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
 
       stubInvocation()
@@ -217,17 +222,15 @@ describe('ContentServer', function () {
         created: 0,
         updated: 0,
         removed: 0,
-        skipped: 0
+        skipped: 0,
       })
       expect(await UnitCollection.countDocuments({})).to.equal(2)
       expect(await UnitCollection.find().fetchAsync()).to.deep.equal(docs)
     })
-    it('allows to hook into beforeSyncUpsert', done => {
-      const docs = [
-        { _id: Random.id(), title: 'foo' }
-      ]
+    it('allows to hook into beforeSyncUpsert', (done) => {
+      const docs = [{ _id: Random.id(), title: 'foo' }]
       const insertDocs = { [Unit.name]: docs }
-      stub(ContentConnection, 'get', () => (insertDocs))
+      stub(ContentConnection, 'get', () => insertDocs)
       stubInvocation()
       stubConnection()
 
@@ -238,16 +241,12 @@ describe('ContentServer', function () {
         done()
       }
       ContentServer.on(ContentServer.hooks.beforeSyncUpsert, Unit.name, fn)
-      ContentServer
-        .sync({ name: Unit.name })
-        .catch(done)
+      ContentServer.sync({ name: Unit.name }).catch(done)
     })
-    it('allows to hook into syncEnd', done => {
-      const docs = [
-        { _id: Random.id(), title: 'foo' }
-      ]
+    it('allows to hook into syncEnd', (done) => {
+      const docs = [{ _id: Random.id(), title: 'foo' }]
       const insertDocs = { [Unit.name]: docs }
-      stub(ContentConnection, 'get', () => (insertDocs))
+      stub(ContentConnection, 'get', () => insertDocs)
       stubInvocation()
       stubConnection()
 
@@ -257,16 +256,14 @@ describe('ContentServer', function () {
           created: 1,
           updated: 0,
           removed: 0,
-          skipped: 0
+          skipped: 0,
         })
         ContentServer.off(ContentServer.hooks.syncEnd, Unit.name, fn)
         done()
       }
       ContentServer.on(ContentServer.hooks.syncEnd, Unit.name, fn)
 
-      ContentServer
-        .sync({ name: Unit.name })
-        .catch(done)
+      ContentServer.sync({ name: Unit.name }).catch(done)
     })
   })
 })

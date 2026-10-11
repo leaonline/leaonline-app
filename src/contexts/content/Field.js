@@ -10,7 +10,11 @@ onClientExec(() => {
 })
 
 Field.methods = Field.methods ?? {}
-Field.methods.getAll = createGetAllMethod({ context: Field, backendOnly: false, defaultQuery: { legacy: { $ne: true } } })
+Field.methods.getAll = createGetAllMethod({
+  context: Field,
+  backendOnly: false,
+  defaultQuery: { legacy: { $ne: true } },
+})
 Field.methods.get = createGetMethod({ context: Field, backendOnly: false })
 /**
  * See the corelib documentation for further into: {@link https://github.com/leaonline/corelib}

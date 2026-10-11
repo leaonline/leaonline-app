@@ -8,32 +8,35 @@ import Collection2 from 'meteor/aldeed:collection2'
 
 const debug = () => {}
 
-describe(initClientContext.name, function () {
-  afterEach(function () {
+describe(initClientContext.name, () => {
+  afterEach(() => {
     restoreAll()
   })
 
   // XXX: backwards compat for pre 4.0 collection2
   if (Collection2 && typeof Collection2.load === 'function') {
-    it('loads collection2 lazy', function () {
+    it('loads collection2 lazy', () => {
       let loadCalled = false
-      stub(Collection2, 'load', function () {
+      stub(Collection2, 'load', () => {
         loadCalled = true
       })
 
-      initClientContext({
-        name: Random.id(),
-        schema: { title: String }
-      }, debug)
+      initClientContext(
+        {
+          name: Random.id(),
+          schema: { title: String },
+        },
+        debug,
+      )
 
       expect(loadCalled).to.equal(true)
     })
   }
 
-  it('creates a new collection', function () {
+  it('creates a new collection', () => {
     const ctx = {
       name: Random.id(),
-      schema: { title: String }
+      schema: { title: String },
     }
 
     const build = initClientContext(ctx, debug)
@@ -46,16 +49,17 @@ describe(initClientContext.name, function () {
     // skip second creation
     expect(initClientContext(ctx)).to.deep.equal(ctx)
   })
-  it('has schema attached', function () {
+  it('has schema attached', () => {
     const ctx = {
       name: Random.id(),
-      schema: { title: String }
+      schema: { title: String },
     }
 
     initClientContext(ctx, debug)
     const collection = ctx.collection()
     expect(collection.attachSchema).to.be.a('function')
-    expect(() => collection.insert({ name: 'foo' }))
-      .to.throw('After filtering out keys not in the schema, your object is now empty')
+    expect(() => collection.insert({ name: 'foo' })).to.throw(
+      'After filtering out keys not in the schema, your object is now empty',
+    )
   })
 })

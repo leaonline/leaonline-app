@@ -4,12 +4,12 @@ import { expect } from 'chai'
 import { UITests } from '../../../../../tests/ui-helpers.tests'
 import '../container'
 
-describe('container', function () {
-  beforeEach(function () {
+describe('container', () => {
+  beforeEach(() => {
     UITests.preRender()
   })
 
-  afterEach(function () {
+  afterEach(() => {
     UITests.postRender()
   })
 

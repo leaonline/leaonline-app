@@ -18,33 +18,39 @@ const contentUrl = Meteor.settings.remotes.content.url
  * @async
  * @return {Promise<void>}
  */
-ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
+ContentConnection.connect = function connect({ log, timeout = 5000 } = {}) {
   return new Promise((resolve, reject) => {
     if (log) log('establish connection to', contentUrl)
     let connected = false
-    const onError = err => {
+    const onError = (err) => {
       clearTimeout(timer)
       contentConnection?.disconnect()
       return reject(err)
     }
     const timer = setTimeout(() => {
       if (!connected) {
-        return onError(new Meteor.Error('errors.notConnected', 'remote.timeOut', { contentUrl, timeout }))
+        return onError(
+          new Meteor.Error('errors.notConnected', 'remote.timeOut', {
+            contentUrl,
+            timeout,
+          }),
+        )
       }
       clearTimeout(timer)
     }, timeout)
     contentConnection = DDP.connect(contentUrl, {
       retry: false,
-      onConnected: err => {
+      onConnected: (err) => {
         if (err) {
           return onError(err)
         }
 
-        if (log) log('connection established with', contentUrl, contentConnection)
+        if (log)
+          log('connection established with', contentUrl, contentConnection)
         connected = true
         clearTimeout(timer)
         resolve()
-      }
+      },
     })
   })
 }
@@ -53,7 +59,7 @@ ContentConnection.connect = function connect ({ log, timeout = 5000 } = {}) {
  * Returns, whether the connection is fully established
  * @return {boolean}
  */
-ContentConnection.isConnected = function isConnected () {
+ContentConnection.isConnected = function isConnected() {
   if (typeof contentConnection?.status !== 'function') {
     return false
   }
@@ -66,11 +72,10 @@ ContentConnection.isConnected = function isConnected () {
  * @param log
  * @return {Promise}
  */
-ContentConnection.get = function get ({ name, ids = [], log }) {
+ContentConnection.get = function get({ name, ids = [], log }) {
   return new Promise((resolve) => {
-    const methodName = ids.length > 0
-      ? `${name}.methods.get`
-      : `${name}.methods.getAll`
+    const methodName =
+      ids.length > 0 ? `${name}.methods.get` : `${name}.methods.getAll`
 
     const token = getToken({ name: methodName })
     const params = { token }
@@ -110,7 +115,7 @@ const getToken = createJWTFactory({
   url: url.substring(0, url.length - 1),
   key: content.jwt.key,
   sub: content.jwt.sub,
-  expires: content.jwt.expires
+  expires: content.jwt.expires,
 })
 
 export { ContentConnection }

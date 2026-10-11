@@ -3,7 +3,10 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { Achievements } from '../Achievements'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
-import { stubCollection, restoreCollections } from '../../../tests/helpers/stubCollection'
+import {
+  stubCollection,
+  restoreCollections,
+} from '../../../tests/helpers/stubCollection'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { SyncState } from '../../sync/SyncState'
 import { Field } from '../../content/Field'
@@ -20,16 +23,16 @@ const createMockDoc = (options = {}) => {
     fieldId: options.fieldId ?? Random.id(),
     dimensionId: options.dimensionId ?? Random.id(),
     maxProgress: options.maxProgress ?? 0,
-    maxCompetencies: options.maxCompetencies ?? 0
+    maxCompetencies: options.maxCompetencies ?? 0,
   }
 }
 
-describe(Achievements.name, function () {
+describe(Achievements.name, () => {
   before(() => {
     stubCollection([
       AchievementsCollection,
       FieldsCollection,
-      DimensionCollection
+      DimensionCollection,
     ])
   })
   after(() => {
@@ -41,18 +44,26 @@ describe(Achievements.name, function () {
     await DimensionCollection.removeAsync({})
     await AchievementsCollection.removeAsync({})
   })
-  describe(Achievements.create.name, function () {
+  describe(Achievements.create.name, () => {
     it('it creates a new empty achievements doc', async () => {
       const dimensionId = Random.id()
       const fieldId = Random.id()
-      const expected = { fieldId, dimensionId, maxProgress: 0, maxCompetencies: 0 }
-      const { _id, ...doc } = await Achievements.create({ dimensionId, fieldId })
+      const expected = {
+        fieldId,
+        dimensionId,
+        maxProgress: 0,
+        maxCompetencies: 0,
+      }
+      const { _id, ...doc } = await Achievements.create({
+        dimensionId,
+        fieldId,
+      })
       expect(_id).to.be.a('string')
       expect(doc).to.deep.equal(expected)
     })
   })
 
-  describe(Achievements.update.name, function () {
+  describe(Achievements.update.name, () => {
     it('creates a new doc and updates it, if it does not exist yet', async () => {
       const dimensionId = Random.id()
       const fieldId = Random.id()
@@ -63,17 +74,27 @@ describe(Achievements.name, function () {
         expect(name).to.equal(Achievements.name)
       })
 
-      const updated = await Achievements.update({ dimensionId, fieldId, maxCompetencies, maxProgress })
+      const updated = await Achievements.update({
+        dimensionId,
+        fieldId,
+        maxCompetencies,
+        maxProgress,
+      })
       expect(updated).to.equal(1)
       const { _id, ...doc } = await AchievementsCollection.findOneAsync()
       expect(_id).to.be.a('string')
-      expect(doc).to.deep.equal({ dimensionId, fieldId, maxCompetencies, maxProgress })
+      expect(doc).to.deep.equal({
+        dimensionId,
+        fieldId,
+        maxCompetencies,
+        maxProgress,
+      })
     })
   })
 
-  describe('methods', function () {
+  describe('methods', () => {
     testGetAllMethod(Achievements, {
-      factory: async withDeps => {
+      factory: async (withDeps) => {
         const fieldId = withDeps
           ? (await FieldsCollection.findOneAsync())._id
           : Random.id()
@@ -88,16 +109,16 @@ describe(Achievements.name, function () {
           selector: ({ docs }) => {
             const ids = [...createIdSet(docs, 'fieldId')]
             return { _id: { $in: ids } }
-          }
+          },
         },
         [Dimension.name]: {
           factory: () => ({ title: Random.id() }),
           selector: ({ docs }) => {
             const ids = [...createIdSet(docs, 'dimensionId')]
             return { _id: { $in: ids } }
-          }
-        }
-      }
+          },
+        },
+      },
     })
   })
 })

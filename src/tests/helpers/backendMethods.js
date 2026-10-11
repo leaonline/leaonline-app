@@ -11,7 +11,10 @@ import { iterateAsync } from './iterate'
 const stubSyncUpdate = ({ ctx, expectSync }) => {
   let syncCalled = false
   const handler = expectSync
-    ? name => { expect(name).to.equal(ctx.name); syncCalled = true }
+    ? (name) => {
+        expect(name).to.equal(ctx.name)
+        syncCalled = true
+      }
     : expect.fail
   stub(SyncState, 'update', handler)
 
@@ -26,12 +29,12 @@ export const testInsert = (ctx, { factory, expectSync = false }) => {
   const method = ctx.methods.insert || ctx.methods.create
   const run = method.run
 
-  describe(method.name, function () {
+  describe(method.name, () => {
     afterEach(async () => {
       restoreAll()
       await getCollection(ctx.name).removeAsync({})
     })
-    it('inserts a single document and returns it\'s _id', async () => {
+    it("inserts a single document and returns it's _id", async () => {
       const testSync = stubSyncUpdate({ ctx, expectSync })
       const collection = getCollection(ctx.name)
       expect(await countDocs(collection)).to.equal(0)
@@ -56,7 +59,7 @@ export const testUpdate = (ctx, { factory, expectSync = false }) => {
   const method = ctx.methods.update
   const run = method.run
 
-  describe(method.name, function () {
+  describe(method.name, () => {
     afterEach(async () => {
       restoreAll()
       await getCollection(ctx.name).removeAsync({})
@@ -73,7 +76,7 @@ export const testUpdate = (ctx, { factory, expectSync = false }) => {
         const beforeDoc = await collection.findOneAsync(docId)
         const updated = await run({
           _id: docId,
-          ...updateDoc
+          ...updateDoc,
         })
         expect(updated).to.equal(1)
         const afterDoc = await collection.findOneAsync(docId)
@@ -85,11 +88,14 @@ export const testUpdate = (ctx, { factory, expectSync = false }) => {
   })
 }
 
-export const testRemove = (ctx, { factory, expectSync = false, collection, env = {}, before = () => {} } = {}) => {
+export const testRemove = (
+  ctx,
+  { factory, expectSync = false, collection, env = {}, before = () => {} } = {},
+) => {
   const method = ctx.methods.remove || ctx.methods.delete
   const run = method.run
 
-  describe(method.name, function () {
+  describe(method.name, () => {
     beforeEach(async () => {
       await before() // setup stubs etc.
     })
@@ -110,8 +116,7 @@ export const testRemove = (ctx, { factory, expectSync = false, collection, env =
         try {
           const removed = await run.call(env, { _id: fakeId })
           expect(removed).to.equal(0)
-        }
-        catch (e) {
+        } catch (e) {
           // all good here
         }
 
@@ -132,7 +137,7 @@ export const testGetMethod = (ctx, customFns, { env = {} } = {}) => {
   const method = ctx.methods.get
   const run = method.run
 
-  describe(method.name, function () {
+  describe(method.name, () => {
     it('returns a single doc by _id', async () => {
       const _id = Random.id()
       expect(await run.call(env, { _id })).to.equal(undefined)
@@ -147,7 +152,7 @@ export const testGetMethod = (ctx, customFns, { env = {} } = {}) => {
 
     if (customFns) {
       customFns({
-        run
+        run,
       })
     }
   })
@@ -159,12 +164,12 @@ export const testGetAllMethod = (ctx, options) => {
   const method = ctx.methods.getAll ?? ctx.methods.all
   const run = method.run
   const depNames = Object.keys(dependencies)
-  const depArgs = depNames.map(name => ({ name }))
+  const depArgs = depNames.map((name) => ({ name }))
   const hasDependencies = depNames.length > 0
-  const removeAll = name => getCollection(name).removeAsync({})
+  const removeAll = (name) => getCollection(name).removeAsync({})
   const expectNoDeps = (target) => {
     if (hasDependencies) {
-      depNames.forEach(name => {
+      depNames.forEach((name) => {
         // dependencies may or may not be included
         // however, if they are included, there should be no
         // docs if we have no docs of our main ctx
@@ -175,7 +180,7 @@ export const testGetAllMethod = (ctx, options) => {
     }
   }
 
-  describe(method.name, function () {
+  describe(method.name, () => {
     afterEach(async () => {
       const collection = await getCollection(ctx.name)
       if (collection) collection.removeAsync({})
@@ -196,8 +201,10 @@ export const testGetAllMethod = (ctx, options) => {
       expect(docs.length).to.be.above(0)
 
       // make sure all docs are in collection
-      const ids = docs.map(doc => doc._id)
-      expect(await collection.countDocuments({ _id: { $in: ids } })).to.equal(docs.length)
+      const ids = docs.map((doc) => doc._id)
+      expect(await collection.countDocuments({ _id: { $in: ids } })).to.equal(
+        docs.length,
+      )
 
       await iterateAsync(3, async () => {
         const docResult = await run.call({})
@@ -216,22 +223,29 @@ export const testGetAllMethod = (ctx, options) => {
           await createTestDocs({
             collection: getCollection(name),
             factory: dependencies[name].factory,
-            name
+            name,
           })
         }
 
         const collection = getCollection(ctx.name) ?? fallbackCollection
-        const docs = await createTestDocs({ collection, factory: async () => factory(true) })
+        const docs = await createTestDocs({
+          collection,
+          factory: async () => factory(true),
+        })
 
         // build expected result
         const expectedResult = { [ctx.name]: docs }
         for (const name of depNames) {
           const selector = dependencies[name].selector({ docs })
-          expectedResult[name] = await getCollection(name).find(selector).fetchAsync()
+          expectedResult[name] = await getCollection(name)
+            .find(selector)
+            .fetchAsync()
         }
 
         // expect at least one dep doc found
-        expect(depNames.some(name => expectedResult[name].length > 0)).to.eq(true)
+        expect(depNames.some((name) => expectedResult[name].length > 0)).to.eq(
+          true,
+        )
 
         const docResult = await run.call({}, { dependencies: depArgs })
         expect(docResult[ctx.name]).to.deep.equal(docs)

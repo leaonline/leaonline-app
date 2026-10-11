@@ -5,44 +5,44 @@ export const Logos = {
   name: 'logos',
   label: 'logos.title',
   icon: 'images',
-  isConfigDoc: true
+  isConfigDoc: true,
 }
 
 Logos.schema = {
   footer: {
     type: Array,
     label: 'logos.footer',
-    optional: false
+    optional: false,
   },
   'footer.$': {
     type: Object,
-    label: 'common.entry'
+    label: 'common.entry',
   },
   'footer.$.url': {
     type: String,
     label: 'logos.logoUrl',
-    isMediaUrl: true
+    isMediaUrl: true,
   },
   'footer.$.title': {
     type: String,
     label: 'logos.logoTitle',
-    optional: true
+    optional: true,
   },
   'footer.$.width': {
     type: Number,
     label: 'logos.width',
-    optional: true
+    optional: true,
   },
   'footer.$.height': {
     type: Number,
     label: 'logos.height',
-    optional: true
+    optional: true,
   },
   'footer.$.href': {
     type: String,
     label: 'logos.href',
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 Logos.methods = {}
@@ -55,19 +55,18 @@ Logos.methods.update = {
   schema: Object.assign({}, Logos.schema, {
     _id: {
       type: String,
-      optional: true
-    }
+      optional: true,
+    },
   }),
-  run: onServer(async function ({ footer }) {
+  run: onServer(async ({ footer }) => {
     const LogoCollection = Logos.collection()
     const logoDoc = await LogoCollection.findOneAsync()
     if (!logoDoc) {
       return LogoCollection.insertAsync({ footer })
-    }
-    else {
+    } else {
       return LogoCollection.updateAsync(logoDoc._id, { $set: { footer } })
     }
-  })
+  }),
 }
 
 Logos.methods.get = {
@@ -78,14 +77,14 @@ Logos.methods.get = {
   schema: {
     _id: {
       type: String,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: onServer(async function () {
+  run: onServer(async () => {
     const doc = await Logos.collection().findOneAsync()
     return doc ?? {}
   }),
-  call: onClient(function (cb) {
+  call: onClient((cb) => {
     Meteor.call(Logos.methods.get.name, cb)
-  })
+  }),
 }

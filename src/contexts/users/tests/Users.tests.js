@@ -3,7 +3,10 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { Users } from '../Users'
 import { Accounts } from 'meteor/accounts-base'
-import { testGetAllMethod, testRemove } from '../../../tests/helpers/backendMethods'
+import {
+  testGetAllMethod,
+  testRemove,
+} from '../../../tests/helpers/backendMethods'
 import { getUsersCollection } from '../../../api/collections/getUsersCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 import { stub } from '../../../tests/helpers/stubUtils'
@@ -19,7 +22,7 @@ const createUser = (options = {}) => {
     createdAt: options.createdAt ?? new Date(),
     restore: options.restore ?? Random.id(),
     voice: options.voice ?? Random.id(),
-    speed: options.speed ?? 1
+    speed: options.speed ?? 1,
   }
 
   if (options.lastLogin) {
@@ -31,10 +34,10 @@ const createUser = (options = {}) => {
 
 const UsersCollection = getUsersCollection()
 
-describe('Users', function () {
+describe('Users', () => {
   setupAndTeardown([UsersCollection])
 
-  describe('methods', function () {
+  describe('methods', () => {
     describe(Users.methods.create.name, () => {
       const run = Users.methods.create.run
 
@@ -45,13 +48,18 @@ describe('Users', function () {
           fn: () => run.call({ userId }),
           name: createUser.error,
           reason: 'createUser.alreadyExist',
-          details: { userId }
+          details: { userId },
         })
       })
       it('creates a new user and logs them in', async () => {
         let runLoginHandlersCalled = false
         let loginUserCalled = false
-        stub(RestoreCodes, 'generate', () => ['foo', 'bar', 'baz', Random.id(4)])
+        stub(RestoreCodes, 'generate', () => [
+          'foo',
+          'bar',
+          'baz',
+          Random.id(4),
+        ])
         stub(Accounts, '_runLoginHandlers', (self, credentials) => {
           expect(credentials.user.username).to.be.a('string')
           expect(credentials.password).to.be.a('string')
@@ -74,7 +82,12 @@ describe('Users', function () {
           const userDoc = await getUsersCollection().findOneAsync(newUserId)
           const { username, restore, createdAt, services, ...doc } = userDoc
           expect(doc).to.deep.equal({
-            _id: newUserId, voice, speed, isDev, device, terms
+            _id: newUserId,
+            voice,
+            speed,
+            isDev,
+            device,
+            terms,
           })
           expect(createdAt).to.be.instanceOf(Date)
           expect(username).to.be.a('string')
@@ -84,20 +97,24 @@ describe('Users', function () {
         })
       })
     })
-    describe(Users.methods.updateProfile.name, function () {
+    describe(Users.methods.updateProfile.name, () => {
       const run = Users.methods.updateProfile.run
 
       it('throws if there is nothing to update', async () => {
         const userId = Random.id()
         const env = { userId }
-        const allOptions = [undefined, {}, { voice: undefined, speed: undefined }]
-        await forEachAsync(allOptions, async options => {
-          const { voice, speed } = (options ?? {})
+        const allOptions = [
+          undefined,
+          {},
+          { voice: undefined, speed: undefined },
+        ]
+        await forEachAsync(allOptions, async (options) => {
+          const { voice, speed } = options ?? {}
           await expectThrown({
             fn: () => run.call(env, options),
             name: 'permissionDenied',
             reason: 'updateProfile.failed',
-            details: { userId, voice, speed }
+            details: { userId, voice, speed },
           })
         })
       })
@@ -105,24 +122,24 @@ describe('Users', function () {
         const allOptions = [
           { voice: 'foo' },
           { voice: 'foo', speed: 1 },
-          { speed: 1 }
+          { speed: 1 },
         ]
-        await forEachAsync(allOptions, async options => {
+        await forEachAsync(allOptions, async (options) => {
           const userId = await UsersCollection.insertAsync({})
           const env = { userId }
           await run.call(env, options)
           const doc = await UsersCollection.findOneAsync(userId)
           expect(doc).to.deep.equal({
             _id: userId,
-            ...options
+            ...options,
           })
         })
       })
     })
-    describe(Users.methods.getCodes.name, function () {
+    describe(Users.methods.getCodes.name, () => {
       const run = Users.methods.getCodes.run
 
-      it('returns a user\'s restore codes', async () => {
+      it("returns a user's restore codes", async () => {
         const restore = 'foo-bar-baz'
         const userId = await UsersCollection.insertAsync({ restore })
         expect(await run.call({ userId })).to.equal(restore)
@@ -133,19 +150,14 @@ describe('Users', function () {
 
       it('throws if there is no user by restore codes', async () => {
         const count = 0
-        const allCodes = [
-          [],
-          ['foo'],
-          ['foo', 'bar'],
-          ['foo', 'bar', 'baz']
-        ]
-        await forEachAsync(allCodes, async codes => {
+        const allCodes = [[], ['foo'], ['foo', 'bar'], ['foo', 'bar', 'baz']]
+        await forEachAsync(allCodes, async (codes) => {
           const restore = codes.join('-')
           await expectThrown({
             fn: () => run.call({}, { codes }),
             name: 'permissionDenied',
             reason: 'restore.failed',
-            details: { codes, restore, count }
+            details: { codes, restore, count },
           })
         })
       })
@@ -163,7 +175,7 @@ describe('Users', function () {
         const allOptions = [
           { voice: 'foo' },
           { speed: 1 },
-          { device: { vendor: 'foo' } }
+          { device: { vendor: 'foo' } },
         ]
         await forEachAsync(allOptions, async (options, index) => {
           const codes = ['foo', 'bar', 'baz', `${index}`]
@@ -173,7 +185,7 @@ describe('Users', function () {
           expect(await UsersCollection.findOneAsync(userId)).to.deep.equal({
             _id: userId,
             restore,
-            ...options
+            ...options,
           })
         })
       })
@@ -181,11 +193,11 @@ describe('Users', function () {
     testRemove(Users, {
       factory: createUser,
       expectSync: false,
-      collection: UsersCollection
+      collection: UsersCollection,
     })
     testGetAllMethod(Users, {
       factory: createUser,
-      collection: UsersCollection
+      collection: UsersCollection,
     })
   })
 })

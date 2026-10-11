@@ -5,8 +5,8 @@ export const LoginMethods = {
     color: 'info',
     label: 'auth.logins.password.title',
     template: 'loginWithPassword',
-    load: () => import('./password/loginWithPassword')
-  }
+    load: () => import('./password/loginWithPassword'),
+  },
   /*
    email: {
    name: 'email',

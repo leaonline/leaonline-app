@@ -3,87 +3,88 @@ import { ColorType } from '../../../contexts/types/ColorType'
 import './navbar.html'
 
 Template.navbar.onDestroyed(function () {
-  const instance = this
-  instance.state.clear()
+  this.state.clear()
 })
 
 Template.navbar.onCreated(function () {
-  const instance = this
-
-  instance.initDependencies({
+  this.initDependencies({
     language: true,
     tts: true,
-    onComplete: () => instance.state.set('dependenciesLoaded', true)
+    onComplete: () => this.state.set('dependenciesLoaded', true),
   })
 
-  instance.autorun(() => {
+  this.autorun(() => {
     const data = Template.currentData()
-    const { sessionDoc, showProgress, dimensionDoc, levelDoc, unitSetDoc } = data
+    const { sessionDoc, showProgress, dimensionDoc, levelDoc, unitSetDoc } =
+      data
     if (!sessionDoc || !unitSetDoc || !dimensionDoc || !levelDoc) {
-      return instance.state.set({
-        showProgress: false
+      return this.state.set({
+        showProgress: false,
       })
     }
 
-    const colorType = ColorType.byIndex(dimensionDoc.colorType)?.type || 'primary'
+    const colorType =
+      ColorType.byIndex(dimensionDoc.colorType)?.type || 'primary'
     const current = (sessionDoc.progress || 0) + 1
-    const max = (unitSetDoc.progress || 0)
-    const value = (current / (max)) * 100
+    const max = unitSetDoc.progress || 0
+    const value = (current / max) * 100
     const rounded = Math.round(value)
     const progress = {
       current,
       max,
       value,
       rounded,
-      type: colorType
+      type: colorType,
     }
 
     const labels = {
       dimension: dimensionDoc?.title,
       level: levelDoc?.title,
-      type: colorType
+      type: colorType,
     }
 
     const loadComplete = true
-    instance.state.set({ showProgress, progress, labels, loadComplete })
+    this.state.set({ showProgress, progress, labels, loadComplete })
   })
 })
 
 Template.navbar.helpers({
-  loadComplete () {
+  loadComplete() {
     const instance = Template.instance()
-    return instance.state.get('dependenciesLoaded') &&
+    return (
+      instance.state.get('dependenciesLoaded') &&
       instance.state.get('loadComplete')
+    )
   },
-  showProgress () {
+  showProgress() {
     return Template.getState('showProgress')
   },
-  progress () {
+  progress() {
     return Template.getState('progress')
   },
-  labels () {
+  labels() {
     return Template.getState('labels')
   },
-  hasExit () {
+  hasExit() {
     return Template.instance().data.onExit
-  }
+  },
 })
 
 Template.navbar.events({
-  'click .navbar-overview-button' (event, templateInstance) {
+  'click .navbar-overview-button'(event, templateInstance) {
     event.preventDefault()
     templateInstance.$('#navbar-modal').modal('show')
   },
-  'click .navbar-confirm-cancel' (event, templateInstance) {
+  'click .navbar-confirm-cancel'(event, templateInstance) {
     event.preventDefault()
     templateInstance.state.set('confirmed', true)
     templateInstance.$('#navbar-modal').modal('hide')
   },
-  'hidden.bs.modal' (event, templateInstance) {
+  'hidden.bs.modal'(event, templateInstance) {
     const confirmed = templateInstance.state.get('confirmed')
     if (confirmed) {
       templateInstance.state.set('confirmed', null)
       templateInstance.data.onExit()
     }
-  }
+  },
 })

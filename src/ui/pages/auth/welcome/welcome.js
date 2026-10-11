@@ -1,5 +1,5 @@
 import { Template } from 'meteor/templating'
-import { fadeOut } from '../../../../utils/animationUtils'
+import { setQueryParam } from '../../../routing/setQueryParam'
 import { dataTarget } from '../../../../utils/dataTarget'
 import { asyncTimeout } from '../../../../utils/asyncTimeout'
 import '../../../components/container/container'
@@ -7,66 +7,65 @@ import './welcome.scss'
 import './welcome.html'
 
 Template.welcome.onCreated(function () {
-  const instance = this
-
-  instance.initDependencies({
+  this.initDependencies({
     language: true,
     tts: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     onComplete: () => {
-      instance.state.set('dependenciesComplete', true)
+      this.state.set('dependenciesComplete', true)
     },
-    onError: e => {
+    onError: (e) => {
       // instance.data.onFail()
-      instance.state.set('dependenciesComplete', true)
-    }
+      this.state.set('dependenciesComplete', true)
+    },
   })
-  instance.state.set('loadComplete', true)
+  this.state.set('loadComplete', true)
 })
 
 Template.welcome.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.instance().state.get('loadComplete')
   },
-  dependenciesComplete () {
+  dependenciesComplete() {
     return Template.instance().state.get('dependenciesComplete')
   },
-  currentLogin () {
+  currentLogin() {
     return Template.getState('currentLogin')
   },
-  isBeta () {
+  isBeta() {
     return Template.instance().state.get('isBeta')
   },
-  betaMessageOpen () {
+  betaMessageOpen() {
     return Template.instance().state.get('betaMessageOpen')
   },
-  intro () {
+  intro() {
     return Template.instance().state.get('intro')
   },
-  availableLogins () {
+  availableLogins() {
     return Template.instance().availableLogins
   },
-  videoRequested () {
+  videoRequested() {
     return Template.getState('videoRequested')
   },
-  loginTemplateLoaded () {
+  loginTemplateLoaded() {
     return !Template.getState('loadingLoginTemplate')
   },
-  loginTemplateData (ctx) {
+  loginTemplateData(ctx) {
     return {
       ...ctx,
-      onSuccess: Template.instance().data.onSuccess
+      onSuccess: Template.instance().data.onSuccess,
     }
-  }
+  },
 })
 
 Template.welcome.events({
   'click .lea-login-btn': async (event, templateInstance) => {
     event.preventDefault()
     const type = dataTarget(event)
-    const { load, action, ...currentLogin } = templateInstance.availableLogins.find(l => l.name === type)
+    const { load, action, ...currentLogin } =
+      templateInstance.availableLogins.find((l) => l.name === type)
     if (!currentLogin) {
       // raise error
     }
@@ -84,12 +83,17 @@ Template.welcome.events({
     await asyncTimeout(300)
     const element = templateInstance.$('.lea-login-method-card').get(0)
     try {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
-    }
-    catch (e) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'center',
+      })
+    } catch (e) {
       console.error(e)
     }
-    if (load) { await load() }
+    if (load) {
+      await load()
+    }
     templateInstance.state.set({ loadingLoginTemplate: false })
   },
   'click .lea-cancel-login-btn': async (event, templateInstance) => {
@@ -99,8 +103,11 @@ Template.welcome.events({
     await asyncTimeout(300)
     const element = templateInstance.$('.lea-login-list-card').get(0)
     try {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
-    }
-    catch {}
-  }
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'center',
+      })
+    } catch {}
+  },
 })

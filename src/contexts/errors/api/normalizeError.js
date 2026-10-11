@@ -16,12 +16,23 @@ const { maxStackSize } = Meteor.settings.public.error
  * @param isSystem
  * @return {{stack: (string|string), name, details: (*), type: *, message}|{stack: (string|string), name, details: (*), type: string, message}}
  */
-export const normalizeError = ({ error, browser, userId, code, template, method, publication, endpoint, isSystem }) => {
-  import { simpleHash } from '../../../utils/simpleHash'
+export const normalizeError = ({
+  error,
+  browser,
+  userId,
+  code,
+  template,
+  method,
+  publication,
+  endpoint,
+  isSystem,
+}) => {
+  const { simpleHash } = require('../../../utils/simpleHash')
 
-  const errorDoc = ('errorType' in error)
-    ? normalizeMeteorError(error)
-    : normalizeNativeError(error)
+  const errorDoc =
+    'errorType' in error
+      ? normalizeMeteorError(error)
+      : normalizeNativeError(error)
 
   errorDoc.code = code
   errorDoc.template = template
@@ -31,9 +42,8 @@ export const normalizeError = ({ error, browser, userId, code, template, method,
   errorDoc.publication = publication
   errorDoc.endpoint = endpoint
   errorDoc.isSystem = isSystem || false
-  errorDoc.browser = (Meteor.isClient && browser)
-    ? EJSON.stringify(browser)
-    : undefined
+  errorDoc.browser =
+    Meteor.isClient && browser ? EJSON.stringify(browser) : undefined
 
   const hashInput = `${userId || ''}${errorDoc.browser || ''}${method || ''}${publication || ''}${endpoint || ''}${error.stack}`
   errorDoc.hash = simpleHash(hashInput)
@@ -46,23 +56,23 @@ export const normalizeError = ({ error, browser, userId, code, template, method,
   return errorDoc
 }
 
-const normalizeMeteorError = error => ({
+const normalizeMeteorError = (error) => ({
   name: error.error,
   type: error.errorType,
   message: error.reason,
   details: stringifyDetails(error.details),
-  stack: truncateStack(error.stack)
+  stack: truncateStack(error.stack),
 })
 
-const normalizeNativeError = error => ({
+const normalizeNativeError = (error) => ({
   name: error.name,
   type: 'Native.Error',
   message: error.message,
   details: stringifyDetails(error.details),
-  stack: truncateStack(error.stack)
+  stack: truncateStack(error.stack),
 })
 
-const stringifyDetails = details => {
+const stringifyDetails = (details) => {
   const type = typeof details
   if (type === 'undefined' || details === null) return
   if (type === 'object') return EJSON.stringify(details)

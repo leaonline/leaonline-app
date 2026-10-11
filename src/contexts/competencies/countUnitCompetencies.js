@@ -22,27 +22,43 @@ export const countUnitCompetencies = ({ unitDoc, log = () => {} }) => {
   let count = 0
   unitDoc.pages.forEach((page, pageIndex) => {
     if (!page.content?.length) {
-      return log('Skip', unitDoc.shortCode, 'page', pageIndex, ': has no content')
+      return log(
+        'Skip',
+        unitDoc.shortCode,
+        'page',
+        pageIndex,
+        ': has no content',
+      )
     }
 
-    page.content.forEach(entry => {
+    page.content.forEach((entry) => {
       if (entry.type !== 'item') return
       const scoring = entry.value?.scoring
 
       if (!scoring?.length) {
-        return log('Skip unit', unitDoc.shortCode, 'page', pageIndex, ': item has no scoring')
+        return log(
+          'Skip unit',
+          unitDoc.shortCode,
+          'page',
+          pageIndex,
+          ': item has no scoring',
+        )
       }
 
-      scoring.forEach(score => {
+      scoring.forEach((score) => {
         if (!score.competency) {
-          return log('Skip unit', unitDoc.shortCode, 'page', pageIndex, ': item scoring has no competencies')
+          return log(
+            'Skip unit',
+            unitDoc.shortCode,
+            'page',
+            pageIndex,
+            ': item scoring has no competencies',
+          )
         }
 
         // competency can either be a string (single) or an array of strings
         // (multiple) so we need to count them correctly here:
-        count += Array.isArray(score.competency)
-          ? score.competency.length
-          : 1
+        count += Array.isArray(score.competency) ? score.competency.length : 1
       })
     })
   })

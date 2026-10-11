@@ -9,6 +9,7 @@
                 {{/if}}
                 <div class="modal-body">
                     <img src="/sorry.png" width="910" height="512"
+                         alt="sorry"
                          class="img-fluid"/>
                 </div>
                 {{#each error in errors}}
@@ -26,7 +27,7 @@
                     </div>
                 {{/if}}
                 <div class="modal-footer">
-                    <button class="btn w-100 btn-primary" data-bs-dismiss="modal">
+                    <button type="button" class="btn w-100 btn-primary" data-bs-dismiss="modal">
                         {{#if loadComplete}}
                             {{i18n "actions.ok"}}
                         {{else}}

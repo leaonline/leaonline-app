@@ -2,7 +2,12 @@ import { expect } from 'chai'
 import { iterateAsync } from './iterate'
 import { getCollection } from '../../api/utils/getCollection'
 
-export const createTestDocs = async ({ times = 10, factory, collection, name }) => {
+export const createTestDocs = async ({
+  times = 10,
+  factory,
+  collection,
+  name,
+}) => {
   const Collection = collection ?? getCollection(name)
   return await iterateAsync(times, async () => {
     const insertDoc = await factory()

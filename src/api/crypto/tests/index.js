@@ -1,4 +1,4 @@
 /* eslint-env mocha */
-describe('crypto', function () {
-  import './SensitiveData.tests'
+describe('crypto', () => {
+  require('./SensitiveData.tests')
 })

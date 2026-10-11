@@ -8,30 +8,30 @@ export const Order = {
   label: 'order.title',
   icon: 'list-ol',
   isConfigDoc: true,
-  sync: true
+  sync: true,
 }
 
 Order.schema = {
   fields: {
-    type: Array
+    type: Array,
   },
   'fields.$': {
     type: String,
     dependency: {
       collection: Field.name,
-      field: Field.representative
-    }
+      field: Field.representative,
+    },
   },
   dimensions: {
-    type: Array
+    type: Array,
   },
   'dimensions.$': {
     type: String,
     dependency: {
       collection: Dimension.name,
-      field: Dimension.representative
-    }
-  }
+      field: Dimension.representative,
+    },
+  },
 }
 
 Order.methods = {}
@@ -41,18 +41,18 @@ Order.methods.update = {
   backend: true,
   schema: {
     _id: {
-      type: String
+      type: String,
     },
-    ...Order.schema
+    ...Order.schema,
   },
-  run: async function ({ _id, ...orderDoc }) {
+  run: async ({ _id, ...orderDoc }) => {
     const OrderCollection = getCollection(Order.name)
     const selector = { _id }
     const modifier = { $set: orderDoc }
     const updated = await OrderCollection.updateAsync(selector, modifier)
     await SyncState.update(Order.name)
     return updated
-  }
+  },
 }
 
 Order.methods.get = {
@@ -61,21 +61,20 @@ Order.methods.get = {
   schema: {
     _id: {
       type: String,
-      optional: true
+      optional: true,
     },
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: async function ({ _id, dependencies }) {
-    return getCollection(Order.name).findOneAsync()
-  }
+  run: async ({ _id, dependencies }) =>
+    getCollection(Order.name).findOneAsync(),
 }
 
 Order.methods.getAll = {
@@ -84,33 +83,35 @@ Order.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
-  run: async function ({ dependencies }) {
+  run: async ({ dependencies }) => {
     const data = {
-      [Order.name]: await getCollection(Order.name).findOneAsync()
+      [Order.name]: await getCollection(Order.name).findOneAsync(),
     }
     data[Field.name] = await getCollection(Field.name).find().fetchAsync()
-    data[Dimension.name] = await getCollection(Dimension.name).find().fetchAsync()
+    data[Dimension.name] = await getCollection(Dimension.name)
+      .find()
+      .fetchAsync()
     return data
-  }
+  },
 }
 
 Order.publications = {}
 
-Order.init = async function init () {
+Order.init = async function init() {
   const OrderCollection = getCollection(Order.name)
 
-  if (await OrderCollection.countDocuments({}) === 0) {
+  if ((await OrderCollection.countDocuments({})) === 0) {
     await OrderCollection.insertAsync({
       field: [],
-      fields: []
+      fields: [],
     })
   }
 }

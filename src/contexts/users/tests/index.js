@@ -1,6 +1,6 @@
 /* eslint-env mocha */
-describe('users', function () {
-  import './Users.tests'
-  import './removeUser.tests'
-  import './updateuserProfile.tests'
+describe('users', () => {
+  require('./Users.tests')
+  require('./removeUser.tests')
+  require('./updateuserProfile.tests')
 })

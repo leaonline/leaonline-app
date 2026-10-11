@@ -1,20 +1,19 @@
 import './switch.html'
 
 Template.switch.onCreated(function () {
-  const instance = this
   const dataAtts = {}
-  Object.entries(instance.data).forEach(([key, value]) => {
+  Object.entries(this.data).forEach(([key, value]) => {
     if (key.includes('data-')) {
       dataAtts[key] = value
     }
   })
-  instance.state.set({ dataAtts })
+  this.state.set({ dataAtts })
 })
 
 Template.switch.helpers({
-  inputAtts () {
+  inputAtts() {
     return Template.getState('dataAtts')
-  }
+  },
 })
 
 Template.switch.onRendered(function () {

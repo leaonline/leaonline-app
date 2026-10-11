@@ -31,5 +31,6 @@ export const generateUserCode = async (length = 5, maxRetries = 500) => {
 
   throw new Meteor.Error(
     'generateUserCode.error',
-    'generateUserCode.maxTriesExceeded')
+    'generateUserCode.maxTriesExceeded',
+  )
 }

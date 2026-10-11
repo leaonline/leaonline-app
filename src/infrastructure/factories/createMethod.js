@@ -8,15 +8,16 @@ import { errorMixin } from '../mixins/errorMixin'
 const log = createLog({ name: 'createMethod' })
 const methodFactory = createMethodFactory({
   schemaFactory: createSchema,
-  mixins: [checkPermissions, errorMixin, environmentExtensionMixin]
+  mixins: [checkPermissions, errorMixin, environmentExtensionMixin],
 })
 
-export const createMethod = method => {
+export const createMethod = (method) => {
   log(method.name)
   return methodFactory(method)
 }
 
-export const createMethods = methods => methods.forEach(methodDef => {
-  console.info(`[methodFactory]: create ${methodDef.name}`)
-  createMethod(methodDef)
-})
+export const createMethods = (methods) =>
+  methods.forEach((methodDef) => {
+    console.info(`[methodFactory]: create ${methodDef.name}`)
+    createMethod(methodDef)
+  })

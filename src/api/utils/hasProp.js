@@ -12,4 +12,4 @@
  * @param prop {string} the name of the property
  * @return {boolean}
  */
-export const hasProp = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+export const hasProp = (obj, prop) => Object.hasOwn(obj, prop)

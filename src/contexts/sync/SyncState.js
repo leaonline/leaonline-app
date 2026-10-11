@@ -13,7 +13,7 @@ import { createLog } from '../../infrastructure/log/createLog'
  * @namespace
  */
 export const SyncState = {
-  name: 'syncState'
+  name: 'syncState',
 }
 
 const log = createLog({ name: SyncState.name })
@@ -22,7 +22,9 @@ const getAppContexts = () => [...appContexts]
 const checkIfSync = (ctx = {}, name) => {
   if (!ctx.sync) {
     const errorName = ctx.name ?? name
-    throw new Error(`Attempt to sync "${errorName}" but it's not defined for sync!`)
+    throw new Error(
+      `Attempt to sync "${errorName}" but it's not defined for sync!`,
+    )
   }
 }
 
@@ -40,7 +42,7 @@ SyncState.schema = {
   updatedAt: Date,
   name: String,
   hash: String,
-  version: Number
+  version: Number,
 }
 
 /**
@@ -52,7 +54,7 @@ SyncState.schema = {
  * @param name {string}
  * @return {Promise<object>} upsert result, depending on insert or update
  */
-SyncState.update = async name => {
+SyncState.update = async (name) => {
   log('update', name)
   const ctx = ContextRegistry.get(name)
   checkIfSync(ctx)
@@ -60,10 +62,13 @@ SyncState.update = async name => {
   const hash = Random.id(8)
   const updatedAt = new Date()
 
-  return getCollection(SyncState.name).upsertAsync({ name }, {
-    $set: { name, updatedAt, hash },
-    $inc: { version: 1 }
-  })
+  return getCollection(SyncState.name).upsertAsync(
+    { name },
+    {
+      $set: { name, updatedAt, hash },
+      $inc: { version: 1 },
+    },
+  )
 }
 
 /**
@@ -72,9 +77,10 @@ SyncState.update = async name => {
  * @param names {Array<string>}
  * @return {Promise<Array<object>>} a list of documents
  */
-SyncState.get = async ({ names }) => getCollection(SyncState.name)
-  .find({ name: { $in: names } })
-  .fetchAsync()
+SyncState.get = async ({ names }) =>
+  getCollection(SyncState.name)
+    .find({ name: { $in: names } })
+    .fetchAsync()
 
 /**
  * Throws an error if any of the given names is not registered for sync.
@@ -82,8 +88,8 @@ SyncState.get = async ({ names }) => getCollection(SyncState.name)
  * and have the {sync} flag being set to a truthy value.
  * @param names {Array<string>}
  */
-SyncState.validate = names => {
-  names.forEach(name => {
+SyncState.validate = (names) => {
+  names.forEach((name) => {
     const ctx = ContextRegistry.get(name)
     checkIfSync(ctx, name)
   })
@@ -105,33 +111,29 @@ SyncState.methods = {}
 SyncState.methods.getHashes = {
   name: 'syncState.methods.getHashes',
   schema: {},
-  run: onServerExec(function () {
-    return async function () {
-      const syncDoc = {}
-      const names = getAppContexts()
-      const docs = await SyncState.get({ names })
-      docs.forEach(doc => {
-        syncDoc[doc.name] = doc
-      })
-      return syncDoc
-    }
-  })
+  run: onServerExec(() => async () => {
+    const syncDoc = {}
+    const names = getAppContexts()
+    const docs = await SyncState.get({ names })
+    docs.forEach((doc) => {
+      syncDoc[doc.name] = doc
+    })
+    return syncDoc
+  }),
 }
 
 SyncState.methods.getDocs = {
   name: 'syncState.methods.getDocs',
   schema: {
-    name: String
+    name: String,
   },
-  run: onServerExec(function () {
-    return async function ({ name }) {
-      console.debug('[SyncState]: get', name)
-      SyncState.validate([name])
-      const collection = getCollection(name)
-      if (!collection) {
-        throw new Error(`No collection found for ${name}`)
-      }
-      return collection.find().fetchAsync()
+  run: onServerExec(() => async ({ name }) => {
+    console.debug('[SyncState]: get', name)
+    SyncState.validate([name])
+    const collection = getCollection(name)
+    if (!collection) {
+      throw new Error(`No collection found for ${name}`)
     }
-  })
+    return collection.find().fetchAsync()
+  }),
 }

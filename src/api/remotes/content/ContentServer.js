@@ -23,13 +23,13 @@ import { ContentConnection } from './ContentConnection'
 import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
 // set the lib's validator to allow validation of received unit docs
-SchemaValidator.set(function (schema) {
+SchemaValidator.set((schema) => {
   const instance = createSchema(schema)
-  return doc => instance.validate(doc)
+  return (doc) => instance.validate(doc)
 })
 
 const contexts = [Unit, UnitSet, Field, Dimension, Level, TestCycle]
-const contextNames = contexts.map(ctx => ctx.name)
+const contextNames = contexts.map((ctx) => ctx.name)
 const log = createLog({ name: 'ContentServer' })
 
 /**
@@ -60,8 +60,7 @@ ContentServer.contexts = () => [].concat(contexts)
 ContentServer.init = async () => {
   try {
     await ContentConnection.connect({ log })
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e)
   }
   return ContentServer
@@ -98,14 +97,16 @@ ContentServer.sync = async ({ name, debug } = {}) => {
     created: 0,
     updated: 0,
     removed: 0,
-    skipped: 0
+    skipped: 0,
   }
 
   const result = await ContentConnection.get({ name, log })
   const allDocs = result && result[name]
 
   // if there is nothing to get, skip here
-  if (!allDocs?.length) { return stats }
+  if (!allDocs?.length) {
+    return stats
+  }
 
   const onBeforeUpsert = getHooks(ContentServer.hooks.beforeSyncUpsert, name)
   const onSyncEnd = getHooks(ContentServer.hooks.syncEnd, name)
@@ -122,14 +123,12 @@ ContentServer.sync = async ({ name, debug } = {}) => {
     const { _id: docId } = doc
     allIds[index] = docId
 
-    if (await collection.countDocuments({ _id: docId }) === 0) {
+    if ((await collection.countDocuments({ _id: docId })) === 0) {
       await onBeforeUpsert({ type: 'insert', doc })
       const insertId = await collection.insertAsync(doc)
       if (debug) log(name, 'inserted', insertId)
       stats.created++
-    }
-
-    else {
+    } else {
       await onBeforeUpsert({ type: 'update', doc })
       const updateDoc = { ...doc }
       delete updateDoc._id
@@ -154,7 +153,7 @@ ContentServer.sync = async ({ name, debug } = {}) => {
  */
 ContentServer.hooks = {
   beforeSyncUpsert: 'beforeSyncUpsert',
-  syncEnd: 'syncEnd'
+  syncEnd: 'syncEnd',
 }
 
 const hooks = new Map()
@@ -170,7 +169,7 @@ const getHooks = (hooksName, ctxName) => {
   const fnSet = map.get(ctxName)
 
   return fnSet && fnSet.size > 0
-    ? (data) => fnSet.forEach(fn => fn(data))
+    ? (data) => fnSet.forEach((fn) => fn(data))
     : () => {}
 }
 
@@ -266,10 +265,9 @@ const ensureCollectionExists = ({ name }) => {
 }
 
 const ensureNotInMethodOrPub = () => {
-  const invocation = (
+  const invocation =
     DDP._CurrentMethodInvocation.get() ||
     DDP._CurrentPublicationInvocation.get()
-  )
   if (invocation) {
     throw new ContentServerError('methodOrPubInvocation')
   }
@@ -280,7 +278,7 @@ const ensureNotInMethodOrPub = () => {
  * @private
  */
 class ContentServerError extends Meteor.Error {
-  constructor (reason, details) {
+  constructor(reason, details) {
     super('contentServer.error', reason, details)
   }
 }

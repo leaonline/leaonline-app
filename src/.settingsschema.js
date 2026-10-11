@@ -1,16 +1,16 @@
 const SimpleSchema = require('simpl-schema')
-const schema = def => new SimpleSchema(def)
+const schema = (def) => new SimpleSchema(def)
 
 const settingsSchema = schema({
   // package settings are custom
   packages: {
     type: Object,
     optional: true,
-    blackbox: true
+    blackbox: true,
   },
   app: schema({
     name: String,
-    token: String
+    token: String,
   }),
   isStaging: Boolean,
   defaultLang: String,
@@ -21,7 +21,7 @@ const settingsSchema = schema({
     accessTokenUrl: String,
     authorizeUrl: String,
     identityUrl: String,
-    redirectUrl: String
+    redirectUrl: String,
   }),
   useFixtures: Boolean,
   remotes: schema({
@@ -29,29 +29,29 @@ const settingsSchema = schema({
       url: String,
       jwt: schema({
         key: String,
-        sub: String
+        sub: String,
       }),
       sync: schema({
-        "field": Boolean,
-        "unit": Boolean,
-        "unitSet": Boolean,
-        "dimension": Boolean,
-        "level": Boolean,
-        "testCycle": Boolean,
-        "mapIcons": Boolean,
-        "feedback": Boolean,
-        "order": Boolean,
-        "legal": Boolean,
-        "achievements": Boolean
+        field: Boolean,
+        unit: Boolean,
+        unitSet: Boolean,
+        dimension: Boolean,
+        level: Boolean,
+        testCycle: Boolean,
+        mapIcons: Boolean,
+        feedback: Boolean,
+        order: Boolean,
+        legal: Boolean,
+        achievements: Boolean,
       }),
       remap: schema({
         active: Boolean,
         dryRun: Boolean,
         dimensions: schema({
-          order: [String]
-        })
-      })
-    })
+          order: [String],
+        }),
+      }),
+    }),
   }),
   restore: schema({
     codes: schema({
@@ -62,37 +62,37 @@ const settingsSchema = schema({
         source: String,
         flags: {
           type: String,
-          optional: true
-        }
+          optional: true,
+        },
       }),
-      maxRetries: SimpleSchema.Integer
-    })
+      maxRetries: SimpleSchema.Integer,
+    }),
   }),
   crypto: schema({
     key: {
       type: String,
-      min: 32
+      min: 32,
     },
     algorithm: String,
-    outputFormat: String
+    outputFormat: String,
   }),
   log: schema({
-    level: SimpleSchema.Integer
+    level: SimpleSchema.Integer,
   }),
   email: schema({
     notify: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'notify.$': SimpleSchema.RegEx.Email,
     replyTo: {
       type: SimpleSchema.RegEx.Email,
-      optional: true
+      optional: true,
     },
     from: {
       type: SimpleSchema.RegEx.Email,
-      optional: true
-    }
+      optional: true,
+    },
   }),
   public: schema({
     env: String,
@@ -101,16 +101,16 @@ const settingsSchema = schema({
     status: String,
     accounts: schema({
       code: schema({
-        length: SimpleSchema.Integer
-      })
+        length: SimpleSchema.Integer,
+      }),
     }),
     packages: schema({
       'dynamic-import': schema({
         useLocationOrigin: {
           type: Boolean,
-          optional: true
-        }
-      })
+          optional: true,
+        },
+      }),
     }),
     app: schema({
       name: String,
@@ -118,30 +118,30 @@ const settingsSchema = schema({
       description: String,
       icon: String,
       logLevel: String,
-      storageKey: String
+      storageKey: String,
     }),
     tts: schema({
-      url: String
+      url: String,
     }),
     hosts: schema({
       content: schema({
         base: String,
         tts: String,
         competency: String,
-        url: String
+        url: String,
       }),
       sessions: schema({
         url: String,
         evalUrl: String,
-        responseUrl: String
-      })
+        responseUrl: String,
+      }),
     }),
     error: schema({
-      maxStackSize: SimpleSchema.Integer
-    })
+      maxStackSize: SimpleSchema.Integer,
+    }),
   }),
 })
 
-module.exports = function (settings) {
+module.exports = (settings) => {
   settingsSchema.validate(settings)
 }

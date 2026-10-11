@@ -5,20 +5,33 @@ import Modal from 'bootstrap/js/dist/modal'
 import { translate } from '../../../api/i18n/translate'
 import './mapStageChooser.html'
 
-export const mapPercent = metric => metric?.percent == null ? translate('map.unavailable') : `${Math.round(metric.percent)}%`
+export const mapPercent = (metric) =>
+  metric?.percent == null
+    ? translate('map.unavailable')
+    : `${Math.round(metric.percent)}%`
 Template.mapChoiceSummary.helpers({
-  pagePercent () { return mapPercent(this.choice.progress) },
-  competencyCount () { return `${this.choice.competencies.current ?? '–'} / ${this.choice.competencies.max ?? '–'}` }
+  pagePercent() {
+    return mapPercent(this.choice.progress)
+  },
+  competencyCount() {
+    return `${this.choice.competencies.current ?? '–'} / ${this.choice.competencies.max ?? '–'}`
+  },
 })
 let scope = 0
-Template.mapStageChooser.onCreated(function () { this.titleId = `map-chooser-title-${++scope}` })
+Template.mapStageChooser.onCreated(function () {
+  this.titleId = `map-chooser-title-${++scope}`
+})
 Template.mapStageChooser.onRendered(function () {
   this.element = this.find('.modal')
-  this.onHidden = () => { if (!this.view.isDestroyed) this.data.onClose() }
+  this.onHidden = () => {
+    if (!this.view.isDestroyed) this.data.onClose()
+  }
   this.element.addEventListener('hidden.bs.modal', this.onHidden)
   this.modal = new Modal(this.element)
   this.modal.show()
-  const firstChoice = this.find('.map-unitset:not(:disabled), .map-decision') || this.find('.map-chooser-close')
+  const firstChoice =
+    this.find('.map-unitset:not(:disabled), .map-decision') ||
+    this.find('.map-chooser-close')
   firstChoice?.focus()
   let deciding = false
   this.autorun(() => {
@@ -40,10 +53,18 @@ Template.mapStageChooser.onDestroyed(function () {
 })
 Template.mapStageChooser.helpers({
   titleId: () => Template.instance().titleId,
-  disabled () { return this.busy || this.offline }
+  disabled() {
+    return this.busy || this.offline
+  },
 })
 Template.mapStageChooser.events({
-  'click .map-chooser-close' (event, instance) { instance.modal.hide() },
-  'click .map-unitset' (event, instance) { instance.data.onSelect(event.currentTarget.dataset.unitset) },
-  'click .map-decision' (event, instance) { instance.data.onDecision(event.currentTarget.dataset.decision) }
+  'click .map-chooser-close'(event, instance) {
+    instance.modal.hide()
+  },
+  'click .map-unitset'(event, instance) {
+    instance.data.onSelect(event.currentTarget.dataset.unitset)
+  },
+  'click .map-decision'(event, instance) {
+    instance.data.onDecision(event.currentTarget.dataset.decision)
+  },
 })

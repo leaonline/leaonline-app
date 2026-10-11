@@ -7,7 +7,7 @@ export const Legal = {
   label: 'legal.title',
   icon: 'info',
   sync: true,
-  isConfigDoc: true
+  isConfigDoc: true,
 }
 
 Legal.schema = {
@@ -15,26 +15,26 @@ Legal.schema = {
     type: String,
     label: 'legal.imprint',
     richText: true,
-    optional: true
+    optional: true,
   },
   privacy: {
     type: String,
     label: 'legal.privacy',
     richText: true,
-    optional: true
+    optional: true,
   },
   terms: {
     type: String,
     label: 'legal.terms',
     richText: true,
-    optional: true
+    optional: true,
   },
   contact: {
     type: String,
     label: 'legal.contact',
     richText: true,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 Legal.methods = {}
@@ -44,18 +44,20 @@ Legal.methods.update = {
   backend: true,
   schema: {
     _id: {
-      type: String
+      type: String,
     },
     imprint: Legal.schema.imprint,
     privacy: Legal.schema.privacy,
     terms: Legal.schema.terms,
-    contact: Legal.schema.contact
+    contact: Legal.schema.contact,
   },
-  run: async function ({ _id, imprint, privacy, terms, contact }) {
-    const updated = await getCollection(Legal.name).updateAsync(_id, { $set: { imprint, privacy, terms, contact } })
+  run: async ({ _id, imprint, privacy, terms, contact }) => {
+    const updated = await getCollection(Legal.name).updateAsync(_id, {
+      $set: { imprint, privacy, terms, contact },
+    })
     await SyncState.update(Legal.name)
     return updated
-  }
+  },
 }
 
 Legal.methods.get = {
@@ -64,15 +66,15 @@ Legal.methods.get = {
   schema: {
     _id: {
       type: String,
-      optional: true
+      optional: true,
     },
     name: {
       type: String,
       optional: true,
-      allowedValues: Object.keys(Legal.schema)
-    }
+      allowedValues: Object.keys(Legal.schema),
+    },
   },
-  run: async function ({ name } = {}) {
+  run: async ({ name } = {}) => {
     const config = await getCollection(Legal.name).findOneAsync()
     if (!name || !config) {
       return config
@@ -80,7 +82,7 @@ Legal.methods.get = {
     if (hasProp(config, name)) {
       return config[name]
     }
-  }
+  },
 }
 
 Legal.publications = {}

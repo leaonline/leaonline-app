@@ -1,16 +1,11 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": ["jsdoc","closure"]
+    "dictionaries": ["jsdoc", "closure"]
   },
   "source": {
-    "include": [
-      "./"
-    ],
-    "exclude": [
-      ".meteor",
-      "node_modules"
-    ],
+    "include": ["./"],
+    "exclude": [".meteor", "node_modules"],
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },

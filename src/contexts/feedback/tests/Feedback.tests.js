@@ -1,7 +1,12 @@
 /* eslint-env mocha */
 import { coin } from '../../../tests/helpers/coin'
 import { Feedback } from '../Feedback'
-import { testGetAllMethod, testGetMethod, testInsert, testUpdate } from '../../../tests/helpers/backendMethods'
+import {
+  testGetAllMethod,
+  testGetMethod,
+  testInsert,
+  testUpdate,
+} from '../../../tests/helpers/backendMethods'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 
@@ -9,17 +14,17 @@ const FeedbackCollection = initTestCollection(Feedback)
 const createMockDoc = (options = {}) => {
   return {
     threshold: options.threshold ?? 0.5,
-    phrases: options.phrases ?? ['foo', 'bar']
+    phrases: options.phrases ?? ['foo', 'bar'],
   }
 }
 
-describe(Feedback.name, function () {
+describe(Feedback.name, () => {
   setupAndTeardown([FeedbackCollection])
 
   describe('methods', () => {
     testInsert(Feedback, {
       factory: createMockDoc,
-      expectSync: true
+      expectSync: true,
     })
     testUpdate(Feedback, {
       factory: () => {
@@ -29,11 +34,11 @@ describe(Feedback.name, function () {
           : { threshold: 0.1 }
         return { insertDoc, updateDoc }
       },
-      expectSync: true
+      expectSync: true,
     })
     testGetMethod(Feedback)
     testGetAllMethod(Feedback, {
-      factory: createMockDoc
+      factory: createMockDoc,
     })
   })
 })

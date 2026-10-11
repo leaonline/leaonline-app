@@ -3,7 +3,7 @@
 import { RestoreCodes } from '../RestoreCodes'
 import { createSchema } from '../../../infrastructure/factories/createSchema'
 
-describe(RestoreCodes.name, function () {
+describe(RestoreCodes.name, () => {
   it('generates valid restore codes', () => {
     const restoreSchema = createSchema(RestoreCodes.schema())
     const restore = RestoreCodes.generate()

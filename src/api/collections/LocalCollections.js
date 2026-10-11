@@ -26,13 +26,13 @@ LocalCollections.add = (name, collection) => {
  * @param name
  * @return {boolean}
  */
-LocalCollections.has = name => map.has(name)
+LocalCollections.has = (name) => map.has(name)
 
 /**
  * Get a local Mongo Collection by name
  * @param name {string}
  * @return {Mongo.Collection|undefined}
  */
-LocalCollections.get = name => map.get(name)
+LocalCollections.get = (name) => map.get(name)
 
 export { LocalCollections }

@@ -12,8 +12,13 @@ import { getCollection } from '../../api/utils/getCollection'
  * @return {Promise<*|number>}
  */
 export const updateProgress = async ({ sessionId, userId }) => {
-  const sessionDoc = await getCollection(Session.name).findOneAsync({ _id: sessionId, userId })
-  const unitDoc = await getCollection(Unit.name).findOneAsync({ _id: sessionDoc?.unit })
+  const sessionDoc = await getCollection(Session.name).findOneAsync({
+    _id: sessionId,
+    userId,
+  })
+  const unitDoc = await getCollection(Unit.name).findOneAsync({
+    _id: sessionDoc?.unit,
+  })
 
   if (sessionDoc && unitDoc?.pages?.length) {
     return Progress.update({
@@ -23,7 +28,7 @@ export const updateProgress = async ({ sessionId, userId }) => {
       progress: unitDoc.pages.length,
       dimensionId: sessionDoc.dimensionId,
       competencies: sessionDoc.competencies,
-      complete: false // TODO how to determine completeness?
+      complete: false, // TODO how to determine completeness?
     })
   }
 

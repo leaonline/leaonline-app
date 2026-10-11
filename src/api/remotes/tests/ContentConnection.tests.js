@@ -13,9 +13,9 @@ describe('ContentConnection', () => {
     restoreAll()
   })
 
-  describe(ContentConnection.connect.name, function () {
+  describe(ContentConnection.connect.name, () => {
     it('connects to a remote ddp server', async () => {
-      const log = s => expect(s).to.be.a('string')
+      const log = (s) => expect(s).to.be.a('string')
       const connection = { status: () => ({ status: 'connected' }) }
       stub(DDP, 'connect', (_url, _options) => {
         setTimeout(() => _options.onConnected(), 5)
@@ -35,17 +35,17 @@ describe('ContentConnection', () => {
       expect(ContentConnection.isConnected()).to.equal(false)
     })
   })
-  describe(ContentConnection.get.name, function () {
+  describe(ContentConnection.get.name, () => {
     it('gets a single docs from a collection', async () => {
       const doc = { _id: Random.id() }
       const connection = {
-        call (methodName, params, cb) {
+        call(methodName, params, cb) {
           expect(methodName).to.equal(`${Unit.name}.methods.get`)
           const { token, ids } = params
           expect(token).to.be.a('string')
           expect(ids).to.deep.equal([doc._id])
           return cb(undefined, doc)
-        }
+        },
       }
       stub(DDP, 'connect', (_url, _options) => {
         setTimeout(() => _options.onConnected(), 5)
@@ -58,16 +58,16 @@ describe('ContentConnection', () => {
       const received = await ContentConnection.get({
         name: Unit.name,
         params: { foo: 'bar' },
-        ids: [doc._id]
+        ids: [doc._id],
       })
       expect(received).to.deep.equal(doc)
     })
     it('throw if the remote returned with an error', async () => {
       const err = new Error('expected error')
       const connection = {
-        call (methodName, params, cb) {
+        call(methodName, params, cb) {
           return cb(err)
-        }
+        },
       }
       stub(DDP, 'connect', (_url, _options) => {
         setTimeout(() => _options.onConnected(), 5)
@@ -81,23 +81,20 @@ describe('ContentConnection', () => {
       const e = await ContentConnection.get({
         name: Unit.name,
         log,
-        ids: [Random.id()]
+        ids: [Random.id()],
       })
       expect(e).to.deep.equal([])
     })
     it('returns all docs from remote if given', async () => {
-      const docs = [
-        { _id: Random.id() },
-        { _id: Random.id() }
-      ]
+      const docs = [{ _id: Random.id() }, { _id: Random.id() }]
       const connection = {
-        call (methodName, params, cb) {
+        call(methodName, params, cb) {
           expect(methodName).to.equal(`${Unit.name}.methods.getAll`)
           const { token, ids } = params
           expect(token).to.be.a('string')
           expect(ids).to.deep.equal(undefined)
           return cb(undefined, docs)
-        }
+        },
       }
       stub(DDP, 'connect', (_url, _options) => {
         setTimeout(() => _options.onConnected(), 5)
@@ -108,7 +105,7 @@ describe('ContentConnection', () => {
       await asyncTimeout(10)
 
       const received = await ContentConnection.get({
-        name: Unit.name
+        name: Unit.name,
       })
       expect(received).to.deep.equal(docs)
     })

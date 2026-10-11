@@ -14,52 +14,50 @@ Template.fatal.onCreated(function () {
   instance.initDependencies({
     language: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     loaders: [initFullTheme],
     onComplete: async () => {
       instance.state.set('dependenciesComplete', true)
     },
-    onError (err) {
+    onError(err) {
       console.error(err) // silently skip to keep messages displayed
       instance.state.set('dependenciesComplete', true)
-    }
+    },
   })
 })
 
 Template.fatal.onRendered(function () {
-  const instance = this
-
-  instance.autorun(() => {
+  this.autorun(() => {
     const open = modalOpen.get()
 
-    if (open && instance.state.get('dependenciesComplete')) {
-      instance.$('#fatal-modal').modal('show')
+    if (open && this.state.get('dependenciesComplete')) {
+      this.$('#fatal-modal').modal('show')
     }
   })
 })
 
 Template.fatal.helpers({
-  errors () {
+  errors() {
     return Object.values(errors.all())
   },
-  loadComplete () {
+  loadComplete() {
     return Template.getState('dependenciesComplete')
-  }
+  },
 })
 
 Template.fatal.events({
-  'hidden.bs.modal' () {
+  'hidden.bs.modal'() {
     errors.clear()
     modalOpen.set(false)
-  }
+  },
 })
 
 export const fatal = ({ error, logToConsole }) => {
   const id = Random.id()
   if (logToConsole) console.error(error)
   errors.set(id, {
-    message: error.message
+    message: error.message,
   })
 
   if (!modalOpen.get()) {

@@ -8,9 +8,19 @@ import { DocNotFoundError } from '../errors/DocNotFoundError'
  * @param details {object=} additional context information
  * @param logToConsole {boolean=} logs the error to the console, if desired
  */
-export const ensureDocument = ({ name, document, docId, details, logToConsole }) => {
+export const ensureDocument = ({
+  name,
+  document,
+  docId,
+  details,
+  logToConsole,
+}) => {
   if (typeof document === 'undefined' || document === null) {
-    const e = new DocNotFoundError('document.notFoundById', { name, docId, ...details })
+    const e = new DocNotFoundError('document.notFoundById', {
+      name,
+      docId,
+      ...details,
+    })
 
     if (logToConsole) {
       console.error(e)

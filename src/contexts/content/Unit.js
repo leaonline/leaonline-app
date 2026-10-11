@@ -20,7 +20,7 @@ onClientExec(() => {
       return null
     }
 
-    const byId = element => element.contentId === contentId
+    const byId = (element) => element.contentId === contentId
     const p = unit.pages[page]
     if (p?.content?.length) {
       const contentElement = p.content.find(byId)
@@ -46,12 +46,12 @@ onClientExec(() => {
 Unit.methods = Unit.methods ?? {}
 Unit.methods.getAll = createGetAllMethod({
   context: Unit,
-  backendOnly: false
+  backendOnly: false,
 })
 
 Unit.methods.get = createGetMethod({
   context: Unit,
-  backendOnly: false
+  backendOnly: false,
 })
 
 /**

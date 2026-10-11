@@ -12,7 +12,10 @@ const cache = new Map()
  * @param onError
  * @return {any}
  */
-export const loadOnce = function (asyncInitFunc, { onError, debug = () => {}, name } = {}) {
+export const loadOnce = (
+  asyncInitFunc,
+  { onError, debug = () => {}, name } = {},
+) => {
   if (cache.has(asyncInitFunc)) {
     return cache.get(asyncInitFunc)
   }
@@ -21,15 +24,15 @@ export const loadOnce = function (asyncInitFunc, { onError, debug = () => {}, na
   cache.set(asyncInitFunc, initialized)
 
   asyncInitFunc()
-    .catch(e => {
+    .catch((e) => {
       debug('[loadOnce]: failed with error:')
       debug(e)
 
       fatal({
         error: {
           message: 'unknown',
-          original: e.message
-        }
+          original: e.message,
+        },
       })
 
       sendError({ error: e })

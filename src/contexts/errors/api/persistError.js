@@ -18,10 +18,9 @@ export const persistError = async (normalizedErrorDoc) => {
 
   if (existingError) {
     await collection.updateAsync(existingError._id, {
-      $inc: { count: 1 }
+      $inc: { count: 1 },
     })
-  }
-  else {
+  } else {
     normalizedErrorDoc.count = 1
     await collection.insertAsync(normalizedErrorDoc)
 

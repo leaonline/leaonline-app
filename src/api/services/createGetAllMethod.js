@@ -11,7 +11,12 @@ import { getCollection } from '../utils/getCollection'
  * @param defaultQuery {object=}
  * @return {{schema: {'dependencies.$': (function(String, String)), 'ids.$': (function(String, String)), ids: {optional: boolean, type: ArrayConstructor}, dependencies: {optional: boolean, type: ArrayConstructor}}, name: string, backend: boolean, run: *}}
  */
-export const createGetAllMethod = ({ context, run, defaultQuery, backendOnly = true }) => {
+export const createGetAllMethod = ({
+  context,
+  run,
+  defaultQuery,
+  backendOnly = true,
+}) => {
   const { name } = context
   return {
     name: `${name}.methods.getAll`,
@@ -19,12 +24,12 @@ export const createGetAllMethod = ({ context, run, defaultQuery, backendOnly = t
     schema: {
       ids: {
         type: Array,
-        optional: true
+        optional: true,
       },
       'ids.$': String,
       dependencies: {
         type: Array,
-        optional: true
+        optional: true,
       },
       'dependencies.$': Object,
       'dependencies.$.name': String,
@@ -34,27 +39,29 @@ export const createGetAllMethod = ({ context, run, defaultQuery, backendOnly = t
       },
     },
     run: onServerExec(() => {
-      
-      return run ?? async function ({ ids, dependencies = [] }) {
-        // return value
-        const output = {}
+      return (
+        run ??
+        (async ({ ids, dependencies = [] }) => {
+          // return value
+          const output = {}
 
-        // get main documents, if hashes do not match
-        const collection = getCollection(name)
-        const query = defaultQuery ?? Object.create(null)
-        if (ids) query._id = { $in: ids }
-        output[name] = await collection.find(query).fetchAsync()
+          // get main documents, if hashes do not match
+          const collection = getCollection(name)
+          const query = defaultQuery ?? Object.create(null)
+          if (ids) query._id = { $in: ids }
+          output[name] = await collection.find(query).fetchAsync()
 
-        // dependencies
-        for (const dep of dependencies) {
-          const depName = dep.name
-          const depCollection = getCollection(depName)
-          const depQuery = dep.query ?? Object.create(null)
-          output[depName] = await depCollection.find(depQuery).fetchAsync()
-        }
+          // dependencies
+          for (const dep of dependencies) {
+            const depName = dep.name
+            const depCollection = getCollection(depName)
+            const depQuery = dep.query ?? Object.create(null)
+            output[depName] = await depCollection.find(depQuery).fetchAsync()
+          }
 
-        return output
-      }
-    })
+          return output
+        })
+      )
+    }),
   }
 }

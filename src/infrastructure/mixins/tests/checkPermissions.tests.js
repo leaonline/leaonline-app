@@ -6,7 +6,7 @@ import { checkPermissions } from '../checkPermissions'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
 
-describe(checkPermissions.name, function () {
+describe(checkPermissions.name, () => {
   let connection
   beforeEach(() => {
     connection = { id: Random.id() }
@@ -17,8 +17,8 @@ describe(checkPermissions.name, function () {
   it('skips checks if is public', () => {
     const options = {
       name: Random.id(),
-      run: function run () {},
-      isPublic: true
+      run: function run() {},
+      isPublic: true,
     }
     const wrapped = checkPermissions(options)
     expect(wrapped.run).to.equal(options.run)
@@ -34,8 +34,8 @@ describe(checkPermissions.name, function () {
         userId: undefined,
         isPublic: undefined,
         backend: undefined,
-        clientConnection: connection.id
-      }
+        clientConnection: connection.id,
+      },
     })
   })
   it('throws if method/pub is backend-only but not invoked by backend user', async () => {
@@ -51,8 +51,8 @@ describe(checkPermissions.name, function () {
         userId,
         isPublic: undefined,
         backend: true,
-        clientConnection: connection.id
-      }
+        clientConnection: connection.id,
+      },
     })
   })
   it('runs the method if invoked by a user', async () => {
@@ -63,10 +63,15 @@ describe(checkPermissions.name, function () {
   it('runs the backend method if invoked by a backend user', async () => {
     const userId = Random.id()
     const lea = { id: Random.id(), accessToken: Random.id() }
-    const user = ({ _id: userId, services: { lea } })
+    const user = { _id: userId, services: { lea } }
     stub(Meteor.users, 'findOneAsync', async () => user)
 
-    const wrapped = checkPermissions({ backend: true, run: (name) => `${name} foo` })
-    expect(await wrapped.run.call({ userId, connection }, 'hello,')).to.equal('hello, foo')
+    const wrapped = checkPermissions({
+      backend: true,
+      run: (name) => `${name} foo`,
+    })
+    expect(await wrapped.run.call({ userId, connection }, 'hello,')).to.equal(
+      'hello, foo',
+    )
   })
 })

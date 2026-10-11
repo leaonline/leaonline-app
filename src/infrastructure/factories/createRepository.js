@@ -20,7 +20,7 @@ class Repository {
    * @constructor
    * @param  {Map} storage should implement the Map interface
    */
-  constructor (storage) {
+  constructor(storage) {
     this.storage = storage
   }
 
@@ -32,7 +32,7 @@ class Repository {
    * @throws {Error} if target already exists by name
    * @return {object} the added target
    */
-  add (name, target) {
+  add(name, target) {
     if (this.storage.has(name)) {
       throw Error(`Item "${name}" already exists`)
     }
@@ -46,7 +46,7 @@ class Repository {
    * @param name {string} name / storage key
    * @return {boolean} true/false
    */
-  has (name) {
+  has(name) {
     return this.storage.has(name)
   }
 
@@ -55,7 +55,7 @@ class Repository {
    * @param name {string} name / storage key
    * @return {object|undefined} the target or undefined, if not in storage
    */
-  get (name) {
+  get(name) {
     return this.storage.get(name)
   }
 
@@ -63,7 +63,7 @@ class Repository {
    * Returns all target objects in storage
    * @return {Array<Object>} an array of all target objects
    */
-  all () {
+  all() {
     return [...this.storage.values()]
   }
 }

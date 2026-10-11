@@ -6,14 +6,13 @@ import { nonEmptyString } from '../../utils/string/nonEmptyString'
 export const Routes = {}
 
 const go = (...args) => {
-  import { gotoRoute } from './gotoRoute'
+  const { gotoRoute } = require('./gotoRoute')
   gotoRoute(...args)
 }
 
 const settings = () => {
   // TODO load dynamically using i18n locale
-  import settingsFile from '../../resources/i18n/de/routes.json'
-  return settingsFile
+  return require('../../resources/i18n/de/routes.json').default
 }
 
 /**
@@ -26,16 +25,16 @@ Routes.notFound = {
   path: () => `${settings().notFound}`,
   label: 'pages.notFound.title',
   triggersEnter: () => [],
-  async load () {
+  async load() {
     return import('../pages/notfound/notFound')
   },
   target: null,
   template: 'notFound',
   data: {
-    next () {
+    next() {
       go(Routes.overview)
-    }
-  }
+    },
+  },
 }
 
 /**
@@ -47,24 +46,24 @@ Routes.notFound = {
 Routes.fallback = {
   path: () => '*',
   label: 'pages.redirecting.title',
-  triggersEnter: () => [
-    createTrigger(() => true, Routes.notFound.path)
-  ],
-  async load () {
+  triggersEnter: () => [createTrigger(() => true, Routes.notFound.path)],
+  async load() {
     return import('../pages/loading/loading')
   },
   target: null,
   template: 'loading',
-  data: null
+  data: null,
 }
 
 Routes.demo = {
   path: () => `${settings().demo}`,
   label: 'pages.welcome.title',
-  triggersEnter: () => [function () {
-    go(Routes.welcome, true)
-  }],
-  load: () => {}
+  triggersEnter: () => [
+    () => {
+      go(Routes.welcome, true)
+    },
+  ],
+  load: () => {},
 }
 
 /**
@@ -80,16 +79,16 @@ Routes.legal = {
   },
   label: 'legal.title',
   triggersEnter: () => [],
-  async load () {
+  async load() {
     return import('../pages/legal/legal')
   },
   target: null,
   template: 'legal',
   data: {
-    next () {
+    next() {
       go(Routes.overview)
-    }
-  }
+    },
+  },
 }
 
 const toWelcome = createTrigger(loggedOut, () => Routes.welcome.path())
@@ -104,21 +103,19 @@ const toOverview = createTrigger(loggedIn, () => Routes.overview)
  */
 Routes.welcome = {
   path: (isDemo = false) => {
-    return isDemo
-      ? `${settings().welcome}?demo=1`
-      : `${settings().welcome}`
+    return isDemo ? `${settings().welcome}?demo=1` : `${settings().welcome}`
   },
   label: 'pages.welcome.title',
   triggersEnter: () => [toOverview],
-  async load () {
+  async load() {
     return import('../pages/auth/welcome/welcome')
   },
   target: null,
   template: 'welcome',
   data: {
     register: () => go(Routes.register),
-    login: () => go(Routes.login)
-  }
+    login: () => go(Routes.login),
+  },
 }
 
 /**
@@ -130,7 +127,7 @@ Routes.register = {
   },
   label: 'pages.register.title',
   triggersEnter: () => [toOverview],
-  async load () {
+  async load() {
     return import('../pages/auth/register/registerNewUser')
   },
   target: null,
@@ -138,8 +135,8 @@ Routes.register = {
   data: {
     success: () => go(Routes.overview),
     restore: () => go(Routes.restore),
-    login: () => go(Routes.login)
-  }
+    login: () => go(Routes.login),
+  },
 }
 
 /**
@@ -151,15 +148,15 @@ Routes.login = {
   },
   label: 'pages.login.title',
   triggersEnter: () => [toOverview],
-  async load () {
+  async load() {
     return import('../pages/auth/login/login')
   },
   target: null,
   template: 'login',
   data: {
     success: () => go(Routes.overview),
-    restore: () => go(Routes.restore)
-  }
+    restore: () => go(Routes.restore),
+  },
 }
 
 /**
@@ -171,15 +168,15 @@ Routes.restore = {
   },
   label: 'pages.restore.title',
   triggersEnter: () => [toOverview],
-  async load () {
+  async load() {
     return import('../pages/auth/restore/restore')
   },
   target: null,
   template: 'restore',
   data: {
     success: () => go(Routes.overview),
-    login: () => go(Routes.login)
-  }
+    login: () => go(Routes.login),
+  },
 }
 
 // ============================================================================
@@ -193,22 +190,22 @@ Routes.user = {
   path: () => `${settings().user}`,
   label: 'pages.user.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/user/user')
   },
   target: null,
-  template: 'userProfile'
+  template: 'userProfile',
 }
 
 Routes.secureAccount = {
   path: () => `${settings().secureAccount}`,
   label: 'pages.secureAccount.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/secure/secureAccount/secureAccount')
   },
   target: null,
-  template: 'secureAccount'
+  template: 'secureAccount',
 }
 
 /**
@@ -218,25 +215,25 @@ Routes.overview = {
   path: () => `${settings().overview}`,
   label: 'pages.overview.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/overview/overview')
   },
   target: null,
   template: 'overview',
-  onAction () {
+  onAction() {
     window.scrollTo(0, 0)
   },
   data: {
-    onSelected ({ fieldId }) {
+    onSelected({ fieldId }) {
       go(Routes.map, fieldId)
     },
-    next ({ sessionId, unitId }) {
+    next({ sessionId, unitId }) {
       go(Routes.unit, sessionId, unitId)
     },
-    story ({ sessionId, unitSetId, unitId }) {
+    story({ sessionId, unitSetId, unitId }) {
       go(Routes.story, sessionId, unitSetId, unitId)
-    }
-  }
+    },
+  },
 }
 
 /**
@@ -252,24 +249,23 @@ Routes.map = {
   },
   label: 'pages.map.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/map/map')
   },
   target: null,
   template: 'map',
-  onAction () {
+  onAction() {
     // window.scrollTo(0, 0)
   },
   data: {
-    onSelected ({ sessionId, unitSetId, unitId, showStory }) {
+    onSelected({ sessionId, unitSetId, unitId, showStory }) {
       if (showStory) {
         return go(Routes.story, sessionId, unitSetId)
-      }
-      else {
+      } else {
         return go(Routes.unit, sessionId, unitSetId, unitId)
       }
-    }
-  }
+    },
+  },
 }
 
 Routes.story = {
@@ -278,16 +274,16 @@ Routes.story = {
   },
   label: 'pages.unit.story',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/story/story')
   },
   target: null,
   template: 'story',
-  onAction () {
+  onAction() {
     window.scrollTo(0, 0)
   },
   data: {
-    next ({ sessionId, unitSetId, unitId }) {
+    next({ sessionId, unitSetId, unitId }) {
       if (!sessionId || !unitSetId) {
         return go(Routes.overview)
       }
@@ -298,31 +294,35 @@ Routes.story = {
 
       return go(Routes.unit, sessionId, unitSetId, unitId)
     },
-    exit () {
+    exit() {
       go(Routes.overview)
-    }
-  }
+    },
+  },
 }
 /**
  * Unit process page, where all units are dynamically rendered and processed.
  */
 
 Routes.unit = {
-  path: (sessionId = ':sessionId', unitSetId = ':unitSetId', unitId = ':unitId') => {
+  path: (
+    sessionId = ':sessionId',
+    unitSetId = ':unitSetId',
+    unitId = ':unitId',
+  ) => {
     return `${settings().unit}/${sessionId}/${unitSetId}/${unitId}`
   },
   label: 'pages.unit.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/unit/unit')
   },
   target: null,
   template: 'unit',
-  onAction () {
+  onAction() {
     window.scrollTo(0, 0)
   },
   data: {
-    next ({ sessionId, unitId, unitSetId, hasStory, completed }) {
+    next({ sessionId, unitId, unitSetId, hasStory, completed }) {
       if (!sessionId) {
         return go(Routes.overview)
       }
@@ -333,22 +333,20 @@ Routes.unit = {
         return go(Routes.story, sessionId, unitSetId, unitId)
       }
 
-      return (!unitId || completed)
+      return !unitId || completed
         ? go(Routes.complete, sessionId)
         : go(Routes.unit, sessionId, unitId)
     },
-    exit ({ fieldId, unitSetId } = {}) {
+    exit({ fieldId, unitSetId } = {}) {
       if (fieldId) {
         return go(Routes.map, fieldId, unitSetId)
       }
       go(Routes.overview)
     },
-    finish ({ sessionId }) {
-      return sessionId
-        ? go(Routes.complete, sessionId)
-        : go(Routes.overview)
-    }
-  }
+    finish({ sessionId }) {
+      return sessionId ? go(Routes.complete, sessionId) : go(Routes.overview)
+    },
+  },
 }
 
 Routes.complete = {
@@ -357,25 +355,25 @@ Routes.complete = {
   },
   label: 'pages.complete.title',
   triggersEnter: () => [toWelcome],
-  async load () {
+  async load() {
     return import('../pages/complete/complete')
   },
   target: null,
   template: 'complete',
-  onAction () {
+  onAction() {
     window.scrollTo(0, 0)
   },
   data: {
-    end () {
+    end() {
       go(Routes.logout)
     },
-    next () {
+    next() {
       go(Routes.overview)
     },
-    exit () {
+    exit() {
       go(Routes.logout)
-    }
-  }
+    },
+  },
 }
 
 Routes.logout = {
@@ -384,19 +382,19 @@ Routes.logout = {
   },
   label: 'pages.logout.title',
   triggersEnter: () => [],
-  async load () {
+  async load() {
     return import('../pages/logout/logout')
   },
   target: null,
   template: 'logout',
-  onAction () {
+  onAction() {
     window.scrollTo(0, 0)
   },
   data: {
-    next () {
+    next() {
       return Routes.overview
-    }
-  }
+    },
+  },
 }
 
 /**
@@ -407,18 +405,15 @@ Routes.logout = {
 Routes.root = {
   path: () => '/',
   label: 'pages.redirecting.title',
-  triggersEnter: () => [
-    toWelcome,
-    toOverview
-  ],
-  async load () {
+  triggersEnter: () => [toWelcome, toOverview],
+  async load() {
     return import('../pages/loading/loading')
   },
   target: null,
   template: 'loading',
-  data: null
+  data: null,
 }
 
-Object.keys(Routes).forEach(key => {
+Object.keys(Routes).forEach((key) => {
   Routes[key].key = key
 })

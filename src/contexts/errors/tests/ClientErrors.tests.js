@@ -5,13 +5,16 @@ import { Email } from 'meteor/email'
 import { ClientErrors } from '../ClientErrors'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { getCollection } from '../../../api/utils/getCollection'
-import { restoreCollections, stubCollection } from '../../../tests/helpers/stubCollection'
+import {
+  restoreCollections,
+  stubCollection,
+} from '../../../tests/helpers/stubCollection'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { asyncTimeout } from '../../../api/utils/asyncTimeout'
 
 const ClientErrorsCollection = initTestCollection(ClientErrors)
 
-describe(ClientErrors.name, function () {
+describe(ClientErrors.name, () => {
   before(() => {
     stubCollection([ClientErrorsCollection])
   })
@@ -26,12 +29,14 @@ describe(ClientErrors.name, function () {
       name: 'error',
       reason: 'foo',
       details: { bar: 'moo' },
-      stack: 'error in file.js\ncalled by foobar.js\nmoooooooo in moo.js'
+      stack: 'error in file.js\ncalled by foobar.js\nmoooooooo in moo.js',
     }
 
     const userId = Random.id()
     const docId = await ClientErrors.methods.send.run.call({ userId }, options)
-    const { _id, createdAt, ...doc } = await getCollection(ClientErrors.name).findOneAsync(docId)
+    const { _id, createdAt, ...doc } = await getCollection(
+      ClientErrors.name,
+    ).findOneAsync(docId)
     expect(_id).to.be.a('string')
     expect(createdAt).to.be.instanceOf(Date)
     expect(doc).to.deep.equal({
@@ -42,7 +47,7 @@ describe(ClientErrors.name, function () {
       stack: options.stack,
       title: undefined,
       type: 'native',
-      userId
+      userId,
     })
 
     await asyncTimeout(20)

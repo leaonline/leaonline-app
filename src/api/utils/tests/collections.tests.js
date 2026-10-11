@@ -5,8 +5,8 @@ import { expect } from 'chai'
 import { createCollection } from '../../../infrastructure/factories/createCollection'
 import { getLocalCollection } from '../getLocalCollection'
 
-describe(getCollection.name, function () {
-  it('returns a collection if it exists', function () {
+describe(getCollection.name, () => {
+  it('returns a collection if it exists', () => {
     const name = Random.id()
     const collection = createCollection({ name, schema: {} })
     expect(getCollection(name)).to.equal(collection)
@@ -14,12 +14,16 @@ describe(getCollection.name, function () {
   })
 })
 
-describe(getLocalCollection.name, function () {
-  it('returns a local collection', function () {
+describe(getLocalCollection.name, () => {
+  it('returns a local collection', () => {
     const name = Random.id()
     const localName = Random.id()
     const collection = createCollection({ name, schema: {}, isLocal: false })
-    const local = createCollection({ name: localName, schema: {}, isLocal: true })
+    const local = createCollection({
+      name: localName,
+      schema: {},
+      isLocal: true,
+    })
 
     expect(getLocalCollection(localName)).to.equal(local)
     expect(getLocalCollection(Random.id())).to.equal(undefined)

@@ -5,4 +5,4 @@ import { Errors } from '../Errors'
  * @param query {object}
  * @return {Promise<*>}
  */
-export const getError = async query => Errors.collection().findOneAsync(query)
+export const getError = async (query) => Errors.collection().findOneAsync(query)

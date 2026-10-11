@@ -15,7 +15,7 @@ let debug = false
  */
 export const isDebugUser = async (value = undefined, debugFn = () => {}) => {
   const user = await Meteor.userAsync()
-  debug = !!(user?.debug)
+  debug = !!user?.debug
 
   if (typeof value !== 'undefined') {
     check(value, Boolean)

@@ -8,16 +8,16 @@ export const legalRenderer = () => {
 }
 
 class LegalRenderer extends Renderer {
-  constructor (options) {
+  constructor(options) {
     super(options)
     this.count = 0
   }
 
-  heading (text) {
+  heading(text) {
     return `<span class="lea-text-bold">${text}</span>`
   }
 
-  paragraph (text /*, level */) {
+  paragraph(text /*, level */) {
     const transformed = text
       .replace(/§§/g, i18n.get('pages.legal.paragraphs'))
       .replace(/§/g, i18n.get('pages.legal.paragraph'))
@@ -27,13 +27,17 @@ class LegalRenderer extends Renderer {
 
     setTimeout(() => {
       const parent = document.querySelector(`#${id}`)
-      Blaze.renderWithData(Template.soundbutton, {
-        text: transformed,
-        outline: true,
-        sm: true,
-        type: 'secondary',
-        class: 'border-0'
-      }, parent)
+      Blaze.renderWithData(
+        Template.soundbutton,
+        {
+          text: transformed,
+          outline: true,
+          sm: true,
+          type: 'secondary',
+          class: 'border-0',
+        },
+        parent,
+      )
     }, 1000)
 
     return `<p class="lea-text-sm"><span id="${id}"></span>${text}</p>`

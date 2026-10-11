@@ -14,16 +14,21 @@ docFactories.set(Dimension.name, () => ({
   icon: Random.id(4),
   colorType: 1,
   shortCode: 's',
-  shortNum: 1
+  shortNum: 1,
 }))
 docFactories.set(Unit.name, () => ({ title: Random.id(), pages: [] }))
-docFactories.set(UnitSet.name, () => ({ title: Random.id(), units: [Random.id()] }))
+docFactories.set(UnitSet.name, () => ({
+  title: Random.id(),
+  units: [Random.id()],
+}))
 
-DocumentFactories.get = name => docFactories.get(name)
+DocumentFactories.get = (name) => docFactories.get(name)
 
 export const SelectorFactories = {}
 
-SelectorFactories.idSelector = (...fieldNames) => ({ docs }) => {
-  const ids = [...createIdSet(docs, fieldNames)]
-  return { _id: { $in: ids } }
-}
+SelectorFactories.idSelector =
+  (...fieldNames) =>
+  ({ docs }) => {
+    const ids = [...createIdSet(docs, fieldNames)]
+    return { _id: { $in: ids } }
+  }
