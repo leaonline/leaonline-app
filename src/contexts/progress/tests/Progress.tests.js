@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
+import sinon from 'sinon'
 import { Random } from 'meteor/random'
 import { Progress } from '../Progress'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
@@ -22,22 +23,21 @@ const ProgressCollection = initTestCollection(Progress)
 const FieldCollection = initTestCollection(Field)
 
 const createDoc = (options = {}) => {
-  return {
+  const progressDoc = {
     userId: options.userId ?? Random.id(),
     fieldId: options.fieldId ?? Random.id(),
-    unitSets: [
-      {
-        _id: options.unitSetId ?? Random.id(),
-        dimensionId: options.dimensionId ?? Random.id(),
-        progress: options.progress ?? 123,
-        competencies: options.competencies ?? 456,
-        complete: options.complete ?? false,
-      },
-    ],
+    unitSetId: options.unitSetId ?? Random.id(),
+    dimensionId: options.dimensionId ?? Random.id(),
+    progress: options.progress ?? 123,
+    competencies: options.competencies ?? 456,
+    complete: options.complete ?? false,
   }
+  Object.freeze(progressDoc)
+  return progressDoc
 }
 
 describe('Progress', () => {
+  let clock
   before(() => {
     stubCollection([ProgressCollection, FieldCollection])
   })
@@ -45,12 +45,19 @@ describe('Progress', () => {
     restoreCollections()
   })
   beforeEach(async () => {
+    clock = sinon.useFakeTimers();
     await ProgressCollection.removeAsync({})
     await FieldCollection.removeAsync({})
   })
 
+  afterEach(() => {
+    clock.restore()
+  })
+
   describe(Progress.create.name, () => {
     it('creates a new progress doc', async () => {
+      const now = new Date()
+      clock.setSystemTime(now)
       const insertDoc = createDoc()
       const progressId = await Progress.create(insertDoc)
       expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
@@ -64,32 +71,39 @@ describe('Progress', () => {
             progress: insertDoc.progress,
             competencies: insertDoc.competencies,
             complete: insertDoc.complete,
+            createdAt: now
           },
         ],
       })
     })
   })
   describe(Progress.update.name, () => {
-    it('creates a new Progress doc if non exists', async () => {
+    it('creates a new Progress doc if none exists', async () => {
+      const now = new Date()
+      clock.setSystemTime(now)
       const updateDoc = createDoc()
       const progressId = await Progress.update(updateDoc)
       expect(await ProgressCollection.findOneAsync(progressId)).to.deep.equal({
         _id: progressId,
         userId: updateDoc.userId,
         fieldId: updateDoc.fieldId,
-        unitSets: [
-          {
-            _id: updateDoc.unitSetId,
-            dimensionId: updateDoc.dimensionId,
-            progress: updateDoc.progress,
-            competencies: updateDoc.competencies,
-            complete: updateDoc.complete,
-          },
-        ],
+        unitSets: [{
+          _id: updateDoc.unitSetId,
+          competencies: updateDoc.competencies,
+          complete: false,
+          dimensionId: updateDoc.dimensionId,
+          progress: updateDoc.progress,
+          createdAt: now
+        }],
       })
     })
     it('updates an existing Progress doc', async () => {
-      const insertDoc = createDoc()
+      const now = new Date()
+      clock.setSystemTime(now)
+      const insertDoc = createDoc({
+        progress: 256,
+        competencies: 512
+      })
       const progressId = await Progress.create(insertDoc)
 
       // update existing unit set
@@ -111,9 +125,12 @@ describe('Progress', () => {
           {
             _id: insertDoc.unitSetId,
             dimensionId: insertDoc.dimensionId,
-            progress: 256,
-            competencies: 512,
+            progress: 512,
+            competencies: 1024,
             complete: true,
+            createdAt: now,
+            completedAt: now,
+            updatedAt: now,
           },
         ],
       })
@@ -125,8 +142,8 @@ describe('Progress', () => {
         fieldId: insertDoc.fieldId,
         unitSetId: newUnitSetId,
         dimensionId: insertDoc.dimensionId,
-        progress: 16,
-        competencies: 32,
+        progress: 128,
+        competencies: 256,
         complete: false,
       })
 
@@ -138,16 +155,20 @@ describe('Progress', () => {
           {
             _id: insertDoc.unitSetId,
             dimensionId: insertDoc.dimensionId,
-            progress: 256,
-            competencies: 512,
+            progress: 512,
+            competencies: 1024,
             complete: true,
+            createdAt: now,
+            completedAt: now,
+            updatedAt: now
           },
           {
             _id: newUnitSetId,
             dimensionId: insertDoc.dimensionId,
-            progress: 16,
-            competencies: 32,
+            progress: 128,
+            competencies: 256,
             complete: false,
+            createdAt: now
           },
         ],
       })

@@ -1,4 +1,4 @@
-import SimpleSchema from 'simpl-schema'
+import SimpleSchema from 'meteor/simple-schema'
 
 /**
  * Checks, whether a schema is instance of SimpleSchema
