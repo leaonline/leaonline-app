@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
+import sinon from 'sinon'
 import { Random } from 'meteor/random'
 import { Session } from '../Session'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
@@ -303,6 +304,7 @@ describe('Session', () => {
       const method = createMethod(Session.methods.update)
 
       it('it updates progress', async () => {
+        const now = new Date()
         const userId = Random.id()
         const nextUnitId = Random.id()
         const nextNextUnitId = Random.id()
@@ -337,18 +339,17 @@ describe('Session', () => {
         expect(next).to.equal(nextUnitId)
 
         const { _id, ...progress } = await ProgressCollection.findOneAsync()
-        expect(progress).to.deep.equal({
-          userId,
-          fieldId,
-          unitSets: [
-            {
+        expect(progress.userId).to.equal(userId)
+        expect(progress.fieldId).to.equal(fieldId)
+        expect(progress.unitSets.length).to.equal(1)
+        const { createdAt, ...entry} = progress.unitSets[0]
+        expect(createdAt).to.be.instanceOf(Date)
+        expect(entry).to.deep.equal({
               _id: unitSet,
               dimensionId,
               competencies: 1,
               complete: false,
               progress: 4,
-            },
-          ],
         })
       })
     })
