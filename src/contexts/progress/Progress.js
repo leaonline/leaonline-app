@@ -125,7 +125,14 @@ onServerExec(() => {
 
     if (unitSetId && dimensionId) {
       const createdAt = new Date()
-      unitSets.push({ _id: unitSetId, dimensionId, progress, competencies, complete, createdAt })
+      unitSets.push({
+        _id: unitSetId,
+        dimensionId,
+        progress,
+        competencies,
+        complete,
+        createdAt,
+      })
     }
 
     return getCollection(Progress.name).insertAsync({
@@ -188,11 +195,18 @@ onServerExec(() => {
             [`unitSets.${index}.complete`]: complete,
             [`unitSets.${index}.completedAt`]: complete ? timestamp : undefined,
             [`unitSets.${index}.updatedAt`]: timestamp,
-          }
+          },
         }
       : {
           $push: {
-            unitSets: { _id: unitSetId, dimensionId, competencies, complete, progress, createdAt: timestamp },
+            unitSets: {
+              _id: unitSetId,
+              dimensionId,
+              competencies,
+              complete,
+              progress,
+              createdAt: timestamp,
+            },
           },
         }
     log('unit set', { index, updateDoc })

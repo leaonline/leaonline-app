@@ -342,14 +342,14 @@ describe('Session', () => {
         expect(progress.userId).to.equal(userId)
         expect(progress.fieldId).to.equal(fieldId)
         expect(progress.unitSets.length).to.equal(1)
-        const { createdAt, ...entry} = progress.unitSets[0]
+        const { createdAt, ...entry } = progress.unitSets[0]
         expect(createdAt).to.be.instanceOf(Date)
         expect(entry).to.deep.equal({
-              _id: unitSet,
-              dimensionId,
-              competencies: 1,
-              complete: false,
-              progress: 4,
+          _id: unitSet,
+          dimensionId,
+          competencies: 1,
+          complete: false,
+          progress: 4,
         })
       })
     })

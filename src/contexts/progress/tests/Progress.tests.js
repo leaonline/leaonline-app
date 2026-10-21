@@ -45,7 +45,7 @@ describe('Progress', () => {
     restoreCollections()
   })
   beforeEach(async () => {
-    clock = sinon.useFakeTimers();
+    clock = sinon.useFakeTimers()
     await ProgressCollection.removeAsync({})
     await FieldCollection.removeAsync({})
   })
@@ -71,7 +71,7 @@ describe('Progress', () => {
             progress: insertDoc.progress,
             competencies: insertDoc.competencies,
             complete: insertDoc.complete,
-            createdAt: now
+            createdAt: now,
           },
         ],
       })
@@ -87,14 +87,16 @@ describe('Progress', () => {
         _id: progressId,
         userId: updateDoc.userId,
         fieldId: updateDoc.fieldId,
-        unitSets: [{
-          _id: updateDoc.unitSetId,
-          competencies: updateDoc.competencies,
-          complete: false,
-          dimensionId: updateDoc.dimensionId,
-          progress: updateDoc.progress,
-          createdAt: now
-        }],
+        unitSets: [
+          {
+            _id: updateDoc.unitSetId,
+            competencies: updateDoc.competencies,
+            complete: false,
+            dimensionId: updateDoc.dimensionId,
+            progress: updateDoc.progress,
+            createdAt: now,
+          },
+        ],
       })
     })
     it('updates an existing Progress doc', async () => {
@@ -102,7 +104,7 @@ describe('Progress', () => {
       clock.setSystemTime(now)
       const insertDoc = createDoc({
         progress: 256,
-        competencies: 512
+        competencies: 512,
       })
       const progressId = await Progress.create(insertDoc)
 
@@ -160,7 +162,7 @@ describe('Progress', () => {
             complete: true,
             createdAt: now,
             completedAt: now,
-            updatedAt: now
+            updatedAt: now,
           },
           {
             _id: newUnitSetId,
@@ -168,7 +170,7 @@ describe('Progress', () => {
             progress: 128,
             competencies: 256,
             complete: false,
-            createdAt: now
+            createdAt: now,
           },
         ],
       })

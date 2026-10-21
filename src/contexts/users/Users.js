@@ -215,7 +215,6 @@ Users.methods.create = {
       const updateDoc = { restore, terms, isDev }
 
       await getUsersCollection().updateAsync(newUserId, { $set: updateDoc })
-      console.debug('create new user', username, restore)
 
       // validate the new account with the created credentials
       const credentials = { user: { username }, password }

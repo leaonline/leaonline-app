@@ -51,6 +51,23 @@ describe('Users', () => {
           details: { userId },
         })
       })
+      it('throws if terms and conditions are not checked', async () => {
+        const voice = coin() ? 'de-DE-test' : undefined
+        const speed = coin() ? 1.0 : undefined
+        const isDev = coin()
+        const device = coin() ? { vendor: 'foo' } : undefined
+        const termsAndConditionsIsChecked = false
+
+        await expectThrown({
+          fn: () =>
+            run.call(
+              {},
+              { voice, speed, isDev, device, termsAndConditionsIsChecked },
+            ),
+          name: createUser.error,
+          reason: 'termsAndConditionsIsChecked.false',
+        })
+      })
       it('creates a new user and logs them in', async () => {
         let runLoginHandlersCalled = false
         let loginUserCalled = false
@@ -67,7 +84,7 @@ describe('Users', () => {
         })
         stub(Accounts, '_loginUser', (self, newUserId) => {
           loginUserCalled = true
-          return newUserId
+          return { _id: newUserId }
         })
 
         await iterateAsync(3, async () => {
@@ -77,19 +94,25 @@ describe('Users', () => {
           const speed = coin() ? 1.0 : undefined
           const isDev = coin()
           const device = coin() ? { vendor: 'foo' } : undefined
-          const newUserId = await run.call({}, { voice, speed, isDev, device })
-          const terms = undefined
+          const termsAndConditionsIsChecked = true
+
+          // create call
+          const loginCredentials = await run.call(
+            {},
+            { voice, speed, isDev, device, termsAndConditionsIsChecked },
+          )
+          const newUserId = loginCredentials._id
+          expect(newUserId).to.be.a('string')
+
           const userDoc = await getUsersCollection().findOneAsync(newUserId)
-          const { username, restore, createdAt, services, ...doc } = userDoc
+          const { username, restore, createdAt, services, terms, ...doc } =
+            userDoc
           expect(doc).to.deep.equal({
             _id: newUserId,
-            voice,
-            speed,
             isDev,
-            device,
-            terms,
           })
           expect(createdAt).to.be.instanceOf(Date)
+          expect(terms).to.be.instanceOf(Date)
           expect(username).to.be.a('string')
           expect(restore.includes('foo-bar-baz-')).to.equal(true)
           expect(loginUserCalled).to.equal(true)

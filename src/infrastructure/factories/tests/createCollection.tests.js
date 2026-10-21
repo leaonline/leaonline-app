@@ -5,6 +5,7 @@ import { createCollection } from '../createCollection'
 import { getCollection } from '../../../api/utils/getCollection'
 import { getLocalCollection } from '../../../api/utils/getLocalCollection'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
+import { LocalCollections } from '../../../api/collections/LocalCollections'
 
 describe(createCollection.name, () => {
   it('creates a new collection', async () => {
@@ -16,7 +17,7 @@ describe(createCollection.name, () => {
     expect(getCollection(name)).to.equal(collection)
     expect(getLocalCollection(name)).to.equal(undefined)
     await expectThrown({
-      fn: () => collection.insert({}),
+      fn: () => collection.insertAsync({}),
       message: 'Foo is required',
     })
   })
@@ -30,7 +31,7 @@ describe(createCollection.name, () => {
     expect(getCollection(name)).to.equal(undefined)
     expect(getLocalCollection(name)).to.equal(collection)
     await expectThrown({
-      fn: () => collection.insert({}),
+      fn: () => collection.insertAsync({}),
       message: 'Foo is required',
     })
   })
@@ -41,6 +42,7 @@ describe(createCollection.name, () => {
       isLocal: true,
       schema: { foo: String },
     })
+    expect(LocalCollections.has(name)).to.be.true
     expect(
       createCollection({
         name,

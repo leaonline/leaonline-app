@@ -56,15 +56,6 @@ describe('Response', () => {
         itemId: Random.id(),
         itemType: Random.id(),
         page: 1,
-        scores: [
-          {
-            competency: [Random.id()],
-            correctResponse: ['foo', 1, /foo/g],
-            isUndefined: false,
-            score: true,
-            value: ['foo', 1],
-          },
-        ],
       }
       const userId = Random.id()
       await method._execute({ userId }, { ...responseDoc })
