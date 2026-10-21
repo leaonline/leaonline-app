@@ -1,4 +1,4 @@
-name: Backend
+name: Test Suite
 
 on:
   push:
@@ -6,43 +6,55 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  code-quality: write
+
 jobs:
   lintcode:
-    name: Backend JS lint
+    name: App JS lint
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
-          cache-dependency-path: 'backend/package-lock.json'
+          cache-dependency-path: 'src/package-lock.json'
 
-      - run: cd backend && npm ci --legacy-peer-deps --force
-      - run: cd backend && npm run lint:code
+      - run: |
+          cd src
+          npm ci --legacy-peer-deps --force
+          npm run lint:code
+          npm run format:code
 
   tests:
-    name: Backend Meteor Tests
+    name: App Meteor Tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout leaonline:corelib repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: leaonline/corelib
-          path: github/corelib
+          path: src/packages/corelib
 
+      - name: Checkout leaonline:ui repo
+        uses: actions/checkout@v7
+        with:
+          repository: leaonline/ui
+          path: src/packages/ui
 
       - name: Checkout leaonline:service-registry repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: leaonline/service-registry
-          path: github/service-registry
+          path: src/packages/service-registry
 
       # CACHING
       - name: Install Meteor
@@ -50,7 +62,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.meteor
-          key: v3-meteor-${{ hashFiles('.meteor/versions') }}
+          key: v3-meteor-${{ hashFiles('src/.meteor/versions') }}
           restore-keys: |
             v3-meteor-
 
@@ -59,10 +71,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            .meteor/local/resolver-result-cache.json
-            .meteor/local/plugin-cache
-            .meteor/local/isopacks
-            .meteor/local/bundler-cache/scanner
+            src/.meteor/local/resolver-result-cache.json
+            src/.meteor/local/plugin-cache
+            src/.meteor/local/isopacks
+            src/.meteor/local/bundler-cache/scanner
           key: v3-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
             v3-meteor_build_cache-
@@ -70,20 +82,33 @@ jobs:
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v2
         with:
-          meteor-release: '3.0.2'
+          meteor-release: '3.4'
 
       - name: Install NPM Dependencies
-        run: cd backend && meteor npm ci --legacy-peer-deps --force
+        run: |
+          cd src
+          meteor npm ci --legacy-peer-deps --force
 
       - name: Run Tests
-        run: cd backend && sh ./test.sh -c -o
+        run: |
+          cd src
+          sh ./test.sh -c -o
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-evidence
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            src/.coverage/
 
 # TODO add coverage checks etc.
 #      - name: Upload coverage
 #        uses: actions/upload-artifact@v2
 #        with:
 #          name: coverage-folder
-#          path: backend/.coverage/
+#          path: App/.coverage/
 #
 #  coverage:
 #    name: Coverage report
@@ -97,28 +122,30 @@ jobs:
 #        uses: actions/download-artifact@v2
 #        with:
 #          name: coverage-folder
-#          path: backend/.coverage/
+#          path: App/.coverage/
 #
 #
 #      - name: Coverage Report
 #        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
 #        with:
-#          path: ".coverage/lcov.info"
+#          path: "src/.coverage/lcov.info"
 #          min_coverage: 95 # TODO increase to 95!
 
   docs:
-    name: Backend Build Docs
+    name: App Build Docs
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
-          cache-dependency-path: 'backend/package-lock.json'
+          cache-dependency-path: 'src/package-lock.json'
 
-      - run: cd backend && npm ci --legacy-peer-deps --force
-      - run: cd backend && npm run build:docs
+      - run: |
+          cd src
+          npm ci --legacy-peer-deps --force
+          npm run build:docs

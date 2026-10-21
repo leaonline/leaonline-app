@@ -15,7 +15,10 @@ import { ServiceRegistry } from '../api/remotes/ServiceRegistry'
 import { Legal } from '../contexts/legal/Legal'
 import { Unit } from '../contexts/content/Unit'
 import { Feedback } from '../contexts/feedback/Feedback'
-import { rateLimitMethods, rateLimitMethod } from '../infrastructure/factories/rateLimit'
+import {
+  rateLimitMethods,
+  rateLimitMethod,
+} from '../infrastructure/factories/rateLimit'
 import { getServiceLang } from '../api/i18n/getLang'
 import { Achievements } from '../contexts/achievements/Achievements'
 import { MapIcons } from '../contexts/map/MapIcons'
@@ -30,20 +33,20 @@ import { ClientConnection } from '../contexts/connection/ClientConnection'
 import { UnitSetAppraisal } from '../contexts/appraisal/UnitSetAppraisal'
 import { Errors } from '../contexts/errors/Errors'
 
-const register = ctx => {
+const register = (ctx) => {
   if (!ContextRegistry.has(ctx.name)) {
     ContextRegistry.add(ctx.name, ctx)
   }
 }
 
-const init = ctx => {
+const init = (ctx) => {
   if (typeof ctx.init === 'function') {
     ctx.init()
   }
 }
 
 // create with collections
-ContentServer.contexts().forEach(ctx => {
+ContentServer.contexts().forEach((ctx) => {
   createCollection(ctx)
   register(ctx)
 })
@@ -64,7 +67,8 @@ ContentServer.contexts().forEach(ctx => {
   ServerErrors,
   ClientErrors,
   UnitSetAppraisal,
-  Feedback].forEach(ctx => {
+  Feedback,
+].forEach((ctx) => {
   createCollection(ctx)
   register(ctx)
   init(ctx)
@@ -93,15 +97,16 @@ const methodContexts = [
   ClientErrors,
   ClientConnection,
   UnitSetAppraisal,
-  Order]
+  Order,
+]
 
 if (Meteor.settings.isStaging) {
   methodContexts.push(DevData)
 }
 
-methodContexts.forEach(ctx => {
+methodContexts.forEach((ctx) => {
   const methods = Object.values(ctx.methods)
-  methods.forEach(method => {
+  methods.forEach((method) => {
     createMethod(method)
 
     if (method.isPublic) {
@@ -112,12 +117,21 @@ methodContexts.forEach(ctx => {
 })
 
 // register these contexts for auto-sync with the app
-;[Field, Dimension, Level, Legal, MapIcons, Feedback, Order, Achievements].forEach(ctx => SyncState.register(ctx))
+;[
+  Field,
+  Dimension,
+  Level,
+  Legal,
+  MapIcons,
+  Feedback,
+  Order,
+  Achievements,
+].forEach((ctx) => SyncState.register(ctx))
 
 ServiceRegistry.init({
   icon: 'mobile',
   label: 'apps.app.title',
-  description: 'apps.app.description'
+  description: 'apps.app.description',
 })
 
 const { defaultLang } = Meteor.settings
@@ -139,5 +153,5 @@ ServiceRegistry.register(Dimension)
 ServiceRegistry.register(Field)
 
 const methods = Object.values(ServiceRegistry.methods)
-methods.forEach(method => createMethod(method))
+methods.forEach((method) => createMethod(method))
 rateLimitMethods(methods)

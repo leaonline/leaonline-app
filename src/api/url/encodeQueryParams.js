@@ -1,12 +1,19 @@
-
 const unsupportedChars = /[!'()*]/g
 
-const fixedEncodeURIComponent = str => encodeURIComponent(str)
-  .replace(unsupportedChars, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+const fixedEncodeURIComponent = (str) =>
+  encodeURIComponent(str).replace(
+    unsupportedChars,
+    (c) => '%' + c.charCodeAt(0).toString(16).toUpperCase(),
+  )
 
 const toEncodedParams = ([key, value]) => {
   if (Array.isArray(value)) {
-    return value.map(entry => `${fixedEncodeURIComponent(key)}=${fixedEncodeURIComponent(entry)}`).join('&')
+    return value
+      .map(
+        (entry) =>
+          `${fixedEncodeURIComponent(key)}=${fixedEncodeURIComponent(entry)}`,
+      )
+      .join('&')
   }
 
   return `${fixedEncodeURIComponent(key)}=${fixedEncodeURIComponent(value)}`
@@ -19,6 +26,5 @@ const toEncodedParams = ([key, value]) => {
  * @param params
  * @return {string}
  */
-export const encodeQueryParams = params => Object.entries(params)
-  .map(toEncodedParams)
-  .join('&')
+export const encodeQueryParams = (params) =>
+  Object.entries(params).map(toEncodedParams).join('&')

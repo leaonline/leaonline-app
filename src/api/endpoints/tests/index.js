@@ -1,4 +1,4 @@
 /* eslint-env mocha */
-describe('endpoints', function () {
-  import './createReachabilityurl.tests'
+describe('endpoints', () => {
+  require('./createReachabilityurl.tests')
 })

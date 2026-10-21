@@ -12,5 +12,7 @@ export const publishDefaultAccountFields = async function () {
   // skip this for non-logged in users
   if (!userId) return this.ready()
 
-  return getUsersCollection().find(userId, { fields: { emails: 0, services: 0, device: 0 } })
+  return getUsersCollection().find(userId, {
+    fields: { emails: 0, services: 0, device: 0 },
+  })
 }

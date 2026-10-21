@@ -1,7 +1,7 @@
 let detected
 let types
 
-export const getOSInfo = async function () {
+export const getOSInfo = async () => {
   if (detected) return { detected, types }
   const Detector = (await import('detect-os')).default
   const detector = new Detector()

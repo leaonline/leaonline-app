@@ -3,7 +3,11 @@ import { expect } from 'chai'
 import { Meteor } from 'meteor/meteor'
 import { Email } from 'meteor/email'
 import { notifyUsersAboutError } from '../notifyUsersAboutError'
-import { stub, restoreAll, overrideStub } from '../../../tests/helpers/stubUtils'
+import {
+  stub,
+  restoreAll,
+  overrideStub,
+} from '../../../tests/helpers/stubUtils'
 import { DocNotFoundError } from '../DocNotFoundError'
 import { normalizeError } from '../normalizeError'
 
@@ -15,7 +19,7 @@ const getHtml = (error) => {
   return `<html lang="en"><body>${source}</body></html>`
 }
 
-describe(notifyUsersAboutError.name, function () {
+describe(notifyUsersAboutError.name, () => {
   afterEach(() => {
     restoreAll()
   })
@@ -32,15 +36,17 @@ describe(notifyUsersAboutError.name, function () {
       new Error('foo'),
       new TypeError('bar'),
       new Meteor.Error('foo', 'bar', 'baz'),
-      new DocNotFoundError('foo', 'bar')
+      new DocNotFoundError('foo', 'bar'),
     ]
 
     for (const error of values) {
       for (const type of architectures) {
         const e = normalizeError({ error })
-        overrideStub(Email, 'sendAsync', async options => {
+        overrideStub(Email, 'sendAsync', async (options) => {
           expect(notify).to.include(options.to)
-          expect(options.subject).to.equal(`${appName} (${type}) [error]: ${e.message}`)
+          expect(options.subject).to.equal(
+            `${appName} (${type}) [error]: ${e.message}`,
+          )
           expect(options.replyTo).to.equal(replyTo)
           expect(options.from).to.equal(from)
           expect(options.html).to.equal(getHtml(e))

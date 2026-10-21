@@ -1,43 +1,43 @@
 export const ErrorBaseSchema = {
   userId: {
     type: String,
-    optional: true
+    optional: true,
   },
   createdAt: {
     type: Date,
-    optional: true
+    optional: true,
   },
   isFatal: {
     type: Boolean,
-    optional: true
+    optional: true,
   },
   name: {
     type: String,
-    optional: true
+    optional: true,
   },
   title: {
     type: String,
-    optional: true
+    optional: true,
   },
   type: {
     type: String,
-    optional: true
+    optional: true,
   },
   message: {
     type: String,
-    optional: true
+    optional: true,
   },
   reason: {
     type: String,
-    optional: true
+    optional: true,
   },
   details: {
     type: Object,
     blackbox: true,
-    optional: true
+    optional: true,
   },
   stack: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 }

@@ -10,7 +10,7 @@ import { MapData } from '../../map/MapData'
 import { Session } from '../../session/Session'
 import {
   restoreCollections,
-  stubCollection
+  stubCollection,
 } from '../../../tests/helpers/stubCollection'
 import { Unit } from '../Unit'
 
@@ -26,13 +26,13 @@ const allCollections = [
   LevelCollection,
   MapCollection,
   SessionCollection,
-  UnitCollection
+  UnitCollection,
 ]
-describe('Content', function () {
-  before(function () {
+describe('Content', () => {
+  before(() => {
     stubCollection(allCollections)
   })
-  after(function () {
+  after(() => {
     restoreCollections()
   })
 
@@ -42,65 +42,77 @@ describe('Content', function () {
     }
   })
 
-  describe(Content.methods.home.name, function () {
+  describe(Content.methods.home.name, () => {
     const home = Content.methods.home.run
 
-    it('returns nothing if no flag is true', async function () {
+    it('returns nothing if no flag is true', async () => {
       const data = await home({})
       expect(data).to.deep.equal({
         field: [],
         dimension: [],
-        level: []
+        level: [],
       })
     })
-    it('returns docs if true', async function () {
+    it('returns docs if true', async () => {
       await FieldCollection.insertAsync({ title: 'foo' })
       await DimensionCollection.insertAsync({ title: 'foo' })
       await LevelCollection.insertAsync({ title: 'foo' })
 
-      const data = await home.call({}, { field: true, dimension: true, level: true })
+      const data = await home.call(
+        {},
+        { field: true, dimension: true, level: true },
+      )
       expect(data).to.deep.equal({
         field: [await FieldCollection.findOneAsync()],
         dimension: [await DimensionCollection.findOneAsync()],
-        level: [await LevelCollection.findOneAsync()]
+        level: [await LevelCollection.findOneAsync()],
       })
     })
   })
-  describe(Content.methods.map.name, function () {
+  describe(Content.methods.map.name, () => {
     const map = Content.methods.map.run
 
-    it('returns the current map data for a given field', async function () {
+    it('returns the current map data for a given field', async () => {
       const fieldId = await FieldCollection.insertAsync({ title: 'foo' })
-      const mapId = await MapCollection.insertAsync({ field: fieldId, foo: 'bar' })
+      const mapId = await MapCollection.insertAsync({
+        field: fieldId,
+        foo: 'bar',
+      })
       const mapData = await map.call({}, { fieldId })
       expect(mapData).to.deep.equal({
         _id: mapId,
         field: fieldId,
-        foo: 'bar'
+        foo: 'bar',
       })
     })
   })
-  describe(Content.methods.session.name, function () {
+  describe(Content.methods.session.name, () => {
     const run = Content.methods.session.run
 
-    it('returns the current session screen data', async function () {
+    it('returns the current session screen data', async () => {
       const unitSetId = Random.id()
       const userId = Random.id()
-      const sessionId = await SessionCollection.insertAsync({ userId, unitSet: unitSetId })
-      const { sessionDoc, unitDoc, unitSetDoc } = await run.call({ userId }, { unitSetId })
+      const sessionId = await SessionCollection.insertAsync({
+        userId,
+        unitSet: unitSetId,
+      })
+      const { sessionDoc, unitDoc, unitSetDoc } = await run.call(
+        { userId },
+        { unitSetId },
+      )
       expect(sessionDoc).to.deep.equal({
         _id: sessionId,
         userId,
-        unitSet: unitSetId
+        unitSet: unitSetId,
       })
       expect(unitDoc).to.equal(undefined)
       expect(unitSetDoc).to.equal(undefined)
     })
   })
-  describe(Content.methods.unit.name, function () {
+  describe(Content.methods.unit.name, () => {
     const run = Content.methods.unit.run
 
-    it('returns a specific unit doc', async function () {
+    it('returns a specific unit doc', async () => {
       const unitId = await UnitCollection.insertAsync({ title: Random.id() })
       const doc = await UnitCollection.findOneAsync(unitId)
       expect(doc).to.not.equal(undefined)

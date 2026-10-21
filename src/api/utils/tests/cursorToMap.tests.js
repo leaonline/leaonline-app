@@ -5,15 +5,11 @@ import { Random } from 'meteor/random'
 import { Mongo } from 'meteor/mongo'
 import { forEachAsync } from '../../../infrastructure/async/forEachAsync'
 
-describe(cursorToMap.name, function () {
+describe(cursorToMap.name, () => {
   it('creates a map of all docs', async () => {
     const collection = new Mongo.Collection(null)
-    const docs = [
-      { foo: 'bar' },
-      { bar: 'baz' },
-      { baz: 'moo' }
-    ]
-    await forEachAsync(docs, doc => collection.insertAsync(doc))
+    const docs = [{ foo: 'bar' }, { bar: 'baz' }, { baz: 'moo' }]
+    await forEachAsync(docs, (doc) => collection.insertAsync(doc))
 
     const allDocs = await collection.find().fetchAsync()
     const map = await cursorToMap(collection.find())

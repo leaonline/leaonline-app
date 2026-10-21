@@ -1,5 +1,5 @@
 import { ServiceRegistry } from '../../api/remotes/ServiceRegistry'
-import SimpleSchema from 'simpl-schema'
+import SimpleSchema from 'meteor/aldeed:simple-schema'
 
 const schemaOptions = Object.keys(ServiceRegistry.schemaOptions)
 schemaOptions.push('autoform')
@@ -14,10 +14,10 @@ const defaultOptions = {
     getAutoValues: true,
     removeEmptyStrings: true,
     removeNullsFromArrays: false,
-    trimStrings: true
+    trimStrings: true,
   },
   humanizeAutoLabels: false,
-  requiredByDefault: true
+  requiredByDefault: true,
 }
 
 /**

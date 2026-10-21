@@ -2,7 +2,8 @@ import { Unit } from '../contexts/content/Unit'
 import { ContentServer } from '../api/remotes/content/ContentServer'
 import crypto from 'crypto'
 
-const md5 = str => crypto.createHash('md5').update(str).digest('hex').toString()
+const md5 = (str) =>
+  crypto.createHash('md5').update(str).digest('hex').toString()
 const hashes = new Set()
 const { beforeSyncUpsert, syncEnd } = ContentServer.hooks
 

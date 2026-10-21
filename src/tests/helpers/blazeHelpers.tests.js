@@ -3,13 +3,12 @@ import { TTSEngine } from 'meteor/leaonline:corelib/tts/TTSEngine'
 import { Template } from 'meteor/templating'
 import { Tracker } from 'meteor/tracker'
 
-const withDiv = function withDiv (callback) {
+const withDiv = function withDiv(callback) {
   const el = document.createElement('div')
   document.body.appendChild(el)
   try {
     callback(el)
-  }
-  finally {
+  } finally {
     document.body.removeChild(el)
   }
 }
@@ -17,10 +16,10 @@ const withDiv = function withDiv (callback) {
 export const asyncTimeout = (ms) =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
-export const withRenderedTemplate = function withRenderedTemplate (
+export const withRenderedTemplate = function withRenderedTemplate(
   template,
   data,
-  callback
+  callback,
 ) {
   withDiv((el) => {
     const ourTemplate =
@@ -67,8 +66,7 @@ export const createTemplateRenderingContext = () => {
     TTSEngine.isConfigured = originalIsConfigured
     if (hadIntersectionObserver) {
       globalThis.IntersectionObserver = originalIntersectionObserver
-    }
-    else {
+    } else {
       delete globalThis.IntersectionObserver
     }
   }
@@ -86,13 +84,13 @@ export const createTemplateRenderingContext = () => {
       bubbles: true,
       cancelable: true,
       clientX: 1,
-      clientY: 1
+      clientY: 1,
     }
 
     el.dispatchEvent(new MouseEvent('pointerover', opts))
     el.dispatchEvent(new MouseEvent('mouseover', opts))
     el.dispatchEvent(
-      new MouseEvent('pointerenter', { ...opts, bubbles: false })
+      new MouseEvent('pointerenter', { ...opts, bubbles: false }),
     )
     el.dispatchEvent(new MouseEvent('mouseenter', { ...opts, bubbles: false }))
   }
@@ -108,7 +106,7 @@ export const createTemplateRenderingContext = () => {
     teardown,
     render,
     setup,
-    fire
+    fire,
   }
 }
 

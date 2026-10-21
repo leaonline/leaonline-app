@@ -4,7 +4,7 @@ import { Router } from './Router'
 export const createTrigger = (condition, getRedirectRoute) => {
   check(condition, Function)
   check(getRedirectRoute, Function)
-  return function routeTrigger () {
+  return function routeTrigger() {
     if (condition()) {
       const location = Router.location()
       const encodedLocation = encodeURIComponent(location)

@@ -8,26 +8,26 @@ Template.notFound.onCreated(function () {
     tts: true,
     language: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
-    onComplete () {
+    onComplete() {
       instance.state.set('dependenciesComplete', true)
-    }
+    },
   })
 })
 
 Template.notFound.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.getState('dependenciesComplete')
-  }
+  },
 })
 
 Template.notFound.events({
-  'click .lea-pagenotfound-button' (event, templateInstance) {
+  'click .lea-pagenotfound-button'(event, templateInstance) {
     event.preventDefault()
 
     fadeOut('.lea-pagenotfound-container', templateInstance, () => {
       templateInstance.data.next()
     })
-  }
+  },
 })

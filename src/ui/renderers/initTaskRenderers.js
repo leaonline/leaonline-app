@@ -16,14 +16,14 @@ export const initTaskRenderers = () => {
 
   TaskRenderers.init({
     markdown: {
-      renderer: async txt => {
+      renderer: async (txt) => {
         const mdOptions = { input: txt, renderer: defaultMarkdownRendererName }
         return LeaMarkdown.parse(mdOptions)
-      }
-    }
+      },
+    },
   })
     .then(() => renderersLoaded.set(true))
-    .catch(e => console.error(e))
+    .catch((e) => console.error(e))
 
   return renderersLoaded
 }

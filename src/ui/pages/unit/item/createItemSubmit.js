@@ -3,6 +3,17 @@ import { Response } from '../../../../contexts/response/Response'
 import { getProperty } from '../../../../utils/object/getProperty'
 
 /**
+ * @callback ItemSubmit
+ * @param {Object} options
+ * @param {string} options.sessionId The current session id.
+ * @param {Object} options.unitDoc The current unit document.
+ * @param {string} options.dimensionId The current dimension id.
+ * @param {number} options.page The current page index.
+ * @param {*} options.scores Scores to submit with each response.
+ * @returns {Promise.<Array.<*>>}
+ */
+
+/**
  * Returns a submit function that restores values from cache and sends them
  * to the server.
  * @param loadValue {Function}
@@ -10,9 +21,15 @@ import { getProperty } from '../../../../utils/object/getProperty'
  * @param receive {Function}
  * @param onSuccess {Function}
  * @param onError {Function}
- * @return {function({sessionId?: *, unitDoc: *, page?: *}): *}
+ * @return {ItemSubmit}
  */
-export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSuccess }) => {
+export const createItemSubmit = ({
+  loadValue,
+  prepare,
+  receive,
+  onError,
+  onSuccess,
+}) => {
   /**
    *
    * @param sessionId {String} The current {Session} id
@@ -29,7 +46,7 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
 
     // xxx: circumvent special case, where there is no pages or no content
     if (Array.isArray(contentPage?.content)) {
-      contentPage.content.forEach(entry => {
+      contentPage.content.forEach((entry) => {
         // we iterate the full page structure
         // so we skip on any content
         // that is not flagged as item type
@@ -45,30 +62,31 @@ export const createItemSubmit = ({ loadValue, prepare, receive, onError, onSucce
           page,
           itemId: contentId,
           itemType,
-          responses: (responseValue?.responses) || [],
-          scores
+          responses: responseValue?.responses || [],
+          scores,
         })
       })
     }
-    debugger
-    return Promise.all(allResponseDocs.map(responseDoc =>
-      callMethod({
-        name: Response.methods.submit.name,
-        args: responseDoc,
-        prepare: () => {
-          console.debug('[submit item]:', responseDoc)
-          if (prepare) prepare(responseDoc)
-        },
-        receive: () => {
-          if (receive) prepare(receive)
-        },
-        failure: error => {
-          if (onError) onError(error, responseDoc)
-        },
-        success: result => {
-          if (onSuccess) onSuccess(result, responseDoc)
-        }
-      })
-    ))
+    return Promise.all(
+      allResponseDocs.map((responseDoc) =>
+        callMethod({
+          name: Response.methods.submit.name,
+          args: responseDoc,
+          prepare: () => {
+            console.debug('[submit item]:', responseDoc)
+            if (prepare) prepare(responseDoc)
+          },
+          receive: () => {
+            if (receive) prepare(receive)
+          },
+          failure: (error) => {
+            if (onError) onError(error, responseDoc)
+          },
+          success: (result) => {
+            if (onSuccess) onSuccess(result, responseDoc)
+          },
+        }),
+      ),
+    )
   }
 }

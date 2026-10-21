@@ -6,7 +6,7 @@ import {
   testGetMethod,
   testInsert,
   testRemove,
-  testUpdate
+  testUpdate,
 } from '../../../tests/helpers/backendMethods'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
 import { Field } from '../../content/Field'
@@ -18,15 +18,15 @@ const FieldCollection = initTestCollection(Field)
 const createDoc = ({ fieldId, icons } = {}) => {
   return {
     fieldId: fieldId ?? Random.id(),
-    icons: icons ?? ['foo', 'bar', 'baz']
+    icons: icons ?? ['foo', 'bar', 'baz'],
   }
 }
-describe(MapIcons.name, function () {
+describe(MapIcons.name, () => {
   setupAndTeardown([MapIconsCollection, FieldCollection])
-  describe('methods', function () {
+  describe('methods', () => {
     testInsert(MapIcons, {
       factory: createDoc,
-      expectSync: true
+      expectSync: true,
     })
     testUpdate(MapIcons, {
       factory: () => {
@@ -35,11 +35,11 @@ describe(MapIcons.name, function () {
         const updateDoc = { fieldId, icons: ['foo'] }
         return { insertDoc, updateDoc }
       },
-      expectSync: true
+      expectSync: true,
     })
     testRemove(MapIcons, {
       factory: createDoc,
-      expectSync: true
+      expectSync: true,
     })
     testGetMethod(MapIcons)
     testGetAllMethod(MapIcons, {
@@ -55,9 +55,9 @@ describe(MapIcons.name, function () {
             const ids = [...createIdSet(docs, 'fieldId')]
             return { _id: { $in: ids } }
           },
-          factory: () => ({ title: Random.id(), shortCode: 'al' })
-        }
-      }
+          factory: () => ({ title: Random.id(), shortCode: 'al' }),
+        },
+      },
     })
   })
 })

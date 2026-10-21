@@ -1,4 +1,5 @@
 /* eslint-env mocha */
-describe('pages', function () {
-  import '../complete/tests'
+describe('pages', () => {
+  require('../complete/tests')
+  require('../map/tests')
 })

@@ -38,5 +38,5 @@ export const updateUserProfile = async ({ userId, voice, speed, device }) => {
 
 const log = createLog({
   name: updateUserProfile.name,
-  type: 'log'
+  type: 'log',
 })

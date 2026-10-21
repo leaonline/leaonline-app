@@ -5,7 +5,7 @@ import { Random } from 'meteor/random'
 import { restoreAll, stub } from '../../../tests/helpers/stubUtils'
 import { DocNotFoundError } from '../../errors/DocNotFoundError'
 
-describe(ensureDocument.name, function () {
+describe(ensureDocument.name, () => {
   afterEach(() => {
     restoreAll()
   })
@@ -15,9 +15,10 @@ describe(ensureDocument.name, function () {
     const name = 'foobar'
     const details = { foo: 'bar' }
 
-    ;[undefined, null].forEach(document => {
-      const thrown = expect(() => ensureDocument({ name, details, docId, document }))
-        .to.throw('errors.docNotFound')
+    ;[undefined, null].forEach((document) => {
+      const thrown = expect(() =>
+        ensureDocument({ name, details, docId, document }),
+      ).to.throw('errors.docNotFound')
       thrown.with.property('reason', 'document.notFoundById')
       thrown.with.deep.property('details', { name, docId, ...details })
     })

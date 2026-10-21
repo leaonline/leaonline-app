@@ -6,4 +6,4 @@ import { Meteor } from 'meteor/meteor'
  * @return {*|undefined} returns whether the function returns or undefined on client
  * @module onServerExec
  */
-export const onServerExec = fn => Meteor.isServer ? fn() : undefined
+export const onServerExec = (fn) => (Meteor.isServer ? fn() : undefined)

@@ -2,26 +2,25 @@ import { getCollection } from '../../api/utils/getCollection'
 import { createIdSet } from '../../api/utils/createIdSet'
 
 class DependencyBuilder {
-  constructor ({ allowEmptyDocs = false, allowEmptyDeps = false } = {}) {
+  constructor({ allowEmptyDocs = false, allowEmptyDeps = false } = {}) {
     this.added = new Map()
     this.allowEmptyDocs = allowEmptyDocs
     this.allowEmptyDeps = allowEmptyDeps
-    return this
   }
 
-  add (ctx, ...fieldNames) {
+  add(ctx, ...fieldNames) {
     if (!this.added.has(ctx.name)) {
       this.added.set(ctx.name, fieldNames)
     }
     return this
   }
 
-  output (target) {
+  output(target) {
     this.destination = target
     return this
   }
 
-  async run ({ docs, dependencies }) {
+  async run({ docs, dependencies }) {
     const skipDocs = !docs?.length && !this.allowEmptyDocs
     const skipDeps = !dependencies?.length && !this.allowEmptyDeps
     if (skipDocs || skipDeps) {

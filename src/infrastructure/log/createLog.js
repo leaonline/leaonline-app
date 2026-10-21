@@ -5,25 +5,24 @@ import { isomorph } from 'meteor/leaonline:corelib/utils/arch'
 const internal = {
   error: {
     level: 0,
-    run: (...args) => console.error(...args)
+    run: (...args) => console.error(...args),
   },
   warn: {
     level: 1,
-    run: (...args) => console.warn(...args)
+    run: (...args) => console.warn(...args),
   },
   log: {
     level: 2,
-    run: (...args) => console.log(...args)
-
+    run: (...args) => console.log(...args),
   },
   info: {
     level: 3,
-    run: (...args) => console.info(...args)
+    run: (...args) => console.info(...args),
   },
   debug: {
     level: 4,
-    run: (...args) => console.debug(...args)
-  }
+    run: (...args) => console.debug(...args),
+  },
 }
 
 /**
@@ -44,14 +43,7 @@ const internal = {
  */
 export const createLog = isomorph({
   onServer: () => {
-    import chalk from 'chalk'
     const logLevel = Meteor.settings.log.level
-
-    internal.error.color = s => chalk.red(s)
-    internal.warn.color = s => chalk.yellow(s)
-    internal.log.color = s => chalk.blue(s)
-    internal.info.color = s => chalk.gray(s)
-    internal.debug.color = s => chalk.magenta(s)
 
     const getLine = () => {
       const stack = new Error().stack
@@ -62,8 +54,14 @@ export const createLog = isomorph({
           return 'file: "eval"'
         }
 
-        if (!line.match(/(infrastructure\/log\/createLog)|(environmentExtensionMixin)/)) {
-          return line.replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '').replace(/[()]+/g, '')
+        if (
+          !line.match(
+            /(infrastructure\/log\/createLog)|(environmentExtensionMixin)/,
+          )
+        ) {
+          return line
+            .replace(/\s*at\s*[a-zA-Z0-9._-]+\s*/, '')
+            .replace(/[()]+/g, '')
         }
       }
     }
@@ -85,8 +83,7 @@ export const createLog = isomorph({
 
       return (...args) => {
         const line = getLine()
-        const info = logType.color(`${typeName} ${line}`)
-        logType.run(info, logName, ...args)
+        logType.run(logName, ...args)
       }
     }
   },
@@ -111,5 +108,5 @@ export const createLog = isomorph({
         logType.run(typeName, logName, ...args)
       }
     }
-  }
+  },
 })

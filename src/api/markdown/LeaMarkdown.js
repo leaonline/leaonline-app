@@ -8,7 +8,7 @@ const defaultOptions = {
   breaks: true,
   gfm: true,
   async: true,
-  headerIds: false
+  headerIds: false,
 }
 
 LeaMarkdown.addRenderer = (name, impl) => {
@@ -24,7 +24,7 @@ LeaMarkdown.parse = async ({ input, options, renderer }) => {
     value.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, ''),
     {
       ...defaultOptions,
-      renderer: rendererImpl
-    }
+      renderer: rendererImpl,
+    },
   )
 }

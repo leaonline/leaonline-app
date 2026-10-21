@@ -1,4 +1,4 @@
-import SimpleSchema from 'simpl-schema'
+import SimpleSchema from 'meteor/simple-schema'
 
 /**
  * Checks, whether a schema is instance of SimpleSchema
@@ -8,4 +8,4 @@ import SimpleSchema from 'simpl-schema'
  * @function
  * @module isSchemaInstance
  */
-export const isSchemaInstance = schema => schema instanceof SimpleSchema
+export const isSchemaInstance = (schema) => schema instanceof SimpleSchema

@@ -1,28 +1,30 @@
 /* eslint-env mocha */
 /* global $ */
 import { expect } from 'chai'
-import { UITests } from '../../../../../tests/ui-helpers.tests'
+import { createRendererTestContext } from '../../../../tests/helpers/rendererHelpers.tests'
 import '../container'
+import { asyncTimeout } from '../../../../utils/asyncTimeout'
 
-describe('container', function () {
-  beforeEach(function () {
-    UITests.preRender()
+describe('container', () => {
+  const { setup, render, teardown } = createRendererTestContext()
+  beforeEach(() => {
+    setup()
   })
 
-  afterEach(function () {
-    UITests.postRender()
+  afterEach(() => {
+    teardown()
   })
 
   it('is initially not displayed after being rendered', async function () {
     this.timeout(3000)
 
-    const root = await UITests.withRenderedTemplate('container', {})
+    const root = await render('container', {})
     const container = $(root.firstChild)
 
     expect(container.hasClass('lea-base-container')).to.equal(true)
     expect(container.data('visible')).to.equal(false)
 
-    await UITests.wait(1500)
+    await asyncTimeout(1500)
 
     expect(container.hasClass('lea-base-container')).to.equal(true)
     expect(container.data('visible')).to.equal(true)

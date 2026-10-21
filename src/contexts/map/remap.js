@@ -23,7 +23,7 @@ export const runRemap = async ({ active, dryRun, dimensions } = {}) => {
 
   const FieldsCollection = getCollection(Field.name)
 
-  if (await FieldsCollection.countDocuments({}) === 0) {
+  if ((await FieldsCollection.countDocuments({})) === 0) {
     return false
   }
 
@@ -32,22 +32,37 @@ export const runRemap = async ({ active, dryRun, dimensions } = {}) => {
   const fields = await FieldsCollection.find().fetchAsync()
 
   // create map data for each field
-  await forEachAsync(fields, async field => {
+  await forEachAsync(fields, async (field) => {
     const fieldId = field._id
-    const result = await MapData.create({ field: fieldId, dryRun, dimensionsOrder: dimensions.order })
-    if (!result) return console.warn('runRemap: skip for field', fieldId, field.shortCode, result)
+    const result = await MapData.create({
+      field: fieldId,
+      dryRun,
+      dimensionsOrder: dimensions.order,
+    })
+    if (!result)
+      return console.warn(
+        'runRemap: skip for field',
+        fieldId,
+        field.shortCode,
+        result,
+      )
 
     const mapDoc = await MapData.get({ field: fieldId })
 
     // for every dimension we get max possible
     // progress and competencies and forward them
     // to the Achievements to update
-    await forEachAsync(mapDoc.dimensions, async entry => {
+    await forEachAsync(mapDoc.dimensions, async (entry) => {
       const dimensionId = entry._id
       const { maxProgress, maxCompetencies } = entry
 
       if (maxCompetencies > 0 && maxProgress > 0) {
-        await Achievements.update({ dimensionId, fieldId, maxProgress, maxCompetencies })
+        await Achievements.update({
+          dimensionId,
+          fieldId,
+          maxProgress,
+          maxCompetencies,
+        })
       }
     })
   })

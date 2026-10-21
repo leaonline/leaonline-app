@@ -9,36 +9,36 @@ export const UnitSetAppraisal = {
   name: 'unitSetAppraisal',
   label: 'unitSetAppraisal.title',
   icon: 'thumbs-up',
-  representative: 'dimensionId'
+  representative: 'dimensionId',
 }
 
 UnitSetAppraisal.schema = {
   createdAt: {
-    type: Date
+    type: Date,
   },
   userId: {
-    type: String
+    type: String,
   },
   fieldId: {
     type: String,
     dependency: {
       collection: Field.name,
-      field: Field.representative
-    }
+      field: Field.representative,
+    },
   },
   dimensionId: {
     type: String,
     dependency: {
       collection: Dimension.name,
-      field: Dimension.representative
-    }
+      field: Dimension.representative,
+    },
   },
   unitSetId: {
     type: String,
     dependency: {
       collection: UnitSet.name,
-      field: UnitSet.representative
-    }
+      field: UnitSet.representative,
+    },
   },
   /**
    * Respnse is a likert scale, ranging from 0..5
@@ -52,7 +52,7 @@ UnitSetAppraisal.schema = {
   response: {
     type: Number,
     min: 0,
-    max: 4
+    max: 4,
   },
 
   /**
@@ -61,7 +61,7 @@ UnitSetAppraisal.schema = {
    */
   reason: {
     type: String,
-    optional: true
+    optional: true,
   },
 
   /**
@@ -70,7 +70,7 @@ UnitSetAppraisal.schema = {
    */
   score: {
     type: Number,
-    optional: true
+    optional: true,
   },
 
   /**
@@ -80,8 +80,8 @@ UnitSetAppraisal.schema = {
    */
   sessionId: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 UnitSetAppraisal.methods = {}
@@ -90,7 +90,7 @@ UnitSetAppraisal.methods.send = {
   name: 'unitSetAppraisal.methods.send',
   schema: {
     unitSetId: UnitSetAppraisal.schema.unitSetId,
-    response: UnitSetAppraisal.schema.response
+    response: UnitSetAppraisal.schema.response,
   },
   run: async function ({ unitSetId, response }) {
     const { userId } = this
@@ -100,7 +100,7 @@ UnitSetAppraisal.methods.send = {
       name: UnitSet.name,
       docId: unitSetId,
       document: unitSetDoc,
-      details: { userId }
+      details: { userId },
     })
     const fieldId = unitSetDoc.field
     const dimensionId = unitSetDoc.dimension
@@ -110,9 +110,9 @@ UnitSetAppraisal.methods.send = {
       unitSetId,
       fieldId,
       dimensionId,
-      response
+      response,
     })
-  }
+  },
 }
 
 UnitSetAppraisal.methods.getAll = {
@@ -120,17 +120,19 @@ UnitSetAppraisal.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
   backend: true,
-  run: async function ({ dependencies } = {}) {
-    const docs = await getCollection(UnitSetAppraisal.name).find({}).fetchAsync()
+  run: async ({ dependencies } = {}) => {
+    const docs = await getCollection(UnitSetAppraisal.name)
+      .find({})
+      .fetchAsync()
     const data = { [UnitSetAppraisal.name]: docs }
 
     await onDependencies()
@@ -141,5 +143,5 @@ UnitSetAppraisal.methods.getAll = {
       .run({ dependencies, docs })
 
     return data
-  }
+  },
 }

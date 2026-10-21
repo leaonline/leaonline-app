@@ -1,4 +1,4 @@
 /* eslint-env mocha */
-describe('routing', function () {
-  import './triggers.tests'
+describe('routing', () => {
+  require('./triggers.tests')
 })

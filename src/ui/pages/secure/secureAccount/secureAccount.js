@@ -5,8 +5,8 @@ import { AppStorage } from '../../../storage/AppStorage'
 createTemplate({
   template: Template.secureAccount,
   helpers: {
-    restoreCode () {
+    restoreCode() {
       return AppStorage.get('restore')
-    }
-  }
+    },
+  },
 })

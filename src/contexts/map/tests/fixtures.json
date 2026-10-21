@@ -2,17 +2,13 @@
   "field": [
     {
       "_id": "W2zjTv7icffNaKMhR",
-      "jobs": [
-        "Maschinen- und Anlagenführer*in",
-        "Packmitteltechnologe*in"
-      ],
+      "jobs": ["Maschinen- und Anlagenführer*in", "Packmitteltechnologe*in"],
       "shortCode": "TB",
       "status": 3,
       "title": "Technische Berufe",
       "icon": "tv",
       "isLegacy": false
     }
-
   ],
   "dimension": [
     {
@@ -100,10 +96,7 @@
           "contentId": "vLxFLdkiJowJgNbLN"
         }
       ],
-      "units": [
-        "Y8mvywZuNDek2NJbt",
-        "KmpW9TgT3BExSiyof"
-      ]
+      "units": ["Y8mvywZuNDek2NJbt", "KmpW9TgT3BExSiyof"]
     },
     {
       "_id": "BGBtBe5z45bfte3XJ",
@@ -132,9 +125,7 @@
           "contentId": "28ptgshFQxCRGYCW4"
         }
       ],
-      "units": [
-        "BzM8LFsx7F8ERx3mq"
-      ]
+      "units": ["BzM8LFsx7F8ERx3mq"]
     },
     {
       "_id": "QMLtD5bTHCbJE9EW3",
@@ -163,10 +154,7 @@
           "contentId": "SEmnszwYhyq2Jmy8K"
         }
       ],
-      "units": [
-        "ewiJBH4QB6YF3LiBq",
-        "shsdoEojRmqg8o7mD"
-      ]
+      "units": ["ewiJBH4QB6YF3LiBq", "shsdoEojRmqg8o7mD"]
     },
     {
       "_id": "cEFvL2Dgzu2D4XW3F",
@@ -195,9 +183,7 @@
           "contentId": "Qi3E99iqsGe5XMJFz"
         }
       ],
-      "units": [
-        "8W5KqaJ8qz59rFZmC"
-      ]
+      "units": ["8W5KqaJ8qz59rFZmC"]
     },
     {
       "_id": "pAkQLcMhTHGDp2PL3",
@@ -226,9 +212,7 @@
           "contentId": "E6FCPLuNvgjpxES8E"
         }
       ],
-      "units": [
-        "SvqRmPBqs76oi26i7"
-      ]
+      "units": ["SvqRmPBqs76oi26i7"]
     }
   ],
   "unit": [
@@ -283,34 +267,22 @@
                 "text": "{{blanks$Ö[l]$Öl}} {{blanks$[HLP46]$HLP46}} {{blanks$[f]ehlt$fehlt}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   },
                   {
-                    "competency": [
-                      "zrPkrxCidGqeRkS5s"
-                    ]
+                    "competency": ["zrPkrxCidGqeRkS5s"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   }
                 ]
               },
@@ -336,59 +308,37 @@
                 "text": "Menge: {{blanks$[ein Kanister]$ein Kanister}}\nProduktname: {{blanks$[HLP46]$HLP46}}\nMaschinenname: Fräsmaschine",
                 "scoring": [
                   {
-                    "competency": [
-                      "zrPkrxCidGqeRkS5s"
-                    ]
+                    "competency": ["zrPkrxCidGqeRkS5s"]
                   },
                   {
-                    "competency": [
-                      "RC5BZ8s7tKK8rR7Dr"
-                    ]
+                    "competency": ["RC5BZ8s7tKK8rR7Dr"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   },
                   {
-                    "competency": [
-                      "JcmfCM9fpmJev66sG"
-                    ]
+                    "competency": ["JcmfCM9fpmJev66sG"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "gZ9xsaNZeeyvtecFB"
-                    ]
+                    "competency": ["gZ9xsaNZeeyvtecFB"]
                   },
                   {
-                    "competency": [
-                      "zbFkLaQ4t5SakbMc2"
-                    ]
+                    "competency": ["zbFkLaQ4t5SakbMc2"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   },
                   {
-                    "competency": [
-                      "fFY68j9ZPDwnTu4e5"
-                    ]
+                    "competency": ["fFY68j9ZPDwnTu4e5"]
                   }
                 ]
               },
@@ -447,24 +397,16 @@
                 "text": "{{blanks$[Nie]ten$Nieten}}\n{{blanks$[Schrau]ben$Schrauben von der Firma Walder}} von der Firma Walder",
                 "scoring": [
                   {
-                    "competency": [
-                      "ywzxcv5A6atrPmDDt"
-                    ]
+                    "competency": ["ywzxcv5A6atrPmDDt"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   },
                   {
-                    "competency": [
-                      "ywzxcv5A6atrPmDDt"
-                    ]
+                    "competency": ["ywzxcv5A6atrPmDDt"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   }
                 ]
               },
@@ -490,24 +432,16 @@
                 "text": "{{blanks$[Pa]pier$Papier}}\n{{blanks$[be]schichtet$beschichtet}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "ywzxcv5A6atrPmDDt"
-                    ]
+                    "competency": ["ywzxcv5A6atrPmDDt"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   },
                   {
-                    "competency": [
-                      "ywzxcv5A6atrPmDDt"
-                    ]
+                    "competency": ["ywzxcv5A6atrPmDDt"]
                   },
                   {
-                    "competency": [
-                      "zrPkrxCidGqeRkS5s"
-                    ]
+                    "competency": ["zrPkrxCidGqeRkS5s"]
                   }
                 ]
               },
@@ -533,14 +467,10 @@
                 "text": "{{blanks$[Du]plexkarton$Duplexkarton}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "ywzxcv5A6atrPmDDt"
-                    ]
+                    "competency": ["ywzxcv5A6atrPmDDt"]
                   },
                   {
-                    "competency": [
-                      "aYvvHSqW9myFEaikC"
-                    ]
+                    "competency": ["aYvvHSqW9myFEaikC"]
                   }
                 ]
               },
@@ -566,24 +496,16 @@
                 "text": "{{blanks$Lieferadresse: [B]adstraße 7, 34513 Waldstein $Lieferadresse Badstraße 7, 34513 Waldstein}}\n\n{{blanks$Die Firma [I]ndustriepack befindet sich in der Stadt Waldstein. $Die Firma Industriepack befindet sich in der Stadt Waldstein.}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "by8ikQFQWxHTDgs7n"
-                    ]
+                    "competency": ["by8ikQFQWxHTDgs7n"]
                   },
                   {
-                    "competency": [
-                      "JcmfCM9fpmJev66sG"
-                    ]
+                    "competency": ["JcmfCM9fpmJev66sG"]
                   },
                   {
-                    "competency": [
-                      "by8ikQFQWxHTDgs7n"
-                    ]
+                    "competency": ["by8ikQFQWxHTDgs7n"]
                   },
                   {
-                    "competency": [
-                      "aYvvHSqW9myFEaikC"
-                    ]
+                    "competency": ["aYvvHSqW9myFEaikC"]
                   }
                 ]
               },
@@ -657,14 +579,10 @@
                 "text": "Schleifmaschine:\nProbelauf: {{blanks$[6]$sechs}} Minuten \nBemessungsdifferenzstrom: kleiner als {{blanks$[15]$fünfzehn}} Milliampere",
                 "scoring": [
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   },
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   }
                 ]
               },
@@ -698,14 +616,10 @@
                 "text": "Drehmaschine:\nreduzierte Geschwindigkeit: {{blanks$[zwei]$zwei}} Meter pro Minute \nsenkrechte lineare Bewegung: {{blanks$[zehn]$zehn}} Millimeter pro Sekunde",
                 "scoring": [
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   },
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   }
                 ]
               },
@@ -739,14 +653,10 @@
                 "text": "Leila kontrolliert ob der Abstand zwischen der Schleifmaschine und der Drehmaschine stimmt. \nDieser muss mindestens {{blanks$[3]$drei}} Meter betragen. \nDie Drehmaschine läuft {{blanks$[16]$sechzehn}} Stunden am Tag.",
                 "scoring": [
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   },
                   {
-                    "competency": [
-                      "eQoN5BmJ4A46kJiqj"
-                    ]
+                    "competency": ["eQoN5BmJ4A46kJiqj"]
                   }
                 ]
               },
@@ -812,9 +722,7 @@
                 "text": "{{blanks$[B]$$pattern=BPO}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "t88z9T5ncPTaxSXKw"
-                    ]
+                    "competency": ["t88z9T5ncPTaxSXKw"]
                   }
                 ]
               },
@@ -840,9 +748,7 @@
                 "text": "{{blanks$[S]$$pattern=PFS}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "t88z9T5ncPTaxSXKw"
-                    ]
+                    "competency": ["t88z9T5ncPTaxSXKw"]
                   }
                 ]
               },
@@ -868,9 +774,7 @@
                 "text": "{{blanks$[F]$$pattern=PFS}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "t88z9T5ncPTaxSXKw"
-                    ]
+                    "competency": ["t88z9T5ncPTaxSXKw"]
                   }
                 ]
               },
@@ -896,14 +800,10 @@
                 "text": "{{blanks$[L]$$pattern=LIA}}icht\n{{blanks$[G]$$pattern=KHG}}etriebe",
                 "scoring": [
                   {
-                    "competency": [
-                      "t88z9T5ncPTaxSXKw"
-                    ]
+                    "competency": ["t88z9T5ncPTaxSXKw"]
                   },
                   {
-                    "competency": [
-                      "t88z9T5ncPTaxSXKw"
-                    ]
+                    "competency": ["t88z9T5ncPTaxSXKw"]
                   }
                 ]
               },
@@ -929,9 +829,7 @@
                 "text": "{{blanks$[L]$$pattern=Ll}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "oMi5oMYNcBbBMKKw9"
-                    ]
+                    "competency": ["oMi5oMYNcBbBMKKw9"]
                   }
                 ]
               },
@@ -957,9 +855,7 @@
                 "text": "{{blanks$[g]$$pattern=Gg}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "oMi5oMYNcBbBMKKw9"
-                    ]
+                    "competency": ["oMi5oMYNcBbBMKKw9"]
                   }
                 ]
               },
@@ -985,9 +881,7 @@
                 "text": "{{blanks$[H]$$pattern=Hh}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "oMi5oMYNcBbBMKKw9"
-                    ]
+                    "competency": ["oMi5oMYNcBbBMKKw9"]
                   }
                 ]
               },
@@ -1013,9 +907,7 @@
                 "text": "{{blanks$[M]$$pattern=Mm}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "oMi5oMYNcBbBMKKw9"
-                    ]
+                    "competency": ["oMi5oMYNcBbBMKKw9"]
                   }
                 ]
               },
@@ -1041,9 +933,7 @@
                 "text": "{{blanks$[o]$$pattern=Oo}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "oMi5oMYNcBbBMKKw9"
-                    ]
+                    "competency": ["oMi5oMYNcBbBMKKw9"]
                   }
                 ]
               },
@@ -1117,54 +1007,34 @@
                 "text": "{{blanks$[Sehr]$Sehr}}  geehrte {{blanks$[Frau Gruber]$Frau Gruber}}\nich möchte mich zur Fortbildung \"Sicherheits- und Gesundheitsschutz\" anmelden. \nMit freundlichen Grüßen\nAnil Patel",
                 "scoring": [
                   {
-                    "competency": [
-                      "nAibP8KDLHCscFMRL"
-                    ]
+                    "competency": ["nAibP8KDLHCscFMRL"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "eJGQsdubgK4TKBh2A"
-                    ]
+                    "competency": ["eJGQsdubgK4TKBh2A"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   },
                   {
-                    "competency": [
-                      "7eijKyiAAar2FRwEj"
-                    ]
+                    "competency": ["7eijKyiAAar2FRwEj"]
                   },
                   {
-                    "competency": [
-                      "sN3J9s6deexsbHT6d"
-                    ]
+                    "competency": ["sN3J9s6deexsbHT6d"]
                   },
                   {
-                    "competency": [
-                      "SwFduQYgBvozBiJF7"
-                    ]
+                    "competency": ["SwFduQYgBvozBiJF7"]
                   },
                   {
-                    "competency": [
-                      "gZ9xsaNZeeyvtecFB"
-                    ]
+                    "competency": ["gZ9xsaNZeeyvtecFB"]
                   },
                   {
-                    "competency": [
-                      "zbFkLaQ4t5SakbMc2"
-                    ]
+                    "competency": ["zbFkLaQ4t5SakbMc2"]
                   }
                 ]
               },
@@ -1208,24 +1078,16 @@
                 "text": "{{select$[guten|Guten]$}} {{select$[tag|Tag]$}} Herr Sommer, \nvielen Dank für {{select$[ihre|Ihre]$}} Anfrage. Wir besprechen uns im Team, ob wir die Sonderbestellung anfertigen können. \n{{select$[mit|Mit]$}} freundlichen Grüßen\nAnil Patel",
                 "scoring": [
                   {
-                    "competency": [
-                      "nAibP8KDLHCscFMRL"
-                    ]
+                    "competency": ["nAibP8KDLHCscFMRL"]
                   },
                   {
-                    "competency": [
-                      "zbFkLaQ4t5SakbMc2"
-                    ]
+                    "competency": ["zbFkLaQ4t5SakbMc2"]
                   },
                   {
-                    "competency": [
-                      "hckyCnRfXbyFTznx4"
-                    ]
+                    "competency": ["hckyCnRfXbyFTznx4"]
                   },
                   {
-                    "competency": [
-                      "mjfCArbSK42ck6neg"
-                    ]
+                    "competency": ["mjfCArbSK42ck6neg"]
                   }
                 ]
               },
@@ -1259,79 +1121,49 @@
                 "text": "{{blanks$[L]iebe$Liebe}} Frau Müller, \n\nfür die Schulung \"Sicherheit am Arbeitsplatz\" möchte ich über Ihre Organisation \" {{blanks$[Berufliches Lernen]$Berufliches Lernen}}\" ein Zertifikat als Sicherheitsbeauftragter erwerben. Wie sind die Bedingungen dazu? \n\n{{blanks$[Mit]$Mit}} freundlichen Grüßen \nAnil Patel",
                 "scoring": [
                   {
-                    "competency": [
-                      "nAibP8KDLHCscFMRL"
-                    ]
+                    "competency": ["nAibP8KDLHCscFMRL"]
                   },
                   {
-                    "competency": [
-                      "zbFkLaQ4t5SakbMc2"
-                    ]
+                    "competency": ["zbFkLaQ4t5SakbMc2"]
                   },
                   {
-                    "competency": [
-                      "by8ikQFQWxHTDgs7n"
-                    ]
+                    "competency": ["by8ikQFQWxHTDgs7n"]
                   },
                   {
-                    "competency": [
-                      "JcmfCM9fpmJev66sG"
-                    ]
+                    "competency": ["JcmfCM9fpmJev66sG"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "7eijKyiAAar2FRwEj"
-                    ]
+                    "competency": ["7eijKyiAAar2FRwEj"]
                   },
                   {
-                    "competency": [
-                      "eJGQsdubgK4TKBh2A"
-                    ]
+                    "competency": ["eJGQsdubgK4TKBh2A"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "by8ikQFQWxHTDgs7n"
-                    ]
+                    "competency": ["by8ikQFQWxHTDgs7n"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   },
                   {
-                    "competency": [
-                      "zbFkLaQ4t5SakbMc2"
-                    ]
+                    "competency": ["zbFkLaQ4t5SakbMc2"]
                   },
                   {
-                    "competency": [
-                      "mjfCArbSK42ck6neg"
-                    ]
+                    "competency": ["mjfCArbSK42ck6neg"]
                   },
                   {
-                    "competency": [
-                      "RC5BZ8s7tKK8rR7Dr"
-                    ]
+                    "competency": ["RC5BZ8s7tKK8rR7Dr"]
                   }
                 ]
               },
@@ -1365,24 +1197,16 @@
                 "text": "{{blanks$[H]allo$Hallo}} Mehmet, \n\nkannst Du mir nochmal die Kontaktdaten von Frau Müller geben. Ich möchte das Sicherheitszertifikat machen und Sie gerne anrufen. Danke! \n\n{{blanks$[L]iebe$Liebe}} Grüße, \nAnil",
                 "scoring": [
                   {
-                    "competency": [
-                      "nAibP8KDLHCscFMRL"
-                    ]
+                    "competency": ["nAibP8KDLHCscFMRL"]
                   },
                   {
-                    "competency": [
-                      "eJGQsdubgK4TKBh2A"
-                    ]
+                    "competency": ["eJGQsdubgK4TKBh2A"]
                   },
                   {
-                    "competency": [
-                      "nAibP8KDLHCscFMRL"
-                    ]
+                    "competency": ["nAibP8KDLHCscFMRL"]
                   },
                   {
-                    "competency": [
-                      "9GeJvTn5sJGBDsyAt"
-                    ]
+                    "competency": ["9GeJvTn5sJGBDsyAt"]
                   }
                 ]
               },
@@ -1456,14 +1280,10 @@
                 "text": "Schutzbrille tragen, damit nichts ins {{blanks$[Au]ge$Auge.}} fliegt.",
                 "scoring": [
                   {
-                    "competency": [
-                      "uTZNQrbbk8BB7MJCJ"
-                    ]
+                    "competency": ["uTZNQrbbk8BB7MJCJ"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   }
                 ]
               },
@@ -1497,14 +1317,10 @@
                 "text": "Der beste Schutz ist tatsächlich konzentriertes Arbeiten und nichts in {{blanks$ [Ei]le $Eile}} machen.",
                 "scoring": [
                   {
-                    "competency": [
-                      "uTZNQrbbk8BB7MJCJ"
-                    ]
+                    "competency": ["uTZNQrbbk8BB7MJCJ"]
                   },
                   {
-                    "competency": [
-                      "KzvacZ7tiQLhMDi28"
-                    ]
+                    "competency": ["KzvacZ7tiQLhMDi28"]
                   }
                 ]
               },
@@ -1538,14 +1354,10 @@
                 "text": "Zur Arbeit sollte man stets die passende Kleidung tragen. Man darf nicht {{blanks$[Ei]tel $Eitel }} sein, die Kleidung muss funktionell sein.",
                 "scoring": [
                   {
-                    "competency": [
-                      "uTZNQrbbk8BB7MJCJ"
-                    ]
+                    "competency": ["uTZNQrbbk8BB7MJCJ"]
                   },
                   {
-                    "competency": [
-                      "zrPkrxCidGqeRkS5s"
-                    ]
+                    "competency": ["zrPkrxCidGqeRkS5s"]
                   }
                 ]
               },
@@ -1579,24 +1391,16 @@
                 "text": "Die Schutzmaßnahmen verinnerlicht man irgendwann wie {{blanks$[Au]to$Auto}} fahren. Sich und seinen Körper zu schützen ist sicherlich eine gute {{blanks$[I]dee$Idee}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "uTZNQrbbk8BB7MJCJ"
-                    ]
+                    "competency": ["uTZNQrbbk8BB7MJCJ"]
                   },
                   {
-                    "competency": [
-                      "8GygdGLigceuJ3HkH"
-                    ]
+                    "competency": ["8GygdGLigceuJ3HkH"]
                   },
                   {
-                    "competency": [
-                      "uTZNQrbbk8BB7MJCJ"
-                    ]
+                    "competency": ["uTZNQrbbk8BB7MJCJ"]
                   },
                   {
-                    "competency": [
-                      "KzvacZ7tiQLhMDi28"
-                    ]
+                    "competency": ["KzvacZ7tiQLhMDi28"]
                   }
                 ]
               },
@@ -1662,14 +1466,10 @@
                 "text": "{{blanks$[15]$15.05.2020}}.{{blanks$[05]$}}.2020",
                 "scoring": [
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ]
+                    "competency": ["k4aP56kBwqttafTdd"]
                   },
                   {
-                    "competency": [
-                      "J3FsyGLwbCFvDJk4v"
-                    ]
+                    "competency": ["J3FsyGLwbCFvDJk4v"]
                   }
                 ]
               },
@@ -1695,9 +1495,7 @@
                 "text": "{{blanks$28.05.[2020]$28.05.2020}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ]
+                    "competency": ["k4aP56kBwqttafTdd"]
                   }
                 ]
               },
@@ -1723,15 +1521,11 @@
                 "text": "{{blanks$02.[06]$02.06.2020}}.{{blanks$[2020]$}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ],
+                    "competency": ["k4aP56kBwqttafTdd"],
                     "target": 0
                   },
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ],
+                    "competency": ["k4aP56kBwqttafTdd"],
                     "target": 1
                   }
                 ]
@@ -1758,21 +1552,15 @@
                 "text": "{{blanks$[16]$16.06.2020}}.{{blanks$[06]$}}.{{blanks$[2020]$}}",
                 "scoring": [
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ],
+                    "competency": ["k4aP56kBwqttafTdd"],
                     "target": 0
                   },
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ],
+                    "competency": ["k4aP56kBwqttafTdd"],
                     "target": 1
                   },
                   {
-                    "competency": [
-                      "k4aP56kBwqttafTdd"
-                    ],
+                    "competency": ["k4aP56kBwqttafTdd"],
                     "target": 2
                   }
                 ]

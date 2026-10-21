@@ -20,7 +20,7 @@
                                             data-key=legalRoute.name}}
                                     {{/routeButton}}
                                 {{else}}
-                                    <a href="{{route "legal" legalRoute.name}}"
+                                    <a href="{{route 'legal' legalRoute.name}}"
                                        class="mb-2 no-wrap">{{legalRoute.name}}</a>
                                 {{/if}}
                             {{/each}}
@@ -77,7 +77,7 @@
                                         <i class="fa fas fa-fw fa-sign-out-alt"></i>
                                     {{/routeButton}}
                                 {{else}}
-                                    <a href="{{route "logout"}}"
+                                    <a href="{{route 'logout'}}"
                                        class="logout-button">
                                         <i class="fa fas fa-fw fa-sign-out-alt"></i>
                                         ...

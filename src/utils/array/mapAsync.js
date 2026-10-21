@@ -1,8 +1,8 @@
 /**
  * Similar to array map but for async callbacks
- * @param array {*[]}
- * @param callback {function}
- * @return {Promise<*[]>}
+ * @param {Array.<*>} array
+ * @param {Function} callback
+ * @return {Promise.<Array.<*>>}
  */
 export const mapAsync = async (array, callback) => {
   const tmp = []

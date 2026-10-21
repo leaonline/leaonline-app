@@ -19,17 +19,17 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end px-1" data-bs-popper="static">
                             <li>
-                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme "light"}}active{{/if}} theme-btn"
+                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme 'light'}}active{{/if}} theme-btn"
                                         data-target="light"
-                                        aria-pressed="{{#if theme "light"}}true{{/if}}">
+                                        aria-pressed="{{#if theme 'light'}}true{{/if}}">
                                     {{> icon name="sun" fw=true}}
                                     {{> textGroup text=(i18n "theme.light")}}
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme "dark"}}active{{/if}} theme-btn"
+                                <button type="button" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{#if theme 'dark'}}active{{/if}} theme-btn"
                                         data-target="dark"
-                                        aria-pressed="{{#if theme "dark"}}true{{/if}}">
+                                        aria-pressed="{{#if theme 'dark'}}true{{/if}}">
                                     {{> icon name="moon" fw=true}}
                                     {{> textGroup text=(i18n "theme.dark")}}
                                 </button>

@@ -1,25 +1,33 @@
 /* eslint-env mocha */
 /* global $ */
 import { expect } from 'chai'
-import { UITests } from '../../../../../tests/ui-helpers.tests'
+import {
+  createRendererTestContext,
+  waitFor,
+} from '../../../../tests/helpers/rendererHelpers.tests'
 import '../onComplete'
 
-describe('onComplete', function () {
-  beforeEach(function () {
-    UITests.preRender()
+describe('onComplete', () => {
+  const { setup, teardown, render } = createRendererTestContext()
+  beforeEach(() => {
+    setup()
   })
 
-  afterEach(function () {
-    UITests.postRender()
+  afterEach(() => {
+    teardown()
   })
 
-  it('renders a loading icon by default', async function () {
-    const el = await UITests.withRenderedTemplate('onComplete', {})
-    expect($(el).children().get(0).className).to.include('loading-header')
+  it('renders a loading icon by default', async () => {
+    const el = await render('onComplete', {})
+    await waitFor(() => el.querySelector('h1'))
+    const root = el.querySelector('h1')
+    expect(root.className).to.include('loading-header')
   })
 
-  it('renders a content block when load complete', async function () {
-    const el = await UITests.withRenderedTemplate('onComplete', { complete: true })
+  it('renders a content block when load complete', async () => {
+    const el = await render('onComplete', {
+      complete: true,
+    })
     expect($(el).children().length).to.equal(0)
   })
 })

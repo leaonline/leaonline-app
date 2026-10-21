@@ -1,4 +1,4 @@
 /* eslint-env mocha */
-describe('contexts-api', function () {
-  import './initClientContext.tests'
+describe('contexts-api', () => {
+  require('./initClientContext.tests')
 })

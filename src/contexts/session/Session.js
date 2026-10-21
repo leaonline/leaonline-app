@@ -20,7 +20,7 @@ export const Session = {
   name: 'session',
   label: 'session.title',
   icon: 'edit',
-  representative: 'userId'
+  representative: 'userId',
 }
 
 const log = createLog({ name: Session.name })
@@ -32,83 +32,83 @@ const log = createLog({ name: Session.name })
  */
 Session.schema = {
   userId: {
-    type: String
+    type: String,
   },
   unitSet: {
     type: String,
     dependency: {
       collection: UnitSet.name,
-      field: UnitSet.representative
-    }
+      field: UnitSet.representative,
+    },
   },
   fieldId: {
     type: String,
     dependency: {
       collection: Field.name,
-      field: Field.representative
-    }
+      field: Field.representative,
+    },
   },
   dimensionId: {
     type: String,
     dependency: {
       collection: Dimension.name,
-      field: Dimension.representative
-    }
+      field: Dimension.representative,
+    },
   },
   progress: {
     type: Number,
-    defaultValue: 0
+    defaultValue: 0,
   },
   competencies: {
     type: Number,
-    defaultValue: 0
+    defaultValue: 0,
   },
   unit: {
     type: String,
     optional: true,
     dependency: {
       collection: Unit.name,
-      field: Unit.representative
-    }
+      field: Unit.representative,
+    },
   },
   nextUnit: {
     type: String,
     optional: true,
     dependency: {
       collection: Unit.name,
-      field: Unit.representative
-    }
+      field: Unit.representative,
+    },
   },
   startedAt: {
     type: Date,
-    optional: true
+    optional: true,
   },
   completedAt: {
     type: Date,
-    optional: true
+    optional: true,
   },
   updatedAt: {
     type: Date,
-    optional: true
+    optional: true,
   },
   cancelledAt: {
     type: Date,
-    optional: true
+    optional: true,
   },
   continuedAt: {
     type: Date,
-    optional: true
-  }
+    optional: true,
+  },
 }
 
 onClientExec(() => {
-  import { ReactiveDict } from 'meteor/reactive-dict'
-  import { callMethod } from '../../infrastructure/methods/callMethod'
+  const { ReactiveDict } = require('meteor/reactive-dict')
+  const { callMethod } = require('../../infrastructure/methods/callMethod')
 
   const sessionData = new ReactiveDict()
   sessionData.setDefault({
     sessionDoc: null,
-    unitSetDoc: null
+    unitSetDoc: null,
   })
 
   Session.has = ({ sessionId, unitSetId }) => {
@@ -119,7 +119,7 @@ onClientExec(() => {
   Session.load = async ({ sessionId, unitSetId }) => {
     const { sessionDoc, unitSetDoc } = await callMethod({
       name: Session.methods.get,
-      args: { unitSetId }
+      args: { unitSetId },
     })
     if (sessionDoc?._id !== sessionId || unitSetDoc?._id !== unitSetId) {
       throw new Error(`Could not load session for ${{ sessionId, unitSetId }}`)
@@ -129,7 +129,10 @@ onClientExec(() => {
   }
 
   Session.start = ({ sessionDoc, unitSetDoc }) => {
-    if (!sessionDoc || !unitSetDoc) throw new Error('Cannot start a session without both { sessionDoc, unitSetDoc }')
+    if (!sessionDoc || !unitSetDoc)
+      throw new Error(
+        'Cannot start a session without both { sessionDoc, unitSetDoc }',
+      )
     sessionData.set({ sessionDoc, unitSetDoc })
   }
 
@@ -138,7 +141,7 @@ onClientExec(() => {
   Session.restart = async ({ sessionId }) => {
     const { sessionDoc, unitSetDoc } = await callMethod({
       name: Session.methods.restart,
-      args: { sessionId }
+      args: { sessionId },
     })
     if (sessionDoc?._id !== sessionId) {
       throw new Error(`Could not restart session for ${{ sessionId }}`)
@@ -149,7 +152,8 @@ onClientExec(() => {
 
   Session.update = async ({ prepare, receive, failure, success } = {}) => {
     const sessionDoc = sessionData.get('sessionDoc')
-    if (!sessionDoc?._id) throw new Error('Cannot update Session, no sessionDoc found!')
+    if (!sessionDoc?._id)
+      throw new Error('Cannot update Session, no sessionDoc found!')
     const sessionId = sessionDoc._id
     return callMethod({
       name: Session.methods.update,
@@ -159,15 +163,17 @@ onClientExec(() => {
       failure,
       success: async (nextUnitId) => {
         try {
-          const updatedSessionDoc = await callMethod({ name: Session.methods.get, args: { unitSetId: sessionDoc.unitSet } })
+          const updatedSessionDoc = await callMethod({
+            name: Session.methods.get,
+            args: { unitSetId: sessionDoc.unitSet },
+          })
           sessionData.set({ sessionDoc: updatedSessionDoc })
-        }
-        catch (e) {
+        } catch (e) {
           if (failure) failure(e)
         }
 
         if (success) success(nextUnitId)
-      }
+      },
     })
   }
 
@@ -205,23 +211,21 @@ onServerExec(() => {
    * @param unitSetDoc {string} associated unitSet _id
    * @return {object} the new created session document
    */
-  Session.create = async function create ({ userId, unitSetDoc }) {
+  Session.create = async function create({ userId, unitSetDoc }) {
     log('create', { userId, unitSetId: unitSetDoc._id })
     const insertDoc = {
       userId: userId,
       startedAt: new Date(),
       unitSet: unitSetDoc._id,
       fieldId: unitSetDoc.field,
-      dimensionId: unitSetDoc.dimension
+      dimensionId: unitSetDoc.dimension,
     }
     const hasStory = unitSetDoc.story?.length
     const unitId = unitSetDoc.units[0]
 
     if (hasStory) {
       insertDoc.nextUnit = unitId
-    }
-
-    else {
+    } else {
       insertDoc.unit = unitId
       insertDoc.nextUnit = getNextUnitId({ unitId, units: unitSetDoc.units })
     }
@@ -262,12 +266,14 @@ onServerExec(() => {
    * @param userId {string} the _id of the associated user
    * @return {{unitSetDoc: any, sessionDoc: any, unitDoc}}
    */
-  Session.get = async function get ({ unitSet, userId }) {
+  Session.get = async function get({ unitSet, userId }) {
     log('get', { unitSet, userId })
     const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(unitSet)
     const sessionQuery = { unitSet, userId, completedAt: { $exists: false } }
 
-    let sessionDoc = await getCollection(Session.name).findOneAsync(sessionQuery)
+    let sessionDoc = await getCollection(Session.name).findOneAsync(
+      sessionQuery,
+    )
 
     // if we have no sessionDoc we need to create a new session!
     if (!sessionDoc) {
@@ -288,24 +294,33 @@ onServerExec(() => {
     const SessionCollection = getCollection(Session.name)
 
     // 1 get sessionDoc by sessionId+userId
-    const sessionDoc = await SessionCollection.findOneAsync({ _id: sessionId, userId })
+    const sessionDoc = await SessionCollection.findOneAsync({
+      _id: sessionId,
+      userId,
+    })
     ensureDocument({
       document: sessionDoc,
       docId: sessionId,
       name: Session.name,
-      details: { userId }
+      details: { userId },
     })
 
     if (sessionDoc.completedAt) {
-      throw new Meteor.Error('session.completed', 'session.noRestartCompleted', { sessionId, userId })
+      throw new Meteor.Error(
+        'session.completed',
+        'session.noRestartCompleted',
+        { sessionId, userId },
+      )
     }
 
     // 2 get the unitSet by sessionDoc.unitset
-    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(sessionDoc.unitSet)
+    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(
+      sessionDoc.unitSet,
+    )
     ensureDocument({
       document: unitSetDoc,
       docId: sessionDoc.unitSet,
-      name: UnitSet.name
+      name: UnitSet.name,
     })
 
     // 3 remove prior responses
@@ -315,19 +330,22 @@ onServerExec(() => {
 
     // 5 reset the session Doc
     const unitId = unitSetDoc.units[0]
-    await SessionCollection.updateAsync({ _id: sessionDoc._id }, {
-      $unset: { unit: 1 },
-      $set: {
-        nextUnit: unitId,
-        progress: 0,
-        competencies: 0,
-        updatedAt: new Date()
-      }
-    })
+    await SessionCollection.updateAsync(
+      { _id: sessionDoc._id },
+      {
+        $unset: { unit: 1 },
+        $set: {
+          nextUnit: unitId,
+          progress: 0,
+          competencies: 0,
+          updatedAt: new Date(),
+        },
+      },
+    )
 
     return {
       unitSetDoc,
-      sessionDoc: await SessionCollection.findOneAsync({ _id: sessionDoc._id })
+      sessionDoc: await SessionCollection.findOneAsync({ _id: sessionDoc._id }),
     }
   }
 
@@ -353,26 +371,31 @@ onServerExec(() => {
    * @param userId {string} _id of the user
    * @return {null|string} null if no next unit is found por a unitId if next unit is found
    */
-  Session.update = async function update ({ sessionId, userId }) {
+  Session.update = async function update({ sessionId, userId }) {
     log('update', { sessionId, userId })
     const SessionCollection = getCollection(Session.name)
     const UnitCollection = getCollection(Unit.name)
 
     // 1 get sessionDoc by sessionId+userId
-    const sessionDoc = await SessionCollection.findOneAsync({ _id: sessionId, userId })
+    const sessionDoc = await SessionCollection.findOneAsync({
+      _id: sessionId,
+      userId,
+    })
     ensureDocument({
       document: sessionDoc,
       docId: sessionId,
       name: Session.name,
-      details: { userId }
+      details: { userId },
     })
 
     // 2 get the current unitDoc by sessionDoc.unit
-    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(sessionDoc.unitSet)
+    const unitSetDoc = await getCollection(UnitSet.name).findOneAsync(
+      sessionDoc.unitSet,
+    )
     ensureDocument({
       document: unitSetDoc,
       docId: sessionDoc.unitSet,
-      name: UnitSet.name
+      name: UnitSet.name,
     })
 
     let unitDoc
@@ -383,7 +406,7 @@ onServerExec(() => {
       ensureDocument({
         document: unitDoc,
         docId: sessionDoc.unit,
-        name: Unit.name
+        name: Unit.name,
       })
     }
 
@@ -399,7 +422,7 @@ onServerExec(() => {
       log('complete', sessionId)
       const completeDoc = {
         $unset: { unit: 1, nextUnit: 1 },
-        $set: { completedAt: timestamp }
+        $set: { completedAt: timestamp },
       }
       if (unitDoc) {
         completeDoc.$inc = await get$inc({ unitDoc, sessionId, userId })
@@ -416,8 +439,8 @@ onServerExec(() => {
     const updateDoc = {
       $set: {
         updatedAt: timestamp,
-        unit: sessionDoc.nextUnit // must exist at this point
-      }
+        unit: sessionDoc.nextUnit, // must exist at this point
+      },
     }
 
     // we can only update the progress if there is a unitDoc
@@ -428,14 +451,12 @@ onServerExec(() => {
 
     const nextUnitId = getNextUnitId({
       unitId: sessionDoc.nextUnit,
-      units: unitSetDoc.units
+      units: unitSetDoc.units,
     })
 
     if (nextUnitId) {
       updateDoc.$set.nextUnit = nextUnitId
-    }
-
-    else {
+    } else {
       updateDoc.$unset = { nextUnit: 1 }
     }
 
@@ -447,7 +468,11 @@ onServerExec(() => {
 
   const get$inc = async ({ userId, unitDoc, sessionId }) => ({
     progress: unitDoc.pages.length,
-    competencies: await Response.countAccomplishedAnswers({ userId, unitId: unitDoc._id, sessionId })
+    competencies: await Response.countAccomplishedAnswers({
+      userId,
+      unitId: unitDoc._id,
+      sessionId,
+    }),
   })
 })
 /**
@@ -472,18 +497,20 @@ Session.methods.update = {
   name: 'session.methods.update',
   schema: {
     sessionId: {
-      type: String
-    }
+      type: String,
+    },
   },
-  run: onServerExec(function () {
-    import { Progress } from '../progress/Progress'
+  run: onServerExec(() => {
+    const { Progress } = require('../progress/Progress')
 
     return async function ({ sessionId }) {
       const { userId } = this
       const nextUnitId = await Session.update({ sessionId, userId })
 
       // get the updated session doc and update the user progress
-      const sessionDoc = await getCollection(Session.name).findOneAsync({ _id: sessionId })
+      const sessionDoc = await getCollection(Session.name).findOneAsync({
+        _id: sessionId,
+      })
 
       await Progress.update({
         userId: userId,
@@ -492,12 +519,12 @@ Session.methods.update = {
         progress: sessionDoc.progress,
         dimensionId: sessionDoc.dimensionId,
         competencies: sessionDoc.competencies,
-        complete: !!sessionDoc.completedAt
+        complete: !!sessionDoc.completedAt,
       })
 
       return nextUnitId
     }
-  })
+  }),
 }
 
 Session.methods.getAll = {
@@ -505,13 +532,13 @@ Session.methods.getAll = {
   schema: {
     dependencies: {
       type: Array,
-      optional: true
+      optional: true,
     },
     'dependencies.$': {
       type: Object,
       blackbox: true,
-      optional: true
-    }
+      optional: true,
+    },
   },
   backend: true,
   run: onServerExec(() => {
@@ -521,45 +548,50 @@ Session.methods.getAll = {
       .add(Field, 'fieldId')
       .add(Dimension, 'dimensionId')
 
-    return async function ({ dependencies } = {}) {
-      const docs = await getCollection(Session.name).find({}, {
-        hint: {
-          $natural: -1
-        }
-      }).fetchAsync()
+    return async ({ dependencies } = {}) => {
+      const docs = await getCollection(Session.name)
+        .find(
+          {},
+          {
+            hint: {
+              $natural: -1,
+            },
+          },
+        )
+        .fetchAsync()
 
       const data = { [Session.name]: docs }
-      await resolveDependencies
-        .output(data)
-        .run({ docs, dependencies })
+      await resolveDependencies.output(data).run({ docs, dependencies })
 
       return data
     }
-  })
+  }),
 }
 
 Session.methods.get = {
   name: 'session.methods.get',
   schema: {
-    unitSetId: String
+    unitSetId: String,
   },
-  run: onServerExec(function () {
-    return function ({ unitSetId }) {
-      const { userId } = this
-      return Session.get({ unitSet: unitSetId, userId })
-    }
-  })
+  run: onServerExec(
+    () =>
+      function ({ unitSetId }) {
+        const { userId } = this
+        return Session.get({ unitSet: unitSetId, userId })
+      },
+  ),
 }
 
 Session.methods.restart = {
   name: 'session.methods.restart',
   schema: {
-    sessionId: String
+    sessionId: String,
   },
-  run: onServerExec(function () {
-    return function ({ sessionId }) {
-      const { userId } = this
-      return Session.restart({ sessionId, userId })
-    }
-  })
+  run: onServerExec(
+    () =>
+      function ({ sessionId }) {
+        const { userId } = this
+        return Session.restart({ sessionId, userId })
+      },
+  ),
 }

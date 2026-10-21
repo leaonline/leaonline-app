@@ -1,3 +1,3 @@
 export default {
-  de: () => import('./de')
+  de: () => import('./de'),
 }

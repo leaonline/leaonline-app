@@ -5,17 +5,14 @@ module.exports = {
       status: 3,
       title: 'Technische Berufe',
       shortCode: 'TB',
-      jobs: [
-        'Maschinen- und Anlagenführer*in',
-        'Packmitteltechnologe*in'
-      ],
+      jobs: ['Maschinen- und Anlagenführer*in', 'Packmitteltechnologe*in'],
       isLegacy: false,
       icon: 'tv',
       meta: {
         updatedAt: new Date(1647330316526),
-        updatedBy: 'dMAb3sr3vo2a7t3hc'
-      }
-    }
+        updatedBy: 'dMAb3sr3vo2a7t3hc',
+      },
+    },
   ],
   unit: [
     {
@@ -27,28 +24,31 @@ module.exports = {
         {
           type: 'text',
           subtype: 'text',
-          value: 'In der Produktionshalle ist es laut. Die Worte seiner Kollegen versteht Anil nicht immer.',
+          value:
+            'In der Produktionshalle ist es laut. Die Worte seiner Kollegen versteht Anil nicht immer.',
           hidden: false,
           width: '12',
-          contentId: 'ccCaKJRiDyGnu8iAz'
+          contentId: 'ccCaKJRiDyGnu8iAz',
         },
         {
           type: 'media',
           subtype: 'image',
-          value: 'https://content.lealernen.de/cdn/storage/mediaLib/nByymAyaaNXQiwDzz/original/nByymAyaaNXQiwDzz.png',
+          value:
+            'https://content.lealernen.de/cdn/storage/mediaLib/nByymAyaaNXQiwDzz/original/nByymAyaaNXQiwDzz.png',
           width: '12',
-          contentId: '69fmWB54rZfyKfp7c'
-        }
+          contentId: '69fmWB54rZfyKfp7c',
+        },
       ],
       instructions: [
         {
           type: 'text',
           subtype: 'text',
-          value: 'Wenn du mit dem Finger auf eine Lücke tippst, erscheint eine Auswahl an Buchstaben und du kannst deine Antwort eingeben.',
+          value:
+            'Wenn du mit dem Finger auf eine Lücke tippst, erscheint eine Auswahl an Buchstaben und du kannst deine Antwort eingeben.',
           hidden: false,
           width: '12',
-          contentId: '7dwZ4ztKkaQnjS8ND'
-        }
+          contentId: '7dwZ4ztKkaQnjS8ND',
+        },
       ],
       pages: [
         {
@@ -56,10 +56,11 @@ module.exports = {
             {
               type: 'text',
               subtype: 'text',
-              value: 'Welchen Laut hörst du am Anfang des Wortes Bohrer? Schreibe diesen in die Lücke.',
+              value:
+                'Welchen Laut hörst du am Anfang des Wortes Bohrer? Schreibe diesen in die Lücke.',
               hidden: false,
               width: '12',
-              contentId: 'FHiAhhzFyod4Z94pQ'
+              contentId: 'FHiAhhzFyod4Z94pQ',
             },
             {
               type: 'item',
@@ -68,28 +69,27 @@ module.exports = {
                 text: '{{blanks$[B]$$pattern=BPO}}',
                 scoring: [
                   {
-                    competency: [
-                      't88z9T5ncPTaxSXKw'
-                    ],
+                    competency: ['t88z9T5ncPTaxSXKw'],
                     target: 0,
-                    correctResponse: /B/i
-                  }
-                ]
+                    correctResponse: /B/i,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'cu77p4m4PTXmpE2Tx'
-            }
-          ]
+              contentId: 'cu77p4m4PTXmpE2Tx',
+            },
+          ],
         },
         {
           content: [
             {
               type: 'text',
               subtype: 'text',
-              value: 'Welchen Laut hörst du am Anfang des Wortes Seil? Schreibe diesen in die Lücke.',
+              value:
+                'Welchen Laut hörst du am Anfang des Wortes Seil? Schreibe diesen in die Lücke.',
               hidden: false,
               width: '12',
-              contentId: 'L46waa7dsCqH2kRT9'
+              contentId: 'L46waa7dsCqH2kRT9',
             },
             {
               type: 'item',
@@ -98,28 +98,27 @@ module.exports = {
                 text: '{{blanks$[S]$$pattern=PFS}}',
                 scoring: [
                   {
-                    competency: [
-                      't88z9T5ncPTaxSXKw'
-                    ],
+                    competency: ['t88z9T5ncPTaxSXKw'],
                     target: 0,
-                    correctResponse: /S/i
-                  }
-                ]
+                    correctResponse: /S/i,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'NPxuqzAFDCHCr93Ax'
-            }
-          ]
+              contentId: 'NPxuqzAFDCHCr93Ax',
+            },
+          ],
         },
         {
           content: [
             {
               type: 'text',
               subtype: 'text',
-              value: 'Welchen Laut hörst du am Anfang des Wortes Feder? Schreibe diesen in die Lücke.',
+              value:
+                'Welchen Laut hörst du am Anfang des Wortes Feder? Schreibe diesen in die Lücke.',
               hidden: false,
               width: '12',
-              contentId: 'qXLkNJtDSRrDjZtWK'
+              contentId: 'qXLkNJtDSRrDjZtWK',
             },
             {
               type: 'item',
@@ -128,28 +127,27 @@ module.exports = {
                 text: '{{blanks$[F]$$pattern=PFS}}',
                 scoring: [
                   {
-                    competency: [
-                      't88z9T5ncPTaxSXKw'
-                    ],
+                    competency: ['t88z9T5ncPTaxSXKw'],
                     target: 0,
-                    correctResponse: /F/i
-                  }
-                ]
+                    correctResponse: /F/i,
+                  },
+                ],
               },
               width: '12',
-              contentId: '8yrvPcLm6NhQJ7qk9'
-            }
-          ]
+              contentId: '8yrvPcLm6NhQJ7qk9',
+            },
+          ],
         },
         {
           content: [
             {
               type: 'text',
               subtype: 'text',
-              value: 'Welche Laute hörst du am Anfang der Wörter Licht und Getriebe? \nSchreibe diese in die Lücken.',
+              value:
+                'Welche Laute hörst du am Anfang der Wörter Licht und Getriebe? \nSchreibe diese in die Lücken.',
               hidden: false,
               width: '12',
-              contentId: 'eZBvBurPXnurm7ejm'
+              contentId: 'eZBvBurPXnurm7ejm',
             },
             {
               type: 'item',
@@ -158,25 +156,21 @@ module.exports = {
                 text: '{{blanks$[L]$$pattern=LIA}}icht\n{{blanks$[G]$$pattern=KHG}}etriebe',
                 scoring: [
                   {
-                    competency: [
-                      't88z9T5ncPTaxSXKw'
-                    ],
+                    competency: ['t88z9T5ncPTaxSXKw'],
                     target: 0,
-                    correctResponse: /L/i
+                    correctResponse: /L/i,
                   },
                   {
-                    competency: [
-                      't88z9T5ncPTaxSXKw'
-                    ],
+                    competency: ['t88z9T5ncPTaxSXKw'],
                     target: 1,
-                    correctResponse: /G/i
-                  }
-                ]
+                    correctResponse: /G/i,
+                  },
+                ],
               },
               width: '12',
-              contentId: '3ZxXP7RtNndpTZ3rp'
-            }
-          ]
+              contentId: '3ZxXP7RtNndpTZ3rp',
+            },
+          ],
         },
         {
           content: [
@@ -186,7 +180,7 @@ module.exports = {
               value: 'Schreibe das große "L" in die Lücke.',
               hidden: true,
               width: '12',
-              contentId: 'K5fCE7XhFi5WNdEaC'
+              contentId: 'K5fCE7XhFi5WNdEaC',
             },
             {
               type: 'item',
@@ -195,18 +189,16 @@ module.exports = {
                 text: '{{blanks$[L]$$pattern=Ll}}',
                 scoring: [
                   {
-                    competency: [
-                      'oMi5oMYNcBbBMKKw9'
-                    ],
+                    competency: ['oMi5oMYNcBbBMKKw9'],
                     target: 0,
-                    correctResponse: /L/i
-                  }
-                ]
+                    correctResponse: /L/i,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'qmLnuEBoK9dmhAhzX'
-            }
-          ]
+              contentId: 'qmLnuEBoK9dmhAhzX',
+            },
+          ],
         },
         {
           content: [
@@ -216,7 +208,7 @@ module.exports = {
               value: 'Schreibe das kleine "g" in die Lücke.',
               hidden: true,
               width: '12',
-              contentId: 'A64ZiL3mieSgam4ft'
+              contentId: 'A64ZiL3mieSgam4ft',
             },
             {
               type: 'item',
@@ -225,18 +217,16 @@ module.exports = {
                 text: '{{blanks$[g]$$pattern=Gg}}',
                 scoring: [
                   {
-                    competency: [
-                      'oMi5oMYNcBbBMKKw9'
-                    ],
+                    competency: ['oMi5oMYNcBbBMKKw9'],
                     target: 0,
-                    correctResponse: /g/
-                  }
-                ]
+                    correctResponse: /g/,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'mC9prFhF32bBBY9cN'
-            }
-          ]
+              contentId: 'mC9prFhF32bBBY9cN',
+            },
+          ],
         },
         {
           content: [
@@ -246,7 +236,7 @@ module.exports = {
               value: 'Schreibe das große "H" in die Lücke.',
               hidden: true,
               width: '12',
-              contentId: 'eCKfJjZFrQWyotvWT'
+              contentId: 'eCKfJjZFrQWyotvWT',
             },
             {
               type: 'item',
@@ -255,18 +245,16 @@ module.exports = {
                 text: '{{blanks$[H]$$pattern=Hh}}',
                 scoring: [
                   {
-                    competency: [
-                      'oMi5oMYNcBbBMKKw9'
-                    ],
+                    competency: ['oMi5oMYNcBbBMKKw9'],
                     target: 0,
-                    correctResponse: /H/
-                  }
-                ]
+                    correctResponse: /H/,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'Hc6RQxww82EfP9rfy'
-            }
-          ]
+              contentId: 'Hc6RQxww82EfP9rfy',
+            },
+          ],
         },
         {
           content: [
@@ -276,7 +264,7 @@ module.exports = {
               value: 'Schreibe das große "M" in die Lücke.',
               hidden: true,
               width: '12',
-              contentId: 'DYGTBvHHSjBohSsbE'
+              contentId: 'DYGTBvHHSjBohSsbE',
             },
             {
               type: 'item',
@@ -285,18 +273,16 @@ module.exports = {
                 text: '{{blanks$[M]$$pattern=Mm}}',
                 scoring: [
                   {
-                    competency: [
-                      'oMi5oMYNcBbBMKKw9'
-                    ],
+                    competency: ['oMi5oMYNcBbBMKKw9'],
                     target: 0,
-                    correctResponse: /M/
-                  }
-                ]
+                    correctResponse: /M/,
+                  },
+                ],
               },
               width: '12',
-              contentId: 'bNeCFsbpA2wEZWrE3'
-            }
-          ]
+              contentId: 'bNeCFsbpA2wEZWrE3',
+            },
+          ],
         },
         {
           content: [
@@ -306,7 +292,7 @@ module.exports = {
               value: 'Schreibe das kleine "o" in die Lücke.',
               hidden: true,
               width: '12',
-              contentId: 'aYoHFzqb6KdgfYmJC'
+              contentId: 'aYoHFzqb6KdgfYmJC',
             },
             {
               type: 'item',
@@ -315,28 +301,26 @@ module.exports = {
                 text: '{{blanks$[o]$$pattern=Oo}}',
                 scoring: [
                   {
-                    competency: [
-                      'oMi5oMYNcBbBMKKw9'
-                    ],
+                    competency: ['oMi5oMYNcBbBMKKw9'],
                     target: 0,
-                    correctResponse: /o/
-                  }
-                ]
+                    correctResponse: /o/,
+                  },
+                ],
               },
               width: '12',
-              contentId: '3Ty6H8Meu4KzmiBX6'
-            }
-          ]
-        }
+              contentId: '3Ty6H8Meu4KzmiBX6',
+            },
+          ],
+        },
       ],
       meta: {
         createdBy: 'p6kSPxYXgnNEryye3',
         createdAt: new Date(1632349148673),
         history: [],
         updatedAt: new Date(1638959613777),
-        updatedBy: 'kBdFvdDYmPnsA6GbC'
-      }
-    }
+        updatedBy: 'kBdFvdDYmPnsA6GbC',
+      },
+    },
   ],
   unitSet: [
     {
@@ -352,31 +336,31 @@ module.exports = {
         {
           type: 'text',
           subtype: 'text',
-          value: 'Nächste Woche darf Anil an einer neuen Maschine, einer Fräsmaschine, arbeiten. Bevor er eingesetzt wird, muss er jedoch noch mal ein bisschen was über diese Maschine lernen.',
+          value:
+            'Nächste Woche darf Anil an einer neuen Maschine, einer Fräsmaschine, arbeiten. Bevor er eingesetzt wird, muss er jedoch noch mal ein bisschen was über diese Maschine lernen.',
           hidden: false,
           width: '12',
-          contentId: 'kAE5gktcHj4CMtFZy'
+          contentId: 'kAE5gktcHj4CMtFZy',
         },
         {
           type: 'media',
           subtype: 'image',
-          value: 'https://content.lealernen.de/cdn/storage/mediaLib/oRmNERmQXr6fsbcGQ/original/oRmNERmQXr6fsbcGQ.png',
+          value:
+            'https://content.lealernen.de/cdn/storage/mediaLib/oRmNERmQXr6fsbcGQ/original/oRmNERmQXr6fsbcGQ.png',
           width: '12',
-          contentId: 'E6FCPLuNvgjpxES8E'
-        }
+          contentId: 'E6FCPLuNvgjpxES8E',
+        },
       ],
       meta: {
         createdBy: 'p6kSPxYXgnNEryye3',
         createdAt: new Date(1632323516802),
         history: [],
         updatedAt: new Date(1638958430798),
-        updatedBy: 'kBdFvdDYmPnsA6GbC'
+        updatedBy: 'kBdFvdDYmPnsA6GbC',
       },
-      units: [
-        'n2pvvGD2rzyutFey3'
-      ],
-      progress: 9
-    }
+      units: ['n2pvvGD2rzyutFey3'],
+      progress: 9,
+    },
   ],
   dimension: [
     {
@@ -387,8 +371,8 @@ module.exports = {
       icon: 'pen-alt',
       colorType: 5,
       shortCode: 'W',
-      shortNum: 1
-    }
+      shortNum: 1,
+    },
   ],
   level: [
     {
@@ -401,11 +385,11 @@ module.exports = {
         createdAt: new Date(1626083614763),
         history: [],
         updatedAt: new Date(1647330186516),
-        updatedBy: 'dMAb3sr3vo2a7t3hc'
+        updatedBy: 'dMAb3sr3vo2a7t3hc',
       },
       isLegacy: false,
-      level: 1
-    }
+      level: 1,
+    },
   ],
   testCycle: [
     {
@@ -415,17 +399,15 @@ module.exports = {
       dimension: 'kgTqxv4PJFfJjw8ga',
       level: 'Jqiizz7oeQpq75JfD',
       isLegacy: false,
-      unitSets: [
-        'F5LyiYZ2TMJhZRdgR'
-      ],
+      unitSets: ['F5LyiYZ2TMJhZRdgR'],
       meta: {
         createdBy: 'kBdFvdDYmPnsA6GbC',
         createdAt: new Date(1635330473005),
         history: [],
         updatedAt: new Date(1635958247725),
-        updatedBy: 'kBdFvdDYmPnsA6GbC'
+        updatedBy: 'kBdFvdDYmPnsA6GbC',
       },
-      progress: 30
-    }
-  ]
+      progress: 30,
+    },
+  ],
 }

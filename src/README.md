@@ -1,4 +1,11 @@
-# lea.online app backend
+# lea.online app
+
+## API documentation
+
+Run `npm run build:docs` from `src` after installing dependencies. JSDoc uses
+its bundled template and Markdown plugin to document the PWA client and server,
+excluding tests. Open `../docs/api/pwa/index.html` to browse the generated docs.
+The legacy API snapshots remain in `docs/api/app` and `docs/api/backend`.
 
 ## Tests
 

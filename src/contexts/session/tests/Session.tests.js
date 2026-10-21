@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
+import sinon from 'sinon'
 import { Random } from 'meteor/random'
 import { Session } from '../Session'
 import { initTestCollection } from '../../../tests/helpers/initTestCollection'
@@ -11,7 +12,10 @@ import { setupAndTeardown } from '../../../tests/helpers/setupAndTeardown'
 import { testGetAllMethod } from '../../../tests/helpers/backendMethods'
 import { Field } from '../../content/Field'
 import { Dimension } from '../../content/Dimension'
-import { SelectorFactories, DocumentFactories } from '../../../tests/helpers/Factories'
+import {
+  SelectorFactories,
+  DocumentFactories,
+} from '../../../tests/helpers/Factories'
 import { coin } from '../../../tests/helpers/coin'
 import { expectThrown } from '../../../tests/helpers/expectThrown'
 
@@ -27,10 +31,16 @@ const allCollections = [
   UnitSetCollection,
   SessionCollection,
   DimensionCollection,
-  FieldCollection
+  FieldCollection,
 ]
 
-const createSessionMockDoc = ({ unitSet, fieldId, dimensionId, unit, nextUnit } = {}) => {
+const createSessionMockDoc = ({
+  unitSet,
+  fieldId,
+  dimensionId,
+  unit,
+  nextUnit,
+} = {}) => {
   const userId = Random.id()
   return {
     userId: userId,
@@ -39,14 +49,14 @@ const createSessionMockDoc = ({ unitSet, fieldId, dimensionId, unit, nextUnit } 
     fieldId: fieldId ?? Random.id(),
     dimensionId: dimensionId ?? Random.id(),
     nextUnit: nextUnit ?? null,
-    unit: unit ?? Random.id()
+    unit: unit ?? Random.id(),
   }
 }
 
-describe('Session', function () {
+describe('Session', () => {
   setupAndTeardown(allCollections)
 
-  describe(Session.create.name, function () {
+  describe(Session.create.name, () => {
     it('creates a new entry for a given unitSet doc with story', async () => {
       const userId = Random.id()
       const unitSetDoc = {
@@ -54,16 +64,19 @@ describe('Session', function () {
         field: Random.id(),
         story: [{}],
         units: [Random.id(), Random.id()],
-        dimension: Random.id()
+        dimension: Random.id(),
       }
-      const { _id, startedAt, ...sessionDoc } = await Session.create({ userId, unitSetDoc })
+      const { _id, startedAt, ...sessionDoc } = await Session.create({
+        userId,
+        unitSetDoc,
+      })
 
       expect(sessionDoc).to.deep.equal({
         userId: userId,
         unitSet: unitSetDoc._id,
         fieldId: unitSetDoc.field,
         dimensionId: unitSetDoc.dimension,
-        nextUnit: unitSetDoc.units[0]
+        nextUnit: unitSetDoc.units[0],
       })
       expect(_id).to.be.a('string')
       expect(startedAt).to.be.instanceOf(Date)
@@ -74,9 +87,12 @@ describe('Session', function () {
         _id: Random.id(),
         field: Random.id(),
         dimension: Random.id(),
-        units: [Random.id(), Random.id()]
+        units: [Random.id(), Random.id()],
       }
-      const { _id, startedAt, ...sessionDoc } = await Session.create({ userId, unitSetDoc })
+      const { _id, startedAt, ...sessionDoc } = await Session.create({
+        userId,
+        unitSetDoc,
+      })
 
       expect(sessionDoc).to.deep.equal({
         userId: userId,
@@ -84,13 +100,13 @@ describe('Session', function () {
         fieldId: unitSetDoc.field,
         unit: unitSetDoc.units[0],
         dimensionId: unitSetDoc.dimension,
-        nextUnit: unitSetDoc.units[1]
+        nextUnit: unitSetDoc.units[1],
       })
       expect(_id).to.be.a('string')
       expect(startedAt).to.be.instanceOf(Date)
     })
   })
-  describe(Session.get.name, function () {
+  describe(Session.get.name, () => {
     it('returns the session doc if found', async () => {
       const fieldId = Random.id()
       const userId = Random.id()
@@ -103,7 +119,7 @@ describe('Session', function () {
         _id: unitSet,
         field: Random.id(),
         dimension: dimensionId,
-        units: [unitId, Random.id()]
+        units: [unitId, Random.id()],
       })
       await SessionCollection.insertAsync({
         _id: Random.id(),
@@ -114,9 +130,12 @@ describe('Session', function () {
         dimensionId,
         nextUnit: undefined,
         competencies: 0,
-        progress: 0
+        progress: 0,
       })
-      const { sessionDoc, unitSetDoc, unitDoc } = await Session.get({ userId, unitSet })
+      const { sessionDoc, unitSetDoc, unitDoc } = await Session.get({
+        userId,
+        unitSet,
+      })
       expect(sessionDoc).to.deep.equal(await SessionCollection.findOneAsync())
       expect(unitDoc).to.deep.equal(await UnitCollection.findOneAsync())
       expect(unitSetDoc).to.deep.equal(await UnitSetCollection.findOneAsync())
@@ -130,19 +149,22 @@ describe('Session', function () {
       await UnitSetCollection.insertAsync({
         _id: unitSet,
         field: Random.id(),
-        units: [unitId, Random.id()]
+        units: [unitId, Random.id()],
       })
-      const { sessionDoc, unitSetDoc, unitDoc } = await Session.get({ userId, unitSet })
+      const { sessionDoc, unitSetDoc, unitDoc } = await Session.get({
+        userId,
+        unitSet,
+      })
       expect(sessionDoc).to.deep.equal(await SessionCollection.findOneAsync())
       expect(unitDoc).to.deep.equal(await UnitCollection.findOneAsync())
       expect(unitSetDoc).to.deep.equal(await UnitSetCollection.findOneAsync())
     })
   })
-  describe(Session.update.name, function () {
+  describe(Session.update.name, () => {
     it('throws if no session doc has been found', async () => {
       await expectThrown({
         fn: () => Session.update({}),
-        message: 'errors.docNotFound'
+        message: 'errors.docNotFound',
       })
     })
     it('completes a session if no next unit is found', async () => {
@@ -153,7 +175,7 @@ describe('Session', function () {
 
       await UnitCollection.insertAsync({
         _id: unitId,
-        pages: [{}, {}]
+        pages: [{}, {}],
       })
 
       await UnitSetCollection.insertAsync({ _id: unitSet, units: [unitId] })
@@ -164,13 +186,14 @@ describe('Session', function () {
         unit: unitId,
         nextUnit: undefined,
         competencies: 1,
-        progress: 2
+        progress: 2,
       })
 
       const nextUnitId = await Session.update({ userId, sessionId })
       expect(nextUnitId).to.equal(null)
 
-      const { completedAt, ...sessionDoc } = await SessionCollection.findOneAsync()
+      const { completedAt, ...sessionDoc } =
+        await SessionCollection.findOneAsync()
       expect(completedAt).to.be.instanceOf(Date)
       expect(sessionDoc).to.deep.equal({
         _id: sessionId,
@@ -178,7 +201,7 @@ describe('Session', function () {
         unitSet,
         fieldId,
         competencies: 1,
-        progress: 4
+        progress: 4,
       })
     })
     it('sets the next unit and increases progress', async () => {
@@ -191,11 +214,11 @@ describe('Session', function () {
 
       await UnitCollection.insertAsync({
         _id: unitId,
-        pages: [{}, {}]
+        pages: [{}, {}],
       })
       await UnitSetCollection.insertAsync({
         _id: unitSet,
-        units: [unitId, nextUnitId, nextNextUnitId]
+        units: [unitId, nextUnitId, nextNextUnitId],
       })
 
       const sessionId = await SessionCollection.insertAsync({
@@ -205,13 +228,14 @@ describe('Session', function () {
         unit: unitId,
         nextUnit: nextUnitId,
         competencies: 1,
-        progress: 2
+        progress: 2,
       })
 
       const nextUnit = await Session.update({ userId, sessionId })
       expect(nextUnit).to.equal(nextUnitId)
 
-      const { updatedAt, completedAt, ...sessionDoc } = await SessionCollection.findOneAsync()
+      const { updatedAt, completedAt, ...sessionDoc } =
+        await SessionCollection.findOneAsync()
       expect(updatedAt).to.be.instanceOf(Date)
       expect(completedAt).to.equal(undefined)
       expect(sessionDoc).to.deep.equal({
@@ -222,7 +246,7 @@ describe('Session', function () {
         unit: nextUnitId,
         nextUnit: nextNextUnitId,
         competencies: 1,
-        progress: 4
+        progress: 4,
       })
     })
     it('unsets next unit if this is the last unit', async () => {
@@ -234,15 +258,15 @@ describe('Session', function () {
 
       await UnitCollection.insertAsync({
         _id: unitId,
-        pages: [{}, {}]
+        pages: [{}, {}],
       })
       await UnitCollection.insertAsync({
         _id: nextUnitId,
-        pages: [{}, {}]
+        pages: [{}, {}],
       })
       await UnitSetCollection.insertAsync({
         _id: unitSet,
-        units: [unitId]
+        units: [unitId],
       })
 
       const sessionId = await SessionCollection.insertAsync({
@@ -252,7 +276,7 @@ describe('Session', function () {
         unit: unitId,
         nextUnit: nextUnitId,
         competencies: 1,
-        progress: 2
+        progress: 2,
       })
 
       let nextUnit = await Session.update({ userId, sessionId })
@@ -260,7 +284,8 @@ describe('Session', function () {
       nextUnit = await Session.update({ userId, sessionId })
       expect(nextUnit).to.equal(null)
 
-      const { updatedAt, completedAt, ...sessionDoc } = await SessionCollection.findOneAsync()
+      const { updatedAt, completedAt, ...sessionDoc } =
+        await SessionCollection.findOneAsync()
       expect(updatedAt).to.be.instanceOf(Date)
       expect(completedAt).to.be.instanceOf(Date)
       expect(sessionDoc).to.deep.equal({
@@ -269,16 +294,17 @@ describe('Session', function () {
         unitSet,
         fieldId,
         competencies: 1,
-        progress: 6
+        progress: 6,
       })
     })
   })
 
   describe('methods', () => {
-    describe(Session.methods.update.name, function () {
+    describe(Session.methods.update.name, () => {
       const method = createMethod(Session.methods.update)
 
       it('it updates progress', async () => {
+        const now = new Date()
         const userId = Random.id()
         const nextUnitId = Random.id()
         const nextNextUnitId = Random.id()
@@ -290,12 +316,12 @@ describe('Session', function () {
         await UnitCollection.insertAsync({
           _id: unitId,
           pages: [{}, {}],
-          dimension: dimensionId
+          dimension: dimensionId,
         })
         await UnitSetCollection.insertAsync({
           _id: unitSet,
           dimension: dimensionId,
-          units: [unitId, nextUnitId, nextNextUnitId]
+          units: [unitId, nextUnitId, nextNextUnitId],
         })
 
         const sessionId = await SessionCollection.insertAsync({
@@ -306,44 +332,50 @@ describe('Session', function () {
           unit: unitId,
           nextUnit: nextUnitId,
           competencies: 1,
-          progress: 2
+          progress: 2,
         })
 
         const next = await method._execute({ userId }, { sessionId })
         expect(next).to.equal(nextUnitId)
 
         const { _id, ...progress } = await ProgressCollection.findOneAsync()
-        expect(progress).to.deep.equal({
-          userId,
-          fieldId,
-          unitSets: [
-            {
-              _id: unitSet,
-              dimensionId,
-              competencies: 1,
-              complete: false,
-              progress: 4
-            }
-          ]
+        expect(progress.userId).to.equal(userId)
+        expect(progress.fieldId).to.equal(fieldId)
+        expect(progress.unitSets.length).to.equal(1)
+        const { createdAt, ...entry } = progress.unitSets[0]
+        expect(createdAt).to.be.instanceOf(Date)
+        expect(entry).to.deep.equal({
+          _id: unitSet,
+          dimensionId,
+          competencies: 1,
+          complete: false,
+          progress: 4,
         })
       })
     })
 
     testGetAllMethod(Session, {
-      factory: async withDeps => {
-        const unit = withDeps ? (await UnitCollection.findOneAsync())._id : Random.id()
-        const unitSet = withDeps ? (await UnitSetCollection.findOneAsync())._id : Random.id()
-        const dimensionId = withDeps ? (await DimensionCollection.findOneAsync())._id : Random.id()
-        const fieldId = withDeps ? (await FieldCollection.findOneAsync())._id : Random.id()
+      factory: async (withDeps) => {
+        const unit = withDeps
+          ? (await UnitCollection.findOneAsync())._id
+          : Random.id()
+        const unitSet = withDeps
+          ? (await UnitSetCollection.findOneAsync())._id
+          : Random.id()
+        const dimensionId = withDeps
+          ? (await DimensionCollection.findOneAsync())._id
+          : Random.id()
+        const fieldId = withDeps
+          ? (await FieldCollection.findOneAsync())._id
+          : Random.id()
         const doc = {
           dimensionId,
           fieldId,
-          unitSet
+          unitSet,
         }
         if (coin()) {
           doc.unit = unit
-        }
-        else {
+        } else {
           doc.nextUnit = unit
         }
         return createSessionMockDoc(doc)
@@ -351,21 +383,21 @@ describe('Session', function () {
       dependencies: {
         [Field.name]: {
           factory: DocumentFactories.get(Field.name),
-          selector: SelectorFactories.idSelector('fieldId')
+          selector: SelectorFactories.idSelector('fieldId'),
         },
         [Dimension.name]: {
           factory: DocumentFactories.get(Dimension.name),
-          selector: SelectorFactories.idSelector('dimensionId')
+          selector: SelectorFactories.idSelector('dimensionId'),
         },
         [UnitSet.name]: {
           factory: DocumentFactories.get(UnitSet.name),
-          selector: SelectorFactories.idSelector('unitSet')
+          selector: SelectorFactories.idSelector('unitSet'),
         },
         [Unit.name]: {
           factory: DocumentFactories.get(Unit.name),
-          selector: SelectorFactories.idSelector('unit', 'nextUnit')
-        }
-      }
+          selector: SelectorFactories.idSelector('unit', 'nextUnit'),
+        },
+      },
     })
   })
 })

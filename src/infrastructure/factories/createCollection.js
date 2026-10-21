@@ -6,7 +6,7 @@ import { createLog } from '../log/createLog'
 import { getCollection } from '../../api/utils/getCollection'
 
 const collectionFactory = createCollectionFactory({
-  schemaFactory: createSchema
+  schemaFactory: createSchema,
 })
 
 const log = createLog({ name: 'createCollection' })
@@ -14,7 +14,7 @@ const log = createLog({ name: 'createCollection' })
 export const createCollection = ({ name, schema, isLocal }) => {
   log(name, { isLocal: !!isLocal })
 
-  if (isLocal && !LocalCollections.has(name)) {
+  if (isLocal) {
     const existingCollection = LocalCollections.get(name)
 
     if (existingCollection) {
@@ -30,7 +30,6 @@ export const createCollection = ({ name, schema, isLocal }) => {
     }
 
     LocalCollections.add(name, collection)
-
     return collection
   }
 

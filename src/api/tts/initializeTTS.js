@@ -39,19 +39,19 @@ export const initializeTTS = async (debug = noop) => {
   // open-close implementation of global error handlers
   const errorHandlers = {
     /**
-         * if server tts fails, this handler is automatically called
-         */
+     * if server tts fails, this handler is automatically called
+     */
     [TTSEngine.modes.server]: (error) => {
       debug(`[ServerTTSLoader]: failed ${++serverFails} times`, error)
       return browserFallback({
         TTSEngine,
         debug,
-        onComplete () {
+        onComplete() {
           TTSEngine.replay()
           // always reset to server, if max retries are infinite or current retries are below max
           if (MAX_SERVER_RETRIES < 0 || serverFails <= MAX_SERVER_RETRIES) {
             debug(
-                            `reset to ${TTSEngine.modes.server} (${serverFails}/${MAX_SERVER_RETRIES})`
+              `reset to ${TTSEngine.modes.server} (${serverFails}/${MAX_SERVER_RETRIES})`,
             )
             TTSEngine.mode = TTSEngine.modes.server
           }
@@ -60,10 +60,10 @@ export const initializeTTS = async (debug = noop) => {
           fatal({
             error: {
               message: 'tts.failed',
-              original: err.message
-            }
+              original: err.message,
+            },
           })
-        }
+        },
       })
     },
     [TTSEngine.modes.browser]: (error) => {
@@ -72,22 +72,22 @@ export const initializeTTS = async (debug = noop) => {
       fatal({
         error: {
           message: 'tts.failed',
-          original: error.message
-        }
+          original: error.message,
+        },
       })
       sendError({ error })
-    }
+    },
   }
 
   /**
-     * This is called when the servertts fails in order to attempt to load tts using
-     * the browser builtin tts services. Some browsers do not support
-     * tts, which is why the error handler will then pipe into a fatal error,
-     * displaying a dialog to inform the user about it
-     * @param TTSEngine
-     * @param debug
-     * @param onComplete
-     */
+   * This is called when the servertts fails in order to attempt to load tts using
+   * the browser builtin tts services. Some browsers do not support
+   * tts, which is why the error handler will then pipe into a fatal error,
+   * displaying a dialog to inform the user about it
+   * @param TTSEngine
+   * @param debug
+   * @param onComplete
+   */
   const browserFallback = ({ TTSEngine, debug, onComplete }) => {
     debug('[initializeTTS]: fallback to mode', TTSEngine.modes.browser)
     TTSEngine.configure({
@@ -97,26 +97,26 @@ export const initializeTTS = async (debug = noop) => {
       globalErrorHandler,
       onError: (err) => {
         const error =
-                    err && err instanceof Error
-                      ? err
-                      : new Meteor.Error('tts.failed', 'tts.initFailed', err)
+          err && err instanceof Error
+            ? err
+            : new Meteor.Error('tts.failed', 'tts.initFailed', err)
         console.error('[initializeTTS]: configure failed => ', error.message)
         fatal({
           error: {
             message: 'tts.failed',
-            original: error.message
-          }
+            original: error.message,
+          },
         })
         sendError({ error })
       },
-      onComplete () {
+      onComplete() {
         debug('[initializeTTS]: fallback complete')
         onComplete()
-      }
+      },
     })
   }
 
-  function externalServerTTSLoader (requestText, callback, debug = noop) {
+  function externalServerTTSLoader(requestText, callback, debug = noop) {
     debug(`[ServerTTSLoader]: request for text "${requestText}"`)
     const hash = SHA256(requestText)
     return callback(null, `${TTS_URL}?hash=${hash}`)
@@ -130,27 +130,27 @@ export const initializeTTS = async (debug = noop) => {
       globalErrorHandler,
       onError: (err) => {
         const error =
-                    err && err instanceof Error
-                      ? err
-                      : new Meteor.Error('tts.failed', 'tts.initFailed', err)
+          err && err instanceof Error
+            ? err
+            : new Meteor.Error('tts.failed', 'tts.initFailed', err)
         console.error('[initializeTTS]: configure failed => ', error.message)
         // TODO communicate error to user in an understandable way
         // TODO fallback to server-rendered TTS
         fatal({
           error: {
             message: 'tts.failed',
-            original: error.message
-          }
+            original: error.message,
+          },
         })
 
         sendError({ error })
         resolve(TTSEngine)
       },
-      onComplete () {
+      onComplete() {
         debug('[initializeTTS]: configure complete')
         TTSEngine.defaults({ rate: 0.8 })
         resolve(TTSEngine)
-      }
+      },
     })
   })
 }

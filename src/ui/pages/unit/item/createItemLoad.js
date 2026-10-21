@@ -9,8 +9,19 @@ import { noop } from '../../../../utils/noop'
  * @param {function} debug A debug function to log the loading process
  * @return {function({ userId:string, sessionId:string, unitId:string, page:string, type:string, contentId:string }): object|undefined}
  */
-export const createItemLoad = ({ cache, createIfMissing = false, debug = noop }) => {
-  return function onItemLoad ({ userId, sessionId, unitId, page, type, contentId }) {
+export const createItemLoad = ({
+  cache,
+  createIfMissing = false,
+  debug = noop,
+}) => {
+  return function onItemLoad({
+    userId,
+    sessionId,
+    unitId,
+    page,
+    type,
+    contentId,
+  }) {
     debug('load item data', { sessionId, unitId, page, contentId })
     const entry = cache.load({ sessionId, unitId, page, contentId })
     debug('entry found?', entry)
@@ -22,7 +33,7 @@ export const createItemLoad = ({ cache, createIfMissing = false, debug = noop })
         page,
         type,
         contentId,
-        responses: []
+        responses: [],
       })
     }
     return entry

@@ -11,14 +11,14 @@ import { Feedback } from '../../contexts/feedback/Feedback'
  * @param debug {Function}
  * @return {{responsesRemoved: Number, sessionsRemoved: Number, userRemoved: Number}}
  */
-export const removeUser = async function (userId, calledBy, debug = () => {}) {
+export const removeUser = async (userId, calledBy, debug = () => {}) => {
   debug(removeUser.name, { userId, calledBy })
   const user = await Meteor.users.findOneAsync(userId)
 
   if (!user) {
     throw new Meteor.Error('removeUser.error', 'removeUser.userDoesNotExist', {
       userId,
-      calledBy
+      calledBy,
     })
   }
 
@@ -31,6 +31,6 @@ export const removeUser = async function (userId, calledBy, debug = () => {}) {
     responsesRemoved,
     sessionsRemoved,
     feedbackRemoved,
-    userRemoved
+    userRemoved,
   }
 }

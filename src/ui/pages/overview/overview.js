@@ -14,17 +14,17 @@ createTemplate({
   language: true,
   tts: true,
   translations: {
-    de: () => import('./i18n/de')
+    de: () => import('./i18n/de'),
   },
   onDependenciesComplete: async () => {
     await loadAllContentDocs({
-      context: Field
+      context: Field,
       // unlessExists: true
     })
   },
   helpers: {
-    fields () {
+    fields() {
       return getLocalCollection(Field.name).find()
-    }
-  }
+    },
+  },
 })

@@ -9,52 +9,58 @@ import { asyncTimeout } from '../../../../utils/asyncTimeout'
 import { AppStorage } from '../../../storage/AppStorage'
 
 Template.registerNewUser.onCreated(function () {
-  const instance = this
-  instance.state.set('accountStatus', 'decide')
-  instance.initDependencies({
+  this.state.set('accountStatus', 'decide')
+  this.initDependencies({
     contexts: [Users, Legal],
     language: true,
     tts: true,
     translations: {
-      de: () => import('./i18n/de')
+      de: () => import('./i18n/de'),
     },
     onComplete: async () => {
-      instance.state.set('dependenciesComplete', true)
+      this.state.set('dependenciesComplete', true)
     },
-    onError: e => {
+    onError: (e) => {
       // instance.data.onFail()
-      instance.state.set('dependenciesComplete', true)
-    }
+      this.state.set('dependenciesComplete', true)
+    },
   })
 
-  instance.legalTypes = {
+  this.legalTypes = {
     terms: {
       name: 'terms',
       title: 'logins.new.account.open.terms',
       text: '<h1>...</h1>',
-      loaded: false
+      loaded: false,
     },
     privacy: {
       name: 'privacy',
       title: 'logins.new.account.open.privacy',
       text: '<h1>...</h1>',
-      loaded: false
-    }
+      loaded: false,
+    },
   }
 
-  const onSuccess = instance.data.success
-  instance.createUser = async () => {
-    instance.state.set({ accountStatus: 'creating', createStatus: { label: 'auth.create.user', icon: 'user' }, createProgress: 0 })
+  const onSuccess = this.data.success
+  this.createUser = async () => {
+    this.state.set({
+      accountStatus: 'creating',
+      createStatus: { label: 'auth.create.user', icon: 'user' },
+      createProgress: 0,
+    })
     await asyncTimeout(300)
-    instance.state.set({ createProgress: 20 })
+    this.state.set({ createProgress: 20 })
     await asyncTimeout(300)
     const { token, restore } = await callMethod({
       name: Users.methods.create,
-      args: { termsAndConditionsIsChecked: true }
+      args: { termsAndConditionsIsChecked: true },
     })
     AppStorage.set('restore', restore)
     await asyncTimeout(300)
-    instance.state.set({ createStatus: { label: 'auth.create.complete', icon: 'check' }, createProgress: 100 })
+    this.state.set({
+      createStatus: { label: 'auth.create.complete', icon: 'check' },
+      createProgress: 100,
+    })
     await asyncTimeout(300)
     await loginWithToken(token)
     await asyncTimeout(300)
@@ -63,37 +69,37 @@ Template.registerNewUser.onCreated(function () {
 })
 
 Template.registerNewUser.helpers({
-  loadComplete () {
+  loadComplete() {
     return Template.getState('dependenciesComplete')
   },
-  accountStatus (name) {
+  accountStatus(name) {
     return Template.getState('accountStatus') === name
   },
-  availableLogins () {
+  availableLogins() {
     return Template.instance().availableLogins
   },
-  accepted (type) {
+  accepted(type) {
     return Template.getState('accepted')?.[type]
   },
-  legal () {
+  legal() {
     return Template.getState('legal')
   },
-  canRegister () {
+  canRegister() {
     const accepted = Template.getState('accepted') ?? {}
     return accepted.terms && accepted.privacy
   },
-  createProgress () {
+  createProgress() {
     return Template.getState('createProgress')
   },
-  restoreCode () {
+  restoreCode() {
     return Template.getState('restoreCode')
   },
-  createStatus () {
+  createStatus() {
     return Template.getState('createStatus')
-  }
+  },
 })
 Template.registerNewUser.events({
-  'click .legal-modal-btn': async function (event, templateInstance) {
+  'click .legal-modal-btn': async (event, templateInstance) => {
     event.preventDefault()
     const type = dataTarget(event, 'type')
     const legal = templateInstance.legalTypes[type]
@@ -101,14 +107,14 @@ Template.registerNewUser.events({
     if (!legal.loaded) {
       legal.text = await callMethod({
         name: Legal.methods.get.name,
-        args: { name: type }
+        args: { name: type },
       })
       legal.loaded = true
     }
     templateInstance.state.set({ legal })
     templateInstance.modal = templateInstance.api.showModal('#legal-modal')
   },
-  'click .legal-accept-btn': async function (event, templateInstance) {
+  'click .legal-accept-btn': async (event, templateInstance) => {
     event.preventDefault()
     const type = dataTarget(event, 'type')
     const accepted = templateInstance.state.get('accepted') ?? {}
@@ -116,19 +122,18 @@ Template.registerNewUser.events({
     templateInstance.state.set({ accepted })
     templateInstance.modal.hide()
   },
-  'click .register-btn' (event, templateInstance) {
+  'click .register-btn'(event, templateInstance) {
     event.preventDefault()
     templateInstance.createUser().catch(templateInstance.error)
-  }
+  },
 })
 
 const loginWithToken = async (token) => {
   return new Promise((resolve, reject) => {
-    Meteor.loginWithToken(token, error => {
+    Meteor.loginWithToken(token, (error) => {
       if (error) {
         return reject(error)
-      }
-      else {
+      } else {
         return resolve()
       }
     })
