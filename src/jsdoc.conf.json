@@ -1,25 +1,15 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": [
-      "jsdoc",
-      "closure"
-    ]
+    "dictionaries": ["jsdoc", "closure"]
   },
   "source": {
-    "include": [
-      "./"
-    ],
-    "exclude": [
-      ".meteor",
-      "node_modules"
-    ],
+    "include": ["./"],
+    "exclude": [".meteor", "node_modules"],
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "(^|/|\\\\)(_|tests(/|\\\\))|\\.tests\\.js$"
   },
-  "plugins": [
-    "plugins/markdown"
-  ],
+  "plugins": ["plugins/markdown"],
   "sourceType": "module",
   "opts": {
     "encoding": "utf8",
