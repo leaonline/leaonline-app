@@ -3,6 +3,17 @@ import { loggedIn, loggedOut } from '../../utils/accountUtils'
 import { Env } from '../../infrastructure/env/Env'
 import { nonEmptyString } from '../../utils/string/nonEmptyString'
 
+/**
+ * @typedef {Object} AppRoute
+ * @property {function(): string} path
+ * @property {string} label
+ * @property {function(): Array.<Function>} triggersEnter
+ * @property {function(): Promise.<*>} load
+ * @property {?string} target
+ * @property {string} template
+ * @property {?Object} data
+ */
+
 export const Routes = {}
 
 const go = (...args) => {
@@ -17,8 +28,7 @@ const settings = () => {
 
 /**
  * Renders a default template for all pages that have not been found.
- * @type {{path: (function(): *), label: string, triggersEnter: (function(): *[]), load(), target: null, template:
- *   string, roles: null, data: null}}
+ * @type {AppRoute}
  */
 
 Routes.notFound = {
@@ -39,8 +49,7 @@ Routes.notFound = {
 
 /**
  * Reroute to notFound route in case an unknown / non-maching url has been detected.
- * @type {{path: (function(): string), label: *, triggersEnter: (function(): *[]), load(), target: null, template:
- *   string, roles: null, data: null}}
+ * @type {AppRoute}
  */
 
 Routes.fallback = {
@@ -399,8 +408,7 @@ Routes.logout = {
 
 /**
  * The default route to be used when landing on the page without params
- * @type {{path: (function(): string), label: string, triggersEnter: (function(): *[]), load(): Promise<undefined>,
- *   target: null, template: null, roles: null, data: null}}
+ * @type {AppRoute}
  */
 Routes.root = {
   path: () => '/',

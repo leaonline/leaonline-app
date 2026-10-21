@@ -149,7 +149,7 @@ Template.unit.onCreated(function () {
   /**
    * This allows to evaluate/score items on the client
    * in order to produce immediate feedback.
-   * @return {FlatArray<*[], 1>[]}
+   * @return {Array.<*>}
    */
   this.onEvaluate = () => {
     const sessionDoc = this.state.get('sessionDoc')

@@ -3,6 +3,17 @@ import { Response } from '../../../../contexts/response/Response'
 import { getProperty } from '../../../../utils/object/getProperty'
 
 /**
+ * @callback ItemSubmit
+ * @param {Object} options
+ * @param {string} options.sessionId The current session id.
+ * @param {Object} options.unitDoc The current unit document.
+ * @param {string} options.dimensionId The current dimension id.
+ * @param {number} options.page The current page index.
+ * @param {*} options.scores Scores to submit with each response.
+ * @returns {Promise.<Array.<*>>}
+ */
+
+/**
  * Returns a submit function that restores values from cache and sends them
  * to the server.
  * @param loadValue {Function}
@@ -10,7 +21,7 @@ import { getProperty } from '../../../../utils/object/getProperty'
  * @param receive {Function}
  * @param onSuccess {Function}
  * @param onError {Function}
- * @return {function({sessionId?: *, unitDoc: *, page?: *}): *}
+ * @return {ItemSubmit}
  */
 export const createItemSubmit = ({
   loadValue,

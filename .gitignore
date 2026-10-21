@@ -123,3 +123,6 @@ dist
 
 # propietary assets
 **/Semikolon*.ttf
+
+# Generated API documentation for the active PWA
+/docs/api/pwa/
