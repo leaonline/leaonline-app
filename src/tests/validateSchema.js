@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor'
+import SimpleSchema from 'meteor/aldeed:simple-schema'
 import validateSettings from '../.settingsschema'
 
-const settings = { ...Meteor.settings }
-
-validateSettings(settings)
+describe('schema', () => {
+  it('validates schema', async () => {
+    await validateSettings(SimpleSchema, { ...Meteor.settings })
+  })
+})

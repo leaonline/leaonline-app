@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { ReactiveVar } from 'meteor/reactive-var'
-import { createRendererTestContext } from '../../../../tests/helpers/rendererHelpers.tests'
-import { buildMapModel } from '../model'
-import { inputs } from './model.tests'
-import '../mapStageChooser'
+import { createRendererTestContext } from '../../../../../tests/helpers/rendererHelpers.tests'
+import { buildMapModel } from '../../model'
+import { inputs } from '../model.tests'
+import '../../mapStageChooser'
 
 describe('learner map chooser', () => {
   const context = createRendererTestContext()

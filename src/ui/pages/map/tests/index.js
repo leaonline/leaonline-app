@@ -1,10 +1,14 @@
-import { Meteor } from 'meteor/meteor'
+import { onClientExec } from '../../../../utils/archUtils'
+
+// shared tests
 import './model.tests'
 import './navigation.tests'
 import './data.tests'
 
-if (Meteor.isClient) {
-  require('./components.tests')
-  require('./chooser.tests')
-  require('./page.tests')
-}
+onClientExec(() => {
+  require('./client/chooser.tests')
+  require('./client/components.tests')
+
+  // TODO: update page tests, once map page is complete
+  // require('./client/page.tests')
+})

@@ -22,7 +22,7 @@ export const createRendererTestContext = () => {
       originalI18n = Blaze._globalHelpers.i18n
       originalLoading = Template.loading
       Template.registerHelper('i18n', (key) => `translated:${key}`)
-      Template.loading = new Template('uiTestLoading', () => 'Loading')
+      // Template.loading = new Template('uiTestLoading', () => 'Loading')
       sandbox.stub(TTSEngine, 'isConfigured').returns(false)
     },
     teardown() {

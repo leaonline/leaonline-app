@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
 import { truncatePercent } from './truncatePercent'
-import { restoreAll, stub } from '../../../../../tests/helpers.tests'
+import { restoreAll, stub } from '../../../../tests/helpers/stubUtils'
 
 describe(truncatePercent.name, () => {
   afterEach(() => {

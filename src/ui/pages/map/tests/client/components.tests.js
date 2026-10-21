@@ -2,11 +2,11 @@ import { expect } from 'chai'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
-import { i18n } from '../../../../api/i18n/I18n'
-import { createRendererTestContext } from '../../../../tests/helpers/rendererHelpers.tests'
-import { buildMapModel } from '../model'
-import { inputs } from './model.tests'
-import '../learnerMap'
+import { i18n } from '../../../../../api/i18n/I18n'
+import { createRendererTestContext } from '../../../../../tests/helpers/rendererHelpers.tests'
+import { buildMapModel } from '../../model'
+import { inputs } from '../model.tests'
+import '../../learnerMap'
 
 describe('learner map Blaze scene', () => {
   const context = createRendererTestContext()
