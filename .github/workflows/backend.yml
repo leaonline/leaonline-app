@@ -42,19 +42,19 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: leaonline/corelib
-          path: packages/corelib
+          path: src/packages/corelib
 
       - name: Checkout leaonline:ui repo
         uses: actions/checkout@v7
         with:
           repository: leaonline/ui
-          path: packages/ui
+          path: src/packages/ui
 
       - name: Checkout leaonline:service-registry repo
         uses: actions/checkout@v7
         with:
           repository: leaonline/service-registry
-          path: packages/service-registry
+          path: src/packages/service-registry
 
       # CACHING
       - name: Install Meteor
